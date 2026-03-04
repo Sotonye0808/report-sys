@@ -1,0 +1,409 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   1. IMPORTS
+   ══════════════════════════════════════════════════════════════════════════════ */
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   2. PALETTE TOKENS  +  3. SEMANTIC TOKENS — LIGHT (:root)
+   ══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  /* ── Palette ─────────────────────────────────────────── */
+  --palette-black-base: #0a0a0b;
+  --palette-black-soft: #111214;
+  --palette-black-elevated: #16171a;
+
+  --palette-emerald-900: #064e3b;
+  --palette-emerald-700: #047857;
+  --palette-emerald-600: #059669;
+  --palette-emerald-500: #10b981;
+  --palette-emerald-400: #34d399;
+  --palette-emerald-200: #a7f3d0;
+  --palette-emerald-50: #ecfdf5;
+
+  --palette-neutral-950: #0a0a0a;
+  --palette-neutral-900: #0f172a;
+  --palette-neutral-800: #1e293b;
+  --palette-neutral-700: #374151;
+  --palette-neutral-600: #4b5563;
+  --palette-neutral-500: #64748b;
+  --palette-neutral-400: #94a3b8;
+  --palette-neutral-300: #cbd5e1;
+  --palette-neutral-200: #e5e7eb;
+  --palette-neutral-100: #f1f5f9;
+  --palette-neutral-50: #f8f9fb;
+  --palette-neutral-0: #ffffff;
+
+  /* ── Brand / Accent ──────────────────────────────────── */
+  --ds-brand-accent: var(--palette-emerald-500);
+  --ds-brand-accent-hover: var(--palette-emerald-600);
+  --ds-brand-accent-subtle: var(--palette-emerald-50);
+  --ds-brand-black: var(--palette-black-base);
+  --ds-brand-black-soft: var(--palette-black-soft);
+  --ds-brand-black-elevated: var(--palette-black-elevated);
+
+  /* ── Status ──────────────────────────────────────────── */
+  --ds-status-success: #15803d;
+  --ds-status-warning: #b45309;
+  --ds-status-error: #dc2626;
+  --ds-status-info: var(--palette-emerald-700);
+
+  /* ── Surfaces ────────────────────────────────────────── */
+  --ds-surface-base: var(--palette-neutral-50);
+  --ds-surface-elevated: var(--palette-neutral-0);
+  --ds-surface-sunken: var(--palette-neutral-100);
+  --ds-surface-overlay: var(--palette-neutral-0);
+  --ds-surface-sidebar: var(--palette-neutral-0);
+  --ds-surface-header: var(--palette-neutral-0);
+  --ds-surface-glass: rgba(255, 255, 255, 0.7);
+
+  /* ── Text ────────────────────────────────────────────── */
+  --ds-text-primary: var(--palette-neutral-900);
+  --ds-text-secondary: var(--palette-neutral-500);
+  --ds-text-subtle: var(--palette-neutral-400);
+  --ds-text-inverse: var(--palette-neutral-0);
+  --ds-text-link: var(--palette-emerald-600);
+
+  /* ── Borders ─────────────────────────────────────────── */
+  --ds-border-base: var(--palette-neutral-200);
+  --ds-border-strong: var(--palette-neutral-300);
+  --ds-border-subtle: var(--palette-neutral-100);
+  --ds-border-glass: rgba(255, 255, 255, 0.6);
+
+  /* ── Glow ────────────────────────────────────────────── */
+  --ds-glow-accent-soft: 0 0 0 1px rgba(16, 185, 129, 0.2);
+  --ds-glow-accent-strong: 0 0 20px rgba(16, 185, 129, 0.25);
+
+  /* ── Chart / Categorical ─────────────────────────────── */
+  --ds-chart-1: #2563eb;
+  --ds-chart-2: #10b981;
+  --ds-chart-3: #7c3aed;
+  --ds-chart-4: #ea580c;
+  --ds-chart-5: #0891b2;
+  --ds-chart-6: #be185d;
+
+  /* ── Shape ───────────────────────────────────────────── */
+  --ds-radius-sm: 4px;
+  --ds-radius-md: 8px;
+  --ds-radius-lg: 12px;
+  --ds-radius-xl: 20px;
+  --ds-radius-2xl: 24px;
+  --ds-radius-full: 9999px;
+
+  /* ── Shadows ─────────────────────────────────────────── */
+  --ds-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --ds-shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --ds-shadow-lg: 0 12px 20px -4px rgb(0 0 0 / 0.1), 0 4px 8px -4px rgb(0 0 0 / 0.06);
+  --ds-shadow-xl: 0 24px 32px -8px rgb(0 0 0 / 0.12), 0 8px 16px -6px rgb(0 0 0 / 0.07);
+
+  /* ── Typography ──────────────────────────────────────── */
+  --ds-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ds-font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   4. SEMANTIC TOKENS — DARK OVERRIDE (.dark)
+   ══════════════════════════════════════════════════════════════════════════════ */
+.dark {
+  /* ── Surfaces ────────────────────────────────────────── */
+  --ds-surface-base: var(--palette-black-base);
+  --ds-surface-elevated: var(--palette-black-soft);
+  --ds-surface-sunken: var(--palette-black-base);
+  --ds-surface-overlay: var(--palette-black-soft);
+  --ds-surface-sidebar: var(--palette-black-base);
+  --ds-surface-header: var(--palette-black-soft);
+  --ds-surface-glass: rgba(255, 255, 255, 0.04);
+
+  /* ── Brand accent — UNCHANGED across themes ──────────── */
+  --ds-brand-accent-subtle: rgba(16, 185, 129, 0.12);
+
+  /* ── Status ──────────────────────────────────────────── */
+  --ds-status-success: #4ade80;
+  --ds-status-warning: #fbbf24;
+  --ds-status-error: #f87171;
+  --ds-status-info: var(--palette-emerald-400);
+
+  /* ── Text ────────────────────────────────────────────── */
+  --ds-text-primary: #f8fafc;
+  --ds-text-secondary: var(--palette-neutral-400);
+  --ds-text-subtle: #475569;
+  --ds-text-inverse: var(--palette-neutral-900);
+  --ds-text-link: var(--palette-emerald-400);
+
+  /* ── Borders ─────────────────────────────────────────── */
+  --ds-border-base: rgba(255, 255, 255, 0.08);
+  --ds-border-strong: rgba(255, 255, 255, 0.14);
+  --ds-border-subtle: rgba(255, 255, 255, 0.04);
+  --ds-border-glass: rgba(255, 255, 255, 0.08);
+
+  /* ── Glow ────────────────────────────────────────────── */
+  --ds-glow-accent-soft: 0 0 0 1px rgba(16, 185, 129, 0.25);
+  --ds-glow-accent-strong: 0 0 20px rgba(16, 185, 129, 0.3);
+
+  /* ── Chart — brighter for dark backgrounds ───────────── */
+  --ds-chart-1: #60a5fa;
+  --ds-chart-2: #34d399;
+  --ds-chart-3: #a78bfa;
+  --ds-chart-4: #fb923c;
+  --ds-chart-5: #22d3ee;
+  --ds-chart-6: #f472b6;
+
+  /* ── Shadows — deeper in dark mode ───────────────────── */
+  --ds-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+  --ds-shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.35);
+  --ds-shadow-lg: 0 12px 20px -4px rgb(0 0 0 / 0.6), 0 4px 8px -4px rgb(0 0 0 / 0.4);
+  --ds-shadow-xl: 0 24px 32px -8px rgb(0 0 0 / 0.7), 0 8px 16px -6px rgb(0 0 0 / 0.5);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   5. @THEME INLINE — Tailwind Utility Exposure
+   ══════════════════════════════════════════════════════════════════════════════ */
+@theme inline {
+  /* Brand */
+  --color-ds-brand-accent: var(--ds-brand-accent);
+  --color-ds-brand-accent-hover: var(--ds-brand-accent-hover);
+  --color-ds-brand-accent-subtle: var(--ds-brand-accent-subtle);
+  --color-ds-brand-black: var(--ds-brand-black);
+  --color-ds-brand-black-soft: var(--ds-brand-black-soft);
+  --color-ds-brand-black-elevated: var(--ds-brand-black-elevated);
+
+  /* Status */
+  --color-ds-status-success: var(--ds-status-success);
+  --color-ds-status-warning: var(--ds-status-warning);
+  --color-ds-status-error: var(--ds-status-error);
+  --color-ds-status-info: var(--ds-status-info);
+
+  /* Surfaces */
+  --color-ds-surface-base: var(--ds-surface-base);
+  --color-ds-surface-elevated: var(--ds-surface-elevated);
+  --color-ds-surface-sunken: var(--ds-surface-sunken);
+  --color-ds-surface-overlay: var(--ds-surface-overlay);
+  --color-ds-surface-sidebar: var(--ds-surface-sidebar);
+  --color-ds-surface-header: var(--ds-surface-header);
+  --color-ds-surface-glass: var(--ds-surface-glass);
+
+  /* Text */
+  --color-ds-text-primary: var(--ds-text-primary);
+  --color-ds-text-secondary: var(--ds-text-secondary);
+  --color-ds-text-subtle: var(--ds-text-subtle);
+  --color-ds-text-inverse: var(--ds-text-inverse);
+  --color-ds-text-link: var(--ds-text-link);
+
+  /* Borders */
+  --color-ds-border-base: var(--ds-border-base);
+  --color-ds-border-strong: var(--ds-border-strong);
+  --color-ds-border-subtle: var(--ds-border-subtle);
+  --color-ds-border-glass: var(--ds-border-glass);
+
+  /* Charts */
+  --color-ds-chart-1: var(--ds-chart-1);
+  --color-ds-chart-2: var(--ds-chart-2);
+  --color-ds-chart-3: var(--ds-chart-3);
+  --color-ds-chart-4: var(--ds-chart-4);
+  --color-ds-chart-5: var(--ds-chart-5);
+  --color-ds-chart-6: var(--ds-chart-6);
+
+  /* Radii */
+  --radius-ds-sm: var(--ds-radius-sm);
+  --radius-ds-md: var(--ds-radius-md);
+  --radius-ds-lg: var(--ds-radius-lg);
+  --radius-ds-xl: var(--ds-radius-xl);
+  --radius-ds-2xl: var(--ds-radius-2xl);
+  --radius-ds-full: var(--ds-radius-full);
+
+  /* Shadows */
+  --shadow-ds-sm: var(--ds-shadow-sm);
+  --shadow-ds-md: var(--ds-shadow-md);
+  --shadow-ds-lg: var(--ds-shadow-lg);
+  --shadow-ds-xl: var(--ds-shadow-xl);
+
+  /* Typography */
+  --font-ds-sans: var(--ds-font-sans);
+  --font-ds-mono: var(--ds-font-mono);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   6. BASE STYLES
+   ══════════════════════════════════════════════════════════════════════════════ */
+body {
+  background: var(--ds-surface-base);
+  color: var(--ds-text-primary);
+  font-family: var(--ds-font-sans);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  max-width: 100vw;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ds-surface-sunken);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ds-border-strong);
+  border-radius: var(--ds-radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ds-text-subtle);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   7. UTILITY CLASSES
+   ══════════════════════════════════════════════════════════════════════════════ */
+@layer utilities {
+  .transition-base {
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-surface {
+    background: var(--ds-surface-glass);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--ds-border-glass);
+  }
+
+  .ds-hover-glow:hover {
+    box-shadow: var(--ds-glow-accent-soft);
+    border-color: var(--ds-brand-accent);
+    transition:
+      box-shadow 200ms ease-in-out,
+      border-color 200ms ease-in-out;
+  }
+
+  .ds-glow-active {
+    box-shadow: var(--ds-glow-accent-strong);
+    border-color: var(--ds-brand-accent);
+  }
+}
+
+@keyframes ds-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.ds-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--ds-surface-sunken) 25%,
+    rgba(16, 185, 129, 0.06) 50%,
+    var(--ds-surface-sunken) 75%
+  );
+  background-size: 200% 100%;
+  animation: ds-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--ds-radius-md);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   8. COMPONENT-SCOPE OVERRIDES
+   ══════════════════════════════════════════════════════════════════════════════ */
+/* Switch — only override colors; let Ant Design own dimensions and thumb positioning */
+[class*="ant-switch"] {
+  vertical-align: middle !important;
+}
+[class*="ant-switch"][class*="ant-switch-checked"] {
+  background-color: var(--ds-brand-accent) !important;
+}
+[class*="ant-switch"][class*="ant-switch-checked"]:hover:not([disabled]) {
+  background-color: var(--ds-brand-accent-hover) !important;
+}
+
+.ant-table {
+  border-radius: var(--ds-radius-lg) !important;
+  overflow: hidden;
+}
+.ant-table-thead > tr > th {
+  background: var(--ds-surface-sunken) !important;
+  border-bottom: 1px solid var(--ds-border-base) !important;
+  font-weight: 600 !important;
+  color: var(--ds-text-primary) !important;
+}
+.ant-table-tbody > tr:nth-child(even) > td {
+  background: var(--ds-surface-base) !important;
+}
+.ant-table-tbody > tr:nth-child(odd) > td {
+  background: var(--ds-surface-elevated) !important;
+}
+.ant-table-tbody > tr:hover > td {
+  background: var(--ds-brand-accent-subtle) !important;
+}
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--ds-border-subtle) !important;
+  color: var(--ds-text-primary) !important;
+}
+.ant-modal-content {
+  border-radius: var(--ds-radius-2xl) !important;
+  overflow: hidden;
+}
+.ant-modal-header {
+  background: var(--ds-surface-glass) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid var(--ds-border-glass) !important;
+}
+.ant-input,
+.ant-select-selector,
+.ant-picker {
+  border-radius: var(--ds-radius-lg) !important;
+  border-color: var(--ds-border-base) !important;
+  background: var(--ds-surface-sunken) !important;
+}
+.ant-input:focus,
+.ant-input-focused,
+.ant-select-focused .ant-select-selector {
+  border-color: var(--ds-brand-accent) !important;
+  box-shadow: var(--ds-glow-accent-soft) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   9. ACCESSIBILITY & MOTION
+   ══════════════════════════════════════════════════════════════════════════════ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--ds-brand-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.text-muted {
+  color: var(--ds-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

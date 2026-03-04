@@ -1,0 +1,47 @@
+/**
+ * app/api/auth/forgot-password/route.ts
+ * POST /api/auth/forgot-password
+ * Generates a reset token and (in production) would send an email.
+ * In dev, returns the token directly in the response.
+ */
+
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { mockDb } from "@/lib/data/mockDb";
+import { mockCache } from "@/lib/data/mockCache";
+
+const Schema = z.object({
+  email: z.string().email(),
+});
+
+export async function POST(req: NextRequest) {
+  const body = Schema.parse(await req.json());
+
+  const user = await mockDb.users.findFirst({
+    where: (u: UserProfile) => u.email.toLowerCase() === body.email.toLowerCase(),
+  });
+
+  /* Always return 200 to prevent email enumeration */
+  if (!user) {
+    return NextResponse.json({ success: true, message: "If this email exists, a reset link has been sent." });
+  }
+
+  const token = crypto.randomUUID().replace(/-/g, "");
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString(); /* 1 hour */
+
+  /* Store reset token in cache (key: pwd-reset:{token} → userId) */
+  await mockCache.set(`pwd-reset:${token}`, JSON.stringify({ userId: user.id, expiresAt }), 3600);
+
+  /* In production: send email. In dev: include token in response. */
+  const response: Record<string, unknown> = {
+    success: true,
+    message: "If this email exists, a reset link has been sent.",
+  };
+
+  if (process.env.NODE_ENV !== "production") {
+    response.devToken = token;
+    response.devHint = `Use this token at /reset-password?token=${token}`;
+  }
+
+  return NextResponse.json(response);
+}

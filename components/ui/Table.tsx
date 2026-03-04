@@ -1,0 +1,47 @@
+/**
+ * components/ui/Table.tsx
+ * Generic typed table wrapper with empty-state and loading built in.
+ */
+
+import { Table as AntTable, type TableProps as AntTableProps } from "antd";
+import { EmptyState } from "./EmptyState";
+import { CONTENT } from "@/config/content";
+
+interface TableProps<T extends object> extends AntTableProps<T> {
+  emptyTitle?: string;
+  emptyDescription?: string;
+}
+
+export function Table<T extends object>({
+  emptyTitle,
+  emptyDescription,
+  locale,
+  ...props
+}: TableProps<T>) {
+  return (
+    <AntTable<T>
+      locale={{
+        emptyText: (
+          <EmptyState
+            title={emptyTitle ?? CONTENT.common.noResultsTitle}
+            description={emptyDescription ?? CONTENT.common.noResultsDescription}
+          />
+        ),
+        ...locale,
+      }}
+      pagination={
+        props.pagination === false
+          ? false
+          : {
+              showSizeChanger: true,
+              showTotal: (total, [start, end]) =>
+                `${CONTENT.common.pagination.showing} ${start} ${CONTENT.common.pagination.to} ${end} ${CONTENT.common.pagination.of} ${total} ${CONTENT.common.pagination.results}`,
+              ...((props.pagination as object) ?? {}),
+            }
+      }
+      {...props}
+    />
+  );
+}
+
+export default Table;
