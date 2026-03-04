@@ -2,11 +2,11 @@
  * lib/data/seed.ts
  * Deterministic fixture data for development.
  * Seeded once on first mockDb access.
- * Password for all seed users: "Harvesters2024!"
+ * Password for all seed users: "Nlp2026!"
  */
 
 import bcryptjs from "bcryptjs";
-import { UserRole, ReportStatus, ReportPeriodType, MetricFieldType, MetricCalculationType } from "@/types/global";
+import { UserRole, ReportStatus, ReportPeriodType, MetricFieldType, MetricCalculationType, GoalMode } from "@/types/global";
 import { mockDb as _mockDbImport } from "./mockDb";
 type MockDbType = typeof _mockDbImport;
 
@@ -54,7 +54,7 @@ export async function seedDb(db: MockDbType): Promise<void> {
     const existing = await db.users.findUnique({ where: { id: SEED_IDS.users.superadmin } });
     if (existing) return;
 
-    const hashedPassword = await bcryptjs.hash("Harvesters2024!", 10);
+    const hashedPassword = await bcryptjs.hash("Nlp2026!", 10);
     const now = new Date().toISOString();
 
     // ── Users ────────────────────────────────────────────────────────────────
@@ -381,6 +381,148 @@ export async function seedDb(db: MockDbType): Promise<void> {
     ] as unknown as Report[];
 
     for (const r of sampleReports) await db.reports.create({ data: r }, true);
+
+    // ── Seed Goals ───────────────────────────────────────────────────────────
+    // One annual goal per key metric, per campus, for two years.
+    // Some monthly goals on Lekki for variety.
+    // A couple are locked to simulate the unlock-request workflow.
+
+    const seedYear = 2026;
+    const prevYear = 2025;
+
+    interface GoalSeed {
+        id: string;
+        campusId: string;
+        templateMetricId: string;
+        metricName: string;
+        mode: GoalMode;
+        year: number;
+        month?: number;
+        targetValue: number;
+        isLocked: boolean;
+    }
+
+    // Helper to build annual goals for a campus
+    function campusGoals(
+        campusId: string,
+        prefix: string,
+        yr: number,
+        targets: Record<string, number>,
+    ): GoalSeed[] {
+        return Object.entries(targets).map(([metricId, targetValue], idx) => ({
+            id: `goal-${prefix}-${yr}-${metricId}`,
+            campusId,
+            templateMetricId: metricId,
+            metricName: "—", // will be inferred from template at runtime
+            mode: GoalMode.ANNUAL,
+            year: yr,
+            targetValue,
+            isLocked: idx === 0 && yr === seedYear, // lock first metric for demo
+        }));
+    }
+
+    const annualTargets2026: Record<string, Record<string, number>> = {
+        [SEED_IDS.campuses.lekki]: {
+            "m-att-total":  2500,
+            "m-att-first":   150,
+            "m-sal":         200,
+            "m-tithes":   4000000,
+            "m-wrkr-total":  350,
+            "m-youth-att":   600,
+            "m-child-att":   450,
+            "m-media-stream":8000,
+        },
+        [SEED_IDS.campuses.ikeja]: {
+            "m-att-total":  1800,
+            "m-att-first":   100,
+            "m-sal":         140,
+            "m-tithes":   2800000,
+            "m-wrkr-total":  240,
+            "m-youth-att":   400,
+            "m-child-att":   300,
+        },
+        [SEED_IDS.campuses.abuja]: {
+            "m-att-total":  2000,
+            "m-att-first":   120,
+            "m-sal":         160,
+            "m-tithes":   3200000,
+            "m-wrkr-total":  280,
+            "m-youth-att":   500,
+            "m-child-att":   360,
+        },
+        [SEED_IDS.campuses.london]: {
+            "m-att-total":  900,
+            "m-att-first":    50,
+            "m-sal":          70,
+            "m-tithes":   6000000,
+            "m-wrkr-total":  130,
+            "m-youth-att":   200,
+            "m-child-att":   150,
+        },
+    };
+
+    const annualTargets2025: Record<string, Record<string, number>> = {
+        [SEED_IDS.campuses.lekki]: {
+            "m-att-total":  2200,
+            "m-att-first":   120,
+            "m-sal":         175,
+            "m-tithes":   3500000,
+            "m-wrkr-total":  310,
+        },
+        [SEED_IDS.campuses.ikeja]: {
+            "m-att-total":  1600,
+            "m-att-first":    90,
+            "m-sal":         120,
+            "m-tithes":   2400000,
+        },
+        [SEED_IDS.campuses.abuja]: {
+            "m-att-total":  1750,
+            "m-att-first":   100,
+            "m-sal":         140,
+            "m-tithes":   2800000,
+        },
+        [SEED_IDS.campuses.london]: {
+            "m-att-total":  800,
+            "m-att-first":    40,
+            "m-sal":          60,
+        },
+    };
+
+    // Monthly goals for Lekki 2026 — attendance
+    const lekkiMonthlyGoals: GoalSeed[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => ({
+        id: `goal-lekki-monthly-att-${month}`,
+        campusId: SEED_IDS.campuses.lekki,
+        templateMetricId: "m-att-total",
+        metricName: "Total Attendance",
+        mode: GoalMode.MONTHLY,
+        year: seedYear,
+        month,
+        targetValue: Math.round(2500 * (0.85 + Math.random() * 0.3)),
+        isLocked: false,
+    }));
+
+    const allGoals: GoalSeed[] = [
+        ...Object.entries(annualTargets2026).flatMap(([campusId, targets]) => {
+            const prefix = campusId.replace("campus-", "");
+            return campusGoals(campusId, prefix, seedYear, targets);
+        }),
+        ...Object.entries(annualTargets2025).flatMap(([campusId, targets]) => {
+            const prefix = campusId.replace("campus-", "");
+            return campusGoals(campusId, prefix, prevYear, targets);
+        }),
+        ...lekkiMonthlyGoals,
+    ];
+
+    for (const goal of allGoals) {
+        await db.goals.create({
+            data: {
+                ...goal,
+                createdById: SEED_IDS.users.superadmin,
+                createdAt: now,
+                updatedAt: now,
+            } as Goal,
+        }, true);
+    }
 
     // ── Sample Notifications ──────────────────────────────────────────────────
     const { NotificationType } = await import("@/types/global");

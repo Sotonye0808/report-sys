@@ -10,7 +10,7 @@ import { APP_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
-/** All seeded demo accounts — password is always Harvesters2024! */
+/** All seeded demo accounts — password is always Nlp2026! */
 const DEMO_ACCOUNTS = [
   { role: "Superadmin", email: "superadmin@harvesters.org" },
   { role: "SPO", email: "spo@harvesters.org" },
@@ -23,7 +23,7 @@ const DEMO_ACCOUNTS = [
   { role: "Data Entry", email: "dataentry@harvesters.org" },
 ] as const;
 
-const DEMO_PASSWORD = "Harvesters2024!";
+const DEMO_PASSWORD = "Nlp2026!";
 
 interface LoginFormValues {
   email: string;
