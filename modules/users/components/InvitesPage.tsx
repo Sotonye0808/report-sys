@@ -27,7 +27,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES } from "@/config/routes";
-import { UserRole } from "@/types/global";
+import { UserRole, HIERARCHY_ORDER } from "@/types/global";
 import { fmtDateTime } from "@/lib/utils/formatDate";
 import Button from "@/components/ui/Button";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
@@ -35,35 +35,24 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { ROLE_CONFIG } from "@/config/roles";
 import Table from "@/components/ui/Table";
 
-/* ── Invitable roles per requesting role ────────────────────────────────────── */
+/* ── Invitable roles: hierarchy-based ───────────────────────────────────────── */
 
-const INVITABLE_ROLES: Record<UserRole, UserRole[]> = {
-    [UserRole.SUPERADMIN]: [
-        UserRole.CAMPUS_ADMIN,
-        UserRole.CAMPUS_PASTOR,
-        UserRole.GROUP_ADMIN,
-        UserRole.GROUP_PASTOR,
-        UserRole.SPO,
-        UserRole.CEO,
-        UserRole.CHURCH_MINISTRY,
-        UserRole.DATA_ENTRY,
-        UserRole.MEMBER,
-    ],
-    [UserRole.CAMPUS_ADMIN]: [
-        UserRole.GROUP_ADMIN,
-        UserRole.GROUP_PASTOR,
-        UserRole.DATA_ENTRY,
-        UserRole.MEMBER,
-    ],
-    [UserRole.CAMPUS_PASTOR]: [UserRole.GROUP_PASTOR, UserRole.MEMBER],
-    [UserRole.GROUP_ADMIN]:   [UserRole.DATA_ENTRY, UserRole.MEMBER],
-    [UserRole.GROUP_PASTOR]:  [UserRole.MEMBER],
-    [UserRole.SPO]:            [],
-    [UserRole.CEO]:            [],
-    [UserRole.CHURCH_MINISTRY]: [],
-    [UserRole.DATA_ENTRY]:     [],
-    [UserRole.MEMBER]:         [],
-};
+/**
+ * Returns the roles that a given user role can invite.
+ * SUPERADMIN can invite any role (except SUPERADMIN itself).
+ * All other roles can only invite roles BELOW them in the hierarchy
+ * (higher HIERARCHY_ORDER number = lower in hierarchy).
+ */
+function getInvitableRoles(currentRole: UserRole): UserRole[] {
+    const currentOrder = HIERARCHY_ORDER[currentRole];
+    const allRoles = Object.keys(HIERARCHY_ORDER) as UserRole[];
+
+    if (currentRole === UserRole.SUPERADMIN) {
+        return allRoles.filter((r) => r !== UserRole.SUPERADMIN);
+    }
+
+    return allRoles.filter((r) => HIERARCHY_ORDER[r] > currentOrder);
+}
 
 /* ── Expiry options (matches content.ts) ───────────────────────────────────── */
 
@@ -116,7 +105,7 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
     const [form]    = Form.useForm();
     const [saving, setSaving] = useState(false);
 
-    const invitableRoles = INVITABLE_ROLES[currentRole] ?? [];
+    const invitableRoles = getInvitableRoles(currentRole);
     if (invitableRoles.length === 0) return null;
 
     const roleOptions = invitableRoles.map((r) => ({

@@ -1,6 +1,6 @@
 import { type NextRequest } from "next/server";
 import { z } from "zod";
-import { mockDb } from "@/lib/data/mockDb";
+import { mockDb, dbReady } from "@/lib/data/mockDb";
 import {
     verifyRefreshToken,
     generateTokens,
@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
         const payload = verifyRefreshToken(refreshToken);
         if (!payload) return unauthorizedResponse("Invalid or expired refresh token");
 
+        await dbReady;
         const userProfile = await mockDb.users.findUnique({ where: { id: payload.userId } });
         if (!userProfile || !userProfile.isActive) {
             return unauthorizedResponse("User not found or inactive");

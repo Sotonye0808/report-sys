@@ -8,12 +8,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Form, message, Switch, Select, Collapse, Badge } from "antd";
+import { Form, message, Switch, Select, Collapse, Badge, Modal } from "antd";
 import {
   SaveOutlined,
   PlusOutlined,
   DeleteOutlined,
   DragOutlined,
+  TrophyOutlined,
 } from "@ant-design/icons";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
@@ -170,6 +171,8 @@ export function TemplateNewPage() {
   const [form] = Form.useForm<HeaderFormValues>();
   const [sections, setSections] = useState<DraftSection[]>(() => [makeEmptySection(1)]);
   const [saving, setSaving] = useState(false);
+  const [goalPromptVisible, setGoalPromptVisible] = useState(false);
+  const [createdTemplateId, setCreatedTemplateId] = useState<string | null>(null);
 
   /* ── Section helpers ────────────────────────────────────────── */
   const addSection = () =>
@@ -262,8 +265,15 @@ export function TemplateNewPage() {
         message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
         return;
       }
-      message.success(CONTENT.common.successSave as string);
-      router.push(APP_ROUTES.templates);
+      message.success(CONTENT.templates.templateCreated as string);
+      // If any metric captures goals, prompt to set goals now
+      const hasGoalMetrics = sections.some((s) => s.metrics.some((m) => m.capturesGoal));
+      if (hasGoalMetrics && json.data?.id) {
+        setCreatedTemplateId(json.data.id);
+        setGoalPromptVisible(true);
+      } else {
+        router.push(APP_ROUTES.templates);
+      }
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
     } finally {
@@ -274,6 +284,7 @@ export function TemplateNewPage() {
   const totalMetrics = sections.reduce((n, s) => n + s.metrics.length, 0);
 
   return (
+    <>
     <PageLayout
       title={CONTENT.templates.newTemplate as string}
       actions={
@@ -452,5 +463,44 @@ export function TemplateNewPage() {
         </div>
       </Form>
     </PageLayout>
+
+      {/* Goal-set prompt modal */}
+      <Modal
+        open={goalPromptVisible}
+        title={
+          <div className="flex items-center gap-2">
+            <TrophyOutlined className="text-ds-brand-accent" />
+            <span>{CONTENT.templates.goalPromptTitle as string}</span>
+          </div>
+        }
+        footer={[
+          <Button key="later" onClick={() => { setGoalPromptVisible(false); router.push(APP_ROUTES.templates); }}>
+            {CONTENT.templates.goalPromptSkip as string}
+          </Button>,
+          <Button
+            key="now"
+            type="primary"
+            icon={<TrophyOutlined />}
+            onClick={() => {
+              setGoalPromptVisible(false);
+              router.push(APP_ROUTES.goals);
+            }}
+          >
+            {CONTENT.templates.goalPromptConfirm as string}
+          </Button>,
+        ]}
+        onCancel={() => { setGoalPromptVisible(false); router.push(APP_ROUTES.templates); }}
+        closable={false}
+      >
+        <p className="text-sm text-ds-text-secondary py-2">
+          {CONTENT.templates.goalPromptDescription as string}
+        </p>
+        {createdTemplateId && (
+          <p className="text-xs text-ds-text-subtle">
+            Template ID: <code className="font-ds-mono">{createdTemplateId}</code>
+          </p>
+        )}
+      </Modal>
+    </>
   );
 }

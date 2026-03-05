@@ -20,8 +20,10 @@ export async function POST(req: NextRequest, { params }: RouteCtx) {
     const auth = await verifyAuth(req, [
         UserRole.GROUP_ADMIN,
         UserRole.GROUP_PASTOR,
-        UserRole.CAMPUS_ADMIN,
-        UserRole.CAMPUS_PASTOR,
+        UserRole.SPO,
+        UserRole.CEO,
+        UserRole.CHURCH_MINISTRY,
+        UserRole.SUPERADMIN,
     ]);
     if (!auth.success)
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });

@@ -7,3 +7,4 @@ export { ReportDetailPage } from "./components/ReportDetailPage";
 export { ReportsListPage }  from "./components/ReportsListPage";
 export { ReportNewPage }    from "./components/ReportNewPage";
 export { ReportEditPage }   from "./components/ReportEditPage";
+export { ReportSectionsForm, buildSectionsPayload, parseSectionsToMetricValues } from "./components/ReportSectionsForm";

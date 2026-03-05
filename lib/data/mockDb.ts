@@ -266,13 +266,27 @@ class MockDb extends EventEmitter {
 // Singleton export
 // ─────────────────────────────────────────────────────────────────────────────
 
-const globalForDb = global as typeof global & { __mockDb?: MockDb };
+const globalForDb = global as typeof global & {
+    __mockDb?: MockDb;
+    __mockDbReady?: Promise<void>;
+};
 
 if (!globalForDb.__mockDb) {
     globalForDb.__mockDb = new MockDb();
-    // Lazy-seed on first access
-    import("./seed").then(({ seedDb }) => seedDb(globalForDb.__mockDb!)).catch(console.error);
+    // Seed on first access — store promise so consumers can await readiness
+    globalForDb.__mockDbReady = import("./seed")
+        .then(({ seedDb }) => seedDb(globalForDb.__mockDb!))
+        .catch(console.error)
+        .then(() => undefined);
 }
 
 export const mockDb = globalForDb.__mockDb;
+
+/**
+ * Resolves once the initial seed has completed.
+ * Await this before querying the DB in API routes / auth checks to avoid
+ * empty-table races on cold start.
+ */
+export const dbReady: Promise<void> = globalForDb.__mockDbReady ?? Promise.resolve();
+
 export default mockDb;

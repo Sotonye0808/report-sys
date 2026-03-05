@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Form, Alert } from "antd";
+import { Form, Alert, Checkbox } from "antd";
 import { UserOutlined, LockOutlined, DownOutlined, RightOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { useAuth } from "@/providers/AuthProvider";
@@ -10,7 +10,7 @@ import { APP_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
-/** All seeded demo accounts — password is always Harvesters2024! */
+/** All seeded demo accounts — password is always Nlp2026! */
 const DEMO_ACCOUNTS = [
   { role: "Superadmin", email: "superadmin@harvesters.org" },
   { role: "SPO", email: "spo@harvesters.org" },
@@ -23,11 +23,12 @@ const DEMO_ACCOUNTS = [
   { role: "Data Entry", email: "dataentry@harvesters.org" },
 ] as const;
 
-const DEMO_PASSWORD = "Harvesters2024!";
+const DEMO_PASSWORD = "Nlp2026!";
 
 interface LoginFormValues {
   email: string;
   password: string;
+  rememberMe?: boolean;
 }
 
 export default function LoginPage() {
@@ -41,7 +42,7 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      await login(values.email, values.password);
+      await login(values.email, values.password, values.rememberMe);
     } catch (err) {
       setError(err instanceof Error ? err.message : CONTENT.auth.errors.serverError);
     } finally {
@@ -104,7 +105,12 @@ export default function LoginPage() {
           />
         </Form.Item>
 
-        <div className="flex justify-end mb-2">
+        <div className="flex items-center justify-between mb-2">
+          <Form.Item name="rememberMe" valuePropName="checked" noStyle>
+            <Checkbox className="text-sm text-ds-text-secondary">
+              {CONTENT.auth.rememberMe}
+            </Checkbox>
+          </Form.Item>
           <Link
             href={APP_ROUTES.forgotPassword}
             className="text-sm text-ds-text-link hover:underline"
@@ -120,8 +126,14 @@ export default function LoginPage() {
 
       <p className="text-center text-sm text-ds-text-secondary">
         {CONTENT.auth.noAccount}{" "}
-        <Link href={APP_ROUTES.join} className="text-ds-text-link hover:underline font-medium">
+        <Link href={APP_ROUTES.register} className="text-ds-text-link hover:underline font-medium">
           {CONTENT.auth.registerLink}
+        </Link>
+      </p>
+      <p className="text-center text-xs text-ds-text-subtle mt-1">
+        {CONTENT.auth.haveInvite as string}{" "}
+        <Link href={APP_ROUTES.join} className="text-ds-text-link hover:underline">
+          {CONTENT.auth.joinWithInvite as string}
         </Link>
       </p>
 

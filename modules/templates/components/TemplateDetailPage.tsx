@@ -8,7 +8,7 @@
 
 import { useState, use } from "react";
 import { useRouter } from "next/navigation";
-import { Form, message, Switch, Select, Tag, Collapse, Badge } from "antd";
+import { Form, message, Modal, Switch, Select, Tag, Collapse, Badge } from "antd";
 import {
   SaveOutlined,
   PlusOutlined,
@@ -16,6 +16,7 @@ import {
   ArrowLeftOutlined,
   StarOutlined,
   DragOutlined,
+  TrophyOutlined,
 } from "@ant-design/icons";
 import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
 import { mockDb } from "@/lib/data/mockDb";
@@ -148,6 +149,7 @@ export function TemplateDetailPage({ params }: PageProps) {
   const [form] = Form.useForm();
   const [sections, setSections] = useState<DraftSection[] | null>(null);
   const [saving, setSaving] = useState(false);
+  const [goalPromptVisible, setGoalPromptVisible] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
   const template = useMockDbSubscription<TemplateWithMeta | null>("reportTemplates", async () =>
@@ -263,7 +265,10 @@ export function TemplateDetailPage({ params }: PageProps) {
       });
       const json = await res.json();
       if (!res.ok) { message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic); return; }
-      message.success(CONTENT.common.successSave as string);
+      message.success(CONTENT.templates.templateSaved as string);
+      // Prompt to update goals if any metric captures a goal
+      const hasGoalMetrics = draft.some((s) => s.metrics.some((m) => m.capturesGoal));
+      if (hasGoalMetrics) setGoalPromptVisible(true);
     } catch { message.error((CONTENT.errors as Record<string, string>).generic); }
     finally { setSaving(false); }
   };
@@ -283,6 +288,7 @@ export function TemplateDetailPage({ params }: PageProps) {
   const totalMetrics = draft.reduce((n, s) => n + s.metrics.length, 0);
 
   return (
+    <>
     <PageLayout
       title={CONTENT.templates.editTemplate as string}
       subtitle={template.name}
@@ -446,5 +452,39 @@ export function TemplateDetailPage({ params }: PageProps) {
         </div>
       </Form>
     </PageLayout>
+
+      {/* Goal-update prompt modal */}
+      <Modal
+        open={goalPromptVisible}
+        title={
+          <div className="flex items-center gap-2">
+            <TrophyOutlined className="text-ds-brand-accent" />
+            <span>{CONTENT.templates.goalPromptTitle as string}</span>
+          </div>
+        }
+        footer={[
+          <Button key="later" onClick={() => setGoalPromptVisible(false)}>
+            {CONTENT.templates.goalPromptSkip as string}
+          </Button>,
+          <Button
+            key="now"
+            type="primary"
+            icon={<TrophyOutlined />}
+            onClick={() => {
+              setGoalPromptVisible(false);
+              router.push(APP_ROUTES.goals);
+            }}
+          >
+            {CONTENT.templates.goalPromptConfirm as string}
+          </Button>,
+        ]}
+        onCancel={() => setGoalPromptVisible(false)}
+        closable={false}
+      >
+        <p className="text-sm text-ds-text-secondary py-2">
+          {CONTENT.templates.goalPromptDescription as string}
+        </p>
+      </Modal>
+    </>
   );
 }

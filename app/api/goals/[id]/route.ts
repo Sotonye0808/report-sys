@@ -11,11 +11,20 @@ import { verifyAuth } from "@/lib/utils/auth";
 import { mockDb } from "@/lib/data/mockDb";
 import { UserRole } from "@/types/global";
 
-const ALLOWED_ROLES: UserRole[] = [
+const READ_ROLES: UserRole[] = [
     UserRole.GROUP_ADMIN,
     UserRole.GROUP_PASTOR,
     UserRole.CAMPUS_ADMIN,
     UserRole.CAMPUS_PASTOR,
+    UserRole.SPO,
+    UserRole.CEO,
+    UserRole.CHURCH_MINISTRY,
+    UserRole.SUPERADMIN,
+];
+
+const WRITE_ROLES: UserRole[] = [
+    UserRole.GROUP_ADMIN,
+    UserRole.GROUP_PASTOR,
     UserRole.SPO,
     UserRole.CEO,
     UserRole.CHURCH_MINISTRY,
@@ -30,7 +39,7 @@ const UpdateGoalSchema = z.object({
 interface RouteCtx { params: Promise<{ id: string }> }
 
 export async function GET(req: NextRequest, { params }: RouteCtx) {
-    const auth = await verifyAuth(req, ALLOWED_ROLES);
+    const auth = await verifyAuth(req, READ_ROLES);
     if (!auth.success)
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
@@ -42,7 +51,7 @@ export async function GET(req: NextRequest, { params }: RouteCtx) {
 }
 
 export async function PUT(req: NextRequest, { params }: RouteCtx) {
-    const auth = await verifyAuth(req, ALLOWED_ROLES);
+    const auth = await verifyAuth(req, WRITE_ROLES);
     if (!auth.success)
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 

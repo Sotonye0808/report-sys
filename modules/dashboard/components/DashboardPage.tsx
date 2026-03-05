@@ -43,7 +43,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
 import { ReportStatusBadge, RoleBadge } from "@/components/ui/StatusBadge";
-import { UserRole, ReportStatus } from "@/types/global";
+import { UserRole, ReportStatus, ReportPeriodType } from "@/types/global";
 
 /* ── Local types ──────────────────────────────────────────────────────────── */
 
@@ -243,6 +243,30 @@ export function DashboardPage() {
     };
   }, [reports, allUsers, templates, campuses]);
 
+  /* ── Weekly report check for current period ─────────────────────────────── */
+
+  const weeklyReportCheck = useMemo(() => {
+    if (!reports || !user) return { hasWeeklyReport: true, currentPeriodLabel: "" };
+    const now = new Date();
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+    const daysSinceStart = Math.floor((now.getTime() - startOfYear.getTime()) / 86400000);
+    const currentWeek = Math.ceil((daysSinceStart + startOfYear.getDay() + 1) / 7);
+    const currentYear = now.getFullYear();
+
+    const hasWeeklyReport = reports.some(
+      (r) =>
+        r.periodType === ReportPeriodType.WEEKLY &&
+        r.periodYear === currentYear &&
+        r.periodWeek === currentWeek &&
+        r.createdById === user.id,
+    );
+
+    return {
+      hasWeeklyReport,
+      currentPeriodLabel: `Week ${currentWeek}, ${currentYear}`,
+    };
+  }, [reports, user]);
+
   /* ── KPI card config ────────────────────────────────────────────────────── */
 
   const reportsHref = APP_ROUTES.reports;
@@ -361,6 +385,44 @@ export function DashboardPage() {
 
   if (!user || !role) return <LoadingSkeleton rows={3} />;
 
+  /* ── Member lobby — MEMBER role sees a waiting page ─────────────────────── */
+  if (role === UserRole.MEMBER) {
+    const lobby = CONTENT.dashboard.memberLobby as {
+      title: string;
+      subtitle: string;
+      waitingLabel: string;
+      currentRole: string;
+      contactAdmin: string;
+    };
+
+    return (
+      <PageLayout>
+        <div className="flex flex-col items-center justify-center py-20 px-4 max-w-lg mx-auto text-center gap-6">
+          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-ds-brand-accent/10">
+            <ClockCircleOutlined className="text-3xl text-ds-brand-accent" />
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-ds-text-primary">{lobby.title}</h1>
+            <p className="text-sm text-ds-text-secondary leading-relaxed">{lobby.subtitle}</p>
+          </div>
+          <div className="bg-ds-surface-elevated border border-ds-border-base rounded-ds-2xl p-5 w-full">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-ds-text-secondary">{lobby.currentRole}</span>
+              <span className="text-xs font-medium text-ds-text-subtle bg-ds-surface-sunken px-3 py-1 rounded-full">
+                {lobby.waitingLabel}
+              </span>
+            </div>
+            <p className="text-left text-sm font-medium text-ds-text-primary mt-2">
+              {user.firstName} {user.lastName}
+            </p>
+            <p className="text-left text-xs text-ds-text-subtle">{user.email}</p>
+          </div>
+          <p className="text-xs text-ds-text-subtle">{lobby.contactAdmin}</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout>
       <PageHeader
@@ -387,6 +449,7 @@ export function DashboardPage() {
             pendingReview: (n: number) => string;
             draftReports: (n: number) => string;
             requiresEdits: (n: number) => string;
+            weeklyReportDue: (period: string) => string;
             viewReports: string;
           };
 
@@ -398,6 +461,12 @@ export function DashboardPage() {
           }
 
           const ctaItems: CtaItem[] = [
+            {
+              id: "weekly-report-due",
+              message: ctaContent.weeklyReportDue(weeklyReportCheck.currentPeriodLabel),
+              type: "warning",
+              show: (roleConfig?.canFillReports ?? false) && !weeklyReportCheck.hasWeeklyReport,
+            },
             {
               id: "pending-approval",
               message: ctaContent.pendingApproval(counts.pending),
@@ -414,13 +483,13 @@ export function DashboardPage() {
               id: "drafts",
               message: ctaContent.draftReports(counts.draft),
               type: "info",
-              show: (roleConfig?.canCreateReports ?? false) && counts.draft > 0,
+              show: (roleConfig?.canFillReports ?? false) && counts.draft > 0,
             },
             {
               id: "requires-edits",
               message: ctaContent.requiresEdits(counts.requiresEdits),
               type: "error",
-              show: counts.requiresEdits > 0,
+              show: (roleConfig?.canFillReports ?? false) && counts.requiresEdits > 0,
             },
           ];
 

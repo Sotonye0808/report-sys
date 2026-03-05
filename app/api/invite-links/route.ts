@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
 import { mockDb } from "@/lib/data/mockDb";
-import { UserRole, InviteLinkType } from "@/types/global";
+import { UserRole, InviteLinkType, HIERARCHY_ORDER } from "@/types/global";
 
 const ALLOWED_ROLES = [
   UserRole.SUPERADMIN,
@@ -50,6 +50,16 @@ export async function POST(req: NextRequest) {
   }
 
   const body = CreateInviteLinkSchema.parse(await req.json());
+
+  // Enforce role hierarchy: user can only invite roles below them (except SUPERADMIN who can invite any)
+  const creatorOrder = HIERARCHY_ORDER[auth.user.role];
+  const targetOrder = HIERARCHY_ORDER[body.targetRole];
+  if (auth.user.role !== UserRole.SUPERADMIN && targetOrder <= creatorOrder) {
+    return NextResponse.json(
+      { success: false, error: "Cannot create invite for a role at or above your level" },
+      { status: 403 },
+    );
+  }
 
   const expiresAt = new Date(Date.now() + body.expiresInHours * 3600 * 1000).toISOString();
   const token = crypto.randomUUID().replace(/-/g, "");

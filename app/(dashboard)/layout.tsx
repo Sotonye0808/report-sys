@@ -199,22 +199,24 @@ function Header({
   return (
     <header className="h-16 bg-ds-surface-elevated border-b border-ds-border-base flex items-center justify-between px-4 md:px-4 gap-4 flex-shrink-0">
       {/* Mobile-only hamburger */}
-      <Button
-        type="text"
-        icon={<MenuOutlined />}
-        onClick={onMobileMenuOpen}
-        className="md:hidden"
-        aria-label="Open menu"
-      />
+      <div className="md:hidden">
+        <Button
+          type="text"
+          icon={<MenuOutlined />}
+          onClick={onMobileMenuOpen}
+          aria-label="Open menu"
+        />
+      </div>
 
       {/* Desktop-only collapse toggle */}
-      <Button
-        type="text"
-        icon={sidebarCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        onClick={onDesktopCollapseToggle}
-        className="hidden md:flex"
-        aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-      />
+      <div className="hidden md:flex">
+        <Button
+          type="text"
+          icon={sidebarCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={onDesktopCollapseToggle}
+          aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        />
+      </div>
 
       {/* Spacer */}
       <div className="flex-1" />
@@ -244,7 +246,8 @@ function Header({
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const router = useRouter();
+  const { user, isLoading, logout } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -252,6 +255,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   useEffect(() => {
     setDrawerOpen(false);
   }, [pathname]);
+
+  // Redirect unauthenticated users to login
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.replace("/login");
+    }
+  }, [isLoading, user, router]);
 
   const role = user?.role as UserRole | undefined;
 
@@ -265,7 +275,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const unreadCount = notifications?.length ?? 0;
 
-  if (!user) return null; // AuthProvider handles redirect to /login
+  if (!user) {
+    // Show a loading skeleton while auth check is in progress or redirect is pending
+    return (
+      <div className="flex items-center justify-center h-screen bg-ds-surface-base">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-3 border-ds-brand-accent border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-ds-text-secondary">{CONTENT.common.loading}</p>
+        </div>
+      </div>
+    );
+  }
 
   const navItems = getNavItems(role as UserRole);
 

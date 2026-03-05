@@ -1,26 +1,42 @@
-"use client";
+﻿"use client";
 
 /**
  * modules/reports/components/ReportEditPage.tsx
+ *
  * Edit a report that is in DRAFT or REQUIRES_EDITS status.
- * Loads existing field values and allows updating them.
+ * Goals for the campus + period are loaded from /api/goals/for-report and
+ * pre-seeded into the form as read-only goal values with live stat tracking.
  */
 
-import { useState, use } from "react";
+import { useState, use, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Form, message } from "antd";
-import { SaveOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { message } from "antd";
+import {
+  SaveOutlined,
+  ArrowLeftOutlined,
+  LockOutlined,
+} from "@ant-design/icons";
 import { useRole } from "@/lib/hooks/useRole";
 import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
 import { mockDb } from "@/lib/data/mockDb";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
+import {
+  ReportSectionsForm,
+  buildSectionsPayload,
+  parseSectionsToMetricValues,
+  type MetricValues,
+  type GoalsForReportMap,
+} from "./ReportSectionsForm";
 import { ReportStatus } from "@/types/global";
+
+const rk = CONTENT.reports as Record<string, unknown>;
+
+/* ---- Component ---- */
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -30,9 +46,13 @@ export function ReportEditPage({ params }: PageProps) {
   const { id } = use(params);
   const router = useRouter();
   const { can } = useRole();
-  const [form] = Form.useForm();
-  const [saving, setSaving] = useState(false);
+
+  const [title, setTitle] = useState("");
+  const [notes, setNotes] = useState("");
+  const [metricValues, setMetricValues] = useState<Record<string, MetricValues>>({});
+  const [goalsMap, setGoalsMap] = useState<GoalsForReportMap>({});
   const [initialized, setInitialized] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const report = useMockDbSubscription<Report | null>("reports", async () =>
     mockDb.reports.findFirst({ where: (r: Report) => r.id === id }),
@@ -45,25 +65,46 @@ export function ReportEditPage({ params }: PageProps) {
     });
   });
 
-  /* Pre-fill form once report loads */
-  if (report && !initialized) {
-    form.setFieldsValue({ title: report.title, notes: report.notes ?? "" });
+  /* Initialise form values + load goals once report + template are available */
+  useEffect(() => {
+    if (!report || !template || initialized) return;
+    setTitle(report.title ?? "");
+    setNotes(report.notes ?? "");
+    setMetricValues(parseSectionsToMetricValues((report.sections ?? []) as unknown[]));
     setInitialized(true);
-  }
 
-  /* Guard: only editable when DRAFT or REQUIRES_EDITS */
-  const isEditable =
-    report?.status === ReportStatus.DRAFT ||
-    report?.status === ReportStatus.REQUIRES_EDITS;
+    // Load goals for this campus + period
+    const campusId = report.campusId;
+    const year     = report.periodYear;
+    const month    = report.periodMonth;
+    if (!campusId || !year) return;
 
-  const handleSave = async (values: { title: string; notes?: string }) => {
-    if (!report) return;
+    const params = new URLSearchParams({ campusId, year: String(year) });
+    if (month) params.set("month", String(month));
+
+    fetch(`${API_ROUTES.goals.forReport}?${params}`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.success) setGoalsMap(json.data as GoalsForReportMap);
+      })
+      .catch(() => {/* non-fatal */});
+  }, [report, template, initialized]);
+
+  const handleMetricChange = (metricId: string, v: MetricValues) =>
+    setMetricValues((prev) => ({ ...prev, [metricId]: v }));
+
+  const handleSave = async () => {
+    if (!report || !template) return;
     setSaving(true);
     try {
       const res = await fetch(API_ROUTES.reports.detail(id), {
-        method:  "PUT",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify(values),
+        body: JSON.stringify({
+          title,
+          notes,
+          sections: buildSectionsPayload(template, metricValues, goalsMap),
+        }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -79,6 +120,7 @@ export function ReportEditPage({ params }: PageProps) {
     }
   };
 
+  /* Guards */
   if (!can.fillReports) {
     router.replace(APP_ROUTES.reports);
     return null;
@@ -86,18 +128,18 @@ export function ReportEditPage({ params }: PageProps) {
 
   if (report === undefined || template === undefined) {
     return (
-      <PageLayout title={CONTENT.common.loading as string ?? "Loading…"}>
-        <LoadingSkeleton rows={5} />
+      <PageLayout title={(CONTENT.common.loading as string) ?? "Loading..."}>
+        <LoadingSkeleton rows={6} />
       </PageLayout>
     );
   }
 
   if (!report) {
     return (
-      <PageLayout title="Report Not Found">
+      <PageLayout title={CONTENT.errors.notFoundTitle as string}>
         <EmptyState
-          title="Report not found"
-          description="This report does not exist or has been removed."
+          title={CONTENT.errors.notFoundTitle as string}
+          description="This report does not exist."
           action={
             <Button onClick={() => router.push(APP_ROUTES.reports)}>
               {CONTENT.common.back as string}
@@ -108,12 +150,15 @@ export function ReportEditPage({ params }: PageProps) {
     );
   }
 
+  const isEditable =
+    report.status === ReportStatus.DRAFT || report.status === ReportStatus.REQUIRES_EDITS;
   if (!isEditable) {
     return (
-      <PageLayout title={report.title}>
+      <PageLayout title={report.title ?? "Report"}>
         <EmptyState
+          icon={<LockOutlined />}
           title="Report cannot be edited"
-          description={`Reports in "${report.status}" status cannot be edited.`}
+          description={`Reports with status "${report.status}" cannot be edited.`}
           action={
             <Button onClick={() => router.push(APP_ROUTES.reportDetail(id))}>
               {CONTENT.common.back as string}
@@ -126,50 +171,67 @@ export function ReportEditPage({ params }: PageProps) {
 
   return (
     <PageLayout
-      title={`${CONTENT.common.edit as string}: ${report.title}`}
+      title={`${rk.editReport as string}: ${report.title ?? ""}`}
       actions={
-        <Button icon={<ArrowLeftOutlined />} onClick={() => router.push(APP_ROUTES.reportDetail(id))}>
-          {CONTENT.common.back as string}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            icon={<ArrowLeftOutlined />}
+            onClick={() => router.push(APP_ROUTES.reportDetail(id))}
+          >
+            {CONTENT.common.back as string}
+          </Button>
+          <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={handleSave}>
+            {CONTENT.common.save as string}
+          </Button>
+        </div>
       }
     >
-      <div className="max-w-2xl">
-        <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6">
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={handleSave}
-            requiredMark={false}
-          >
-            <Form.Item
-              name="title"
-              label="Report Title"
-              rules={[{ required: true, message: "Title is required." }]}
-            >
-              <Input size="large" />
-            </Form.Item>
+      <div className="max-w-4xl space-y-6">
+        {/* Header: title + notes */}
+        <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6 space-y-4">
+          <div>
+            <label className="text-xs font-medium text-ds-text-secondary block mb-1">
+              {CONTENT.reports.columnLabels.title as string}
+            </label>
+            <input
+              className="w-full bg-ds-surface border border-ds-border-base rounded-ds-md px-3 py-2 text-sm text-ds-text-primary focus:outline-none focus:ring-2 focus:ring-ds-brand-accent"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Report title"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-medium text-ds-text-secondary block mb-1">
+              {rk.notesLabel as string}
+            </label>
+            <textarea
+              className="w-full bg-ds-surface border border-ds-border-base rounded-ds-md px-3 py-2 text-sm text-ds-text-primary focus:outline-none focus:ring-2 focus:ring-ds-brand-accent resize-none"
+              rows={2}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder={rk.notesPlaceholder as string}
+            />
+          </div>
+        </div>
 
-            <Form.Item name="notes" label={CONTENT.reports.notesLabel as string}>
-              <Input.TextArea
-                rows={3}
-                placeholder={CONTENT.reports.notesPlaceholder as string}
-              />
-            </Form.Item>
+        {/* Template sections form (shared component) */}
+        {template && (
+          <ReportSectionsForm
+            template={template}
+            metricValues={metricValues}
+            goalsMap={goalsMap}
+            onMetricChange={handleMetricChange}
+          />
+        )}
 
-            <div className="flex justify-end gap-3 pt-2">
-              <Button onClick={() => router.push(APP_ROUTES.reportDetail(id))}>
-                {CONTENT.common.cancel as string}
-              </Button>
-              <Button
-                type="primary"
-                htmlType="submit"
-                icon={<SaveOutlined />}
-                loading={saving}
-              >
-                {CONTENT.common.save as string}
-              </Button>
-            </div>
-          </Form>
+        {/* Bottom actions */}
+        <div className="flex justify-end gap-3 pb-6">
+          <Button onClick={() => router.push(APP_ROUTES.reportDetail(id))}>
+            {CONTENT.common.cancel as string}
+          </Button>
+          <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={handleSave}>
+            {CONTENT.common.save as string}
+          </Button>
         </div>
       </div>
     </PageLayout>
