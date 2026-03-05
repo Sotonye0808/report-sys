@@ -21,6 +21,7 @@ import {
   LockOutlined,
   EyeOutlined,
   EditOutlined,
+  DownloadOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
@@ -31,6 +32,7 @@ import { ROLE_CONFIG } from "@/config/roles";
 import { mockDb } from "@/lib/data/mockDb";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
 import { fmtDate } from "@/lib/utils/formatDate";
+import { exportReportsList } from "@/lib/utils/exportReports";
 import Button from "@/components/ui/Button";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
@@ -205,9 +207,7 @@ export function ReportsListPage() {
         render: (_: unknown, r: Report) => {
           const campus = (campuses ?? []).find((c) => c.id === r.campusId);
           return (
-            <span className="text-sm text-ds-text-secondary">
-              {campus?.name ?? r.campusId}
-            </span>
+            <span className="text-sm text-ds-text-secondary">{campus?.name ?? r.campusId}</span>
           );
         },
       },
@@ -228,11 +228,7 @@ export function ReportsListPage() {
         title: CONTENT.reports.columnLabels?.deadline ?? "Deadline",
         dataIndex: "deadline",
         key: "deadline",
-        render: (v: string) => (
-          <span className="text-sm text-ds-text-secondary">
-            {fmtDate(v)}
-          </span>
-        ),
+        render: (v: string) => <span className="text-sm text-ds-text-secondary">{fmtDate(v)}</span>,
       },
     },
     {
@@ -247,8 +243,7 @@ export function ReportsListPage() {
             <Button
               size="small"
               icon={<EyeOutlined />}
-              onClick={() => router.push(APP_ROUTES.reportDetail(r.id))
-              }
+              onClick={() => router.push(APP_ROUTES.reportDetail(r.id))}
             >
               {CONTENT.common.view}
             </Button>
@@ -331,15 +326,26 @@ export function ReportsListPage() {
       <PageHeader
         title={CONTENT.reports.pageTitle as string}
         actions={
-          can.fillReports ? (
+          <div className="flex gap-2">
             <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => router.push(APP_ROUTES.reportNew)}
+              icon={<DownloadOutlined />}
+              onClick={() =>
+                exportReportsList(filteredReports ?? [], templates ?? [], campuses ?? [])
+              }
+              disabled={!filteredReports || filteredReports.length === 0}
             >
-              {CONTENT.reports.newReport}
+              {(CONTENT.reports as unknown as Record<string, Record<string, string>>).export.button}
             </Button>
-          ) : undefined
+            {can.fillReports && (
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => router.push(APP_ROUTES.reportNew)}
+              >
+                {CONTENT.reports.newReport}
+              </Button>
+            )}
+          </div>
         }
       />
 
