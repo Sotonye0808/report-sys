@@ -21,14 +21,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch("/api/auth/me", { credentials: "include" });
-      if (response.ok) {
-        const data: ApiResponse<AuthUser> = await response.json();
-        if (data.success) setUser(data.data);
-        else setUser(null);
-      } else {
-        setUser(null);
+      // 1. Try the access token first
+      const meRes = await fetch("/api/auth/me", { credentials: "include" });
+      if (meRes.ok) {
+        const data: ApiResponse<AuthUser> = await meRes.json();
+        if (data.success) {
+          setUser(data.data);
+          return;
+        }
       }
+
+      // 2. Access token expired or invalid — attempt silent refresh
+      if (meRes.status === 401) {
+        const refreshRes = await fetch("/api/auth/refresh", {
+          method: "POST",
+          credentials: "include",
+        });
+        if (refreshRes.ok) {
+          const refreshData: ApiResponse<{ user: AuthUser }> = await refreshRes.json();
+          if (refreshData.success) {
+            setUser(refreshData.data.user);
+            return;
+          }
+        }
+      }
+
+      setUser(null);
     } catch {
       setUser(null);
     } finally {
@@ -36,11 +54,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, rememberMe?: boolean) => {
     const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, rememberMe: rememberMe ?? false }),
       credentials: "include",
     });
 

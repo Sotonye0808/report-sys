@@ -109,15 +109,19 @@ export function verifyRefreshToken(token: string): { userId: string } | null {
 // Cookies
 // ─────────────────────────────────────────────────────────────────────────────
 
-export async function setAuthCookies(tokens: AuthTokens): Promise<void> {
+export async function setAuthCookies(tokens: AuthTokens, rememberMe?: boolean): Promise<void> {
     const cookieStore = await cookies();
     const isProd = process.env.NODE_ENV === "production";
+
+    // Standard: 15min access, 7d refresh. Remember me: 30d access, 90d refresh.
+    const accessMaxAge = rememberMe ? 60 * 60 * 24 * 30 : 60 * 15;
+    const refreshMaxAge = rememberMe ? 60 * 60 * 24 * 90 : 60 * 60 * 24 * 7;
 
     cookieStore.set(COOKIE_NAME, tokens.accessToken, {
         httpOnly: true,
         secure: isProd,
         sameSite: "lax",
-        maxAge: 60 * 15, // 15 minutes
+        maxAge: accessMaxAge,
         path: "/",
     });
 
@@ -125,7 +129,7 @@ export async function setAuthCookies(tokens: AuthTokens): Promise<void> {
         httpOnly: true,
         secure: isProd,
         sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        maxAge: refreshMaxAge,
         path: "/",
     });
 }

@@ -268,6 +268,15 @@ function JoinForm() {
           {CONTENT.auth.loginLink as string}
         </a>
       </p>
+      <p className="mt-2 text-center text-xs text-ds-text-subtle">
+        {CONTENT.auth.noInvite as string}{" "}
+        <a
+          href={APP_ROUTES.register}
+          className="text-ds-brand-accent hover:underline"
+        >
+          {CONTENT.auth.registerWithoutInvite as string}
+        </a>
+      </p>
     </>
   );
 }

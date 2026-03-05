@@ -64,7 +64,6 @@ const MONTH_LABELS = g.months as string[];
 
 const CAN_WRITE_ROLES: UserRole[] = [
   UserRole.GROUP_ADMIN, UserRole.GROUP_PASTOR,
-  UserRole.CAMPUS_ADMIN, UserRole.CAMPUS_PASTOR,
   UserRole.SPO, UserRole.CEO, UserRole.CHURCH_MINISTRY,
   UserRole.SUPERADMIN,
 ];

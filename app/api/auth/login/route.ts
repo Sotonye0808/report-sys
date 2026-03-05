@@ -17,6 +17,7 @@ import {
 const LoginSchema = z.object({
     email: z.string().email(),
     password: z.string().min(1),
+    rememberMe: z.boolean().optional().default(false),
 });
 
 export async function POST(req: NextRequest) {
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
         const body = LoginSchema.safeParse(await req.json());
         if (!body.success) return badRequestResponse("Invalid input");
 
-        const { email, password } = body.data;
+        const { email, password, rememberMe } = body.data;
 
         const userProfile = await mockDb.users.findFirst({ where: { email: email as unknown as string } });
         if (!userProfile) return unauthorizedResponse("Invalid email or password");
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
         };
 
         const tokens = generateTokens(authUser);
-        await setAuthCookies(tokens);
+        await setAuthCookies(tokens, rememberMe);
 
         return successResponse({ user: authUser }, 200);
     } catch (err) {

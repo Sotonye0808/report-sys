@@ -39,6 +39,19 @@ const CreateReportSchema = z.object({
     period: z.string().min(1),
     periodType: z.nativeEnum(ReportPeriodType),
     notes: z.string().optional(),
+    sections: z.array(z.object({
+        templateSectionId: z.string(),
+        sectionName: z.string(),
+        metrics: z.array(z.object({
+            templateMetricId: z.string(),
+            metricName: z.string(),
+            calculationType: z.string().optional(),
+            isLocked: z.boolean().optional(),
+            monthlyGoal: z.number().optional(),
+            monthlyAchieved: z.number().optional(),
+            yoyGoal: z.number().optional(),
+        })),
+    })).optional(),
 });
 
 /* ── GET ───────────────────────────────────────────────────────────────────── */
@@ -130,10 +143,10 @@ export async function POST(req: NextRequest) {
                     createdById: auth.user.id,
                     submittedById: null,
                     notes: body.notes ?? null,
+                    sections: body.sections ?? [],
                     createdAt: now,
                     updatedAt: now,
                     deadline: null,
-                    sections: [],
                 } as unknown as Report,
             });
 

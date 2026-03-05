@@ -66,7 +66,7 @@ export const ROLE_DASHBOARD_ROUTES: Record<UserRole, string> = {
     [UserRole.CAMPUS_PASTOR]: APP_ROUTES.dashboard,
     [UserRole.CAMPUS_ADMIN]: APP_ROUTES.dashboard,
     [UserRole.DATA_ENTRY]: APP_ROUTES.reports,
-    [UserRole.MEMBER]: APP_ROUTES.member.dashboard,
+    [UserRole.MEMBER]: APP_ROUTES.dashboard,
 };
 
 /* ── API Routes ─────────────────────────────────────────────────────────────── */
@@ -122,6 +122,7 @@ export const API_ROUTES = {
     },
     goals: {
         list: "/api/goals",
+        forReport: "/api/goals/for-report",
         detail: (id: string) => `/api/goals/${id}`,
         unlockRequest: (id: string) => `/api/goals/${id}/unlock-request`,
         approveUnlock: (id: string) => `/api/goals/${id}/unlock-request/approve`,

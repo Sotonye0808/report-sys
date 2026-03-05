@@ -39,6 +39,7 @@ export const DASHBOARD_NAV_ITEMS: NavItem[] = [
             UserRole.CEO,
             UserRole.SPO,
             UserRole.DATA_ENTRY,
+            UserRole.MEMBER,
         ],
     },
     {

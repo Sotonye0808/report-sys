@@ -166,7 +166,7 @@ declare global {
     interface AuthContextValue {
         user: AuthUser | null;
         isLoading: boolean;
-        login: (email: string, password: string) => Promise<void>;
+        login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
         logout: () => Promise<void>;
         refreshToken: () => Promise<void>;
     }
