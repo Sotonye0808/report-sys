@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
-import { mockDb } from "@/lib/data/mockDb";
+import { mockDb, dbReady } from "@/lib/data/mockDb";
 import { UserRole } from "@/types/global";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -184,6 +184,9 @@ export async function verifyAuth(
     if (!payload) {
         return { success: false, error: "Invalid or expired token", status: 401 };
     }
+
+    // Ensure seed data is ready before querying mock DB
+    await dbReady;
 
     const userProfile = await mockDb.users.findUnique({ where: { id: payload.userId } });
     if (!userProfile || !userProfile.isActive) {

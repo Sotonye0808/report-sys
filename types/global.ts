@@ -409,9 +409,7 @@ declare global {
         isLocked: boolean;
         lockedAt?: string;
         lockedById?: string;
-        monthlyGoalComment?: string;
-        monthlyAchievedComment?: string;
-        yoyGoalComment?: string;
+        comment?: string;
     }
 
     interface ReportWithDetails extends Report {
@@ -457,9 +455,7 @@ declare global {
         monthlyGoal?: number;
         monthlyAchieved?: number;
         yoyGoal?: number;
-        monthlyGoalComment?: string;
-        monthlyAchievedComment?: string;
-        yoyGoalComment?: string;
+        comment?: string;
     }
 
     interface ReportEdit {
@@ -489,9 +485,7 @@ declare global {
         monthlyGoal?: number;
         monthlyAchieved?: number;
         yoyGoal?: number;
-        monthlyGoalComment?: string;
-        monthlyAchievedComment?: string;
-        yoyGoalComment?: string;
+        comment?: string;
     }
 
     interface ReportUpdateRequest {
@@ -573,9 +567,7 @@ declare global {
         month: number;
         goalValue?: number;
         achievedValue?: number;
-        goalComment?: string;
-        achievedComment?: string;
-        yoyGoalComment?: string;
+        comment?: string;
         computedPercentage?: number;
         createdAt: string;
     }

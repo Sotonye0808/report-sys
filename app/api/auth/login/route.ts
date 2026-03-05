@@ -1,6 +1,6 @@
 import { type NextRequest } from "next/server";
 import { z } from "zod";
-import { mockDb } from "@/lib/data/mockDb";
+import { mockDb, dbReady } from "@/lib/data/mockDb";
 import {
     verifyPassword,
     generateTokens,
@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
 
         const { email, password, rememberMe } = body.data;
 
+        await dbReady;
         const userProfile = await mockDb.users.findFirst({ where: { email: email as unknown as string } });
         if (!userProfile) return unauthorizedResponse("Invalid email or password");
 

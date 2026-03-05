@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (existing) {
-        if (existing.isLocked) {
+        if (existing.isLocked && auth.user.role !== UserRole.SUPERADMIN) {
             return NextResponse.json(
                 { success: false, error: "This goal is locked. Submit an unlock request to edit it." },
                 { status: 403 },

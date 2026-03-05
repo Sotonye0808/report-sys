@@ -39,9 +39,7 @@ export interface MetricValues {
   monthlyGoal?: number;
   monthlyAchieved?: number;
   yoyGoal?: number;
-  monthlyGoalComment?: string;
-  monthlyAchievedComment?: string;
-  yoyGoalComment?: string;
+  comment?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -50,16 +48,11 @@ export interface MetricValues {
 
 interface FieldConfig {
   valueKey: keyof Pick<MetricValues, "monthlyGoal" | "monthlyAchieved" | "yoyGoal">;
-  commentKey: keyof Pick<
-    MetricValues,
-    "monthlyGoalComment" | "monthlyAchievedComment" | "yoyGoalComment"
-  >;
   captureFlag: keyof Pick<
     ReportTemplateMetric,
     "capturesGoal" | "capturesAchieved" | "capturesYoY"
   >;
   labelKey: string;
-  commentLabelKey: string;
   /** if true, value is pre-filled from the goals map and shown read-only */
   isGoalField: boolean;
 }
@@ -67,26 +60,20 @@ interface FieldConfig {
 const FIELD_CONFIGS: FieldConfig[] = [
   {
     valueKey: "monthlyGoal",
-    commentKey: "monthlyGoalComment",
     captureFlag: "capturesGoal",
     labelKey: "fieldGoal",
-    commentLabelKey: "fieldGoalComment",
     isGoalField: true,
   },
   {
     valueKey: "monthlyAchieved",
-    commentKey: "monthlyAchievedComment",
     captureFlag: "capturesAchieved",
     labelKey: "fieldAchieved",
-    commentLabelKey: "fieldAchievedComment",
     isGoalField: false,
   },
   {
     valueKey: "yoyGoal",
-    commentKey: "yoyGoalComment",
     captureFlag: "capturesYoY",
     labelKey: "fieldYoY",
-    commentLabelKey: "fieldYoYComment",
     isGoalField: false,
   },
 ];
@@ -254,7 +241,7 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
         ) : (
           <div className="flex-1 space-y-3">
             <div className={`grid ${colClass} gap-3`}>
-              {activeFields.map(({ valueKey, commentKey, labelKey, commentLabelKey, isGoalField }) => {
+              {activeFields.map(({ valueKey, labelKey, isGoalField }) => {
                 const isGoalReadOnly = isGoalField && !!goalInfo;
                 const displayValue = isGoalReadOnly
                   ? goalInfo!.targetValue
@@ -284,16 +271,18 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
                         onChange({ ...values, [valueKey]: v ?? undefined })
                       }
                     />
-                    <CommentToggle
-                      value={values[commentKey] as string | undefined}
-                      onChange={(v) => onChange({ ...values, [commentKey]: v || undefined })}
-                      label={rk[commentLabelKey] as string}
-                      disabled={disabled}
-                    />
                   </div>
                 );
               })}
             </div>
+
+            {/* Single comment per metric */}
+            <CommentToggle
+              value={values.comment}
+              onChange={(v) => onChange({ ...values, comment: v || undefined })}
+              label={rk.metricComment as string}
+              disabled={disabled}
+            />
 
             {/* Live statistics row */}
             {(livePct !== null || liveYoy !== null) && (
@@ -590,9 +579,7 @@ export function buildSectionsPayload(
             monthlyGoal: goal?.targetValue ?? vals.monthlyGoal,
             monthlyAchieved: vals.monthlyAchieved,
             yoyGoal: vals.yoyGoal,
-            monthlyGoalComment: vals.monthlyGoalComment,
-            monthlyAchievedComment: vals.monthlyAchievedComment,
-            yoyGoalComment: vals.yoyGoalComment,
+            comment: vals.comment,
           };
         }),
     }));
@@ -611,20 +598,16 @@ export function parseSectionsToMetricValues(sections: unknown[]): Record<string,
       monthlyGoal?: number;
       monthlyAchieved?: number;
       yoyGoal?: number;
-      monthlyGoalComment?: string;
-      monthlyAchievedComment?: string;
-      yoyGoalComment?: string;
+      comment?: string;
     }>;
   }>;
   for (const sec of typedSections) {
     for (const m of sec.metrics ?? []) {
       map[m.templateMetricId] = {
-        monthlyGoal:          m.monthlyGoal,
-        monthlyAchieved:      m.monthlyAchieved,
-        yoyGoal:              m.yoyGoal,
-        monthlyGoalComment:   m.monthlyGoalComment,
-        monthlyAchievedComment: m.monthlyAchievedComment,
-        yoyGoalComment:       m.yoyGoalComment,
+        monthlyGoal:     m.monthlyGoal,
+        monthlyAchieved: m.monthlyAchieved,
+        yoyGoal:         m.yoyGoal,
+        comment:         m.comment,
       };
     }
   }

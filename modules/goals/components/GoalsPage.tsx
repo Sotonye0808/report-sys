@@ -159,9 +159,10 @@ interface BulkGoalTableProps {
   templates: ReportTemplate[];
   goals: Goal[];
   canEdit: boolean;
+  isSuperadmin: boolean;
 }
 
-function BulkGoalTable({ campusId, year, mode, templates, goals, canEdit }: BulkGoalTableProps) {
+function BulkGoalTable({ campusId, year, mode, templates, goals, canEdit, isSuperadmin }: BulkGoalTableProps) {
   const goalMap = goalsToMap(goals.filter((g) => g.campusId === campusId));
 
   /** local edits: metricId -> { ann: number } | { months: Record<number, number> } */
@@ -304,7 +305,7 @@ function BulkGoalTable({ campusId, year, mode, templates, goals, canEdit }: Bulk
             mode === GoalMode.ANNUAL
               ? goalMap[goalKey(campusId, metric.id, year, GoalMode.ANNUAL)]
               : undefined;
-          const isLocked = existingGoal?.isLocked ?? false;
+          const isLocked = (existingGoal?.isLocked ?? false) && !isSuperadmin;
 
           return (
             <div
@@ -360,7 +361,7 @@ function BulkGoalTable({ campusId, year, mode, templates, goals, canEdit }: Bulk
                   {MONTH_LABELS.map((_, idx) => {
                     const month = idx + 1;
                     const monthGoal = goalMap[goalKey(campusId, metric.id, year, GoalMode.MONTHLY, month)];
-                    const monthLocked = monthGoal?.isLocked ?? false;
+                    const monthLocked = (monthGoal?.isLocked ?? false) && !isSuperadmin;
                     return (
                       <InputNumber
                         key={month}
@@ -426,9 +427,10 @@ interface AllCampusesMatrixProps {
   templates: ReportTemplate[];
   goals: Goal[];
   canEdit: boolean;
+  isSuperadmin: boolean;
 }
 
-function AllCampusesMatrix({ campuses, year, mode, templates, goals, canEdit }: AllCampusesMatrixProps) {
+function AllCampusesMatrix({ campuses, year, mode, templates, goals, canEdit, isSuperadmin }: AllCampusesMatrixProps) {
   const goalMap = goalsToMap(goals);
   /** campusId -> metricId -> value */
   const [matrixValues, setMatrixValues] = useState<MatrixValues>(() => {
@@ -535,7 +537,7 @@ function AllCampusesMatrix({ campuses, year, mode, templates, goals, canEdit }: 
                       <td className="px-4 py-2 text-ds-text-primary font-medium">{metric.name}</td>
                       {campuses.map((campus) => {
                         const existing = goalMap[goalKey(campus.id, metric.id, year, GoalMode.ANNUAL)];
-                        const isLocked = existing?.isLocked ?? false;
+                        const isLocked = (existing?.isLocked ?? false) && !isSuperadmin;
                         const currentVal =
                           matrixValues[campus.id]?.[metric.id] ?? existing?.targetValue;
                         return (
@@ -607,6 +609,7 @@ export function GoalsPage() {
 
   const write          = canWrite(user.role);
   const seeAllCampuses = canSeeAllCampuses(user.role);
+  const isSuperadmin   = user.role === UserRole.SUPERADMIN;
 
   const visibleCampuses = seeAllCampuses
     ? campuses
@@ -624,6 +627,7 @@ export function GoalsPage() {
         templates={templates}
         goals={goals}
         canEdit={write}
+        isSuperadmin={isSuperadmin}
       />
     ),
   }));
@@ -646,6 +650,7 @@ export function GoalsPage() {
             templates={templates}
             goals={goals}
             canEdit={write}
+            isSuperadmin={isSuperadmin}
           />
         ),
       }]

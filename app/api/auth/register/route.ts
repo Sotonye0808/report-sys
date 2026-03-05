@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
-import { mockDb } from "@/lib/data/mockDb";
+import { mockDb, dbReady } from "@/lib/data/mockDb";
 import {
     hashPassword,
     generateTokens,
@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
         const body = RegisterSchema.parse(await req.json());
 
         /* Check for existing email */
+        await dbReady;
         const existing = await mockDb.users.findFirst({
             where: (u: UserProfile) => u.email.toLowerCase() === body.email.toLowerCase(),
         });
