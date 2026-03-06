@@ -54,7 +54,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = async (email: string, password: string, rememberMe?: boolean) => {
+  const login = async (
+    email: string,
+    password: string,
+    rememberMe?: boolean,
+    redirectTo?: string,
+  ) => {
     const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -70,7 +75,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setUser(data.data.user);
     message.success("Welcome back!");
-    router.push(ROLE_DASHBOARD_ROUTES[data.data.user.role]);
+    // Redirect to the `from` param if provided, otherwise fall back to role dashboard
+    const destination = redirectTo ?? ROLE_DASHBOARD_ROUTES[data.data.user.role];
+    router.push(destination);
   };
 
   const logout = async () => {

@@ -27,15 +27,18 @@ import {
   SyncOutlined,
   FileTextOutlined,
   ThunderboltOutlined,
+  DownloadOutlined,
 } from "@ant-design/icons";
 import { Descriptions, Tooltip, Tag } from "antd";
 import { useRole } from "@/lib/hooks/useRole";
+import { useAuth } from "@/providers/AuthProvider";
 import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES } from "@/config/routes";
 import { mockDb } from "@/lib/data/mockDb";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
 import { fmtDate, fmtDateTime } from "@/lib/utils/formatDate";
+import { exportReportDetail } from "@/lib/utils/exportReports";
 import Button from "@/components/ui/Button";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -66,7 +69,15 @@ const REPORT_ACTIONS: ActionConfig[] = [
     targetStatus: ReportStatus.APPROVED,
     eventType: ReportEventType.APPROVED,
     visibleWhen: [ReportStatus.SUBMITTED, ReportStatus.REVIEWED],
-    allowedRoles: [UserRole.CAMPUS_PASTOR, UserRole.CEO, UserRole.SPO, UserRole.SUPERADMIN],
+    allowedRoles: [
+      UserRole.CAMPUS_PASTOR,
+      UserRole.GROUP_PASTOR,
+      UserRole.GROUP_ADMIN,
+      UserRole.CHURCH_MINISTRY,
+      UserRole.CEO,
+      UserRole.SPO,
+      UserRole.SUPERADMIN,
+    ],
   },
   {
     key: "review",
@@ -77,9 +88,12 @@ const REPORT_ACTIONS: ActionConfig[] = [
     eventType: ReportEventType.REVIEWED,
     visibleWhen: [ReportStatus.SUBMITTED],
     allowedRoles: [
-      UserRole.CAMPUS_ADMIN,
       UserRole.CAMPUS_PASTOR,
+      UserRole.GROUP_PASTOR,
+      UserRole.GROUP_ADMIN,
       UserRole.CHURCH_MINISTRY,
+      UserRole.CEO,
+      UserRole.SPO,
       UserRole.SUPERADMIN,
     ],
   },
@@ -92,8 +106,9 @@ const REPORT_ACTIONS: ActionConfig[] = [
     eventType: ReportEventType.EDIT_REQUESTED,
     visibleWhen: [ReportStatus.SUBMITTED, ReportStatus.REVIEWED],
     allowedRoles: [
-      UserRole.CAMPUS_ADMIN,
       UserRole.CAMPUS_PASTOR,
+      UserRole.GROUP_PASTOR,
+      UserRole.GROUP_ADMIN,
       UserRole.CHURCH_MINISTRY,
       UserRole.CEO,
       UserRole.SPO,
@@ -119,32 +134,98 @@ const eventLabels = (rk.eventLabels ?? {}) as Record<string, string>;
 
 interface AuditEventConfig {
   icon: React.ReactNode;
-  color: string;           // Ant Tag color
-  dotColor: string;        // timeline dot CSS class
+  color: string; // Ant Tag color
+  dotColor: string; // timeline dot CSS class
 }
 
 const AUDIT_EVENT_CONFIG: Record<string, AuditEventConfig> = {
-  [ReportEventType.CREATED]:                { icon: <PlusCircleOutlined />,        color: "blue",    dotColor: "bg-blue-500" },
-  [ReportEventType.SUBMITTED]:              { icon: <SendOutlined />,              color: "cyan",    dotColor: "bg-cyan-500" },
-  [ReportEventType.EDIT_REQUESTED]:         { icon: <ExclamationCircleOutlined />, color: "orange",  dotColor: "bg-orange-400" },
-  [ReportEventType.EDIT_SUBMITTED]:         { icon: <SyncOutlined />,              color: "purple",  dotColor: "bg-purple-400" },
-  [ReportEventType.EDIT_APPROVED]:          { icon: <CheckCircleOutlined />,       color: "green",   dotColor: "bg-green-500" },
-  [ReportEventType.EDIT_REJECTED]:          { icon: <CloseOutlined />,             color: "red",     dotColor: "bg-red-400" },
-  [ReportEventType.EDIT_APPLIED]:           { icon: <CheckOutlined />,             color: "green",   dotColor: "bg-green-500" },
-  [ReportEventType.APPROVED]:               { icon: <CheckCircleOutlined />,       color: "green",   dotColor: "bg-green-500" },
-  [ReportEventType.REVIEWED]:               { icon: <CheckCircleOutlined />,       color: "geekblue", dotColor: "bg-blue-400" },
-  [ReportEventType.LOCKED]:                 { icon: <LockOutlined />,              color: "red",     dotColor: "bg-red-500" },
-  [ReportEventType.DEADLINE_PASSED]:        { icon: <ClockCircleOutlined />,       color: "volcano", dotColor: "bg-orange-500" },
-  [ReportEventType.UPDATE_REQUESTED]:       { icon: <ExclamationCircleOutlined />, color: "orange",  dotColor: "bg-orange-400" },
-  [ReportEventType.UPDATE_APPROVED]:        { icon: <CheckOutlined />,             color: "green",   dotColor: "bg-green-500" },
-  [ReportEventType.UPDATE_REJECTED]:        { icon: <CloseOutlined />,             color: "red",     dotColor: "bg-red-400" },
-  [ReportEventType.DATA_ENTRY_CREATED]:     { icon: <FileTextOutlined />,          color: "blue",    dotColor: "bg-blue-500" },
-  [ReportEventType.TEMPLATE_VERSION_NOTE]:  { icon: <FileTextOutlined />,          color: "default", dotColor: "bg-gray-400" },
-  [ReportEventType.AUTO_APPROVED]:          { icon: <ThunderboltOutlined />,        color: "gold",    dotColor: "bg-yellow-400" },
+  [ReportEventType.CREATED]: {
+    icon: <PlusCircleOutlined />,
+    color: "blue",
+    dotColor: "bg-blue-500",
+  },
+  [ReportEventType.SUBMITTED]: { icon: <SendOutlined />, color: "cyan", dotColor: "bg-cyan-500" },
+  [ReportEventType.EDIT_REQUESTED]: {
+    icon: <ExclamationCircleOutlined />,
+    color: "orange",
+    dotColor: "bg-orange-400",
+  },
+  [ReportEventType.EDIT_SUBMITTED]: {
+    icon: <SyncOutlined />,
+    color: "purple",
+    dotColor: "bg-purple-400",
+  },
+  [ReportEventType.EDIT_APPROVED]: {
+    icon: <CheckCircleOutlined />,
+    color: "green",
+    dotColor: "bg-green-500",
+  },
+  [ReportEventType.EDIT_REJECTED]: {
+    icon: <CloseOutlined />,
+    color: "red",
+    dotColor: "bg-red-400",
+  },
+  [ReportEventType.EDIT_APPLIED]: {
+    icon: <CheckOutlined />,
+    color: "green",
+    dotColor: "bg-green-500",
+  },
+  [ReportEventType.APPROVED]: {
+    icon: <CheckCircleOutlined />,
+    color: "green",
+    dotColor: "bg-green-500",
+  },
+  [ReportEventType.REVIEWED]: {
+    icon: <CheckCircleOutlined />,
+    color: "geekblue",
+    dotColor: "bg-blue-400",
+  },
+  [ReportEventType.LOCKED]: { icon: <LockOutlined />, color: "red", dotColor: "bg-red-500" },
+  [ReportEventType.DEADLINE_PASSED]: {
+    icon: <ClockCircleOutlined />,
+    color: "volcano",
+    dotColor: "bg-orange-500",
+  },
+  [ReportEventType.UPDATE_REQUESTED]: {
+    icon: <ExclamationCircleOutlined />,
+    color: "orange",
+    dotColor: "bg-orange-400",
+  },
+  [ReportEventType.UPDATE_APPROVED]: {
+    icon: <CheckOutlined />,
+    color: "green",
+    dotColor: "bg-green-500",
+  },
+  [ReportEventType.UPDATE_REJECTED]: {
+    icon: <CloseOutlined />,
+    color: "red",
+    dotColor: "bg-red-400",
+  },
+  [ReportEventType.DATA_ENTRY_CREATED]: {
+    icon: <FileTextOutlined />,
+    color: "blue",
+    dotColor: "bg-blue-500",
+  },
+  [ReportEventType.TEMPLATE_VERSION_NOTE]: {
+    icon: <FileTextOutlined />,
+    color: "default",
+    dotColor: "bg-gray-400",
+  },
+  [ReportEventType.AUTO_APPROVED]: {
+    icon: <ThunderboltOutlined />,
+    color: "gold",
+    dotColor: "bg-yellow-400",
+  },
 };
 
 function getEventConfig(eventType: string): AuditEventConfig {
-  return AUDIT_EVENT_CONFIG[eventType] ?? { icon: <FileTextOutlined />, color: "default", dotColor: "bg-ds-text-subtle" };
+  return (
+    AUDIT_EVENT_CONFIG[eventType] ?? {
+      icon: <FileTextOutlined />,
+      color: "default",
+      dotColor: "bg-ds-text-subtle",
+    }
+  );
 }
 
 /* ── ReportDetailPage ─────────────────────────────────────────────────────── */
@@ -156,6 +237,7 @@ interface ReportDetailPageProps {
 export function ReportDetailPage({ params }: ReportDetailPageProps) {
   const { id: reportId } = use(params);
   const { role, can } = useRole();
+  const { user: currentUser } = useAuth();
   const router = useRouter();
 
   const isSuperadmin = role === UserRole.SUPERADMIN;
@@ -212,6 +294,11 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
     [events],
   );
 
+  const template = useMemo(
+    () => (templates ?? []).find((t) => t.id === report?.templateId) ?? null,
+    [templates, report?.templateId],
+  );
+
   const sectionsWithMetrics = useMemo(() => {
     if (!sections || !metrics) return [];
     return sections.map((s) => ({
@@ -234,7 +321,7 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
           id: crypto.randomUUID(),
           reportId: report.id,
           eventType: action.eventType,
-          actorId: "",
+          actorId: currentUser?.id ?? "",
           timestamp: new Date().toISOString(),
           previousStatus: report.status,
           newStatus: action.targetStatus,
@@ -249,6 +336,7 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
     reports === undefined ||
     templates === undefined ||
     sections === undefined ||
+    metrics === undefined ||
     events === undefined;
 
   if (isLoading) return <LoadingSkeleton rows={6} />;
@@ -285,6 +373,21 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
           <div className="flex gap-2 flex-wrap">
             <Button icon={<ArrowLeftOutlined />} onClick={() => router.push(backHref)}>
               {CONTENT.common.back ?? "Back"}
+            </Button>
+            <Button
+              icon={<DownloadOutlined />}
+              onClick={() =>
+                exportReportDetail(
+                  report,
+                  sections ?? [],
+                  metrics ?? [],
+                  templates ?? [],
+                  campuses ?? [],
+                  users ?? [],
+                )
+              }
+            >
+              {(rk.export as Record<string, string>).button}
             </Button>
             {canEdit && (
               <Button
@@ -347,10 +450,10 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
       </div>
 
       {/* Report sections + metrics */}
-      {/* Metric comment display per metric if it exists */}
-      {sectionsWithMetrics.length > 0 && (
-        <div className="space-y-4 mb-6">
-          {sectionsWithMetrics.map(({ section, metrics: sectionMetrics }) => (
+      <div className="space-y-4 mb-6">
+        {/* Case A: saved section data exists (report was submitted through the form) */}
+        {sectionsWithMetrics.length > 0 &&
+          sectionsWithMetrics.map(({ section, metrics: sectionMetrics }) => (
             <div
               key={section.id}
               className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-5"
@@ -394,8 +497,50 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
               )}
             </div>
           ))}
-        </div>
-      )}
+
+        {/* Case B: no saved section data — render the template structure as a read-only skeleton */}
+        {sectionsWithMetrics.length === 0 &&
+          template &&
+          template.sections.length > 0 &&
+          [...template.sections]
+            .sort((a, b) => a.order - b.order)
+            .map((section) => (
+              <div
+                key={section.id}
+                className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-5"
+              >
+                <h3 className="text-sm font-semibold text-ds-text-primary mb-3">{section.name}</h3>
+                {section.metrics.length === 0 ? (
+                  <p className="text-xs text-ds-text-subtle">
+                    {CONTENT.common.noResultsDescription}
+                  </p>
+                ) : (
+                  <div className="divide-y divide-ds-border-subtle">
+                    {[...section.metrics]
+                      .sort((a, b) => a.order - b.order)
+                      .map((m) => (
+                        <div key={m.id} className="py-2">
+                          <div className="flex items-center justify-between gap-4">
+                            <p className="text-sm text-ds-text-secondary">{m.name}</p>
+                            <p className="text-sm text-ds-text-subtle tabular-nums">—</p>
+                          </div>
+                          {m.description && (
+                            <p className="text-xs text-ds-text-subtle mt-0.5">{m.description}</p>
+                          )}
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+            ))}
+
+        {/* Case C: no template — nothing to show */}
+        {sectionsWithMetrics.length === 0 && !template && (
+          <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-5">
+            <p className="text-sm text-ds-text-subtle">{CONTENT.common.noResultsDescription}</p>
+          </div>
+        )}
+      </div>
 
       {/* Notes */}
       {report.notes && (

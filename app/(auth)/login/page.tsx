@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Form, Alert, Checkbox } from "antd";
 import { UserOutlined, LockOutlined, DownOutlined, RightOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES } from "@/config/routes";
@@ -31,8 +32,10 @@ interface LoginFormValues {
   rememberMe?: boolean;
 }
 
-export default function LoginPage() {
+function LoginForm() {
   const { login } = useAuth();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("from") ?? undefined;
   const [form] = Form.useForm<LoginFormValues>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +45,7 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      await login(values.email, values.password, values.rememberMe);
+      await login(values.email, values.password, values.rememberMe, redirectTo);
     } catch (err) {
       setError(err instanceof Error ? err.message : CONTENT.auth.errors.serverError);
     } finally {
@@ -180,5 +183,13 @@ export default function LoginPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

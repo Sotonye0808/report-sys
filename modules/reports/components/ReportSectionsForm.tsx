@@ -25,7 +25,8 @@ import {
 } from "@ant-design/icons";
 import { CONTENT } from "@/config/content";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { MetricFieldType, MetricCalculationType } from "@/types/global";
+import { MetricFieldType, MetricCalculationType, UserRole } from "@/types/global";
+import { useRole } from "@/lib/hooks/useRole";
 import type { GoalForMetric, GoalsForReportMap } from "@/app/api/goals/for-report/route";
 
 const rk = CONTENT.reports as Record<string, unknown>;
@@ -59,16 +60,17 @@ interface FieldConfig {
 
 const FIELD_CONFIGS: FieldConfig[] = [
   {
-    valueKey: "monthlyGoal",
-    captureFlag: "capturesGoal",
-    labelKey: "fieldGoal",
-    isGoalField: true,
-  },
-  {
     valueKey: "monthlyAchieved",
     captureFlag: "capturesAchieved",
     labelKey: "fieldAchieved",
     isGoalField: false,
+  },
+  {
+    valueKey: "monthlyGoal",
+    captureFlag: "capturesGoal",
+    labelKey: "fieldGoal",
+    /** if true, value is pre-filled from the goals map and shown read-only */
+    isGoalField: true,
   },
   {
     valueKey: "yoyGoal",
@@ -78,22 +80,34 @@ const FIELD_CONFIGS: FieldConfig[] = [
   },
 ];
 
+/**
+ * Roles that can SEE the YoY field but NOT edit it.
+ * (Campus-level: they need visibility for context but don't own the target)
+ */
+const YOY_READONLY_ROLES = new Set([UserRole.CAMPUS_PASTOR, UserRole.CAMPUS_ADMIN]);
+
+/**
+ * Roles that cannot see the YoY field at all.
+ * (Operational / member roles with no strategic context)
+ */
+const YOY_HIDDEN_ROLES = new Set([UserRole.DATA_ENTRY, UserRole.MEMBER]);
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Goal source badge config — object-driven
 // ─────────────────────────────────────────────────────────────────────────────
 
 const GOAL_SOURCE_LABELS: Record<GoalForMetric["source"], string> = {
   "campus-monthly": "Campus (monthly)",
-  "campus-annual":  "Campus (annual)",
-  "group-monthly":  "Group (monthly)",
-  "group-annual":   "Group (annual)",
+  "campus-annual": "Campus (annual)",
+  "group-monthly": "Group (monthly)",
+  "group-annual": "Group (annual)",
 };
 
 const GOAL_SOURCE_COLORS: Record<GoalForMetric["source"], string> = {
   "campus-monthly": "green",
-  "campus-annual":  "blue",
-  "group-monthly":  "orange",
-  "group-annual":   "default",
+  "campus-annual": "blue",
+  "group-monthly": "orange",
+  "group-annual": "default",
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -107,7 +121,7 @@ function pct(achieved?: number, goal?: number): number | null {
 
 function pctStatus(p: number): "success" | "normal" | "exception" {
   if (p >= 100) return "success";
-  if (p >= 70)  return "normal";
+  if (p >= 70) return "normal";
   return "exception";
 }
 
@@ -128,7 +142,7 @@ interface CommentToggleProps {
 }
 
 function CommentToggle({ value, onChange, label, disabled }: CommentToggleProps) {
-  const [open, setOpen] = useState(!!value);
+  const [open, setOpen] = useState(true); // always open by default for easy entry
 
   return (
     <div className="mt-1">
@@ -176,11 +190,18 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
   const isPercentage = metric.fieldType === MetricFieldType.PERCENTAGE;
   const prefix = isCurrency ? "₦" : undefined;
 
-  const activeFields = FIELD_CONFIGS.filter((f) => metric[f.captureFlag]);
+  // YoY visibility: hidden for DATA_ENTRY/MEMBER, read-only for CAMPUS_ADMIN/CAMPUS_PASTOR
+  const { role } = useRole();
+  const isYoyHidden = role ? YOY_HIDDEN_ROLES.has(role) : false;
+  const isYoyReadOnly = role ? YOY_READONLY_ROLES.has(role) : false;
+
+  const activeFields = FIELD_CONFIGS.filter(
+    (f) => metric[f.captureFlag] && !(f.valueKey === "yoyGoal" && isYoyHidden),
+  );
 
   // Live stats
-  const livePct  = pct(values.monthlyAchieved, values.monthlyGoal ?? goalInfo?.targetValue);
-  const liveYoy  = yoyDelta(values.monthlyAchieved, values.yoyGoal);
+  const livePct = pct(values.monthlyAchieved, values.monthlyGoal ?? goalInfo?.targetValue);
+  const liveYoy = yoyDelta(values.monthlyAchieved, values.yoyGoal);
 
   const colClass =
     activeFields.length >= 3
@@ -201,8 +222,16 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
                 {rk.sectionRequired as string}
               </span>
             )}
-            {isCurrency && <Tag color="blue" className="text-[10px]">₦</Tag>}
-            {isPercentage && <Tag color="purple" className="text-[10px]">%</Tag>}
+            {isCurrency && (
+              <Tag color="blue" className="text-[10px]">
+                ₦
+              </Tag>
+            )}
+            {isPercentage && (
+              <Tag color="purple" className="text-[10px]">
+                %
+              </Tag>
+            )}
           </div>
           {metric.description && (
             <p className="text-xs text-ds-text-subtle mt-0.5 leading-tight">{metric.description}</p>
@@ -216,19 +245,25 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
           </span>
           {/* Goal source badge */}
           {goalInfo && (
-            <Tooltip title={`${rk.goalFromSource as string}: ${GOAL_SOURCE_LABELS[goalInfo.source]}`}>
+            <Tooltip
+              title={`${rk.goalFromSource as string}: ${GOAL_SOURCE_LABELS[goalInfo.source]}`}
+            >
               <Tag
                 color={GOAL_SOURCE_COLORS[goalInfo.source]}
                 className="mt-1 text-[10px] cursor-help"
                 icon={goalInfo.isLocked ? <LockOutlined /> : <TrophyOutlined />}
               >
-                {goalInfo.isLocked ? (rk.goalLocked as string) : GOAL_SOURCE_LABELS[goalInfo.source]}
+                {goalInfo.isLocked
+                  ? (rk.goalLocked as string)
+                  : GOAL_SOURCE_LABELS[goalInfo.source]}
               </Tag>
             </Tooltip>
           )}
           {!goalInfo && metric.capturesGoal && (
             <Tooltip title={rk.goalNotSet as string}>
-              <Tag color="default" className="mt-1 text-[10px]">{rk.goalNotSet as string}</Tag>
+              <Tag color="default" className="mt-1 text-[10px]">
+                {rk.goalNotSet as string}
+              </Tag>
             </Tooltip>
           )}
         </div>
@@ -243,6 +278,10 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
             <div className={`grid ${colClass} gap-3`}>
               {activeFields.map(({ valueKey, labelKey, isGoalField }) => {
                 const isGoalReadOnly = isGoalField && !!goalInfo;
+                // YoY field: read-only for campus-level roles
+                const isYoyFieldReadOnly = valueKey === "yoyGoal" && isYoyReadOnly;
+                const isReadOnly = isGoalReadOnly || isYoyFieldReadOnly;
+
                 const displayValue = isGoalReadOnly
                   ? goalInfo!.targetValue
                   : (values[valueKey] as number | undefined);
@@ -256,6 +295,11 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
                           <InfoCircleOutlined className="ml-1 text-ds-brand-accent cursor-help" />
                         </Tooltip>
                       )}
+                      {isYoyFieldReadOnly && (
+                        <Tooltip title="View only — YoY targets are set by group admins and above">
+                          <LockOutlined className="ml-1 text-ds-text-subtle cursor-help" />
+                        </Tooltip>
+                      )}
                     </label>
                     <InputNumber
                       className="w-full"
@@ -264,11 +308,10 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
                       min={metric.minValue}
                       max={metric.maxValue}
                       value={displayValue}
-                      disabled={disabled || isGoalReadOnly}
+                      disabled={disabled || isReadOnly}
                       placeholder="0"
                       onChange={(v) =>
-                        !isGoalReadOnly &&
-                        onChange({ ...values, [valueKey]: v ?? undefined })
+                        !isReadOnly && onChange({ ...values, [valueKey]: v ?? undefined })
                       }
                     />
                   </div>
@@ -305,9 +348,14 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
                 )}
                 {liveYoy !== null && (
                   <div className="flex items-center gap-1">
-                    <span className="text-[11px] text-ds-text-subtle">{rk.statVsYoY as string}</span>
-                    <span className={`text-xs font-semibold ${liveYoy >= 0 ? "text-green-500" : "text-red-500"}`}>
-                      {liveYoy >= 0 ? "+" : ""}{liveYoy}%
+                    <span className="text-[11px] text-ds-text-subtle">
+                      {rk.statVsYoY as string}
+                    </span>
+                    <span
+                      className={`text-xs font-semibold ${liveYoy >= 0 ? "text-green-500" : "text-red-500"}`}
+                    >
+                      {liveYoy >= 0 ? "+" : ""}
+                      {liveYoy}%
                     </span>
                   </div>
                 )}
@@ -332,9 +380,15 @@ interface SectionPanelProps {
   disabled?: boolean;
 }
 
-function SectionPanel({ section, metricValues, goalsMap, onMetricChange, disabled }: SectionPanelProps) {
+function SectionPanel({
+  section,
+  metricValues,
+  goalsMap,
+  onMetricChange,
+  disabled,
+}: SectionPanelProps) {
   const requiredMetrics = section.metrics.filter((m) => m.isRequired && m.capturesAchieved);
-  const filledRequired  = requiredMetrics.filter(
+  const filledRequired = requiredMetrics.filter(
     (m) => (metricValues[m.id]?.monthlyAchieved ?? 0) > 0,
   ).length;
 
@@ -345,7 +399,9 @@ function SectionPanel({ section, metricValues, goalsMap, onMetricChange, disable
           <Progress
             percent={Math.round((filledRequired / requiredMetrics.length) * 100)}
             size="small"
-            format={() => `${filledRequired}/${requiredMetrics.length} ${rk.requiredFilled as string}`}
+            format={() =>
+              `${filledRequired}/${requiredMetrics.length} ${rk.requiredFilled as string}`
+            }
             status={filledRequired === requiredMetrics.length ? "success" : "active"}
             className="!mb-0"
           />
@@ -384,29 +440,33 @@ interface LiveStatsPanelProps {
 function LiveStatsPanel({ template, metricValues, goalsMap }: LiveStatsPanelProps) {
   const stats = useMemo(() => {
     let totalAchieved = 0;
-    let totalGoal     = 0;
-    let totalYoy      = 0;
+    let totalGoal = 0;
+    let totalYoy = 0;
     let metricsWithGoal = 0;
 
     for (const section of template.sections) {
       for (const metric of section.metrics) {
         if (!metric.capturesAchieved) continue;
         if (metric.calculationType !== MetricCalculationType.SUM) continue;
-        const vals     = metricValues[metric.id] ?? {};
+        const vals = metricValues[metric.id] ?? {};
         const achieved = vals.monthlyAchieved ?? 0;
-        const goal     = vals.monthlyGoal ?? goalsMap[metric.id]?.targetValue ?? 0;
-        const yoy      = vals.yoyGoal ?? 0;
+        const goal = vals.monthlyGoal ?? goalsMap[metric.id]?.targetValue ?? 0;
+        const yoy = vals.yoyGoal ?? 0;
         totalAchieved += achieved;
-        totalGoal     += goal;
-        totalYoy      += yoy;
+        totalGoal += goal;
+        totalYoy += yoy;
         if (goal > 0) metricsWithGoal++;
       }
     }
     return { totalAchieved, totalGoal, totalYoy, metricsWithGoal };
   }, [template, metricValues, goalsMap]);
 
-  const overallPct  = stats.totalGoal > 0 ? Math.round((stats.totalAchieved / stats.totalGoal) * 100) : null;
-  const yoyDeltaVal = stats.totalYoy  > 0 ? Math.round(((stats.totalAchieved - stats.totalYoy) / stats.totalYoy) * 100) : null;
+  const overallPct =
+    stats.totalGoal > 0 ? Math.round((stats.totalAchieved / stats.totalGoal) * 100) : null;
+  const yoyDeltaVal =
+    stats.totalYoy > 0
+      ? Math.round(((stats.totalAchieved - stats.totalYoy) / stats.totalYoy) * 100)
+      : null;
 
   if (overallPct === null && yoyDeltaVal === null && stats.metricsWithGoal === 0) return null;
 
@@ -421,7 +481,9 @@ function LiveStatsPanel({ template, metricValues, goalsMap }: LiveStatsPanelProp
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {overallPct !== null && (
           <div>
-            <div className="text-[11px] text-ds-text-subtle mb-1">{rk.statOverallGoal as string}</div>
+            <div className="text-[11px] text-ds-text-subtle mb-1">
+              {rk.statOverallGoal as string}
+            </div>
             <Progress
               percent={Math.min(overallPct, 100)}
               status={pctStatus(overallPct)}
@@ -432,14 +494,19 @@ function LiveStatsPanel({ template, metricValues, goalsMap }: LiveStatsPanelProp
         {yoyDeltaVal !== null && (
           <div>
             <div className="text-[11px] text-ds-text-subtle mb-1">{rk.statYoYGrowth as string}</div>
-            <div className={`text-2xl font-bold font-ds-mono ${yoyDeltaVal >= 0 ? "text-green-500" : "text-red-500"}`}>
-              {yoyDeltaVal >= 0 ? "+" : ""}{yoyDeltaVal}%
+            <div
+              className={`text-2xl font-bold font-ds-mono ${yoyDeltaVal >= 0 ? "text-green-500" : "text-red-500"}`}
+            >
+              {yoyDeltaVal >= 0 ? "+" : ""}
+              {yoyDeltaVal}%
             </div>
           </div>
         )}
         {stats.metricsWithGoal > 0 && (
           <div>
-            <div className="text-[11px] text-ds-text-subtle mb-1">{rk.statMetricsWithGoal as string}</div>
+            <div className="text-[11px] text-ds-text-subtle mb-1">
+              {rk.statMetricsWithGoal as string}
+            </div>
             <div className="text-2xl font-bold font-ds-mono text-ds-text-primary">
               {stats.metricsWithGoal}
             </div>
@@ -477,9 +544,13 @@ export function ReportSectionsForm({
       <div className="flex items-center gap-2">
         <span className="font-semibold text-ds-text-primary">{section.name}</span>
         {section.isRequired ? (
-          <Tag color="red" className="text-[10px]">{rk.sectionRequired as string}</Tag>
+          <Tag color="red" className="text-[10px]">
+            {rk.sectionRequired as string}
+          </Tag>
         ) : (
-          <Tag color="default" className="text-[10px]">{rk.sectionOptional as string}</Tag>
+          <Tag color="default" className="text-[10px]">
+            {rk.sectionOptional as string}
+          </Tag>
         )}
         <span className="text-xs text-ds-text-subtle ml-auto">
           {section.metrics.length} metric{section.metrics.length !== 1 ? "s" : ""}
@@ -498,7 +569,7 @@ export function ReportSectionsForm({
   }));
 
   const totalMetrics = template.sections.reduce((n, s) => n + s.metrics.length, 0);
-  const goalsCount   = Object.keys(goalsMap).length;
+  const goalsCount = Object.keys(goalsMap).length;
 
   return (
     <div className="space-y-4">
@@ -508,7 +579,9 @@ export function ReportSectionsForm({
         <span>
           {rk.templateLabel as string}:{" "}
           <strong className="text-ds-text-primary">{template.name}</strong>
-          {" · "}{template.sections.length} sections{" · "}{totalMetrics} metrics
+          {" · "}
+          {template.sections.length} sections{" · "}
+          {totalMetrics} metrics
         </span>
         {goalsCount > 0 && (
           <>
@@ -604,10 +677,10 @@ export function parseSectionsToMetricValues(sections: unknown[]): Record<string,
   for (const sec of typedSections) {
     for (const m of sec.metrics ?? []) {
       map[m.templateMetricId] = {
-        monthlyGoal:     m.monthlyGoal,
+        monthlyGoal: m.monthlyGoal,
         monthlyAchieved: m.monthlyAchieved,
-        yoyGoal:         m.yoyGoal,
-        comment:         m.comment,
+        yoyGoal: m.yoyGoal,
+        comment: m.comment,
       };
     }
   }

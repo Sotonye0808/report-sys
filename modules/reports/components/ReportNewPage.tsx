@@ -11,8 +11,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Form, message, Select, InputNumber } from "antd";
+import { Form, message, Select, DatePicker } from "antd";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import weekOfYear from "dayjs/plugin/weekOfYear";
 import { SaveOutlined } from "@ant-design/icons";
+
+dayjs.extend(weekOfYear);
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
 import { mockDb } from "@/lib/data/mockDb";
@@ -35,24 +40,18 @@ import { ReportPeriodType } from "@/types/global";
 const PERIOD_TYPE_OPTIONS = [
   { value: ReportPeriodType.WEEKLY, label: "Weekly" },
   { value: ReportPeriodType.MONTHLY, label: "Monthly" },
+  { value: ReportPeriodType.YEARLY, label: "Yearly" },
 ];
-
-const MONTH_OPTIONS = [1,2,3,4,5,6,7,8,9,10,11,12].map((m) => ({
-  value: m,
-  label: (CONTENT.goals.months as string[])[m - 1],
-}));
 
 /* ---- Form values ---- */
 
+/** Only fields that live in the Ant Design Form store. Period date fields are
+ *  derived from the controlled pickerValue state at submit time. */
 interface NewReportFormValues {
   title: string;
   templateId: string;
   campusId: string;
-  period: string;
   periodType: ReportPeriodType;
-  periodYear: number;
-  periodMonth?: number;
-  periodWeek?: number;
   notes?: string;
 }
 
@@ -74,11 +73,12 @@ export function ReportNewPage() {
   const [goalsMap, setGoalsMap] = useState<GoalsForReportMap>({});
   const [goalsLoading, setGoalsLoading] = useState(false);
 
+  // pickerValue is the single source of truth for the selected period
+  const [pickerValue, setPickerValue] = useState<Dayjs | null>(null);
+
   // Watched form values for goal resolution
-  const periodType  = Form.useWatch("periodType",  form) as ReportPeriodType | undefined;
-  const campusId    = Form.useWatch("campusId",     form) as string | undefined;
-  const periodYear  = Form.useWatch("periodYear",   form) as number | undefined;
-  const periodMonth = Form.useWatch("periodMonth",  form) as number | undefined;
+  const periodType = Form.useWatch("periodType", form) as ReportPeriodType | undefined;
+  const campusId = Form.useWatch("campusId", form) as string | undefined;
 
   useEffect(() => {
     const load = async () => {
@@ -92,11 +92,13 @@ export function ReportNewPage() {
       if (user?.campusId) {
         form.setFieldValue("campusId", user.campusId);
       }
-      const currentYear = new Date().getFullYear();
-      form.setFieldValue("periodYear", currentYear);
-      form.setFieldValue("periodMonth", new Date().getMonth() + 1);
 
-      const defaultTemplate = ts.find((t) => (t as ReportTemplate & { isDefault?: boolean }).isDefault);
+      // Default to the current month in the date picker
+      setPickerValue(dayjs());
+
+      const defaultTemplate = ts.find(
+        (t) => (t as ReportTemplate & { isDefault?: boolean }).isDefault,
+      );
       if (defaultTemplate) {
         form.setFieldValue("templateId", defaultTemplate.id);
         setSelectedTemplate(defaultTemplate);
@@ -109,26 +111,25 @@ export function ReportNewPage() {
   /* Load goals whenever campus + period changes */
   useEffect(() => {
     const resolvedCampusId = campusId ?? user?.campusId;
-    const resolvedYear     = periodYear ?? new Date().getFullYear();
-    if (!resolvedCampusId || !resolvedYear) return;
+    if (!resolvedCampusId || !pickerValue) return;
+
+    const year = pickerValue.year();
+    const month = periodType === ReportPeriodType.MONTHLY ? pickerValue.month() + 1 : undefined;
 
     setGoalsLoading(true);
-    const params = new URLSearchParams({
-      campusId: resolvedCampusId,
-      year: String(resolvedYear),
-    });
-    if (periodType === ReportPeriodType.MONTHLY && periodMonth) {
-      params.set("month", String(periodMonth));
-    }
+    const params = new URLSearchParams({ campusId: resolvedCampusId, year: String(year) });
+    if (month) params.set("month", String(month));
 
     fetch(`${API_ROUTES.goals.list.replace("/api/goals", "/api/goals/for-report")}?${params}`)
       .then((r) => r.json())
       .then((json) => {
         if (json.success) setGoalsMap(json.data as GoalsForReportMap);
       })
-      .catch(() => {/* non-fatal */})
+      .catch(() => {
+        /* non-fatal */
+      })
       .finally(() => setGoalsLoading(false));
-  }, [campusId, user?.campusId, periodYear, periodMonth, periodType]);
+  }, [campusId, user?.campusId, pickerValue, periodType]);
 
   /* When template changes, reset metric values (but keep goals) */
   const handleTemplateChange = useCallback(
@@ -144,9 +145,39 @@ export function ReportNewPage() {
     setMetricValues((prev) => ({ ...prev, [metricId]: v }));
   }, []);
 
+  /** Called when the user picks a date — derives periodYear/Month/Week + label. */
+  const handlePickerChange = useCallback((value: Dayjs | null) => {
+    setPickerValue(value);
+  }, []);
+
+  /** When period type changes, reset the picker so the user re-selects. */
+  const handlePeriodTypeChange = useCallback(() => {
+    setPickerValue(null);
+  }, []);
+
   const handleSubmit = async (values: NewReportFormValues) => {
+    if (!pickerValue) {
+      message.error("Please select a report period.");
+      return;
+    }
     setLoading(true);
     try {
+      // Derive period fields from the controlled DatePicker value
+      const periodYear = pickerValue.year();
+      let periodMonth: number | undefined;
+      let periodWeek: number | undefined;
+      let period: string;
+
+      if (values.periodType === ReportPeriodType.WEEKLY) {
+        periodWeek = pickerValue.week();
+        period = `Week ${String(periodWeek).padStart(2, "0")}, ${periodYear}`;
+      } else if (values.periodType === ReportPeriodType.YEARLY) {
+        period = String(periodYear);
+      } else {
+        periodMonth = pickerValue.month() + 1;
+        period = pickerValue.format("MMMM YYYY");
+      }
+
       const sections = selectedTemplate
         ? buildSectionsPayload(selectedTemplate, metricValues, goalsMap)
         : [];
@@ -154,7 +185,7 @@ export function ReportNewPage() {
       const res = await fetch(API_ROUTES.reports.list, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...values, sections }),
+        body: JSON.stringify({ ...values, periodYear, periodMonth, periodWeek, period, sections }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -232,45 +263,51 @@ export function ReportNewPage() {
               />
             </Form.Item>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Form.Item
                 name="periodType"
                 label={CONTENT.reports.metadata.periodTypeLabel as string}
                 rules={[{ required: true }]}
               >
-                <Select size="large" options={PERIOD_TYPE_OPTIONS} />
+                <Select
+                  size="large"
+                  options={PERIOD_TYPE_OPTIONS}
+                  onChange={handlePeriodTypeChange}
+                />
               </Form.Item>
 
               <Form.Item
-                name="periodYear"
-                label={CONTENT.reports.metadata.yearLabel as string}
-                rules={[{ required: true, message: "Year is required." }]}
+                label={
+                  periodType === ReportPeriodType.WEEKLY
+                    ? (CONTENT.reports.metadata.weekLabel as string)
+                    : periodType === ReportPeriodType.YEARLY
+                      ? (CONTENT.reports.metadata.yearLabel as string)
+                      : (CONTENT.reports.metadata.monthLabel as string)
+                }
+                required
               >
-                <InputNumber className="w-full" size="large" min={2020} max={2100} placeholder="2026" />
+                <DatePicker
+                  className="w-full"
+                  size="large"
+                  picker={
+                    periodType === ReportPeriodType.WEEKLY
+                      ? "week"
+                      : periodType === ReportPeriodType.YEARLY
+                        ? "year"
+                        : "month"
+                  }
+                  format={
+                    periodType === ReportPeriodType.WEEKLY
+                      ? "[Week] ww, YYYY"
+                      : periodType === ReportPeriodType.YEARLY
+                        ? "YYYY"
+                        : "MMMM YYYY"
+                  }
+                  value={pickerValue}
+                  onChange={handlePickerChange}
+                />
               </Form.Item>
-
-              {(periodType === ReportPeriodType.MONTHLY || !periodType) && (
-                <Form.Item
-                  name="periodMonth"
-                  label={CONTENT.reports.metadata.monthLabel as string}
-                >
-                  <Select size="large" options={MONTH_OPTIONS} placeholder="Month" />
-                </Form.Item>
-              )}
-
-              {periodType === ReportPeriodType.WEEKLY && (
-                <Form.Item
-                  name="periodWeek"
-                  label={CONTENT.reports.metadata.weekLabel as string}
-                >
-                  <InputNumber className="w-full" size="large" min={1} max={53} placeholder="Week #" />
-                </Form.Item>
-              )}
             </div>
-
-            <Form.Item name="period" label={CONTENT.reports.periodLabel as string}>
-              <Input placeholder="e.g. March 2025 · Week 12" size="large" />
-            </Form.Item>
 
             <Form.Item name="notes" label={CONTENT.reports.notesLabel as string}>
               <Input.TextArea rows={3} placeholder={CONTENT.reports.notesPlaceholder as string} />
@@ -280,7 +317,9 @@ export function ReportNewPage() {
             {selectedTemplate && (
               <div className="mt-6">
                 {goalsLoading && (
-                  <p className="text-xs text-ds-text-subtle mb-3">{CONTENT.reports.goalsLoading as string}</p>
+                  <p className="text-xs text-ds-text-subtle mb-3">
+                    {CONTENT.reports.goalsLoading as string}
+                  </p>
                 )}
                 <ReportSectionsForm
                   template={selectedTemplate}
@@ -293,12 +332,7 @@ export function ReportNewPage() {
 
             <div className="flex justify-end gap-3 pt-4">
               <Button onClick={() => router.back()}>{CONTENT.common.cancel as string}</Button>
-              <Button
-                type="primary"
-                htmlType="submit"
-                icon={<SaveOutlined />}
-                loading={loading}
-              >
+              <Button type="primary" htmlType="submit" icon={<SaveOutlined />} loading={loading}>
                 {CONTENT.reports.saveDraft as string}
               </Button>
             </div>

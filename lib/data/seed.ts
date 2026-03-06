@@ -6,7 +6,7 @@
  */
 
 import bcryptjs from "bcryptjs";
-import { UserRole, ReportStatus, ReportPeriodType, MetricFieldType, MetricCalculationType, GoalMode } from "@/types/global";
+import { UserRole, ReportStatus, ReportPeriodType, MetricFieldType, MetricCalculationType, GoalMode, ReportEventType, NotificationType } from "@/types/global";
 import { mockDb as _mockDbImport } from "./mockDb";
 type MockDbType = typeof _mockDbImport;
 
@@ -92,7 +92,7 @@ export async function seedDb(db: MockDbType): Promise<void> {
         },
         {
             id: SEED_IDS.users.churchMinistry,
-            email: "ministry@harvesters.org",
+            email: "churchministry@harvesters.org",
             firstName: "Church",
             lastName: "Ministry",
             role: UserRole.CHURCH_MINISTRY,
@@ -338,25 +338,31 @@ export async function seedDb(db: MockDbType): Promise<void> {
         {
             ...reportBase,
             id: "report-lekki-draft",
+            title: "Lekki Campus — Week 1, January 2025",
             campusId: SEED_IDS.campuses.lekki,
             status: ReportStatus.DRAFT,
+            createdById: SEED_IDS.users.campusAdmin,
             submittedById: SEED_IDS.users.campusAdmin,
         },
         {
             ...reportBase,
             id: "report-lekki-submitted",
+            title: "Lekki Campus — Week 2, January 2025",
             campusId: SEED_IDS.campuses.lekki,
             periodWeek: 2,
             status: ReportStatus.SUBMITTED,
+            createdById: SEED_IDS.users.campusAdmin,
             submittedById: SEED_IDS.users.campusAdmin,
         },
         {
             ...reportBase,
             id: "report-ikeja-approved",
+            title: "Ikeja Campus — Week 1, January 2025",
             campusId: SEED_IDS.campuses.ikeja,
             status: ReportStatus.APPROVED,
+            createdById: SEED_IDS.users.dataEntry,
             submittedById: SEED_IDS.users.dataEntry,
-            approvedById: SEED_IDS.users.groupAdmin,
+            approvedById: SEED_IDS.users.campusPastor,
             isDataEntry: true,
             dataEntryById: SEED_IDS.users.dataEntry,
             dataEntryDate: now,
@@ -364,15 +370,19 @@ export async function seedDb(db: MockDbType): Promise<void> {
         {
             ...reportBase,
             id: "report-abuja-requires-edits",
+            title: "Abuja Campus — Week 1, January 2025",
             campusId: SEED_IDS.campuses.abuja,
             status: ReportStatus.REQUIRES_EDITS,
+            createdById: SEED_IDS.users.campusAdmin,
         },
         {
             ...reportBase,
             id: "report-london-locked",
+            title: "London Campus — Week 1, January 2025",
             campusId: SEED_IDS.campuses.london,
             orgGroupId: SEED_IDS.groups.uk,
             status: ReportStatus.LOCKED,
+            createdById: SEED_IDS.users.campusPastor,
             submittedById: SEED_IDS.users.campusPastor,
             approvedById: SEED_IDS.users.groupAdmin,
             reviewedById: SEED_IDS.users.groupPastor,
@@ -381,6 +391,78 @@ export async function seedDb(db: MockDbType): Promise<void> {
     ] as unknown as Report[];
 
     for (const r of sampleReports) await db.reports.create({ data: r }, true);
+
+    // ── Report Events (audit trail) ──────────────────────────────────────────
+
+    const tMinus = (minutesAgo: number) =>
+        new Date(Date.now() - minutesAgo * 60 * 1000).toISOString();
+
+    const reportEvents: ReportEvent[] = [
+        // Lekki Draft — just created
+        { id: "ev-lekki-draft-1", reportId: "report-lekki-draft", eventType: ReportEventType.CREATED, actorId: SEED_IDS.users.campusAdmin, timestamp: tMinus(120), newStatus: ReportStatus.DRAFT },
+
+        // Lekki Submitted — created then submitted
+        { id: "ev-lekki-sub-1", reportId: "report-lekki-submitted", eventType: ReportEventType.CREATED, actorId: SEED_IDS.users.campusAdmin, timestamp: tMinus(180), newStatus: ReportStatus.DRAFT },
+        { id: "ev-lekki-sub-2", reportId: "report-lekki-submitted", eventType: ReportEventType.SUBMITTED, actorId: SEED_IDS.users.campusAdmin, timestamp: tMinus(60), previousStatus: ReportStatus.DRAFT, newStatus: ReportStatus.SUBMITTED },
+
+        // Ikeja Approved — created, submitted, approved
+        { id: "ev-ikeja-1", reportId: "report-ikeja-approved", eventType: ReportEventType.DATA_ENTRY_CREATED, actorId: SEED_IDS.users.dataEntry, timestamp: tMinus(300), newStatus: ReportStatus.DRAFT },
+        { id: "ev-ikeja-2", reportId: "report-ikeja-approved", eventType: ReportEventType.SUBMITTED, actorId: SEED_IDS.users.dataEntry, timestamp: tMinus(240), previousStatus: ReportStatus.DRAFT, newStatus: ReportStatus.SUBMITTED },
+        { id: "ev-ikeja-3", reportId: "report-ikeja-approved", eventType: ReportEventType.APPROVED, actorId: SEED_IDS.users.campusPastor, timestamp: tMinus(180), previousStatus: ReportStatus.SUBMITTED, newStatus: ReportStatus.APPROVED, details: "Figures look good. Approved." },
+
+        // Abuja Requires Edits — created, submitted, edit requested
+        { id: "ev-abuja-1", reportId: "report-abuja-requires-edits", eventType: ReportEventType.CREATED, actorId: SEED_IDS.users.campusAdmin, timestamp: tMinus(360), newStatus: ReportStatus.DRAFT },
+        { id: "ev-abuja-2", reportId: "report-abuja-requires-edits", eventType: ReportEventType.SUBMITTED, actorId: SEED_IDS.users.campusAdmin, timestamp: tMinus(300), previousStatus: ReportStatus.DRAFT, newStatus: ReportStatus.SUBMITTED },
+        { id: "ev-abuja-3", reportId: "report-abuja-requires-edits", eventType: ReportEventType.EDIT_REQUESTED, actorId: SEED_IDS.users.campusPastor, timestamp: tMinus(120), previousStatus: ReportStatus.SUBMITTED, newStatus: ReportStatus.REQUIRES_EDITS, details: "Attendance figures seem inconsistent. Please double-check and resubmit." },
+
+        // London Locked — full lifecycle: created → submitted → approved → reviewed → locked
+        { id: "ev-london-1", reportId: "report-london-locked", eventType: ReportEventType.CREATED, actorId: SEED_IDS.users.campusPastor, timestamp: tMinus(600), newStatus: ReportStatus.DRAFT },
+        { id: "ev-london-2", reportId: "report-london-locked", eventType: ReportEventType.SUBMITTED, actorId: SEED_IDS.users.campusPastor, timestamp: tMinus(480), previousStatus: ReportStatus.DRAFT, newStatus: ReportStatus.SUBMITTED },
+        { id: "ev-london-3", reportId: "report-london-locked", eventType: ReportEventType.APPROVED, actorId: SEED_IDS.users.groupAdmin, timestamp: tMinus(360), previousStatus: ReportStatus.SUBMITTED, newStatus: ReportStatus.APPROVED, details: "All metrics verified." },
+        { id: "ev-london-4", reportId: "report-london-locked", eventType: ReportEventType.REVIEWED, actorId: SEED_IDS.users.groupPastor, timestamp: tMinus(240), previousStatus: ReportStatus.APPROVED, newStatus: ReportStatus.REVIEWED },
+        { id: "ev-london-5", reportId: "report-london-locked", eventType: ReportEventType.LOCKED, actorId: SEED_IDS.users.superadmin, timestamp: tMinus(60), previousStatus: ReportStatus.REVIEWED, newStatus: ReportStatus.LOCKED, details: "Report archived and locked for record." },
+    ];
+
+    for (const ev of reportEvents) {
+        await db.reportEvents.create({ data: ev as ReportEvent }, true);
+    }
+
+    // ── Report Sections + Metrics (for submitted/approved reports) ───────────
+    // Seed realistic metric data for the Lekki Submitted and Ikeja Approved reports.
+
+    const lekkiSections: ReportSection[] = [
+        { id: "rs-lekki-sub-att", reportId: "report-lekki-submitted", templateSectionId: "section-attendance", sectionName: "Weekly Attendance", metrics: [] },
+        { id: "rs-lekki-sub-sal", reportId: "report-lekki-submitted", templateSectionId: "section-salvations", sectionName: "Salvations", metrics: [] },
+        { id: "rs-lekki-sub-tithes", reportId: "report-lekki-submitted", templateSectionId: "section-tithes", sectionName: "Tithes & Offerings", metrics: [] },
+        { id: "rs-lekki-sub-youth", reportId: "report-lekki-submitted", templateSectionId: "section-youth", sectionName: "Youth", metrics: [] },
+    ];
+
+    const lekkiMetrics: ReportMetric[] = [
+        { id: "rm-lekki-att-1", reportSectionId: "rs-lekki-sub-att", templateMetricId: "m-att-total", metricName: "Total Attendance", calculationType: MetricCalculationType.AVERAGE, monthlyGoal: 2500, monthlyAchieved: 2340, yoyGoal: 2100, computedPercentage: 93.6, isLocked: false },
+        { id: "rm-lekki-att-2", reportSectionId: "rs-lekki-sub-att", templateMetricId: "m-att-first", metricName: "First Timers", calculationType: MetricCalculationType.SUM, monthlyGoal: 150, monthlyAchieved: 163, computedPercentage: 108.7, isLocked: false },
+        { id: "rm-lekki-sal-1", reportSectionId: "rs-lekki-sub-sal", templateMetricId: "m-sal", metricName: "Salvations", calculationType: MetricCalculationType.SUM, monthlyGoal: 200, monthlyAchieved: 195, computedPercentage: 97.5, isLocked: false, comment: "Strong altar call responses across all services." },
+        { id: "rm-lekki-tithes-1", reportSectionId: "rs-lekki-sub-tithes", templateMetricId: "m-tithes", metricName: "Tithes", calculationType: MetricCalculationType.SUM, monthlyGoal: 4000000, monthlyAchieved: 3850000, computedPercentage: 96.3, isLocked: false },
+        { id: "rm-lekki-tithes-2", reportSectionId: "rs-lekki-sub-tithes", templateMetricId: "m-offerings", metricName: "Offerings", calculationType: MetricCalculationType.SUM, monthlyAchieved: 1200000, isLocked: false },
+        { id: "rm-lekki-youth-1", reportSectionId: "rs-lekki-sub-youth", templateMetricId: "m-youth-att", metricName: "Youth Attendance", calculationType: MetricCalculationType.AVERAGE, monthlyGoal: 600, monthlyAchieved: 574, computedPercentage: 95.7, isLocked: false },
+    ];
+
+    const ikejaSubmittedSections: ReportSection[] = [
+        { id: "rs-ikeja-att", reportId: "report-ikeja-approved", templateSectionId: "section-attendance", sectionName: "Weekly Attendance", metrics: [] },
+        { id: "rs-ikeja-sal", reportId: "report-ikeja-approved", templateSectionId: "section-salvations", sectionName: "Salvations", metrics: [] },
+    ];
+
+    const ikejaMetrics: ReportMetric[] = [
+        { id: "rm-ikeja-att-1", reportSectionId: "rs-ikeja-att", templateMetricId: "m-att-total", metricName: "Total Attendance", calculationType: MetricCalculationType.AVERAGE, monthlyGoal: 1800, monthlyAchieved: 1740, yoyGoal: 1600, computedPercentage: 96.7, isLocked: false },
+        { id: "rm-ikeja-att-2", reportSectionId: "rs-ikeja-att", templateMetricId: "m-att-first", metricName: "First Timers", calculationType: MetricCalculationType.SUM, monthlyGoal: 100, monthlyAchieved: 98, computedPercentage: 98, isLocked: false },
+        { id: "rm-ikeja-sal-1", reportSectionId: "rs-ikeja-sal", templateMetricId: "m-sal", metricName: "Salvations", calculationType: MetricCalculationType.SUM, monthlyGoal: 140, monthlyAchieved: 152, computedPercentage: 108.6, isLocked: false },
+    ];
+
+    for (const s of [...lekkiSections, ...ikejaSubmittedSections]) {
+        await db.reportSections.create({ data: s }, true);
+    }
+    for (const m of [...lekkiMetrics, ...ikejaMetrics]) {
+        await db.reportMetrics.create({ data: m }, true);
+    }
 
     // ── Seed Goals ───────────────────────────────────────────────────────────
     // One annual goal per key metric, per campus, for two years.
@@ -423,68 +505,68 @@ export async function seedDb(db: MockDbType): Promise<void> {
 
     const annualTargets2026: Record<string, Record<string, number>> = {
         [SEED_IDS.campuses.lekki]: {
-            "m-att-total":  2500,
-            "m-att-first":   150,
-            "m-sal":         200,
-            "m-tithes":   4000000,
-            "m-wrkr-total":  350,
-            "m-youth-att":   600,
-            "m-child-att":   450,
-            "m-media-stream":8000,
+            "m-att-total": 2500,
+            "m-att-first": 150,
+            "m-sal": 200,
+            "m-tithes": 4000000,
+            "m-wrkr-total": 350,
+            "m-youth-att": 600,
+            "m-child-att": 450,
+            "m-media-stream": 8000,
         },
         [SEED_IDS.campuses.ikeja]: {
-            "m-att-total":  1800,
-            "m-att-first":   100,
-            "m-sal":         140,
-            "m-tithes":   2800000,
-            "m-wrkr-total":  240,
-            "m-youth-att":   400,
-            "m-child-att":   300,
+            "m-att-total": 1800,
+            "m-att-first": 100,
+            "m-sal": 140,
+            "m-tithes": 2800000,
+            "m-wrkr-total": 240,
+            "m-youth-att": 400,
+            "m-child-att": 300,
         },
         [SEED_IDS.campuses.abuja]: {
-            "m-att-total":  2000,
-            "m-att-first":   120,
-            "m-sal":         160,
-            "m-tithes":   3200000,
-            "m-wrkr-total":  280,
-            "m-youth-att":   500,
-            "m-child-att":   360,
+            "m-att-total": 2000,
+            "m-att-first": 120,
+            "m-sal": 160,
+            "m-tithes": 3200000,
+            "m-wrkr-total": 280,
+            "m-youth-att": 500,
+            "m-child-att": 360,
         },
         [SEED_IDS.campuses.london]: {
-            "m-att-total":  900,
-            "m-att-first":    50,
-            "m-sal":          70,
-            "m-tithes":   6000000,
-            "m-wrkr-total":  130,
-            "m-youth-att":   200,
-            "m-child-att":   150,
+            "m-att-total": 900,
+            "m-att-first": 50,
+            "m-sal": 70,
+            "m-tithes": 6000000,
+            "m-wrkr-total": 130,
+            "m-youth-att": 200,
+            "m-child-att": 150,
         },
     };
 
     const annualTargets2025: Record<string, Record<string, number>> = {
         [SEED_IDS.campuses.lekki]: {
-            "m-att-total":  2200,
-            "m-att-first":   120,
-            "m-sal":         175,
-            "m-tithes":   3500000,
-            "m-wrkr-total":  310,
+            "m-att-total": 2200,
+            "m-att-first": 120,
+            "m-sal": 175,
+            "m-tithes": 3500000,
+            "m-wrkr-total": 310,
         },
         [SEED_IDS.campuses.ikeja]: {
-            "m-att-total":  1600,
-            "m-att-first":    90,
-            "m-sal":         120,
-            "m-tithes":   2400000,
+            "m-att-total": 1600,
+            "m-att-first": 90,
+            "m-sal": 120,
+            "m-tithes": 2400000,
         },
         [SEED_IDS.campuses.abuja]: {
-            "m-att-total":  1750,
-            "m-att-first":   100,
-            "m-sal":         140,
-            "m-tithes":   2800000,
+            "m-att-total": 1750,
+            "m-att-first": 100,
+            "m-sal": 140,
+            "m-tithes": 2800000,
         },
         [SEED_IDS.campuses.london]: {
-            "m-att-total":  800,
-            "m-att-first":    40,
-            "m-sal":          60,
+            "m-att-total": 800,
+            "m-att-first": 40,
+            "m-sal": 60,
         },
     };
 
@@ -525,7 +607,6 @@ export async function seedDb(db: MockDbType): Promise<void> {
     }
 
     // ── Sample Notifications ──────────────────────────────────────────────────
-    const { NotificationType } = await import("@/types/global");
 
     const notifications: AppNotification[] = [
         {

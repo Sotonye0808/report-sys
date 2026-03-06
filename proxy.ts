@@ -1,14 +1,13 @@
 /**
- * middleware.ts
- * Edge-runtime route protection for the Harvesters Reporting System.
+ * proxy.ts — Next.js 16 Edge-runtime route guard.
  *
  * Rules:
- *  - Unauthenticated users → redirect to /login
+ *  - Unauthenticated users → redirect to /login?from={pathname}
  *  - Authenticated users visiting /login → redirect to their dashboard
- *  - /superadmin/* → SUPERADMIN only
- *  - /leader/* → all roles EXCEPT MEMBER
- *  - /member/* → MEMBER only
- *  - Wrong-role access → redirect to the user's correct dashboard
+ *  - /templates, /users, /org, /invites, /goals → SUPERADMIN only
+ *  - All other dashboard routes → any authenticated role
+ *
+ * JWT secret must match ACCESS_SECRET in lib/utils/auth.ts.
  */
 
 import { NextResponse, type NextRequest } from "next/server";
@@ -16,51 +15,50 @@ import { jwtVerify } from "jose";
 
 /* ── Constants ─────────────────────────────────────────────────────────────── */
 
-const AUTH_COOKIE = "hrs_token";
+const AUTH_COOKIE = process.env.COOKIE_NAME ?? "hrs_token";
+// Must match ACCESS_SECRET in lib/utils/auth.ts
 const JWT_SECRET = new TextEncoder().encode(
-    process.env.JWT_SECRET ?? "harvesters-dev-secret-change-in-production",
+    process.env.JWT_SECRET ?? "dev-access-secret-change-me",
 );
 
-const AUTH_ROUTES = ["/login", "/register", "/forgot-password", "/reset-password", "/join"];
+/** Auth pages — redirect to dashboard if already logged in */
+const PUBLIC_ROUTES = ["/login", "/register", "/forgot-password", "/reset-password", "/join"];
 
-const SUPERADMIN_ONLY = ["/superadmin"];
-const LEADER_ROUTES = ["/leader"];
-const MEMBER_ROUTES = ["/member"];
+/** Routes accessible only to SUPERADMIN */
+const SUPERADMIN_ROUTES = ["/templates", "/users", "/org", "/invites", "/goals"];
 
-/* ── UserRole enum values (duplicated here — no Node imports in Edge) ───────── */
-
-const LEADER_ROLES = new Set([
-    "SPO",
-    "CEO",
-    "CHURCH_MINISTRY",
-    "GROUP_PASTOR",
-    "GROUP_ADMIN",
-    "CAMPUS_PASTOR",
-    "CAMPUS_ADMIN",
-    "DATA_ENTRY",
-]);
+/** All protected route prefixes — require any authenticated user */
+const PROTECTED_PREFIX = [
+    "/dashboard",
+    "/reports",
+    "/analytics",
+    "/inbox",
+    "/settings",
+    "/profile",
+    "/templates",
+    "/users",
+    "/org",
+    "/invites",
+    "/goals",
+];
 
 const ROLE_DASHBOARD: Record<string, string> = {
-    SUPERADMIN: "/superadmin/dashboard",
-    SPO: "/leader/dashboard",
-    CEO: "/leader/dashboard",
-    CHURCH_MINISTRY: "/leader/dashboard",
-    GROUP_PASTOR: "/leader/dashboard",
-    GROUP_ADMIN: "/leader/dashboard",
-    CAMPUS_PASTOR: "/leader/dashboard",
-    CAMPUS_ADMIN: "/leader/dashboard",
-    DATA_ENTRY: "/leader/reports",
-    MEMBER: "/member/dashboard",
+    SUPERADMIN: "/dashboard",
+    SPO: "/dashboard",
+    CEO: "/dashboard",
+    CHURCH_MINISTRY: "/dashboard",
+    GROUP_PASTOR: "/dashboard",
+    GROUP_ADMIN: "/dashboard",
+    CAMPUS_PASTOR: "/dashboard",
+    CAMPUS_ADMIN: "/dashboard",
+    DATA_ENTRY: "/reports",
+    MEMBER: "/dashboard",
 };
 
 /* ── Helpers ───────────────────────────────────────────────────────────────── */
 
 function redirectTo(url: string, req: NextRequest) {
     return NextResponse.redirect(new URL(url, req.url));
-}
-
-function startsWithAny(path: string, prefixes: string[]) {
-    return prefixes.some((p) => path.startsWith(p));
 }
 
 interface TokenPayload {
@@ -89,7 +87,7 @@ async function getTokenPayload(token: string): Promise<TokenPayload | null> {
     }
 }
 
-/* ── Middleware ────────────────────────────────────────────────────────────── */
+/* ── Proxy (Next.js 16 middleware) ─────────────────────────────────────────── */
 
 export async function proxy(req: NextRequest) {
     const { pathname } = req.nextUrl;
@@ -97,25 +95,19 @@ export async function proxy(req: NextRequest) {
     const token = req.cookies.get(AUTH_COOKIE)?.value ?? null;
     const user = token ? await getTokenPayload(token) : null;
 
-    /* ── 1. Public / static paths — always allow ──────────────────────────── */
-    // (The matcher below already excludes _next, api, static assets)
-
-    /* ── 2. Auth routes (/login, /register, etc.) ─────────────────────────── */
-    if (AUTH_ROUTES.some((r) => pathname === r || pathname.startsWith(r + "/"))) {
+    /* ── 1. Public / auth routes ──────────────────────────────────────────── */
+    const isPublic = PUBLIC_ROUTES.some((r) => pathname === r || pathname.startsWith(r + "/"));
+    if (isPublic) {
         if (user) {
-            // Already logged in → send to their dashboard
-            const dashboard = ROLE_DASHBOARD[user.role] ?? "/login";
-            return redirectTo(dashboard, req);
+            return redirectTo(ROLE_DASHBOARD[user.role] ?? "/dashboard", req);
         }
         return NextResponse.next();
     }
 
-    /* ── 3. Protected routes — must be authenticated ──────────────────────── */
-    const isProtected =
-        startsWithAny(pathname, SUPERADMIN_ONLY) ||
-        startsWithAny(pathname, LEADER_ROUTES) ||
-        startsWithAny(pathname, MEMBER_ROUTES) ||
-        pathname.startsWith("/profile");
+    /* ── 2. Protected routes — require authentication ─────────────────────── */
+    const isProtected = PROTECTED_PREFIX.some(
+        (p) => pathname === p || pathname.startsWith(p + "/"),
+    );
 
     if (isProtected && !user) {
         const loginUrl = new URL("/login", req.url);
@@ -125,23 +117,12 @@ export async function proxy(req: NextRequest) {
 
     if (!user) return NextResponse.next();
 
-    /* ── 4. Role-based route guard ─────────────────────────────────────────── */
-    const { role } = user;
-    const userDashboard = ROLE_DASHBOARD[role] ?? "/login";
-
-    // /superadmin/* — SUPERADMIN only
-    if (startsWithAny(pathname, SUPERADMIN_ONLY) && role !== "SUPERADMIN") {
-        return redirectTo(userDashboard, req);
-    }
-
-    // /leader/* — all leader roles
-    if (startsWithAny(pathname, LEADER_ROUTES) && !LEADER_ROLES.has(role)) {
-        return redirectTo(userDashboard, req);
-    }
-
-    // /member/* — MEMBER only
-    if (startsWithAny(pathname, MEMBER_ROUTES) && role !== "MEMBER") {
-        return redirectTo(userDashboard, req);
+    /* ── 3. Superadmin-only routes ────────────────────────────────────────── */
+    const isSuperadminRoute = SUPERADMIN_ROUTES.some(
+        (p) => pathname === p || pathname.startsWith(p + "/"),
+    );
+    if (isSuperadminRoute && user.role !== "SUPERADMIN") {
+        return redirectTo(ROLE_DASHBOARD[user.role] ?? "/dashboard", req);
     }
 
     return NextResponse.next();

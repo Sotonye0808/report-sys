@@ -11,11 +11,7 @@
 import { useState, use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { message } from "antd";
-import {
-  SaveOutlined,
-  ArrowLeftOutlined,
-  LockOutlined,
-} from "@ant-design/icons";
+import { SaveOutlined, ArrowLeftOutlined, LockOutlined } from "@ant-design/icons";
 import { useRole } from "@/lib/hooks/useRole";
 import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
 import { mockDb } from "@/lib/data/mockDb";
@@ -58,12 +54,18 @@ export function ReportEditPage({ params }: PageProps) {
     mockDb.reports.findFirst({ where: (r: Report) => r.id === id }),
   );
 
-  const template = useMockDbSubscription<ReportTemplate | null>("reportTemplates", async () => {
-    if (!report?.templateId) return null;
-    return mockDb.reportTemplates.findFirst({
-      where: (t: ReportTemplate) => t.id === report.templateId,
-    });
-  });
+  // NOTE: report?.templateId is passed as a dep so that the query re-runs
+  // once `report` loads and its templateId becomes available.
+  const template = useMockDbSubscription<ReportTemplate | null>(
+    "reportTemplates",
+    async () => {
+      if (!report?.templateId) return null;
+      return mockDb.reportTemplates.findFirst({
+        where: (t: ReportTemplate) => t.id === report.templateId,
+      });
+    },
+    [report?.templateId],
+  );
 
   /* Initialise form values + load goals once report + template are available */
   useEffect(() => {
@@ -75,8 +77,8 @@ export function ReportEditPage({ params }: PageProps) {
 
     // Load goals for this campus + period
     const campusId = report.campusId;
-    const year     = report.periodYear;
-    const month    = report.periodMonth;
+    const year = report.periodYear;
+    const month = report.periodMonth;
     if (!campusId || !year) return;
 
     const params = new URLSearchParams({ campusId, year: String(year) });
@@ -87,7 +89,9 @@ export function ReportEditPage({ params }: PageProps) {
       .then((json) => {
         if (json.success) setGoalsMap(json.data as GoalsForReportMap);
       })
-      .catch(() => {/* non-fatal */});
+      .catch(() => {
+        /* non-fatal */
+      });
   }, [report, template, initialized]);
 
   const handleMetricChange = (metricId: string, v: MetricValues) =>
