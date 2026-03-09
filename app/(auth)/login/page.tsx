@@ -140,7 +140,7 @@ function LoginForm() {
         </Link>
       </p>
 
-      {/* Demo credentials panel — always visible */}
+      {/* Demo credentials panel — always visible 
       <div className="mt-4 border border-ds-border-subtle rounded-ds-xl overflow-hidden">
         <button
           type="button"
@@ -181,7 +181,7 @@ function LoginForm() {
             ))}
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }

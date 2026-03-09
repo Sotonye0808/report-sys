@@ -781,12 +781,13 @@ export function AnalyticsPage() {
                     cy="50%"
                     outerRadius={90}
                     dataKey="value"
-                    label={((props: Record<string, unknown>) =>
-                      String(props.name ?? "") +
-                      " " +
-                      Math.round(((props.percent as number) ?? 0) * 100) +
-                      "%"
-                    ) as unknown as import("recharts").PieLabel}
+                    label={
+                      ((props: Record<string, unknown>) =>
+                        String(props.name ?? "") +
+                        " " +
+                        Math.round(((props.percent as number) ?? 0) * 100) +
+                        "%") as unknown as import("recharts").PieLabel
+                    }
                     labelLine={{ stroke: "var(--ds-border-base)" }}
                   >
                     {pieData.map((_entry, i) => (
