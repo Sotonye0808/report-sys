@@ -390,6 +390,19 @@ exports.Prisma.InviteLinkScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.BugReportScalarFieldEnum = {
+  id: 'id',
+  category: 'category',
+  description: 'description',
+  screenshotUrl: 'screenshotUrl',
+  contactEmail: 'contactEmail',
+  status: 'status',
+  adminNotes: 'adminNotes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -424,6 +437,7 @@ exports.UserRole = exports.$Enums.UserRole = {
   SUPERADMIN: 'SUPERADMIN',
   SPO: 'SPO',
   CEO: 'CEO',
+  OFFICE_OF_CEO: 'OFFICE_OF_CEO',
   CHURCH_MINISTRY: 'CHURCH_MINISTRY',
   GROUP_PASTOR: 'GROUP_PASTOR',
   GROUP_ADMIN: 'GROUP_ADMIN',
@@ -530,6 +544,24 @@ exports.InviteLinkType = exports.$Enums.InviteLinkType = {
   DIRECT: 'DIRECT'
 };
 
+exports.BugReportCategory = exports.$Enums.BugReportCategory = {
+  UI_DISPLAY: 'UI_DISPLAY',
+  NAVIGATION: 'NAVIGATION',
+  DATA_ISSUE: 'DATA_ISSUE',
+  PERFORMANCE: 'PERFORMANCE',
+  AUTHENTICATION: 'AUTHENTICATION',
+  REPORT_SUBMISSION: 'REPORT_SUBMISSION',
+  NOTIFICATION: 'NOTIFICATION',
+  OTHER: 'OTHER'
+};
+
+exports.BugReportStatus = exports.$Enums.BugReportStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   OrgGroup: 'OrgGroup',
@@ -549,7 +581,8 @@ exports.Prisma.ModelName = {
   GoalEditRequest: 'GoalEditRequest',
   MetricEntry: 'MetricEntry',
   Notification: 'Notification',
-  InviteLink: 'InviteLink'
+  InviteLink: 'InviteLink',
+  BugReport: 'BugReport'
 };
 
 /**

@@ -14,6 +14,7 @@
 
 import { PrismaClient } from "./generated";
 import bcryptjs from "bcryptjs";
+import { DEFAULT_REPORT_TEMPLATE, WEEKLY_REPORT_TEMPLATE, MONTHLY_ONLY_REPORT_TEMPLATE } from "../config/reports";
 
 // Prisma 7 "client" engine requires accelerateUrl (prisma:// URL).
 // Seeds run via the Accelerate connection; DIRECT_URL is only needed for
@@ -46,8 +47,16 @@ const SEED_IDS = {
         abuja: "campus-abuja-001",
         london: "campus-london-001",
     },
-    template: "template-default-001",
-    templateVersion: "tpl-version-001",
+    templates: {
+        default: "template-default-001",
+        weekly: "template-weekly-001",
+        monthly: "template-monthly-001",
+    },
+    templateVersions: {
+        default: "tpl-version-001",
+        weekly: "tpl-version-weekly-001",
+        monthly: "tpl-version-monthly-001",
+    },
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -123,126 +132,72 @@ async function seedDemoUsers(hashedPassword: string) {
 }
 
 async function seedTemplate() {
-    console.log("[seed] Creating report template...");
-    const template = await prisma.reportTemplate.create({
-        data: {
-            id: SEED_IDS.template,
-            organisationId: ORG_ID,
-            name: "Standard Campus Weekly Report",
-            description: "Default Harvesters weekly report covering all key metrics",
-            version: 1,
-            isActive: true,
-            isDefault: true,
-            createdById: SEED_IDS.users.superadmin,
-        },
-    });
+    console.log("[seed] Creating report templates from config/reports.ts...");
 
-    // Template sections and metrics
-    const sectionDefs = [
-        {
-            id: "section-attendance", name: "Weekly Attendance", order: 1, isRequired: true, metrics: [
-                { id: "m-att-total", name: "Total Attendance", fieldType: "NUMBER" as const, calcType: "AVERAGE" as const, order: 1, goal: true, achieved: true, yoy: true },
-                { id: "m-att-first", name: "First Timers", fieldType: "NUMBER" as const, calcType: "SUM" as const, order: 2, goal: true, achieved: true, yoy: false },
-            ]
-        },
-        {
-            id: "section-salvations", name: "Salvations", order: 2, isRequired: true, metrics: [
-                { id: "m-sal", name: "Salvations", fieldType: "NUMBER" as const, calcType: "SUM" as const, order: 1, goal: true, achieved: true, yoy: true },
-            ]
-        },
-        {
-            id: "section-discipleship", name: "Discipleship", order: 3, isRequired: true, metrics: [
-                { id: "m-disc-enroll", name: "Foundation School — Enrolled", fieldType: "NUMBER" as const, calcType: "SNAPSHOT" as const, order: 1, goal: true, achieved: true, yoy: false },
-                { id: "m-disc-grad", name: "Foundation School — Graduated", fieldType: "NUMBER" as const, calcType: "SUM" as const, order: 2, goal: false, achieved: true, yoy: false },
-            ]
-        },
-        {
-            id: "section-tithes", name: "Tithes & Offerings", order: 4, isRequired: false, metrics: [
-                { id: "m-tithes", name: "Tithes", fieldType: "CURRENCY" as const, calcType: "SUM" as const, order: 1, goal: true, achieved: true, yoy: false },
-                { id: "m-offerings", name: "Offerings", fieldType: "CURRENCY" as const, calcType: "SUM" as const, order: 2, goal: false, achieved: true, yoy: false },
-            ]
-        },
-        {
-            id: "section-workers", name: "Workers", order: 5, isRequired: true, metrics: [
-                { id: "m-wrkr-total", name: "Total Workers", fieldType: "NUMBER" as const, calcType: "SNAPSHOT" as const, order: 1, goal: true, achieved: true, yoy: true },
-                { id: "m-wrkr-new", name: "New Workers This Week", fieldType: "NUMBER" as const, calcType: "SUM" as const, order: 2, goal: false, achieved: true, yoy: false },
-            ]
-        },
-        {
-            id: "section-outreach", name: "Outreach", order: 6, isRequired: false, metrics: [
-                { id: "m-out-events", name: "Outreach Events Held", fieldType: "NUMBER" as const, calcType: "SUM" as const, order: 1, goal: true, achieved: true, yoy: false },
-                { id: "m-out-sal", name: "Salvations via Outreach", fieldType: "NUMBER" as const, calcType: "SUM" as const, order: 2, goal: false, achieved: true, yoy: false },
-            ]
-        },
-        {
-            id: "section-youth", name: "Youth", order: 7, isRequired: true, metrics: [
-                { id: "m-youth-att", name: "Youth Attendance", fieldType: "NUMBER" as const, calcType: "AVERAGE" as const, order: 1, goal: true, achieved: true, yoy: false },
-                { id: "m-youth-sal", name: "Youth Salvations", fieldType: "NUMBER" as const, calcType: "SUM" as const, order: 2, goal: false, achieved: true, yoy: false },
-            ]
-        },
-        {
-            id: "section-children", name: "Children", order: 8, isRequired: true, metrics: [
-                { id: "m-child-att", name: "Children Attendance", fieldType: "NUMBER" as const, calcType: "AVERAGE" as const, order: 1, goal: true, achieved: true, yoy: false },
-            ]
-        },
-        {
-            id: "section-media", name: "Media & Digital", order: 9, isRequired: false, metrics: [
-                { id: "m-media-stream", name: "Live Stream Views", fieldType: "NUMBER" as const, calcType: "SUM" as const, order: 1, goal: true, achieved: true, yoy: false },
-                { id: "m-media-social", name: "Social Media Reach", fieldType: "NUMBER" as const, calcType: "SUM" as const, order: 2, goal: false, achieved: true, yoy: false },
-            ]
-        },
-        {
-            id: "section-prayer", name: "Prayer", order: 10, isRequired: false, metrics: [
-                { id: "m-prayer-mtg", name: "Prayer Meetings Held", fieldType: "NUMBER" as const, calcType: "SUM" as const, order: 1, goal: true, achieved: true, yoy: false },
-                { id: "m-prayer-att", name: "Prayer Meeting Attendance", fieldType: "NUMBER" as const, calcType: "AVERAGE" as const, order: 2, goal: false, achieved: true, yoy: false },
-            ]
-        },
-        {
-            id: "section-infra", name: "Infrastructure & Facilities", order: 11, isRequired: false, metrics: [
-                { id: "m-infra-proj", name: "Active Projects", fieldType: "NUMBER" as const, calcType: "SNAPSHOT" as const, order: 1, goal: false, achieved: true, yoy: false },
-            ]
-        },
+    const templateDefs = [
+        { config: DEFAULT_REPORT_TEMPLATE, id: SEED_IDS.templates.default, versionId: SEED_IDS.templateVersions.default },
+        { config: WEEKLY_REPORT_TEMPLATE, id: SEED_IDS.templates.weekly, versionId: SEED_IDS.templateVersions.weekly },
+        { config: MONTHLY_ONLY_REPORT_TEMPLATE, id: SEED_IDS.templates.monthly, versionId: SEED_IDS.templateVersions.monthly },
     ];
 
-    for (const sec of sectionDefs) {
-        await prisma.reportTemplateSection.create({
+    for (const { config, id, versionId } of templateDefs) {
+        console.log(`[seed]   → ${config.name}`);
+
+        const template = await prisma.reportTemplate.create({
             data: {
-                id: sec.id,
-                templateId: template.id,
-                name: sec.name,
-                order: sec.order,
-                isRequired: sec.isRequired,
-                metrics: {
-                    create: sec.metrics.map((m) => ({
-                        id: m.id,
-                        name: m.name,
-                        fieldType: m.fieldType,
-                        calculationType: m.calcType,
-                        isRequired: sec.isRequired,
-                        order: m.order,
-                        capturesGoal: m.goal,
-                        capturesAchieved: m.achieved,
-                        capturesYoY: m.yoy,
-                    })),
+                id,
+                organisationId: ORG_ID,
+                name: config.name,
+                description: config.description,
+                version: config.version,
+                isActive: config.isActive,
+                isDefault: config.isDefault,
+                createdById: SEED_IDS.users.superadmin,
+            },
+        });
+
+        for (const sec of config.sections) {
+            await prisma.reportTemplateSection.create({
+                data: {
+                    id: sec.id,
+                    templateId: template.id,
+                    name: sec.name,
+                    description: sec.description,
+                    order: sec.order,
+                    isRequired: sec.isRequired,
+                    metrics: {
+                        create: sec.metrics.map((met) => ({
+                            id: met.id,
+                            name: met.name,
+                            fieldType: met.fieldType,
+                            calculationType: met.calculationType,
+                            isRequired: met.isRequired,
+                            order: met.order,
+                            capturesGoal: met.capturesGoal,
+                            capturesAchieved: met.capturesAchieved,
+                            capturesYoY: met.capturesYoY,
+                            description: met.description,
+                        })),
+                    },
                 },
+            });
+        }
+
+        // Template version snapshot
+        const fullTemplate = await prisma.reportTemplate.findUnique({
+            where: { id: template.id },
+            include: { sections: { include: { metrics: true }, orderBy: { order: "asc" } } },
+        });
+        await prisma.reportTemplateVersion.create({
+            data: {
+                id: versionId,
+                templateId: template.id,
+                versionNumber: 1,
+                snapshot: JSON.parse(JSON.stringify(fullTemplate)),
+                createdById: SEED_IDS.users.superadmin,
             },
         });
     }
-
-    // Template version snapshot
-    const fullTemplate = await prisma.reportTemplate.findUnique({
-        where: { id: template.id },
-        include: { sections: { include: { metrics: true }, orderBy: { order: "asc" } } },
-    });
-    await prisma.reportTemplateVersion.create({
-        data: {
-            id: SEED_IDS.templateVersion,
-            templateId: template.id,
-            versionNumber: 1,
-            snapshot: JSON.parse(JSON.stringify(fullTemplate)),
-            createdById: SEED_IDS.users.superadmin,
-        },
-    });
 }
 
 async function seedReports() {
@@ -262,8 +217,8 @@ async function seedReports() {
             data: {
                 id: rc.id,
                 title: rc.title,
-                templateId: SEED_IDS.template,
-                templateVersionId: SEED_IDS.templateVersion,
+                templateId: SEED_IDS.templates.default,
+                templateVersionId: SEED_IDS.templateVersions.default,
                 campusId: rc.campusId,
                 orgGroupId: rc.groupId,
                 periodType: "WEEKLY",
@@ -283,22 +238,23 @@ async function seedReports() {
         });
     }
 
-    // Sections + metrics for Lekki submitted
+    // Sections + metrics for Lekki submitted — aligned with DEFAULT_REPORT_TEMPLATE IDs
     const lekkiSec1 = await prisma.reportSection.create({
-        data: { reportId: "report-lekki-submitted", templateSectionId: "section-attendance", sectionName: "Weekly Attendance" },
+        data: { reportId: "report-lekki-submitted", templateSectionId: "std-att", sectionName: "Attendance" },
     });
     await prisma.reportMetric.createMany({
         data: [
-            { reportSectionId: lekkiSec1.id, templateMetricId: "m-att-total", metricName: "Total Attendance", calculationType: "AVERAGE", monthlyGoal: 2500, monthlyAchieved: 2340, yoyGoal: 2100, computedPercentage: 93.6 },
-            { reportSectionId: lekkiSec1.id, templateMetricId: "m-att-first", metricName: "First Timers", calculationType: "SUM", monthlyGoal: 150, monthlyAchieved: 163, computedPercentage: 108.7 },
+            { reportSectionId: lekkiSec1.id, templateMetricId: "std-att-sun-male", metricName: "Sunday Attendance — Male", calculationType: "AVERAGE", monthlyGoal: 1200, monthlyAchieved: 1150, yoyGoal: 1000, computedPercentage: 95.8 },
+            { reportSectionId: lekkiSec1.id, templateMetricId: "std-att-sun-female", metricName: "Sunday Attendance — Female", calculationType: "AVERAGE", monthlyGoal: 1300, monthlyAchieved: 1190, yoyGoal: 1100, computedPercentage: 91.5 },
+            { reportSectionId: lekkiSec1.id, templateMetricId: "std-att-first-timers", metricName: "First Timers", calculationType: "SUM", monthlyGoal: 150, monthlyAchieved: 163, computedPercentage: 108.7 },
         ],
     });
 
     const lekkiSec2 = await prisma.reportSection.create({
-        data: { reportId: "report-lekki-submitted", templateSectionId: "section-salvations", sectionName: "Salvations" },
+        data: { reportId: "report-lekki-submitted", templateSectionId: "std-sal", sectionName: "Salvation" },
     });
     await prisma.reportMetric.create({
-        data: { reportSectionId: lekkiSec2.id, templateMetricId: "m-sal", metricName: "Salvations", calculationType: "SUM", monthlyGoal: 200, monthlyAchieved: 195, computedPercentage: 97.5, comment: "Strong altar call responses across all services." },
+        data: { reportSectionId: lekkiSec2.id, templateMetricId: "std-sal-service", metricName: "Soul Saved in Service", calculationType: "SUM", monthlyGoal: 200, monthlyAchieved: 195, computedPercentage: 97.5, comment: "Strong altar call responses across all services." },
     });
 
     console.log("[seed] Creating report events...");
@@ -325,10 +281,10 @@ async function seedReports() {
 
     console.log("[seed] Creating goals...");
     const campusGoalDefs = [
-        { campusId: SEED_IDS.campuses.lekki, metrics: { "m-att-total": 2500, "m-att-first": 150, "m-sal": 200, "m-wrkr-total": 350, "m-youth-att": 600 } },
-        { campusId: SEED_IDS.campuses.ikeja, metrics: { "m-att-total": 1800, "m-att-first": 100, "m-sal": 140, "m-wrkr-total": 240 } },
-        { campusId: SEED_IDS.campuses.abuja, metrics: { "m-att-total": 2000, "m-att-first": 120, "m-sal": 160, "m-wrkr-total": 280 } },
-        { campusId: SEED_IDS.campuses.london, metrics: { "m-att-total": 900, "m-att-first": 50, "m-sal": 70, "m-wrkr-total": 130 } },
+        { campusId: SEED_IDS.campuses.lekki, metrics: { "std-att-sun-male": 1200, "std-att-first-timers": 150, "std-sal-service": 200, "std-assim-workers": 350, "std-ng-att-stir": 600 } },
+        { campusId: SEED_IDS.campuses.ikeja, metrics: { "std-att-sun-male": 900, "std-att-first-timers": 100, "std-sal-service": 140, "std-assim-workers": 240 } },
+        { campusId: SEED_IDS.campuses.abuja, metrics: { "std-att-sun-male": 1000, "std-att-first-timers": 120, "std-sal-service": 160, "std-assim-workers": 280 } },
+        { campusId: SEED_IDS.campuses.london, metrics: { "std-att-sun-male": 450, "std-att-first-timers": 50, "std-sal-service": 70, "std-assim-workers": 130 } },
     ];
 
     for (const def of campusGoalDefs) {
@@ -338,7 +294,7 @@ async function seedReports() {
                 data: {
                     campusId: def.campusId,
                     orgGroupId: groupId,
-                    templateId: SEED_IDS.template,
+                    templateId: SEED_IDS.templates.default,
                     templateMetricId: metricId,
                     metricName: metricId,
                     mode: "ANNUAL",

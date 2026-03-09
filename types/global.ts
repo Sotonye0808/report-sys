@@ -15,6 +15,7 @@ export enum UserRole {
     SUPERADMIN = "SUPERADMIN",
     SPO = "SPO",
     CEO = "CEO",
+    OFFICE_OF_CEO = "OFFICE_OF_CEO",
     CHURCH_MINISTRY = "CHURCH_MINISTRY",
     GROUP_PASTOR = "GROUP_PASTOR",
     GROUP_ADMIN = "GROUP_ADMIN",
@@ -127,6 +128,24 @@ export enum InviteLinkType {
     DIRECT = "DIRECT",
 }
 
+export enum BugReportStatus {
+    OPEN = "OPEN",
+    IN_PROGRESS = "IN_PROGRESS",
+    RESOLVED = "RESOLVED",
+    CLOSED = "CLOSED",
+}
+
+export enum BugReportCategory {
+    UI_DISPLAY = "UI_DISPLAY",
+    NAVIGATION = "NAVIGATION",
+    DATA_ISSUE = "DATA_ISSUE",
+    PERFORMANCE = "PERFORMANCE",
+    AUTHENTICATION = "AUTHENTICATION",
+    REPORT_SUBMISSION = "REPORT_SUBMISSION",
+    NOTIFICATION = "NOTIFICATION",
+    OTHER = "OTHER",
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // RUNTIME CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
@@ -135,13 +154,14 @@ export const HIERARCHY_ORDER: Record<UserRole, number> = {
     [UserRole.SUPERADMIN]: 0,
     [UserRole.SPO]: 1,
     [UserRole.CEO]: 2,
-    [UserRole.CHURCH_MINISTRY]: 3,
-    [UserRole.GROUP_PASTOR]: 4,
-    [UserRole.GROUP_ADMIN]: 5,
-    [UserRole.CAMPUS_PASTOR]: 6,
-    [UserRole.CAMPUS_ADMIN]: 7,
-    [UserRole.DATA_ENTRY]: 8,
-    [UserRole.MEMBER]: 9,
+    [UserRole.OFFICE_OF_CEO]: 3,
+    [UserRole.CHURCH_MINISTRY]: 4,
+    [UserRole.GROUP_PASTOR]: 5,
+    [UserRole.GROUP_ADMIN]: 6,
+    [UserRole.CAMPUS_PASTOR]: 7,
+    [UserRole.CAMPUS_ADMIN]: 8,
+    [UserRole.DATA_ENTRY]: 9,
+    [UserRole.MEMBER]: 10,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -666,6 +686,20 @@ declare global {
         createdAt: string;
     }
 
+    interface BugReport {
+        id: string;
+        category: BugReportCategory;
+        description: string;
+        screenshotUrl?: string;
+        contactEmail: string;
+        status: BugReportStatus;
+        adminNotes?: string;
+        createdById: string;
+        createdBy?: UserProfile;
+        createdAt: string;
+        updatedAt: string;
+    }
+
     type ApiResponse<T> =
         | { success: true; data: T }
         | { success: false; error: string; code: number };
@@ -691,8 +725,10 @@ declare global {
         profile: Record<string, unknown>;
         invites: Record<string, unknown>;
         settings: Record<string, unknown>;
+        bugReports: Record<string, unknown>;
         errors: Record<string, unknown>;
         common: Record<string, unknown>;
         offline: Record<string, unknown>;
+        seo: Record<string, string>;
     }
 }

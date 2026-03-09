@@ -20,14 +20,51 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  applicationName: "Harvesters Reporting System",
   title: {
     default: "Harvesters Reporting System",
     template: "%s | Harvesters Reporting System",
   },
   description:
-    "The central reporting system for Harvesters International Christian Centre — campus report submission, review, and analytics.",
+    "The central report management platform for Harvesters International Christian Centre — campus report submission, review, and analytics.",
   authors: [{ name: "Harvesters International Christian Centre" }],
   robots: { index: false, follow: false }, // internal system — no indexing
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://reporting.harvesters.org"),
+  openGraph: {
+    type: "website",
+    siteName: "Harvesters Reporting System",
+    title: "Harvesters Reporting System",
+    description:
+      "The central report management platform for Harvesters International Christian Centre.",
+    images: [
+      {
+        url: "/logo/icon-512.svg",
+        width: 512,
+        height: 512,
+        alt: "Harvesters International Christian Centre",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "Harvesters Reporting System",
+    description:
+      "The central report management platform for Harvesters International Christian Centre.",
+    images: ["/logo/icon-512.svg"],
+  },
+  icons: {
+    icon: [
+      { url: "/logo/icon-192.svg", type: "image/svg+xml", sizes: "192x192" },
+      { url: "/logo/icon-512.svg", type: "image/svg+xml", sizes: "any" },
+    ],
+    apple: [{ url: "/logo/icon-192.svg", sizes: "180x180", type: "image/svg+xml" }],
+  },
+  appleWebApp: {
+    title: "HRS",
+    statusBarStyle: "default",
+    capable: true,
+  },
+  formatDetection: { telephone: false },
 };
 
 export default function RootLayout({

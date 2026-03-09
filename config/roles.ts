@@ -72,10 +72,31 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
         canApproveGoalUnlock: true,
         reportVisibilityScope: "all",
     },
+    [UserRole.OFFICE_OF_CEO]: {
+        role: UserRole.OFFICE_OF_CEO,
+        label: CONTENT.users.roles.OFFICE_OF_CEO,
+        hierarchyOrder: 3,
+        dashboardRoute: APP_ROUTES.dashboard,
+        dashboardMode: "analytics",
+        canCreateReports: false,
+        canFillReports: false,
+        canSubmitReports: false,
+        canRequestEdits: true,
+        canApproveReports: false,
+        canMarkReviewed: true,
+        canLockReports: false,
+        canManageTemplates: true,
+        canDataEntry: false,
+        canManageUsers: false,
+        canManageOrg: false,
+        canSetGoals: true,
+        canApproveGoalUnlock: true,
+        reportVisibilityScope: "all",
+    },
     [UserRole.CHURCH_MINISTRY]: {
         role: UserRole.CHURCH_MINISTRY,
         label: CONTENT.users.roles.CHURCH_MINISTRY,
-        hierarchyOrder: 3,
+        hierarchyOrder: 4,
         dashboardRoute: APP_ROUTES.dashboard,
         dashboardMode: "analytics",
         canCreateReports: false,
@@ -96,7 +117,7 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
     [UserRole.GROUP_PASTOR]: {
         role: UserRole.GROUP_PASTOR,
         label: CONTENT.users.roles.GROUP_PASTOR,
-        hierarchyOrder: 4,
+        hierarchyOrder: 5,
         dashboardRoute: APP_ROUTES.dashboard,
         dashboardMode: "report-reviewed",
         canCreateReports: false,
@@ -117,7 +138,7 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
     [UserRole.GROUP_ADMIN]: {
         role: UserRole.GROUP_ADMIN,
         label: CONTENT.users.roles.GROUP_ADMIN,
-        hierarchyOrder: 5,
+        hierarchyOrder: 6,
         dashboardRoute: APP_ROUTES.dashboard,
         dashboardMode: "report-review",
         canCreateReports: false,
@@ -138,7 +159,7 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
     [UserRole.CAMPUS_PASTOR]: {
         role: UserRole.CAMPUS_PASTOR,
         label: CONTENT.users.roles.CAMPUS_PASTOR,
-        hierarchyOrder: 6,
+        hierarchyOrder: 7,
         dashboardRoute: APP_ROUTES.dashboard,
         dashboardMode: "report-review",
         canCreateReports: true,
@@ -159,7 +180,7 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
     [UserRole.CAMPUS_ADMIN]: {
         role: UserRole.CAMPUS_ADMIN,
         label: CONTENT.users.roles.CAMPUS_ADMIN,
-        hierarchyOrder: 7,
+        hierarchyOrder: 8,
         dashboardRoute: APP_ROUTES.dashboard,
         dashboardMode: "report-fill",
         canCreateReports: true,
@@ -180,7 +201,7 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
     [UserRole.DATA_ENTRY]: {
         role: UserRole.DATA_ENTRY,
         label: CONTENT.users.roles.DATA_ENTRY,
-        hierarchyOrder: 8,
+        hierarchyOrder: 9,
         dashboardRoute: APP_ROUTES.reports,
         dashboardMode: "report-fill",
         canCreateReports: true,
@@ -201,7 +222,7 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
     [UserRole.MEMBER]: {
         role: UserRole.MEMBER,
         label: CONTENT.users.roles.MEMBER,
-        hierarchyOrder: 9,
+        hierarchyOrder: 10,
         dashboardRoute: APP_ROUTES.member.dashboard,
         dashboardMode: "report-fill",
         canCreateReports: false,
@@ -237,6 +258,7 @@ export const REPORT_REVIEWER_ROLES: UserRole[] = [
     UserRole.GROUP_PASTOR,
     UserRole.CHURCH_MINISTRY,
     UserRole.CEO,
+    UserRole.OFFICE_OF_CEO,
     UserRole.SPO,
     UserRole.SUPERADMIN,
 ];
@@ -250,6 +272,7 @@ export const LEADER_ROLES: UserRole[] = [
     UserRole.GROUP_PASTOR,
     UserRole.CHURCH_MINISTRY,
     UserRole.CEO,
+    UserRole.OFFICE_OF_CEO,
     UserRole.SPO,
 ];
 
