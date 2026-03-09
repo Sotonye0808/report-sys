@@ -12,6 +12,7 @@
  * Password for all seed users: "Nlp2026!"
  */
 
+import "dotenv/config";
 import { PrismaClient } from "./generated";
 import bcryptjs from "bcryptjs";
 import { DEFAULT_REPORT_TEMPLATE, WEEKLY_REPORT_TEMPLATE, MONTHLY_ONLY_REPORT_TEMPLATE } from "../config/reports";
@@ -27,6 +28,8 @@ const ORG_ID = process.env.NEXT_PUBLIC_ORG_ID ?? "harvesters-org-dev";
 
 // --base flag: seed only org structure + template (no demo users / reports)
 const BASE_ONLY = process.argv.includes("--base");
+// --reset flag: delete existing seed records before re-seeding
+const RESET = process.argv.includes("--reset");
 
 const SEED_IDS = {
     users: {
@@ -58,6 +61,72 @@ const SEED_IDS = {
         monthly: "tpl-version-monthly-001",
     },
 } as const;
+
+// ---------------------------------------------------------------------------
+// Purge helper — removes all deterministic seed records in FK-safe order
+// ---------------------------------------------------------------------------
+
+async function purgeSeedData() {
+    console.log("[seed] Purging existing seed data...");
+
+    // 1. Notifications referencing seeded users
+    await prisma.notification.deleteMany({
+        where: { userId: { in: Object.values(SEED_IDS.users) } },
+    });
+
+    // 2. Goals referencing seeded campuses
+    await prisma.goal.deleteMany({
+        where: { campusId: { in: Object.values(SEED_IDS.campuses) } },
+    });
+
+    // 3. Report events, metrics, sections, then reports
+    const reportIds = [
+        "report-lekki-draft",
+        "report-lekki-submitted",
+        "report-ikeja-approved",
+        "report-abuja-edits",
+        "report-london-locked",
+    ];
+    await prisma.reportEvent.deleteMany({ where: { reportId: { in: reportIds } } });
+    const sections = await prisma.reportSection.findMany({ where: { reportId: { in: reportIds } }, select: { id: true } });
+    const sectionIds = sections.map((s) => s.id);
+    if (sectionIds.length) {
+        await prisma.reportMetric.deleteMany({ where: { reportSectionId: { in: sectionIds } } });
+    }
+    await prisma.reportSection.deleteMany({ where: { reportId: { in: reportIds } } });
+    await prisma.report.deleteMany({ where: { id: { in: reportIds } } });
+
+    // 4. Template versions, then templates (sections/metrics cascade from template)
+    await prisma.reportTemplateVersion.deleteMany({
+        where: { id: { in: Object.values(SEED_IDS.templateVersions) } },
+    });
+    await prisma.reportTemplate.deleteMany({
+        where: { id: { in: Object.values(SEED_IDS.templates) } },
+    });
+
+    // 5. Clear FK back-references on org before deleting users
+    await prisma.orgGroup.updateMany({
+        where: { id: { in: Object.values(SEED_IDS.groups) } },
+        data: { leaderId: null },
+    });
+    await prisma.campus.updateMany({
+        where: { id: { in: Object.values(SEED_IDS.campuses) } },
+        data: { adminId: null },
+    });
+
+    // 6. Demo users, then superadmin
+    const demoUserIds = Object.entries(SEED_IDS.users)
+        .filter(([key]) => key !== "superadmin")
+        .map(([, id]) => id);
+    await prisma.user.deleteMany({ where: { id: { in: demoUserIds } } });
+    await prisma.user.deleteMany({ where: { id: SEED_IDS.users.superadmin } });
+
+    // 7. Campuses, then org groups
+    await prisma.campus.deleteMany({ where: { id: { in: Object.values(SEED_IDS.campuses) } } });
+    await prisma.orgGroup.deleteMany({ where: { id: { in: Object.values(SEED_IDS.groups) } } });
+
+    console.log("[seed] ✓ Purge complete.");
+}
 
 // ---------------------------------------------------------------------------
 // Modular seed functions
@@ -320,12 +389,18 @@ async function seedReports() {
 // ---------------------------------------------------------------------------
 
 async function main() {
+    if (RESET) {
+        await purgeSeedData();
+    }
+
     if (BASE_ONLY) {
         // Base-only seed: org structure + template (no demo users / reports)
-        const existingGroup = await prisma.orgGroup.findUnique({ where: { id: SEED_IDS.groups.nigeria } });
-        if (existingGroup) {
-            console.log("[seed] Base data already seeded, skipping.");
-            return;
+        if (!RESET) {
+            const existingGroup = await prisma.orgGroup.findUnique({ where: { id: SEED_IDS.groups.nigeria } });
+            if (existingGroup) {
+                console.log("[seed] Base data already seeded, skipping. Use --reset to overwrite.");
+                return;
+            }
         }
 
         const hashedPassword = await bcryptjs.hash("Nlp2026!", 12);
@@ -337,10 +412,12 @@ async function main() {
         console.log("[seed] ✓ Base seed complete (groups, campuses, template).");
     } else {
         // Full seed: everything
-        const existing = await prisma.user.findUnique({ where: { id: SEED_IDS.users.superadmin } });
-        if (existing) {
-            console.log("[seed] Already seeded, skipping.");
-            return;
+        if (!RESET) {
+            const existing = await prisma.user.findUnique({ where: { id: SEED_IDS.users.superadmin } });
+            if (existing) {
+                console.log("[seed] Already seeded, skipping. Use --reset to overwrite.");
+                return;
+            }
         }
 
         const hashedPassword = await bcryptjs.hash("Nlp2026!", 12);
