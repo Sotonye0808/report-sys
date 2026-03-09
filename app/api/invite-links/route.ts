@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
+import { db } from "@/lib/data/db";
 import { UserRole, InviteLinkType, HIERARCHY_ORDER } from "@/types/global";
 
 const ALLOWED_ROLES = [
@@ -34,13 +34,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
   }
 
-  const links = await mockDb.inviteLinks.findMany({
-    where: (l: InviteLink) => l.createdById === auth.user.id,
+  const links = await db.inviteLink.findMany({
+    where: { createdById: auth.user.id },
+    orderBy: { createdAt: "desc" },
   });
-  const sorted = [...links].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
-  return NextResponse.json({ success: true, data: sorted });
+  return NextResponse.json({ success: true, data: links });
 }
 
 export async function POST(req: NextRequest) {
@@ -64,20 +62,17 @@ export async function POST(req: NextRequest) {
   const expiresAt = new Date(Date.now() + body.expiresInHours * 3600 * 1000).toISOString();
   const token = crypto.randomUUID().replace(/-/g, "");
 
-  const link = await mockDb.inviteLinks.create({
+  const link = await db.inviteLink.create({
     data: {
-      id: crypto.randomUUID(),
       token,
       type: InviteLinkType.DIRECT,
       targetRole: body.targetRole,
-      campusId: body.campusId ?? undefined,
-      groupId: body.groupId ?? undefined,
+      campusId: body.campusId,
+      groupId: body.groupId,
       createdById: auth.user.id,
       expiresAt,
-      usedAt: undefined,
-      note: body.note ?? undefined,
+      note: body.note,
       isActive: true,
-      createdAt: new Date().toISOString(),
     },
   });
 

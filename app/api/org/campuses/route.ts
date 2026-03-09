@@ -7,8 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const CreateCampusSchema = z.object({
@@ -26,13 +25,12 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
     }
 
-    const cached = await mockCache.get("org:campuses:list");
+    const cached = await cache.get("org:campuses:list");
     if (cached) return NextResponse.json(JSON.parse(cached));
 
-    const campuses = await mockDb.campuses.findMany({});
-    const sorted = [...campuses].sort((a, b) => a.name.localeCompare(b.name));
-    const response = { success: true, data: sorted };
-    await mockCache.set("org:campuses:list", JSON.stringify(response), 120);
+    const campuses = await db.campus.findMany({ orderBy: { name: "asc" } });
+    const response = { success: true, data: campuses };
+    await cache.set("org:campuses:list", JSON.stringify(response), 120);
     return NextResponse.json(response);
 }
 
@@ -44,20 +42,17 @@ export async function POST(req: NextRequest) {
 
     const body = CreateCampusSchema.parse(await req.json());
 
-    const campus = await mockDb.campuses.create({
+    const campus = await db.campus.create({
         data: {
-            id: crypto.randomUUID(),
-            orgLevel: "CAMPUS",
-            isActive: true,
+            name: body.name,
             parentId: body.groupId ?? "",
-            location: body.location ?? "",
             country: body.country ?? "",
-            ...body,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        } as Campus,
+            location: body.location ?? "",
+            adminId: body.adminId,
+            isActive: true,
+        },
     });
 
-    await mockCache.invalidatePattern("org:campuses:*");
+    await cache.invalidatePattern("org:campuses:*");
     return NextResponse.json({ success: true, data: campus }, { status: 201 });
 }

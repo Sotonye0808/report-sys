@@ -33,10 +33,9 @@ import {
 } from "@ant-design/icons";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
-import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
+import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
-import { APP_ROUTES } from "@/config/routes";
-import { mockDb } from "@/lib/data/mockDb";
+import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
 import Button from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -187,25 +186,22 @@ export function DashboardPage() {
 
   // Load reports scoped to campus where applicable.
   // Complex scoping (own) is done in useMemo — WhereClause<T> only supports Partial<T>.
-  const allReports = useMockDbSubscription<Report[]>("reports", async () => {
-    if (!user) return [];
-    if (visibilityScope === "campus") {
-      return mockDb.reports.findMany({ where: { campusId: user.campusId } });
-    }
-    return mockDb.reports.findMany({});
-  });
+  const reportsUrl = user
+    ? visibilityScope === "campus" && user.campusId
+      ? `${API_ROUTES.reports.list}?campusId=${user.campusId}`
+      : API_ROUTES.reports.list
+    : null;
+  const { data: allReports } = useApiData<Report[]>(reportsUrl);
 
-  const templates = useMockDbSubscription<ReportTemplate[]>("reportTemplates", async () =>
-    mockDb.reportTemplates.findMany({}),
-  );
+  const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
 
   // System-mode-only subscriptions — empty for non-superadmin
-  const allUsers = useMockDbSubscription<UserProfile[]>("users", async () =>
-    isSuperadmin ? mockDb.users.findMany({}) : [],
+  const { data: allUsers } = useApiData<UserProfile[]>(
+    isSuperadmin ? API_ROUTES.users.list : null,
   );
 
-  const campuses = useMockDbSubscription<Campus[]>("campuses", async () =>
-    isSuperadmin ? mockDb.campuses.findMany({}) : [],
+  const { data: campuses } = useApiData<Campus[]>(
+    isSuperadmin ? API_ROUTES.org.campuses : null,
   );
 
   /* ── Scope filtering ────────────────────────────────────────────────────── */

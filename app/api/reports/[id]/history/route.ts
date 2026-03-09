@@ -5,8 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import {
     successResponse,
     unauthorizedResponse,
@@ -26,7 +25,7 @@ export async function GET(
         if (!auth.success) return unauthorizedResponse(auth.error);
 
         const { id } = await params;
-        const report = await mockDb.reports.findUnique({ where: { id } });
+        const report = await db.report.findUnique({ where: { id } });
         if (!report) return notFoundResponse("Report not found.");
 
         /* Scope check */
@@ -36,19 +35,16 @@ export async function GET(
         }
 
         const cacheKey = `report:${id}:history`;
-        const cached = await mockCache.get(cacheKey);
+        const cached = await cache.get(cacheKey);
         if (cached) return NextResponse.json(successResponse(JSON.parse(cached)));
 
-        const events = await mockDb.reportEvents.findMany({
-            where: (e: ReportEvent) => e.reportId === id,
+        const events = await db.reportEvent.findMany({
+            where: { reportId: id },
+            orderBy: { timestamp: "desc" },
         });
 
-        const sorted = [...events].sort(
-            (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-        );
-
-        await mockCache.set(cacheKey, JSON.stringify(sorted), 60);
-        return NextResponse.json(successResponse(sorted));
+        await cache.set(cacheKey, JSON.stringify(events), 60);
+        return NextResponse.json(successResponse(events));
     } catch (err) {
         return handleApiError(err);
     }

@@ -5,8 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import { successResponse, unauthorizedResponse, notFoundResponse, errorResponse, handleApiError } from "@/lib/utils/api";
 
 export async function POST(
@@ -18,18 +17,18 @@ export async function POST(
     if (!auth.success) return unauthorizedResponse(auth.error);
 
     const { id } = await params;
-    const notification = await mockDb.notifications.findUnique({ where: { id } });
+    const notification = await db.notification.findUnique({ where: { id } });
     if (!notification) return notFoundResponse("Notification not found.");
     if (notification.userId !== auth.user.id) {
       return errorResponse("You do not have access to this notification.", 403);
     }
 
-    const updated = await mockDb.notifications.update({
+    const updated = await db.notification.update({
       where: { id },
-      data: { isRead: true, readAt: new Date().toISOString() } as Partial<Notification>,
+      data: { read: true, readAt: new Date() },
     });
 
-    await mockCache.invalidatePattern(`notifications:${auth.user.id}*`);
+    await cache.invalidatePattern(`notifications:${auth.user.id}*`);
     return NextResponse.json(successResponse(updated));
   } catch (err) {
     return handleApiError(err);

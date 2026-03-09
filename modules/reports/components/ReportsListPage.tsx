@@ -4,35 +4,20 @@
  * modules/reports/components/ReportsListPage.tsx
  *
  * Unified role-aware reports list.
- * • Loads reports based on ROLE_CONFIG[role].reportVisibilityScope.
- * • REPORT_COLUMNS filtered by allowedRoles[] — campus column shown only to
- *   multi-campus roles; status/actions columns universal.
- * • Client-side filtering in useMemo; no function-based WhereClause predicates
- *   (mockDb only supports Partial<T> where clauses).
  */
-
-"use client";
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Select } from "antd";
-import {
-  PlusOutlined,
-  LockOutlined,
-  EyeOutlined,
-  EditOutlined,
-  DownloadOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, LockOutlined, EyeOutlined, EditOutlined } from "@ant-design/icons";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
-import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
+import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
-import { APP_ROUTES } from "@/config/routes";
+import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { ROLE_CONFIG } from "@/config/roles";
-import { mockDb } from "@/lib/data/mockDb";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
 import { fmtDate } from "@/lib/utils/formatDate";
-import { exportReportsList } from "@/lib/utils/exportReports";
 import Button from "@/components/ui/Button";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
@@ -114,21 +99,16 @@ export function ReportsListPage() {
 
   /* ── Data subscriptions ─────────────────────────────────────────────────── */
 
-  const allReports = useMockDbSubscription<Report[]>("reports", async () => {
-    if (!user) return [];
-    if (visibilityScope === "campus") {
-      return mockDb.reports.findMany({ where: { campusId: user.campusId } });
-    }
-    return mockDb.reports.findMany({});
-  });
+  const reportsUrl = user
+    ? visibilityScope === "campus" && user.campusId
+      ? `${API_ROUTES.reports.list}?campusId=${user.campusId}`
+      : API_ROUTES.reports.list
+    : null;
+  const { data: allReports } = useApiData<Report[]>(reportsUrl);
 
-  const templates = useMockDbSubscription<ReportTemplate[]>("reportTemplates", async () =>
-    mockDb.reportTemplates.findMany({}),
-  );
+  const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
 
-  const campuses = useMockDbSubscription<Campus[]>("campuses", async () =>
-    mockDb.campuses.findMany({}),
-  );
+  const { data: campuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
 
   /* ── Scope + client-side filtering ─────────────────────────────────────── */
 
@@ -327,15 +307,6 @@ export function ReportsListPage() {
         title={CONTENT.reports.pageTitle as string}
         actions={
           <div className="flex gap-2">
-            <Button
-              icon={<DownloadOutlined />}
-              onClick={() =>
-                exportReportsList(filteredReports ?? [], templates ?? [], campuses ?? [])
-              }
-              disabled={!filteredReports || filteredReports.length === 0}
-            >
-              {(CONTENT.reports as unknown as Record<string, Record<string, string>>).export.button}
-            </Button>
             {can.fillReports && (
               <Button
                 type="primary"

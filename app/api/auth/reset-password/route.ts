@@ -6,8 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import { hashPassword } from "@/lib/utils/auth";
 
 const Schema = z.object({
@@ -19,7 +18,7 @@ export async function POST(req: NextRequest) {
     const body = Schema.parse(await req.json());
 
     /* Retrieve cached token */
-    const raw = await mockCache.get(`pwd-reset:${body.token}`);
+    const raw = await cache.get(`pwd-reset:${body.token}`);
     if (!raw) {
         return NextResponse.json(
             { success: false, error: "This reset link is invalid or has expired." },
@@ -30,27 +29,27 @@ export async function POST(req: NextRequest) {
     const { userId, expiresAt } = JSON.parse(raw) as { userId: string; expiresAt: string };
 
     if (new Date(expiresAt) < new Date()) {
-        await mockCache.del(`pwd-reset:${body.token}`);
+        await cache.del(`pwd-reset:${body.token}`);
         return NextResponse.json(
             { success: false, error: "This reset link has expired." },
             { status: 400 },
         );
     }
 
-    const user = await mockDb.users.findFirst({ where: { id: userId } });
+    const user = await db.user.findUnique({ where: { id: userId } });
     if (!user) {
         return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
     }
 
     const hashed = await hashPassword(body.password);
 
-    await mockDb.users.update({
+    await db.user.update({
         where: { id: userId },
-        data: { passwordHash: hashed, updatedAt: new Date().toISOString() } as Partial<UserProfile>,
+        data: { passwordHash: hashed, updatedAt: new Date() },
     });
 
     /* Invalidate the token so it cannot be reused */
-    await mockCache.del(`pwd-reset:${body.token}`);
+    await cache.del(`pwd-reset:${body.token}`);
 
     return NextResponse.json({ success: true, message: "Password reset successfully. You can now log in." });
 }

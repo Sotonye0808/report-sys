@@ -1,0 +1,33 @@
+﻿config/reports.ts(281,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(282,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(283,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(284,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(285,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(286,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(287,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(288,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(289,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(290,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(291,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(292,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(312,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(313,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(314,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(315,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(316,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(336,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(337,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(338,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(339,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(340,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(341,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+config/reports.ts(342,9): error TS2741: Property 'templateId' is missing in type 'SectionDef' but required in type 'ReportTemplateSection'.
+lib/data/redis.ts(72,20): error TS7022: 'nextCursor' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+modules/analytics/components/AnalyticsPage.tsx(784,21): error TS2322: Type '({ name, percent }: { name: string; percent: number; }) => string' is not assignable to type 'PieLabel | undefined'.
+  Type '({ name, percent }: { name: string; percent: number; }) => string' is not assignable to type '(props: PieLabelRenderProps) => ReactNode | ReactElement<SVGElement, string | JSXElementConstructor<any>>'.
+    Types of parameters '__0' and 'props' are incompatible.
+      Type 'PieLabelRenderProps' is not assignable to type '{ name: string; percent: number; }'.
+        Types of property 'name' are incompatible.
+          Type 'string | undefined' is not assignable to type 'string'.
+            Type 'undefined' is not assignable to type 'string'.
+prisma/seed.ts(12,5): error TS2353: Object literal may only specify known properties, and 'datasourceUrl' does not exist in type 'Subset<PrismaClientOptions, PrismaClientOptions>'.

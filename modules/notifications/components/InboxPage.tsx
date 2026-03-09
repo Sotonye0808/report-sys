@@ -8,9 +8,8 @@
 import { useRouter } from "next/navigation";
 import { message } from "antd";
 import { BellOutlined, CheckOutlined } from "@ant-design/icons";
-import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
+import { useApiData } from "@/lib/hooks/useApiData";
 import { useAuth } from "@/providers/AuthProvider";
-import { mockDb } from "@/lib/data/mockDb";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES, APP_ROUTES } from "@/config/routes";
 import { fmtDateTime } from "@/lib/utils/formatDate";
@@ -85,12 +84,9 @@ function NotificationRow({ notification, onMarkRead }: NotificationRowProps) {
 export function InboxPage() {
   const { user } = useAuth();
 
-  const notifications = useMockDbSubscription<AppNotification[]>("notifications", async () => {
-    if (!user) return [];
-    return mockDb.notifications.findMany({
-      where: (n: AppNotification) => n.userId === user.id,
-    });
-  });
+  const { data: notifications, refetch } = useApiData<AppNotification[]>(
+    user ? API_ROUTES.notifications.list : null,
+  );
 
   const sorted = notifications
     ? [...notifications].sort(
@@ -103,6 +99,7 @@ export function InboxPage() {
   const handleMarkRead = async (id: string) => {
     try {
       await fetch(API_ROUTES.notifications.markRead(id), { method: "POST" });
+      refetch();
     } catch {
       message.error(CONTENT.common.errorDefault as string);
     }
@@ -114,6 +111,7 @@ export function InboxPage() {
       message.success(
         (CONTENT.notifications.markAllRead as string) ?? "All notifications marked as read.",
       );
+      refetch();
     } catch {
       message.error(CONTENT.common.errorDefault as string);
     }

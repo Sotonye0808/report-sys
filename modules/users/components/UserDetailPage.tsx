@@ -16,8 +16,7 @@ import {
   StopOutlined,
   CheckCircleOutlined,
 } from "@ant-design/icons";
-import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
-import { mockDb } from "@/lib/data/mockDb";
+import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
 import { formatReportPeriod } from "@/lib/utils/reportUtils";
 import { fmtDate } from "@/lib/utils/formatDate";
@@ -50,15 +49,14 @@ export function UserDetailPage({ params }: PageProps) {
     params.then((p) => setResolvedId(p.id));
   }
 
-  const user = useMockDbSubscription<UserProfile | null>("users", async () => {
-    if (!resolvedId) return null;
-    return mockDb.users.findFirst({ where: { id: resolvedId } });
-  });
+  const { data: user, refetch: refetchUser } = useApiData<UserProfile>(
+    resolvedId ? API_ROUTES.users.detail(resolvedId) : null,
+  );
 
-  const campus = useMockDbSubscription<Campus | null>("campuses", async () => {
-    if (!user?.campusId) return null;
-    return mockDb.campuses.findFirst({ where: { id: user.campusId } });
-  });
+  const { data: campus } = useApiData<Campus>(
+    user?.campusId ? API_ROUTES.org.campus(user.campusId) : null,
+    [user?.campusId],
+  );
 
   const displayRole = editRole ?? user?.role ?? UserRole.MEMBER;
   const displayActive = editActive ?? user?.isActive ?? true;
@@ -90,6 +88,7 @@ export function UserDetailPage({ params }: PageProps) {
       message.success(CONTENT.common.successSave as string);
       setEditRole(null);
       setEditActive(null);
+      refetchUser();
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
     } finally {
@@ -177,7 +176,9 @@ export function UserDetailPage({ params }: PageProps) {
               <Descriptions.Item label={CONTENT.users.campusLabel as string}>
                 {campus?.name ?? user.campusId ?? "—"}
               </Descriptions.Item>
-              <Descriptions.Item label={CONTENT.profile.phoneLabel as string}>{user.phone ?? "—"}</Descriptions.Item>
+              <Descriptions.Item label={CONTENT.profile.phoneLabel as string}>
+                {user.phone ?? "—"}
+              </Descriptions.Item>
               <Descriptions.Item label={CONTENT.profile.memberSince as string}>
                 {fmtDate(user.createdAt)}
               </Descriptions.Item>
@@ -254,24 +255,23 @@ export function UserDetailPage({ params }: PageProps) {
 function RecentUserReports({ userId }: { userId: string }) {
   const router = useRouter();
 
-  const reports = useMockDbSubscription<Report[]>("reports", async () =>
-    mockDb.reports.findMany({
-      where: (r: Report) =>
-        r.submittedById === userId ||
-        r.createdById === userId ||
-        r.dataEntryById === userId,
-    }),
-  );
+  const { data: reports } = useApiData<Report[]>(API_ROUTES.reports.list);
 
   const recent = reports
     ? [...reports]
+        .filter(
+          (r) =>
+            r.submittedById === userId || r.createdById === userId || r.dataEntryById === userId,
+        )
         .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
         .slice(0, 5)
     : [];
 
   return (
     <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6">
-      <h3 className="text-sm font-semibold text-ds-text-primary mb-4">{CONTENT.users.recentReports as string}</h3>
+      <h3 className="text-sm font-semibold text-ds-text-primary mb-4">
+        {CONTENT.users.recentReports as string}
+      </h3>
       {recent.length === 0 ? (
         <p className="text-sm text-ds-text-subtle">{CONTENT.users.noReports as string}</p>
       ) : (
@@ -281,7 +281,9 @@ function RecentUserReports({ userId }: { userId: string }) {
               key={r.id}
               className="flex items-center justify-between py-2 border-b border-ds-border-subtle last:border-b-0"
             >
-              <span className="text-sm text-ds-text-primary truncate max-w-xs">{formatReportPeriod(r)}</span>
+              <span className="text-sm text-ds-text-primary truncate max-w-xs">
+                {formatReportPeriod(r)}
+              </span>
               <div className="flex items-center gap-3 ml-4 flex-shrink-0">
                 <Tag>{r.status}</Tag>
                 <Button size="small" onClick={() => router.push(APP_ROUTES.reportDetail(r.id))}>

@@ -9,8 +9,7 @@
 import { useState } from "react";
 import { Tabs, Modal, Form, message } from "antd";
 import { PlusOutlined, EditOutlined, BankOutlined, ClusterOutlined } from "@ant-design/icons";
-import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
-import { mockDb } from "@/lib/data/mockDb";
+import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
@@ -32,7 +31,7 @@ function CampusesTab() {
   const [saving, setSaving] = useState(false);
   const [form] = Form.useForm();
 
-  const campuses = useMockDbSubscription<Campus[]>("campuses", () => mockDb.campuses.findMany({}));
+  const { data: campuses, refetch } = useApiData<Campus[]>(API_ROUTES.org.campuses);
 
   const filtered = (campuses ?? []).filter(
     (c) => !search || c.name.toLowerCase().includes(search.toLowerCase()),
@@ -97,6 +96,7 @@ function CampusesTab() {
         }
         message.success(CONTENT.common.successSave as string);
         setEditTarget(null);
+        refetch();
       } else {
         const res = await fetch(API_ROUTES.org.campuses, {
           method: "POST",
@@ -110,6 +110,7 @@ function CampusesTab() {
         }
         message.success(CONTENT.common.successSave as string);
         setShowCreate(false);
+        refetch();
       }
       form.resetFields();
     } catch {
@@ -195,9 +196,7 @@ function GroupsTab() {
   const [saving, setSaving] = useState(false);
   const [form] = Form.useForm();
 
-  const groups = useMockDbSubscription<OrgGroup[]>("orgGroups", () =>
-    mockDb.orgGroups.findMany({}),
-  );
+  const { data: groups, refetch: refetchGroups } = useApiData<OrgGroup[]>(API_ROUTES.org.groups);
 
   const filtered = (groups ?? []).filter(
     (g) => !search || g.name.toLowerCase().includes(search.toLowerCase()),
@@ -256,6 +255,7 @@ function GroupsTab() {
         }
         message.success(CONTENT.common.successSave as string);
         setEditTarget(null);
+        refetchGroups();
       } else {
         const res = await fetch(API_ROUTES.org.groups, {
           method: "POST",
@@ -269,6 +269,7 @@ function GroupsTab() {
         }
         message.success(CONTENT.common.successSave as string);
         setShowCreate(false);
+        refetchGroups();
       }
       form.resetFields();
     } catch {

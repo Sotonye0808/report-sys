@@ -7,8 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const UpdateCampusSchema = z.object({
@@ -28,7 +27,7 @@ export async function GET(
     return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
   }
 
-  const campus = await mockDb.campuses.findFirst({ where: { id } });
+  const campus = await db.campus.findUnique({ where: { id } });
   if (!campus) {
     return NextResponse.json({ success: false, error: "Campus not found." }, { status: 404 });
   }
@@ -46,16 +45,21 @@ export async function PUT(
   }
 
   const body = UpdateCampusSchema.parse(await req.json());
-  const campus = await mockDb.campuses.findFirst({ where: { id } });
+  const campus = await db.campus.findUnique({ where: { id } });
   if (!campus) {
     return NextResponse.json({ success: false, error: "Campus not found." }, { status: 404 });
   }
 
-  const updated = await mockDb.campuses.update({
+  const updated = await db.campus.update({
     where: { id },
-    data: { ...body, adminId: body.adminId ?? undefined, updatedAt: new Date().toISOString() } as Partial<Campus>,
+    data: {
+      ...(body.name !== undefined && { name: body.name }),
+      ...(body.country !== undefined && { country: body.country }),
+      ...(body.location !== undefined && { location: body.location }),
+      ...(body.adminId !== undefined && { adminId: body.adminId }),
+    },
   });
 
-  await mockCache.invalidatePattern("org:campuses:*");
+  await cache.invalidatePattern("org:campuses:*");
   return NextResponse.json({ success: true, data: updated });
 }

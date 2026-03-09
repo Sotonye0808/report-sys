@@ -24,10 +24,9 @@ import {
 import Link from "next/link";
 import type { MenuProps } from "antd";
 import { useAuth } from "@/providers/AuthProvider";
-import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
-import { mockDb } from "@/lib/data/mockDb";
+import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
-import { APP_ROUTES } from "@/config/routes";
+import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { getNavItems } from "@/config/nav";
 import Button from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -266,12 +265,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const role = user?.role as UserRole | undefined;
 
   // Unread notifications for all authenticated users
-  const notifications = useMockDbSubscription<AppNotification[]>("notifications", async () => {
-    if (!user) return [];
-    return mockDb.notifications.findMany({
-      where: (n: AppNotification) => n.userId === user.id && !n.read,
-    });
-  });
+  const { data: notifications } = useApiData<AppNotification[]>(
+    user ? `${API_ROUTES.notifications.list}?unread=true` : null,
+  );
 
   const unreadCount = notifications?.length ?? 0;
 

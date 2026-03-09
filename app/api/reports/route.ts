@@ -7,8 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import {
     successResponse,
     errorResponse,
@@ -16,7 +15,7 @@ import {
     handleApiError,
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
-import { UserRole, ReportStatus, ReportPeriodType, ReportEventType } from "@/types/global";
+import { UserRole, ReportStatus, ReportPeriodType, ReportEventType, MetricCalculationType } from "@/types/global";
 
 /* ── Query schema ──────────────────────────────────────────────────────────── */
 
@@ -68,39 +67,39 @@ export async function GET(req: NextRequest) {
         const { page, pageSize, status, campusId, periodType, search, templateId } = query;
 
         const cacheKey = `reports:list:${auth.user.id}:${JSON.stringify(query)}`;
-        const cached = await mockCache.get(cacheKey);
+        const cached = await cache.get(cacheKey);
         if (cached) {
             return NextResponse.json(JSON.parse(cached));
         }
 
-        let reports = await mockDb.reports.findMany({
-            where: (r: Report) => {
-                /* Scope: campus-scoped roles only see their campus */
-                if (roleConfig.reportVisibilityScope === "campus") {
-                    if (r.campusId !== auth.user.campusId) return false;
-                }
-                if (status && r.status !== status) return false;
-                if (campusId && r.campusId !== campusId) return false;
-                if (periodType && r.periodType !== periodType) return false;
-                if (templateId && r.templateId !== templateId) return false;
-                if (search) {
-                    const q = search.toLowerCase();
-                    return (r.title ?? "").toLowerCase().includes(q) || (r.period ?? "").toLowerCase().includes(q);
-                }
-                return true;
-            },
-        });
+        /* Build Prisma where clause */
+        const where: Record<string, unknown> = {};
+        if (roleConfig.reportVisibilityScope === "campus" && auth.user.campusId) {
+            where.campusId = auth.user.campusId;
+        }
+        if (status) where.status = status;
+        if (campusId) where.campusId = campusId;
+        if (periodType) where.periodType = periodType;
+        if (templateId) where.templateId = templateId;
+        if (search) {
+            where.OR = [
+                { title: { contains: search, mode: "insensitive" } },
+                { period: { contains: search, mode: "insensitive" } },
+            ];
+        }
 
-        /* Sort: newest first */
-        reports = [...reports].sort(
-            (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
-        );
+        const [reports, total] = await Promise.all([
+            db.report.findMany({
+                where,
+                orderBy: { updatedAt: "desc" },
+                skip: (page - 1) * pageSize,
+                take: pageSize,
+            }),
+            db.report.count({ where }),
+        ]);
 
-        const total = reports.length;
-        const data = reports.slice((page - 1) * pageSize, page * pageSize);
-
-        const body = successResponse({ data, total, page, pageSize });
-        await mockCache.set(cacheKey, JSON.stringify(body), 30);
+        const body = successResponse({ data: reports, total, page, pageSize });
+        await cache.set(cacheKey, JSON.stringify(body), 30);
         return NextResponse.json(body);
     } catch (err) {
         return handleApiError(err);
@@ -122,49 +121,58 @@ export async function POST(req: NextRequest) {
         const body = CreateReportSchema.parse(await req.json());
 
         /* Verify template exists */
-        const template = await mockDb.reportTemplates.findUnique({ where: { id: body.templateId } });
+        const template = await db.reportTemplate.findUnique({ where: { id: body.templateId } });
         if (!template) {
             return errorResponse("Report template not found.", 404);
         }
 
-        const now = new Date().toISOString();
-
-        const report = await mockDb.transaction(async (tx) => {
-            const newReport = await tx.reports.create({
+        const report = await db.$transaction(async (tx) => {
+            const newReport = await tx.report.create({
                 data: {
-                    id: crypto.randomUUID(),
                     organisationId: process.env.NEXT_PUBLIC_ORG_ID ?? "harvesters",
                     title: body.title,
                     templateId: body.templateId,
                     campusId: body.campusId,
+                    orgGroupId: template.orgGroupId ?? "",
                     period: body.period,
                     periodType: body.periodType,
+                    periodYear: new Date().getFullYear(),
                     status: ReportStatus.DRAFT,
                     createdById: auth.user.id,
-                    submittedById: null,
                     notes: body.notes ?? null,
-                    sections: body.sections ?? [],
-                    createdAt: now,
-                    updatedAt: now,
-                    deadline: null,
-                } as unknown as Report,
+                    sections: body.sections ? {
+                        create: body.sections.map((sec) => ({
+                            templateSectionId: sec.templateSectionId,
+                            sectionName: sec.sectionName,
+                            metrics: {
+                                create: sec.metrics.map((met) => ({
+                                    templateMetricId: met.templateMetricId,
+                                    metricName: met.metricName,
+                                    calculationType: met.calculationType as MetricCalculationType ?? MetricCalculationType.SUM,
+                                    monthlyGoal: met.monthlyGoal,
+                                    monthlyAchieved: met.monthlyAchieved,
+                                    yoyGoal: met.yoyGoal,
+                                    isLocked: met.isLocked ?? false,
+                                })),
+                            },
+                        })),
+                    } : undefined,
+                },
             });
 
-            await tx.reportEvents.create({
+            await tx.reportEvent.create({
                 data: {
-                    id: crypto.randomUUID(),
                     reportId: newReport.id,
                     eventType: ReportEventType.CREATED,
                     actorId: auth.user.id,
-                    timestamp: now,
-                    metadata: null,
-                } as ReportEvent,
+                    timestamp: new Date(),
+                },
             });
 
             return newReport;
         });
 
-        await mockCache.invalidatePattern(`reports:list:${auth.user.id}:*`);
+        await cache.invalidatePattern(`reports:list:${auth.user.id}:*`);
 
         return NextResponse.json(successResponse(report), { status: 201 });
     } catch (err) {

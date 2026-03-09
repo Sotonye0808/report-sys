@@ -7,8 +7,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 
 const Schema = z.object({
   email: z.string().email(),
@@ -17,8 +16,8 @@ const Schema = z.object({
 export async function POST(req: NextRequest) {
   const body = Schema.parse(await req.json());
 
-  const user = await mockDb.users.findFirst({
-    where: (u: UserProfile) => u.email.toLowerCase() === body.email.toLowerCase(),
+  const user = await db.user.findFirst({
+    where: { email: { equals: body.email, mode: "insensitive" } },
   });
 
   /* Always return 200 to prevent email enumeration */
@@ -30,7 +29,7 @@ export async function POST(req: NextRequest) {
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString(); /* 1 hour */
 
   /* Store reset token in cache (key: pwd-reset:{token} → userId) */
-  await mockCache.set(`pwd-reset:${token}`, JSON.stringify({ userId: user.id, expiresAt }), 3600);
+  await cache.set(`pwd-reset:${token}`, JSON.stringify({ userId: user.id, expiresAt }), 3600);
 
   /* In production: send email. In dev: include token in response. */
   const response: Record<string, unknown> = {

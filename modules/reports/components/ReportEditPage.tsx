@@ -13,8 +13,7 @@ import { useRouter } from "next/navigation";
 import { message } from "antd";
 import { SaveOutlined, ArrowLeftOutlined, LockOutlined } from "@ant-design/icons";
 import { useRole } from "@/lib/hooks/useRole";
-import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
-import { mockDb } from "@/lib/data/mockDb";
+import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
@@ -50,20 +49,11 @@ export function ReportEditPage({ params }: PageProps) {
   const [initialized, setInitialized] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const report = useMockDbSubscription<Report | null>("reports", async () =>
-    mockDb.reports.findFirst({ where: (r: Report) => r.id === id }),
-  );
+  const { data: report } = useApiData<Report>(API_ROUTES.reports.detail(id));
 
-  // NOTE: report?.templateId is passed as a dep so that the query re-runs
-  // once `report` loads and its templateId becomes available.
-  const template = useMockDbSubscription<ReportTemplate | null>(
-    "reportTemplates",
-    async () => {
-      if (!report?.templateId) return null;
-      return mockDb.reportTemplates.findFirst({
-        where: (t: ReportTemplate) => t.id === report.templateId,
-      });
-    },
+  // Load template once report's templateId is known
+  const { data: template } = useApiData<ReportTemplate>(
+    report?.templateId ? API_ROUTES.reportTemplates.detail(report.templateId) : null,
     [report?.templateId],
   );
 

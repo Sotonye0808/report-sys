@@ -7,8 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 /* ── Update schema ────────────────────────────────────────────────────────── */
@@ -34,17 +33,19 @@ export async function GET(
     }
 
     const cacheKey = `users:detail:${id}`;
-    const cached = await mockCache.get(cacheKey);
+    const cached = await cache.get(cacheKey);
     if (cached) return NextResponse.json(JSON.parse(cached));
 
-    const user = await mockDb.users.findFirst({ where: { id } });
+    const user = await db.user.findUnique({
+        where: { id },
+        omit: { passwordHash: true },
+    });
     if (!user) {
         return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
     }
 
-    const { passwordHash: _ph, ...safeUser } = user as UserProfile & { passwordHash?: string };
-    const response = { success: true, data: safeUser };
-    await mockCache.set(cacheKey, JSON.stringify(response), 60);
+    const response = { success: true, data: user };
+    await cache.set(cacheKey, JSON.stringify(response), 60);
     return NextResponse.json(response);
 }
 
@@ -62,7 +63,7 @@ export async function PUT(
 
     const body = UpdateUserSchema.parse(await req.json());
 
-    const user = await mockDb.users.findFirst({ where: { id } });
+    const user = await db.user.findUnique({ where: { id } });
     if (!user) {
         return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
     }
@@ -75,21 +76,20 @@ export async function PUT(
         );
     }
 
-    const updated = await mockDb.users.update({
+    const updated = await db.user.update({
         where: { id },
         data: {
-            updatedAt: new Date().toISOString(),
             ...(body.role !== undefined && { role: body.role }),
             ...(body.isActive !== undefined && { isActive: body.isActive }),
-            ...(body.campusId !== undefined && { campusId: body.campusId ?? undefined }),
-            ...(body.groupId !== undefined && { groupId: body.groupId ?? undefined }),
+            ...(body.campusId !== undefined && { campusId: body.campusId }),
+            ...(body.groupId !== undefined && { orgGroupId: body.groupId }),
             ...(body.phone !== undefined && { phone: body.phone }),
-        } as Partial<UserProfile>,
+        },
+        omit: { passwordHash: true },
     });
 
-    await mockCache.invalidatePattern(`users:detail:${id}`);
-    await mockCache.invalidatePattern("users:list:*");
+    await cache.invalidatePattern(`users:detail:${id}`);
+    await cache.invalidatePattern("users:list:*");
 
-    const { passwordHash: _ph, ...safeUser } = updated as UserProfile & { passwordHash?: string };
-    return NextResponse.json({ success: true, data: safeUser });
+    return NextResponse.json({ success: true, data: updated });
 }

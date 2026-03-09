@@ -5,8 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import { successResponse, unauthorizedResponse, handleApiError } from "@/lib/utils/api";
 
 export async function POST(req: NextRequest) {
@@ -14,22 +13,13 @@ export async function POST(req: NextRequest) {
     const auth = await verifyAuth(req);
     if (!auth.success) return unauthorizedResponse(auth.error);
 
-    const unread = await mockDb.notifications.findMany({
-      where: (n: AppNotification) => n.userId === auth.user.id && !n.read,
+    const result = await db.notification.updateMany({
+      where: { userId: auth.user.id, read: false },
+      data: { read: true, readAt: new Date() },
     });
 
-    const now = new Date().toISOString();
-    await Promise.all(
-      unread.map((n) =>
-        mockDb.notifications.update({
-          where: { id: n.id },
-          data: { read: true, readAt: now } as Partial<AppNotification>,
-        }),
-      ),
-    );
-
-    await mockCache.invalidatePattern(`notifications:${auth.user.id}*`);
-    return NextResponse.json(successResponse({ updated: unread.length }));
+    await cache.invalidatePattern(`notifications:${auth.user.id}*`);
+    return NextResponse.json(successResponse({ updated: result.count }));
   } catch (err) {
     return handleApiError(err);
   }

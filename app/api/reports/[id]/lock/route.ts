@@ -5,8 +5,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import {
     successResponse,
     errorResponse,
@@ -26,7 +25,7 @@ export async function POST(
         if (!auth.success) return unauthorizedResponse(auth.error);
 
         const { id } = await params;
-        const report = await mockDb.reports.findUnique({ where: { id } });
+        const report = await db.report.findUnique({ where: { id } });
         if (!report) return notFoundResponse("Report not found.");
 
         const role = auth.user.role as UserRole;
@@ -40,32 +39,32 @@ export async function POST(
 
         const now = new Date().toISOString();
 
-        const updated = await mockDb.transaction(async (tx) => {
-            const r = await tx.reports.update({
+        const updated = await db.$transaction(async (tx) => {
+            const r = await tx.report.update({
                 where: { id },
                 data: {
                     status: ReportStatus.LOCKED,
-                    lockedAt: now,
-                    updatedAt: now,
-                } as Partial<Report>,
+                    lockedAt: new Date(),
+                    updatedAt: new Date(),
+                },
             });
 
-            await tx.reportEvents.create({
+            await tx.reportEvent.create({
                 data: {
-                    id: crypto.randomUUID(),
                     reportId: id,
                     eventType: ReportEventType.LOCKED,
                     actorId: auth.user.id,
-                    timestamp: now,
-                    metadata: null,
-                } as ReportEvent,
+                    timestamp: new Date(),
+                    previousStatus: report.status,
+                    newStatus: ReportStatus.LOCKED,
+                },
             });
 
             return r;
         });
 
-        await mockCache.invalidatePattern(`report:${id}*`);
-        await mockCache.invalidatePattern(`reports:list:*`);
+        await cache.invalidatePattern(`report:${id}*`);
+        await cache.invalidatePattern(`reports:list:*`);
 
         return NextResponse.json(successResponse(updated));
     } catch (err) {

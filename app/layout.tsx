@@ -4,6 +4,8 @@ import "./globals.css";
 import { AntdProvider } from "@/providers/AntdProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import { ServiceWorkerRegistrar } from "@/components/ui/ServiceWorkerRegistrar";
+import OfflineIndicator from "@/components/ui/OfflineIndicator";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -52,6 +54,8 @@ export default function RootLayout({
                 Skip to main content
               </a>
               <main id="main-content">{children}</main>
+              <OfflineIndicator />
+              <ServiceWorkerRegistrar />
             </AuthProvider>
           </AntdProvider>
         </ThemeProvider>

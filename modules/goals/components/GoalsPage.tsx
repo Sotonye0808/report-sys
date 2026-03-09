@@ -36,8 +36,7 @@ import {
   GlobalOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "@/providers/AuthProvider";
-import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
-import { mockDb } from "@/lib/data/mockDb";
+import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES } from "@/config/routes";
 import { ROLE_CONFIG } from "@/config/roles";
@@ -53,27 +52,39 @@ const g = CONTENT.goals as Record<string, unknown>;
 /* ── Constants ─────────────────────────────────────────────────────────────── */
 
 const CURRENT_YEAR = new Date().getFullYear();
-const YEAR_OPTIONS = [CURRENT_YEAR - 1, CURRENT_YEAR, CURRENT_YEAR + 1].map(
-  (y) => ({ value: y, label: String(y) }),
-);
+const YEAR_OPTIONS = [CURRENT_YEAR - 1, CURRENT_YEAR, CURRENT_YEAR + 1].map((y) => ({
+  value: y,
+  label: String(y),
+}));
 const MODE_OPTIONS = [
-  { value: GoalMode.ANNUAL,  label: g.modeAnnual  as string },
+  { value: GoalMode.ANNUAL, label: g.modeAnnual as string },
   { value: GoalMode.MONTHLY, label: g.modeMonthly as string },
 ];
 const MONTH_LABELS = g.months as string[];
 
 const CAN_WRITE_ROLES: UserRole[] = [
-  UserRole.GROUP_ADMIN, UserRole.GROUP_PASTOR,
-  UserRole.SPO, UserRole.CEO, UserRole.CHURCH_MINISTRY,
+  UserRole.GROUP_ADMIN,
+  UserRole.GROUP_PASTOR,
+  UserRole.SPO,
+  UserRole.CEO,
+  UserRole.CHURCH_MINISTRY,
   UserRole.SUPERADMIN,
 ];
 const WIDE_VIEW_ROLES: UserRole[] = [
-  UserRole.SPO, UserRole.CEO, UserRole.CHURCH_MINISTRY, UserRole.SUPERADMIN,
-  UserRole.GROUP_ADMIN, UserRole.GROUP_PASTOR,
+  UserRole.SPO,
+  UserRole.CEO,
+  UserRole.CHURCH_MINISTRY,
+  UserRole.SUPERADMIN,
+  UserRole.GROUP_ADMIN,
+  UserRole.GROUP_PASTOR,
 ];
 
-function canWrite(role: UserRole): boolean { return CAN_WRITE_ROLES.includes(role); }
-function canSeeAllCampuses(role: UserRole): boolean { return WIDE_VIEW_ROLES.includes(role); }
+function canWrite(role: UserRole): boolean {
+  return CAN_WRITE_ROLES.includes(role);
+}
+function canSeeAllCampuses(role: UserRole): boolean {
+  return WIDE_VIEW_ROLES.includes(role);
+}
 
 /* ── Types ──────────────────────────────────────────────────────────────────── */
 
@@ -106,7 +117,7 @@ interface UnlockModalProps {
 }
 
 function UnlockModal({ goal, open, onClose, onSuccess }: UnlockModalProps) {
-  const [form]   = Form.useForm();
+  const [form] = Form.useForm();
   const [saving, setSaving] = useState(false);
 
   const handleSubmit = async (values: { reason: string; proposedValue: number }) => {
@@ -118,32 +129,59 @@ function UnlockModal({ goal, open, onClose, onSuccess }: UnlockModalProps) {
         body: JSON.stringify(values),
       });
       const json = await res.json();
-      if (!res.ok) { message.error(json.error ?? "Error"); return; }
+      if (!res.ok) {
+        message.error(json.error ?? "Error");
+        return;
+      }
       message.success("Unlock request submitted.");
       form.resetFields();
       onSuccess();
-    } catch { message.error("Error"); }
-    finally { setSaving(false); }
+    } catch {
+      message.error("Error");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
-    <Modal open={open} title={g.requestUnlock as string} onCancel={onClose} footer={null} destroyOnClose>
-      <Form form={form} layout="vertical" onFinish={handleSubmit} requiredMark={false} className="mt-4">
+    <Modal
+      open={open}
+      title={g.requestUnlock as string}
+      onCancel={onClose}
+      footer={null}
+      destroyOnClose
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        requiredMark={false}
+        className="mt-4"
+      >
         <div className="text-xs text-ds-text-subtle mb-3">
           <strong>{goal.metricName}</strong>
-          {" — current target: "}{goal.targetValue.toLocaleString()}
+          {" — current target: "}
+          {goal.targetValue.toLocaleString()}
         </div>
-        <Form.Item name="proposedValue" label={g.targetValueLabel as string}
-          rules={[{ required: true, message: "Required" }]}>
+        <Form.Item
+          name="proposedValue"
+          label={g.targetValueLabel as string}
+          rules={[{ required: true, message: "Required" }]}
+        >
           <InputNumber min={0} className="w-full" />
         </Form.Item>
-        <Form.Item name="reason" label={g.unlockReasonLabel as string}
-          rules={[{ required: true, min: 10, message: "At least 10 characters." }]}>
+        <Form.Item
+          name="reason"
+          label={g.unlockReasonLabel as string}
+          rules={[{ required: true, min: 10, message: "At least 10 characters." }]}
+        >
           <Input.TextArea rows={3} placeholder={g.unlockReasonPlaceholder as string} />
         </Form.Item>
         <div className="flex gap-3 justify-end">
           <Button onClick={onClose}>{CONTENT.common.cancel as string}</Button>
-          <Button type="primary" htmlType="submit" loading={saving}>{g.requestUnlock as string}</Button>
+          <Button type="primary" htmlType="submit" loading={saving}>
+            {g.requestUnlock as string}
+          </Button>
         </div>
       </Form>
     </Modal>
@@ -162,27 +200,43 @@ interface BulkGoalTableProps {
   isSuperadmin: boolean;
 }
 
-function BulkGoalTable({ campusId, year, mode, templates, goals, canEdit, isSuperadmin }: BulkGoalTableProps) {
+function BulkGoalTable({
+  campusId,
+  year,
+  mode,
+  templates,
+  goals,
+  canEdit,
+  isSuperadmin,
+}: BulkGoalTableProps) {
   const goalMap = goalsToMap(goals.filter((g) => g.campusId === campusId));
 
   /** local edits: metricId -> { ann: number } | { months: Record<number, number> } */
-  const [annValues,    setAnnValues]    = useState<BulkGoalValues>(() => {
+  const [annValues, setAnnValues] = useState<BulkGoalValues>(() => {
     const init: BulkGoalValues = {};
-    for (const goal of goals.filter((go) => go.campusId === campusId && go.mode === GoalMode.ANNUAL && go.year === year)) {
+    for (const goal of goals.filter(
+      (go) => go.campusId === campusId && go.mode === GoalMode.ANNUAL && go.year === year,
+    )) {
       init[goal.templateMetricId] = goal.targetValue;
     }
     return init;
   });
-  const [monthValues,  setMonthValues]  = useState<Record<string, Record<number, number>>>(() => {
+  const [monthValues, setMonthValues] = useState<Record<string, Record<number, number>>>(() => {
     const init: Record<string, Record<number, number>> = {};
-    for (const goal of goals.filter((go) => go.campusId === campusId && go.mode === GoalMode.MONTHLY && go.year === year && go.month != null)) {
+    for (const goal of goals.filter(
+      (go) =>
+        go.campusId === campusId &&
+        go.mode === GoalMode.MONTHLY &&
+        go.year === year &&
+        go.month != null,
+    )) {
       if (!init[goal.templateMetricId]) init[goal.templateMetricId] = {};
       init[goal.templateMetricId][goal.month!] = goal.targetValue;
     }
     return init;
   });
-  const [saving,       setSaving]       = useState(false);
-  const [unlockGoal,   setUnlockGoal]   = useState<Goal | undefined>(undefined);
+  const [saving, setSaving] = useState(false);
+  const [unlockGoal, setUnlockGoal] = useState<Goal | undefined>(undefined);
 
   /* Collect all goal-capturing metrics across all templates */
   const sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }> =
@@ -215,10 +269,10 @@ function BulkGoalTable({ campusId, year, mode, templates, goals, canEdit, isSupe
           payloads.push({
             campusId,
             templateMetricId: metricId,
-            metricName:       sectionAndMetric.name,
-            mode:             GoalMode.ANNUAL,
+            metricName: sectionAndMetric.name,
+            mode: GoalMode.ANNUAL,
             year,
-            targetValue:      val,
+            targetValue: val,
           });
         }
       } else {
@@ -232,11 +286,11 @@ function BulkGoalTable({ campusId, year, mode, templates, goals, canEdit, isSupe
             payloads.push({
               campusId,
               templateMetricId: metricId,
-              metricName:       sectionAndMetric.name,
-              mode:             GoalMode.MONTHLY,
+              metricName: sectionAndMetric.name,
+              mode: GoalMode.MONTHLY,
               year,
-              month:            Number(month),
-              targetValue:      val,
+              month: Number(month),
+              targetValue: val,
             });
           }
         }
@@ -284,7 +338,9 @@ function BulkGoalTable({ campusId, year, mode, templates, goals, canEdit, isSupe
     children: (
       <div className="space-y-0">
         {/* Column headers */}
-        <div className={`grid gap-3 pb-2 border-b border-ds-border-subtle text-xs font-semibold text-ds-text-secondary ${mode === GoalMode.MONTHLY ? "grid-cols-[200px_1fr]" : "grid-cols-[200px_160px_120px]"}`}>
+        <div
+          className={`grid gap-3 pb-2 border-b border-ds-border-subtle text-xs font-semibold text-ds-text-secondary ${mode === GoalMode.MONTHLY ? "grid-cols-[200px_1fr]" : "grid-cols-[200px_160px_120px]"}`}
+        >
           <span>{g.metricColumn as string}</span>
           {mode === GoalMode.ANNUAL ? (
             <>
@@ -294,7 +350,9 @@ function BulkGoalTable({ campusId, year, mode, templates, goals, canEdit, isSupe
           ) : (
             <div className="grid grid-cols-12 gap-1">
               {MONTH_LABELS.map((lbl) => (
-                <span key={lbl} className="text-center truncate">{lbl}</span>
+                <span key={lbl} className="text-center truncate">
+                  {lbl}
+                </span>
               ))}
             </div>
           )}
@@ -360,7 +418,8 @@ function BulkGoalTable({ campusId, year, mode, templates, goals, canEdit, isSupe
                 <div className="grid grid-cols-12 gap-1">
                   {MONTH_LABELS.map((_, idx) => {
                     const month = idx + 1;
-                    const monthGoal = goalMap[goalKey(campusId, metric.id, year, GoalMode.MONTHLY, month)];
+                    const monthGoal =
+                      goalMap[goalKey(campusId, metric.id, year, GoalMode.MONTHLY, month)];
                     const monthLocked = (monthGoal?.isLocked ?? false) && !isSuperadmin;
                     return (
                       <InputNumber
@@ -368,7 +427,7 @@ function BulkGoalTable({ campusId, year, mode, templates, goals, canEdit, isSupe
                         size="small"
                         className="w-full"
                         min={0}
-                        value={monthValues[metric.id]?.[month] ?? (monthGoal?.targetValue)}
+                        value={monthValues[metric.id]?.[month] ?? monthGoal?.targetValue}
                         disabled={!canEdit || monthLocked}
                         placeholder="0"
                         controls={false}
@@ -430,7 +489,15 @@ interface AllCampusesMatrixProps {
   isSuperadmin: boolean;
 }
 
-function AllCampusesMatrix({ campuses, year, mode, templates, goals, canEdit, isSuperadmin }: AllCampusesMatrixProps) {
+function AllCampusesMatrix({
+  campuses,
+  year,
+  mode,
+  templates,
+  goals,
+  canEdit,
+  isSuperadmin,
+}: AllCampusesMatrixProps) {
   const goalMap = goalsToMap(goals);
   /** campusId -> metricId -> value */
   const [matrixValues, setMatrixValues] = useState<MatrixValues>(() => {
@@ -478,8 +545,12 @@ function AllCampusesMatrix({ campuses, year, mode, templates, goals, canEdit, is
           const metric = sections.flatMap(({ metrics }) => metrics).find((m) => m.id === metricId);
           if (!metric) continue;
           payloads.push({
-            campusId, templateMetricId: metricId, metricName: metric.name,
-            mode: GoalMode.ANNUAL, year, targetValue: val,
+            campusId,
+            templateMetricId: metricId,
+            metricName: metric.name,
+            mode: GoalMode.ANNUAL,
+            year,
+            targetValue: val,
           });
         }
       }
@@ -502,7 +573,8 @@ function AllCampusesMatrix({ campuses, year, mode, templates, goals, canEdit, is
 
   if (sections.length === 0) {
     return (
-      <EmptyState icon={<TrophyOutlined />}
+      <EmptyState
+        icon={<TrophyOutlined />}
         title="No goal metrics found"
         description="No metrics with goal-capturing enabled exist in active templates."
       />
@@ -514,7 +586,10 @@ function AllCampusesMatrix({ campuses, year, mode, templates, goals, canEdit, is
       <p className="text-xs text-ds-text-subtle">{g.bulkNote as string}</p>
 
       {sections.map(({ section, metrics }) => (
-        <div key={section.id} className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base overflow-hidden">
+        <div
+          key={section.id}
+          className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base overflow-hidden"
+        >
           <div className="px-5 py-3 border-b border-ds-border-base bg-ds-surface">
             <span className="font-semibold text-sm text-ds-text-primary">{section.name}</span>
           </div>
@@ -524,7 +599,10 @@ function AllCampusesMatrix({ campuses, year, mode, templates, goals, canEdit, is
                 <tr className="border-b border-ds-border-subtle text-xs text-ds-text-secondary">
                   <th className="text-left px-4 py-2 w-40 font-semibold">Metric</th>
                   {campuses.map((campus) => (
-                    <th key={campus.id} className="text-center px-2 py-2 font-semibold min-w-[110px]">
+                    <th
+                      key={campus.id}
+                      className="text-center px-2 py-2 font-semibold min-w-[110px]"
+                    >
                       {campus.name}
                     </th>
                   ))}
@@ -533,10 +611,14 @@ function AllCampusesMatrix({ campuses, year, mode, templates, goals, canEdit, is
               <tbody>
                 {metrics.map((metric) => {
                   return (
-                    <tr key={metric.id} className="border-b border-ds-border-subtle last:border-none hover:bg-ds-surface/40">
+                    <tr
+                      key={metric.id}
+                      className="border-b border-ds-border-subtle last:border-none hover:bg-ds-surface/40"
+                    >
                       <td className="px-4 py-2 text-ds-text-primary font-medium">{metric.name}</td>
                       {campuses.map((campus) => {
-                        const existing = goalMap[goalKey(campus.id, metric.id, year, GoalMode.ANNUAL)];
+                        const existing =
+                          goalMap[goalKey(campus.id, metric.id, year, GoalMode.ANNUAL)];
                         const isLocked = (existing?.isLocked ?? false) && !isSuperadmin;
                         const currentVal =
                           matrixValues[campus.id]?.[metric.id] ?? existing?.targetValue;
@@ -592,24 +674,18 @@ function AllCampusesMatrix({ campuses, year, mode, templates, goals, canEdit, is
 
 export function GoalsPage() {
   const { user } = useAuth();
-  const [year, setYear]   = useState(CURRENT_YEAR);
-  const [mode, setMode]   = useState<GoalMode>(GoalMode.ANNUAL);
+  const [year, setYear] = useState(CURRENT_YEAR);
+  const [mode, setMode] = useState<GoalMode>(GoalMode.ANNUAL);
 
-  const campuses = useMockDbSubscription<Campus[]>("campuses", async () =>
-    mockDb.campuses.findMany(),
-  );
-  const templates = useMockDbSubscription<ReportTemplate[]>("reportTemplates", async () =>
-    mockDb.reportTemplates.findMany({ where: (t: ReportTemplate) => t.isActive }),
-  );
-  const goals = useMockDbSubscription<Goal[]>("goals", async () =>
-    mockDb.goals.findMany({ where: (goalItem: Goal) => goalItem.year === year }),
-  );
+  const { data: campuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
+  const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
+  const { data: goals } = useApiData<Goal[]>(`${API_ROUTES.goals.list}?year=${year}`, [year]);
 
   if (!user || !campuses || !templates || !goals) return <LoadingSkeleton rows={8} />;
 
-  const write          = canWrite(user.role);
+  const write = canWrite(user.role);
   const seeAllCampuses = canSeeAllCampuses(user.role);
-  const isSuperadmin   = user.role === UserRole.SUPERADMIN;
+  const isSuperadmin = user.role === UserRole.SUPERADMIN;
 
   const visibleCampuses = seeAllCampuses
     ? campuses
@@ -617,8 +693,8 @@ export function GoalsPage() {
 
   /* Build tab items */
   const campusTabs = visibleCampuses.map((campus) => ({
-    key:      campus.id,
-    label:    campus.name,
+    key: campus.id,
+    label: campus.name,
     children: (
       <BulkGoalTable
         campusId={campus.id}
@@ -634,26 +710,28 @@ export function GoalsPage() {
 
   /* "All Campuses" overview tab — only for wide-view roles + annual mode */
   const allCampusesTab = seeAllCampuses
-    ? [{
-        key:   "_all",
-        label: (
-          <span className="flex items-center gap-1.5">
-            <GlobalOutlined />
-            {g.allCampuses as string}
-          </span>
-        ),
-        children: (
-          <AllCampusesMatrix
-            campuses={visibleCampuses}
-            year={year}
-            mode={mode}
-            templates={templates}
-            goals={goals}
-            canEdit={write}
-            isSuperadmin={isSuperadmin}
-          />
-        ),
-      }]
+    ? [
+        {
+          key: "_all",
+          label: (
+            <span className="flex items-center gap-1.5">
+              <GlobalOutlined />
+              {g.allCampuses as string}
+            </span>
+          ),
+          children: (
+            <AllCampusesMatrix
+              campuses={visibleCampuses}
+              year={year}
+              mode={mode}
+              templates={templates}
+              goals={goals}
+              canEdit={write}
+              isSuperadmin={isSuperadmin}
+            />
+          ),
+        },
+      ]
     : [];
 
   const tabItems = [...allCampusesTab, ...campusTabs];

@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
-import { mockDb, dbReady } from "@/lib/data/mockDb";
+import { db } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -44,24 +44,6 @@ export async function hashPassword(password: string): Promise<string> {
 
 export async function verifyPassword(plain: string, hashed: string): Promise<boolean> {
     return bcrypt.compare(plain, hashed);
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Password store (mock — bridges seed.ts hashed passwords to auth service)
-// ─────────────────────────────────────────────────────────────────────────────
-
-export function getPasswordStore(): Map<string, string> {
-    const g = global as typeof global & { __passwordStore?: Map<string, string> };
-    if (!g.__passwordStore) g.__passwordStore = new Map();
-    return g.__passwordStore;
-}
-
-export function getHashedPassword(userId: string): string | undefined {
-    return getPasswordStore().get(userId);
-}
-
-export function setHashedPassword(userId: string, hashed: string): void {
-    getPasswordStore().set(userId, hashed);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -185,10 +167,8 @@ export async function verifyAuth(
         return { success: false, error: "Invalid or expired token", status: 401 };
     }
 
-    // Ensure seed data is ready before querying mock DB
-    await dbReady;
-
-    const userProfile = await mockDb.users.findUnique({ where: { id: payload.userId } });
+    // Look up user in database
+    const userProfile = await db.user.findUnique({ where: { id: payload.userId } });
     if (!userProfile || !userProfile.isActive) {
         return { success: false, error: "User not found or inactive", status: 401 };
     }
@@ -198,10 +178,10 @@ export async function verifyAuth(
         email: userProfile.email,
         firstName: userProfile.firstName,
         lastName: userProfile.lastName,
-        role: userProfile.role,
-        campusId: userProfile.campusId,
-        orgGroupId: userProfile.orgGroupId,
-        avatar: userProfile.avatar,
+        role: userProfile.role as UserRole,
+        campusId: userProfile.campusId ?? undefined,
+        orgGroupId: userProfile.orgGroupId ?? undefined,
+        avatar: userProfile.avatar ?? undefined,
     };
 
     if (allowedRoles && !allowedRoles.includes(user.role)) {
