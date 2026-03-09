@@ -7,8 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import {
     successResponse,
     errorResponse,
@@ -40,10 +39,13 @@ export async function GET(
         const { id } = await params;
 
         const cacheKey = `report:${id}`;
-        const cached = await mockCache.get(cacheKey);
+        const cached = await cache.get(cacheKey);
         if (cached) return NextResponse.json(successResponse(JSON.parse(cached)));
 
-        const report = await mockDb.reports.findUnique({ where: { id } });
+        const report = await db.report.findUnique({
+            where: { id },
+            include: { sections: { include: { metrics: true } } },
+        });
         if (!report) return notFoundResponse("Report not found.");
 
         /* Scope check */
@@ -52,7 +54,7 @@ export async function GET(
             return errorResponse("You do not have access to this report.", 403);
         }
 
-        await mockCache.set(cacheKey, JSON.stringify(report), 60);
+        await cache.set(cacheKey, JSON.stringify(report), 60);
         return NextResponse.json(successResponse(report));
     } catch (err) {
         return handleApiError(err);
@@ -71,7 +73,7 @@ export async function PUT(
 
         const { id } = await params;
 
-        const report = await mockDb.reports.findUnique({ where: { id } });
+        const report = await db.report.findUnique({ where: { id } });
         if (!report) return notFoundResponse("Report not found.");
 
         /* Only DRAFT reports can be freely edited */
@@ -84,35 +86,30 @@ export async function PUT(
         }
 
         const body = UpdateReportSchema.parse(await req.json());
-        const now = new Date().toISOString();
 
-        const updated = await mockDb.transaction(async (tx) => {
-            const r = await tx.reports.update({
+        const updated = await db.$transaction(async (tx) => {
+            const r = await tx.report.update({
                 where: { id },
                 data: {
                     ...(body.title !== undefined && { title: body.title }),
                     ...(body.notes !== undefined && { notes: body.notes }),
-                    ...(body.sections !== undefined && { sections: body.sections }),
-                    updatedAt: now,
                 },
             });
 
-            await tx.reportEvents.create({
+            await tx.reportEvent.create({
                 data: {
-                    id: crypto.randomUUID(),
                     reportId: id,
                     eventType: ReportEventType.EDIT_APPLIED,
                     actorId: auth.user.id,
-                    timestamp: now,
-                    metadata: null,
-                } as ReportEvent,
+                    timestamp: new Date(),
+                },
             });
 
             return r;
         });
 
-        await mockCache.invalidatePattern(`report:${id}*`);
-        await mockCache.invalidatePattern(`reports:list:${auth.user.id}:*`);
+        await cache.invalidatePattern(`report:${id}*`);
+        await cache.invalidatePattern(`reports:list:${auth.user.id}:*`);
 
         return NextResponse.json(successResponse(updated));
     } catch (err) {

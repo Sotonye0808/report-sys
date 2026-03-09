@@ -1,34 +1,55 @@
 /**
  * app/api/report-templates/route.ts
  * GET  /api/report-templates  — list templates
- * POST /api/report-templates  — create template (SUPERADMIN)
+ * POST /api/report-templates  — create template with sections + metrics
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
-import { UserRole } from "@/types/global";
+import { db, cache } from "@/lib/data/db";
+import { UserRole, MetricFieldType, MetricCalculationType } from "@/types/global";
 
 /* ── Schemas ──────────────────────────────────────────────────────────────── */
 
-const FieldSchema = z.object({
-    id: z.string().min(1),
-    label: z.string().min(1),
-    type: z.enum(["text", "number", "textarea", "select"]),
-    required: z.boolean().optional().default(false),
-    options: z.array(z.string()).optional(),
-    placeholder: z.string().optional(),
+const MetricSchema = z.object({
+    id: z.string().optional(),
+    name: z.string().min(1),
+    description: z.string().optional(),
+    fieldType: z.nativeEnum(MetricFieldType).default(MetricFieldType.NUMBER),
+    calculationType: z.nativeEnum(MetricCalculationType).default(MetricCalculationType.SUM),
+    isRequired: z.boolean().default(true),
+    capturesGoal: z.boolean().default(false),
+    capturesAchieved: z.boolean().default(false),
+    capturesYoY: z.boolean().default(false),
+    order: z.number().int().min(1),
+});
+
+const SectionSchema = z.object({
+    id: z.string().optional(),
+    name: z.string().min(1),
+    description: z.string().optional(),
+    order: z.number().int().min(1),
+    isRequired: z.boolean().default(true),
+    metrics: z.array(MetricSchema).min(1),
 });
 
 const CreateTemplateSchema = z.object({
-    name: z.string().min(1).max(100),
-    description: z.string().max(500).optional(),
+    name: z.string().min(1).max(200),
+    description: z.string().max(1000).optional(),
     organisationId: z.string().min(1),
-    fields: z.array(FieldSchema).min(1),
+    sections: z.array(SectionSchema).min(1),
     isDefault: z.boolean().optional().default(false),
 });
+
+const TEMPLATE_MANAGE_ROLES: UserRole[] = [
+    UserRole.SUPERADMIN,
+    UserRole.CEO,
+    UserRole.SPO,
+    UserRole.CHURCH_MINISTRY,
+    UserRole.GROUP_PASTOR,
+    UserRole.GROUP_ADMIN,
+];
 
 /* ── GET /api/report-templates ────────────────────────────────────────────── */
 
@@ -39,58 +60,82 @@ export async function GET(req: NextRequest) {
     }
 
     const cacheKey = "templates:list";
-    const cached = await mockCache.get(cacheKey);
+    const cached = await cache.get(cacheKey);
     if (cached) return NextResponse.json(JSON.parse(cached));
 
-    const templates = await mockDb.reportTemplates.findMany({});
-    const sorted = [...templates].sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
+    const templates = await db.reportTemplate.findMany({
+        orderBy: { createdAt: "desc" },
+        include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
+    });
 
-    const response = { success: true, data: sorted };
-    await mockCache.set(cacheKey, JSON.stringify(response), 60);
+    const response = { success: true, data: templates };
+    await cache.set(cacheKey, JSON.stringify(response), 60);
     return NextResponse.json(response);
 }
 
 /* ── POST /api/report-templates ──────────────────────────────────────────── */
 
 export async function POST(req: NextRequest) {
-    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+    const auth = await verifyAuth(req, TEMPLATE_MANAGE_ROLES);
     if (!auth.success) {
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
     }
 
     const body = CreateTemplateSchema.parse(await req.json());
 
-    const template = await mockDb.transaction(async (tx) => {
-        /* If isDefault, remove default from all others first */
+    const template = await db.$transaction(async (tx) => {
         if (body.isDefault) {
-            const existing = await tx.reportTemplates.findMany({});
-            for (const t of existing) {
-                if ((t as ReportTemplate & { isDefault?: boolean }).isDefault) {
-                    await tx.reportTemplates.update({
-                        where: { id: t.id },
-                        data: { isDefault: false },
-                    });
-                }
-            }
+            await tx.reportTemplate.updateMany({
+                where: { isDefault: true },
+                data: { isDefault: false },
+            });
         }
 
-        return tx.reportTemplates.create({
+        const tpl = await tx.reportTemplate.create({
             data: {
-                id: crypto.randomUUID(),
-                ...body,
-                version: 1,
-                sections: [] as ReportTemplateSection[],
+                name: body.name,
+                description: body.description,
+                organisationId: body.organisationId,
                 createdById: auth.user.id,
                 isActive: true,
                 isDefault: body.isDefault ?? false,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-            } as ReportTemplate,
+            },
+        });
+
+        for (const section of body.sections) {
+            const sec = await tx.reportTemplateSection.create({
+                data: {
+                    templateId: tpl.id,
+                    name: section.name,
+                    description: section.description,
+                    order: section.order,
+                    isRequired: section.isRequired,
+                },
+            });
+            for (const metric of section.metrics) {
+                await tx.reportTemplateMetric.create({
+                    data: {
+                        sectionId: sec.id,
+                        name: metric.name,
+                        description: metric.description,
+                        fieldType: metric.fieldType,
+                        calculationType: metric.calculationType,
+                        isRequired: metric.isRequired,
+                        capturesGoal: metric.capturesGoal,
+                        capturesAchieved: metric.capturesAchieved,
+                        capturesYoY: metric.capturesYoY,
+                        order: metric.order,
+                    },
+                });
+            }
+        }
+
+        return tx.reportTemplate.findUnique({
+            where: { id: tpl.id },
+            include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
         });
     });
 
-    await mockCache.invalidatePattern("templates:*");
+    await cache.invalidatePattern("templates:*");
     return NextResponse.json({ success: true, data: template }, { status: 201 });
 }

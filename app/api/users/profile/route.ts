@@ -7,8 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 
 /* ── Update schema ────────────────────────────────────────────────────────── */
 
@@ -26,13 +25,15 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
     }
 
-    const user = await mockDb.users.findFirst({ where: { id: auth.user.id } });
+    const user = await db.user.findUnique({
+        where: { id: auth.user.id },
+        omit: { passwordHash: true },
+    });
     if (!user) {
         return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
     }
 
-    const { passwordHash: _ph, ...safeUser } = user as UserProfile & { passwordHash?: string };
-    return NextResponse.json({ success: true, data: safeUser });
+    return NextResponse.json({ success: true, data: user });
 }
 
 /* ── PUT /api/users/profile ───────────────────────────────────────────────── */
@@ -45,18 +46,18 @@ export async function PUT(req: NextRequest) {
 
     const body = UpdateProfileSchema.parse(await req.json());
 
-    const user = await mockDb.users.findFirst({ where: { id: auth.user.id } });
+    const user = await db.user.findUnique({ where: { id: auth.user.id } });
     if (!user) {
         return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
     }
 
-    const updated = await mockDb.users.update({
+    const updated = await db.user.update({
         where: { id: auth.user.id },
-        data: { ...body, updatedAt: new Date().toISOString() },
+        data: body,
+        omit: { passwordHash: true },
     });
 
-    await mockCache.invalidatePattern(`users:detail:${auth.user.id}`);
+    await cache.invalidatePattern(`users:detail:${auth.user.id}`);
 
-    const { passwordHash: _ph, ...safeUser } = updated as UserProfile & { passwordHash?: string };
-    return NextResponse.json({ success: true, data: safeUser });
+    return NextResponse.json({ success: true, data: updated });
 }

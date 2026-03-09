@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
+import { db } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const READ_ROLES: UserRole[] = [
@@ -33,7 +33,7 @@ const WRITE_ROLES: UserRole[] = [
 
 const UpdateGoalSchema = z.object({
     targetValue: z.number().min(0).optional(),
-    isLocked:    z.boolean().optional(),
+    isLocked: z.boolean().optional(),
 });
 
 interface RouteCtx { params: Promise<{ id: string }> }
@@ -44,7 +44,7 @@ export async function GET(req: NextRequest, { params }: RouteCtx) {
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
     const { id } = await params;
-    const goal = await mockDb.goals.findUnique({ where: { id } });
+    const goal = await db.goal.findUnique({ where: { id } });
     if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
 
     return NextResponse.json({ success: true, data: goal });
@@ -56,7 +56,7 @@ export async function PUT(req: NextRequest, { params }: RouteCtx) {
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
     const { id } = await params;
-    const goal = await mockDb.goals.findUnique({ where: { id } });
+    const goal = await db.goal.findUnique({ where: { id } });
     if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
 
     if (goal.isLocked && auth.user.role !== UserRole.SUPERADMIN) {
@@ -67,12 +67,11 @@ export async function PUT(req: NextRequest, { params }: RouteCtx) {
     }
 
     const body = UpdateGoalSchema.parse(await req.json());
-    const updated = await mockDb.goals.update({
+    const updated = await db.goal.update({
         where: { id },
-        data: { ...body, updatedAt: new Date().toISOString() },
+        data: body,
     });
 
-    mockDb.emit("goals:changed");
     return NextResponse.json({ success: true, data: updated });
 }
 
@@ -82,10 +81,9 @@ export async function DELETE(req: NextRequest, { params }: RouteCtx) {
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
     const { id } = await params;
-    const goal = await mockDb.goals.findUnique({ where: { id } });
+    const goal = await db.goal.findUnique({ where: { id } });
     if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
 
-    await mockDb.goals.delete({ where: { id } });
-    mockDb.emit("goals:changed");
+    await db.goal.delete({ where: { id } });
     return NextResponse.json({ success: true, data: null });
 }

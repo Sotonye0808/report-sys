@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { mockDb } from "@/lib/data/mockDb";
+import { db } from "@/lib/data/db";
 
 export async function GET(
   _req: NextRequest,
@@ -12,9 +12,7 @@ export async function GET(
 ) {
   const { token } = await params;
 
-  const link = await mockDb.inviteLinks.findFirst({
-    where: (l: InviteLink) => l.token === token,
-  });
+  const link = await db.inviteLink.findUnique({ where: { token } });
 
   if (!link) {
     return NextResponse.json({ success: false, error: "Invalid or expired invite link." }, { status: 404 });

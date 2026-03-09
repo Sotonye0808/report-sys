@@ -1,11 +1,10 @@
 import { type NextRequest } from "next/server";
 import { z } from "zod";
-import { mockDb, dbReady } from "@/lib/data/mockDb";
+import { db } from "@/lib/data/db";
 import {
     verifyPassword,
     generateTokens,
     setAuthCookies,
-    getHashedPassword,
 } from "@/lib/utils/auth";
 import {
     successResponse,
@@ -27,16 +26,14 @@ export async function POST(req: NextRequest) {
 
         const { email, password, rememberMe } = body.data;
 
-        await dbReady;
-        const userProfile = await mockDb.users.findFirst({ where: { email: email as unknown as string } });
+        const userProfile = await db.user.findFirst({ where: { email: { equals: email, mode: "insensitive" } } });
         if (!userProfile) return unauthorizedResponse("Invalid email or password");
 
         if (!userProfile.isActive) return unauthorizedResponse("Account is deactivated");
 
-        const hashed = getHashedPassword(userProfile.id);
-        if (!hashed) return unauthorizedResponse("Invalid email or password");
+        if (!userProfile.passwordHash) return unauthorizedResponse("Invalid email or password");
 
-        const valid = await verifyPassword(password, hashed);
+        const valid = await verifyPassword(password, userProfile.passwordHash);
         if (!valid) return unauthorizedResponse("Invalid email or password");
 
         const authUser: AuthUser = {
@@ -44,10 +41,10 @@ export async function POST(req: NextRequest) {
             email: userProfile.email,
             firstName: userProfile.firstName,
             lastName: userProfile.lastName,
-            role: userProfile.role,
-            campusId: userProfile.campusId,
-            orgGroupId: userProfile.orgGroupId,
-            avatar: userProfile.avatar,
+            role: userProfile.role as AuthUser["role"],
+            campusId: userProfile.campusId ?? undefined,
+            orgGroupId: userProfile.orgGroupId ?? undefined,
+            avatar: userProfile.avatar ?? undefined,
         };
 
         const tokens = generateTokens(authUser);

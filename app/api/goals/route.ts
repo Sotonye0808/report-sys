@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
+import { db } from "@/lib/data/db";
 import { UserRole, GoalMode } from "@/types/global";
 
 const READ_ROLES: UserRole[] = [
@@ -49,22 +49,21 @@ export async function GET(req: NextRequest) {
     const campusId = searchParams.get("campusId");
     const year = searchParams.get("year") ? Number(searchParams.get("year")) : undefined;
 
-    const goals = await mockDb.goals.findMany({
-        where: (g: Goal) => {
-            if (campusId && g.campusId !== campusId) return false;
-            if (year != null && g.year !== year) return false;
-            // Non-superadmin: restrict to their own campus
-            if (
-                auth.user.role !== UserRole.SUPERADMIN &&
-                auth.user.role !== UserRole.SPO &&
-                auth.user.role !== UserRole.CEO &&
-                auth.user.role !== UserRole.CHURCH_MINISTRY
-            ) {
-                if (auth.user.campusId && g.campusId !== auth.user.campusId) return false;
-            }
-            return true;
-        },
-    });
+    /* Build Prisma where clause */
+    const where: Record<string, unknown> = {};
+    if (campusId) where.campusId = campusId;
+    if (year != null) where.year = year;
+    // Non-superadmin: restrict to their own campus
+    if (
+        auth.user.role !== UserRole.SUPERADMIN &&
+        auth.user.role !== UserRole.SPO &&
+        auth.user.role !== UserRole.CEO &&
+        auth.user.role !== UserRole.CHURCH_MINISTRY
+    ) {
+        if (auth.user.campusId) where.campusId = auth.user.campusId;
+    }
+
+    const goals = await db.goal.findMany({ where });
 
     return NextResponse.json({ success: true, data: goals });
 }
@@ -91,17 +90,18 @@ export async function POST(req: NextRequest) {
         }
     }
 
-    const now = new Date().toISOString();
+    const now = new Date();
 
     // Upsert: find existing for same campus/metric/year/mode
-    const existing = await mockDb.goals.findFirst({
-        where: (g: Goal) =>
-            g.campusId === body.campusId &&
-            g.templateMetricId === body.templateMetricId &&
-            g.year === body.year &&
-            g.mode === body.mode &&
-            (body.month == null || g.month === body.month),
-    });
+    const existingWhere: Record<string, unknown> = {
+        campusId: body.campusId,
+        templateMetricId: body.templateMetricId,
+        year: body.year,
+        mode: body.mode,
+    };
+    if (body.month != null) existingWhere.month = body.month;
+
+    const existing = await db.goal.findFirst({ where: existingWhere });
 
     if (existing) {
         if (existing.isLocked && auth.user.role !== UserRole.SUPERADMIN) {
@@ -110,26 +110,26 @@ export async function POST(req: NextRequest) {
                 { status: 403 },
             );
         }
-        const updated = await mockDb.goals.update({
+        const updated = await db.goal.update({
             where: { id: existing.id },
-            data: { ...body, mode: body.mode as GoalMode, updatedAt: now },
+            data: { targetValue: body.targetValue, mode: body.mode as GoalMode },
         });
-        mockDb.emit("goals:changed");
         return NextResponse.json({ success: true, data: updated });
     }
 
-    const goal = await mockDb.goals.create({
+    const goal = await db.goal.create({
         data: {
-            id: crypto.randomUUID(),
-            ...body,
+            campusId: body.campusId,
+            templateMetricId: body.templateMetricId,
+            metricName: body.metricName,
             mode: body.mode as GoalMode,
+            year: body.year,
+            month: body.month,
+            targetValue: body.targetValue,
             isLocked: false,
             createdById: auth.user.id,
-            createdAt: now,
-            updatedAt: now,
         },
     });
 
-    mockDb.emit("goals:changed");
     return NextResponse.json({ success: true, data: goal }, { status: 201 });
 }

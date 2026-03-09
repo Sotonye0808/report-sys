@@ -116,6 +116,7 @@ export const API_ROUTES = {
     },
     analytics: {
         overview: "/api/analytics/overview",
+        metrics: "/api/analytics/metrics",
         reports: "/api/analytics/reports",
         compliance: "/api/analytics/compliance",
         goals: "/api/analytics/goals",

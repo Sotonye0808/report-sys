@@ -6,11 +6,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
+import { db } from "@/lib/data/db";
 import { UserRole, GoalEditRequestStatus } from "@/types/global";
 
 const UnlockRequestSchema = z.object({
-    reason:        z.string().min(10),
+    reason: z.string().min(10),
     proposedValue: z.number().min(0),
 });
 
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest, { params }: RouteCtx) {
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
     const { id } = await params;
-    const goal = await mockDb.goals.findUnique({ where: { id } });
+    const goal = await db.goal.findUnique({ where: { id } });
     if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
 
     if (!goal.isLocked) {
@@ -40,21 +40,16 @@ export async function POST(req: NextRequest, { params }: RouteCtx) {
     }
 
     const body = UnlockRequestSchema.parse(await req.json());
-    const now  = new Date().toISOString();
 
-    const editRequest = await mockDb.goalEditRequests.create({
+    const editRequest = await db.goalEditRequest.create({
         data: {
-            id:             crypto.randomUUID(),
-            goalId:         id,
-            requestedById:  auth.user.id,
-            reason:         body.reason,
-            proposedValue:  body.proposedValue,
-            status:         GoalEditRequestStatus.PENDING,
-            createdAt:      now,
-            updatedAt:      now,
+            goalId: id,
+            requestedById: auth.user.id,
+            reason: body.reason,
+            proposedValue: body.proposedValue,
+            status: GoalEditRequestStatus.PENDING,
         },
     });
 
-    mockDb.emit("goalEditRequests:changed");
     return NextResponse.json({ success: true, data: editRequest }, { status: 201 });
 }

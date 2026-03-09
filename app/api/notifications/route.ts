@@ -6,8 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import { successResponse, unauthorizedResponse, handleApiError } from "@/lib/utils/api";
 
 export async function GET(req: NextRequest) {
@@ -15,20 +14,23 @@ export async function GET(req: NextRequest) {
     const auth = await verifyAuth(req);
     if (!auth.success) return unauthorizedResponse(auth.error);
 
-    const cacheKey = `notifications:${auth.user.id}`;
-    const cached = await mockCache.get(cacheKey);
+    const { searchParams } = new URL(req.url);
+    const unreadOnly = searchParams.get("unread") === "true";
+
+    const cacheKey = `notifications:${auth.user.id}${unreadOnly ? ":unread" : ""}`;
+    const cached = await cache.get(cacheKey);
     if (cached) return NextResponse.json(successResponse(JSON.parse(cached)));
 
-    const notifications = await mockDb.notifications.findMany({
-      where: (n: AppNotification) => n.userId === auth.user.id,
+    const where: { userId: string; read?: boolean } = { userId: auth.user.id };
+    if (unreadOnly) where.read = false;
+
+    const notifications = await db.notification.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
     });
 
-    const sorted = [...notifications].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-
-    await mockCache.set(cacheKey, JSON.stringify(sorted), 30);
-    return NextResponse.json(successResponse(sorted));
+    await cache.set(cacheKey, JSON.stringify(notifications), 30);
+    return NextResponse.json(successResponse(notifications));
   } catch (err) {
     return handleApiError(err);
   }

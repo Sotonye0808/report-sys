@@ -7,8 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
-import { mockCache } from "@/lib/data/mockCache";
+import { db, cache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const UpdateGroupSchema = z.object({
@@ -27,7 +26,7 @@ export async function GET(
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
     }
 
-    const group = await mockDb.orgGroups.findFirst({ where: { id } });
+    const group = await db.orgGroup.findUnique({ where: { id } });
     if (!group) {
         return NextResponse.json({ success: false, error: "Group not found." }, { status: 404 });
     }
@@ -45,16 +44,20 @@ export async function PUT(
     }
 
     const body = UpdateGroupSchema.parse(await req.json());
-    const group = await mockDb.orgGroups.findFirst({ where: { id } });
+    const group = await db.orgGroup.findUnique({ where: { id } });
     if (!group) {
         return NextResponse.json({ success: false, error: "Group not found." }, { status: 404 });
     }
 
-    const updated = await mockDb.orgGroups.update({
+    const updated = await db.orgGroup.update({
         where: { id },
-        data: { ...body, leaderId: body.leaderId ?? undefined, updatedAt: new Date().toISOString() } as Partial<OrgGroup>,
+        data: {
+            ...(body.name !== undefined && { name: body.name }),
+            ...(body.country !== undefined && { country: body.country }),
+            ...(body.leaderId !== undefined && { leaderId: body.leaderId }),
+        },
     });
 
-    await mockCache.invalidatePattern("org:groups:*");
+    await cache.invalidatePattern("org:groups:*");
     return NextResponse.json({ success: true, data: updated });
 }

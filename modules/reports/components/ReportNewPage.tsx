@@ -20,7 +20,6 @@ import { SaveOutlined } from "@ant-design/icons";
 dayjs.extend(weekOfYear);
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
-import { mockDb } from "@/lib/data/mockDb";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
@@ -82,10 +81,13 @@ export function ReportNewPage() {
 
   useEffect(() => {
     const load = async () => {
-      const [ts, cs] = await Promise.all([
-        mockDb.reportTemplates.findMany({}),
-        mockDb.campuses.findMany({}),
+      const [tsRes, csRes] = await Promise.all([
+        fetch(API_ROUTES.reportTemplates.list, { credentials: "include" }),
+        fetch(API_ROUTES.org.campuses, { credentials: "include" }),
       ]);
+      const [tsJson, csJson] = await Promise.all([tsRes.json(), csRes.json()]);
+      const ts: ReportTemplate[] = tsJson.success ? tsJson.data : [];
+      const cs: Campus[] = csJson.success ? csJson.data : [];
       setTemplates(ts);
       setCampuses(cs);
 

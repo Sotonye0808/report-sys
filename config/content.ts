@@ -451,16 +451,62 @@ export const CONTENT = {
     /* ── Analytics ────────────────────────────────────────────────────────── */
     analytics: {
         pageTitle: "Analytics",
-        complianceTitle: "Report Compliance",
+        // Tabs
+        tab: {
+            overview: "Overview",
+            metrics: "Metrics Analysis",
+            trends: "Trends",
+            compliance: "Compliance",
+        },
+        // Section headings
+        complianceTitle: "Report Compliance by Campus",
         trendsTitle: "Submission Trends",
         campusBreakdownTitle: "Campus Breakdown",
         statusBreakdownTitle: "Status Breakdown",
         metricTrendsTitle: "Key Metrics Over Time",
+        goalVsAchievedTitle: "Goal vs. Achieved",
+        yoyComparisonTitle: "Year-on-Year Comparison",
+        campusMetricCompTitle: "Campus Metric Comparison",
+        cumulativeTrendTitle: "Cumulative Trend",
+        // Controls
         periodSelectorLabel: "Period",
+        periodGranularityLabel: "Granularity",
         campusSelectorLabel: "Campus",
         groupSelectorLabel: "Group",
+        metricSelectorLabel: "Metric",
+        sectionSelectorLabel: "Section",
         exportButton: "Export",
+        yearLabel: "Year",
+        monthRangeLabel: "Month Range",
+        // Granularity options
+        granularity: {
+            weekly: "Weekly",
+            monthly: "Monthly",
+            quarterly: "Quarterly",
+            annual: "Annual",
+        },
+        // Chart labels
+        chartLabels: {
+            goal: "Goal",
+            achieved: "Achieved",
+            yoy: "Year on Year",
+            submitted: "Submitted",
+            approved: "Approved",
+            count: "Count",
+            value: "Value",
+            percentage: "% Achieved",
+        },
+        // KPI labels
+        kpi: {
+            avgAchievementRate: "Avg. Achievement Rate",
+            metricsTracked: "Metrics Tracked",
+            campusesReporting: "Campuses Reporting",
+            goalsSet: "Goals Set",
+        },
+        // State
         noData: "No data available for the selected period.",
+        noMetricSelected: "Select a metric above to view the analysis.",
+        loadingMetrics: "Loading metrics…",
         drafts: "Drafts",
         requiresEdits: "Requires Edits",
     },

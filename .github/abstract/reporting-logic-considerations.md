@@ -365,4 +365,104 @@ This gives your Copilot:
 * Permissions
 
 ---
-
+						
+		REPORTING TEMPLATE									
+		2026									
+											
+	MONTH										
+	STRATEGIC INDICATOR	KEY MATRICS		GOAL	ACHIEVED	"% 
+DIFFERENCE"	"YEAR ON 
+YEAR"	"REPORTING 
+FREQUENCY"	MATRICS	"OWNER OF REPORT IN 
+CAMPUSES"	
+	CHURCH PLANTING	"No of Churches to be 
+planted"						"Monthly and 
+Quarterly"	"Monthly Report:
+Summation i.e. the total number after adding each of the month achieved figures"		
+		No of Plant Cells and Small Group									
+		No of Church Plant Cells 									
+	ATTENDANCE	Sunday Attendance 	"Male 
+"					Weekly, Monthly, Quarterly, Bi-annual, and Annual	"
+Monthly Report: Average of the 4 Weeks or 5 Weeks depending on the month i.e. (W1+W2+W3+W4)/4"		
+			Female								
+			Children								
+		First Timers									
+		Worker Attendance									
+		Growth Track Attendance									
+		Growth Track Unique Attendance									
+		Midweek Attendance									
+		Workers Attendance: Midweek									
+		Small Group Attendance									
+		Montly Cell Leaders Attendance (Meeting)									
+	NLP	No of NLP Cells						"Weekly and 
+Monthly"	"Monthly Report:
+Summation i.e. the total number after adding each of the week achieved figures"		
+		NLP Leads									
+		Mobilizers									
+	SALVATION	Soul Saved in Service 						"Weekly and 
+Monthly"	"Monthly Report:
+Summation i.e. the total number after adding each of the week achieved figures"		
+		Soul Saved in Cell									
+		Soul Saved in Next Gen									
+		No of People Baptized									
+	SMALL GROUP	No of Small Group 						"Weekly and
+Monthly"	"Monthly Report:
+Cummulation i.e. the last reported data as at the end of the month"		
+		No of Small Group Leaders									
+		No of Assistant Cell Leaders									
+		No of Cells that held									
+	HAEF	Project Reach						"Monthly and 
+Quarterly"			
+		Project Impact									
+	"DISCIPLESHIP
+"	"Foundation Course 
+Attendance "						"Quarterly and
+Bi-Yearly"	"Monthly Report:
+Summation i.e. the total number after adding each of the cohort achieved figures"		
+		"Foundation Course 
+Graduant"									
+		ALC Attendance									
+		BLC Attendance									
+		PLC Attendance									
+		CPC Attendance									
+	PARTNERSHIP	No. of Partners						"Monthly and 
+Quarterly"	"Monthly Report:
+Summation i.e. the total number after adding each of the month achieved figures"		
+	PROJECT	No. of Ongoing Project						"Monthly and 
+Quarterly"	"Monthly Report:
+Cummulation i.e. the last reported data as at the end of the month"		
+		Project phase and closure									
+	TRANSFORMATION	No of Testimonies						"Monthly and 
+Quarterly"	"Monthly Report:
+Cummulation i.e. the last reported data as at the end of the month or quartely"		
+		No of Birth									
+		No of Babies dedicated									
+		No of Wedding									
+	ASSIMILATION	No Assimilated into Small Groups 						"Monthly and 
+Quarterly"	"Monthly Report:
+Cummulation i.e. the last reported data as at the end of the month and quarter"		
+		No Assimilated into Work Force									
+		No of Workers									
+		No of Leaders									
+	NEXT GEN	Next Gen Attendance	"Kidzone
+Stir House"					Weekly and Monthly 	Monthly Report: Average of the 4 Week i.e. (W1+W2+W3+W4)/4		
+		First Timers	"Kidzone
+Stir House"								
+		Workers Attendance	"Kidzone
+Stir House"								
+		No of Baptized (Water)	"Kidzone
+Stir House"					"Monthly and 
+Quarterly"	"Monthly Report:
+Cummulation i.e. the last reported data as at the end of the month and quarter"		
+		No of Baptized (Holy Ghost)	"Kidzone
+Stir House"								
+		Next Gen Return Rate	"Kidzone
+Stir House"								
+		No of PD/PF Participant	"Kidzone
+Stir House"								
+		No of Teen Leaders	Stir House								
+		No that Served 	"Kidzone
+Stir House"								
+		Parental Engaging Rate	"Kidzone
+Stir House"								
+									

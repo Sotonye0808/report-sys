@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth, hashPassword, verifyPassword } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
+import { db } from "@/lib/data/db";
 
 const Schema = z.object({
   currentPassword: z.string().min(1),
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
   const body = Schema.parse(await req.json());
 
-  const user = await mockDb.users.findFirst({ where: { id: auth.user.id } });
+  const user = await db.user.findUnique({ where: { id: auth.user.id } });
   if (!user) {
     return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
   }
@@ -38,9 +38,9 @@ export async function POST(req: NextRequest) {
 
   const hashed = await hashPassword(body.newPassword);
 
-  await mockDb.users.update({
+  await db.user.update({
     where: { id: auth.user.id },
-    data: { passwordHash: hashed, updatedAt: new Date().toISOString() } as Partial<UserProfile>,
+    data: { passwordHash: hashed, updatedAt: new Date() },
   });
 
   return NextResponse.json({ success: true, message: "Password changed successfully." });

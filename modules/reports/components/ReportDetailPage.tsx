@@ -32,10 +32,9 @@ import {
 import { Descriptions, Tooltip, Tag } from "antd";
 import { useRole } from "@/lib/hooks/useRole";
 import { useAuth } from "@/providers/AuthProvider";
-import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
+import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
-import { APP_ROUTES } from "@/config/routes";
-import { mockDb } from "@/lib/data/mockDb";
+import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
 import { fmtDate, fmtDateTime } from "@/lib/utils/formatDate";
 import { exportReportDetail } from "@/lib/utils/exportReports";
@@ -242,39 +241,21 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
 
   const isSuperadmin = role === UserRole.SUPERADMIN;
 
-  /* ── Data subscriptions ─────────────────────────────────────────────────── */
+  /* ── Data fetching ─────────────────────────────────────────────────── */
 
-  const reports = useMockDbSubscription<Report[]>("reports", async () =>
-    mockDb.reports.findMany({ where: { id: reportId } }),
+  const { data: report, refetch: refetchReport } = useApiData<Report>(
+    API_ROUTES.reports.detail(reportId),
   );
 
-  const templates = useMockDbSubscription<ReportTemplate[]>("reportTemplates", async () =>
-    mockDb.reportTemplates.findMany({}),
-  );
+  const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
 
-  const sections = useMockDbSubscription<ReportSection[]>("reportSections", async () =>
-    mockDb.reportSections.findMany({ where: { reportId } }),
-  );
+  const { data: events } = useApiData<ReportEvent[]>(API_ROUTES.reports.history(reportId));
 
-  const metrics = useMockDbSubscription<ReportMetric[]>("reportMetrics", async () =>
-    mockDb.reportMetrics.findMany({}),
-  );
+  const { data: campuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
 
-  const events = useMockDbSubscription<ReportEvent[]>("reportEvents", async () =>
-    mockDb.reportEvents.findMany({ where: { reportId } }),
-  );
-
-  const campuses = useMockDbSubscription<Campus[]>("campuses", async () =>
-    mockDb.campuses.findMany({}),
-  );
-
-  const users = useMockDbSubscription<UserProfile[]>("users", async () =>
-    mockDb.users.findMany({}),
-  );
+  const { data: users } = useApiData<UserProfile[]>(API_ROUTES.users.list);
 
   /* ── Derived data ───────────────────────────────────────────────────────── */
-
-  const report = useMemo(() => reports?.[0], [reports]);
 
   const campus = useMemo(
     () => (campuses ?? []).find((c) => c.id === report?.campusId),
@@ -299,45 +280,36 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
     [templates, report?.templateId],
   );
 
+  // Report detail API returns sections with nested metrics
+  type SectionWithMetrics = ReportSection & { metrics: ReportMetric[] };
   const sectionsWithMetrics = useMemo(() => {
-    if (!sections || !metrics) return [];
-    return sections.map((s) => ({
-      section: s,
-      metrics: metrics.filter((m) => m.reportSectionId === s.id),
+    const secs: SectionWithMetrics[] =
+      (report as Report & { sections?: SectionWithMetrics[] })?.sections ?? [];
+    return secs.map((s: SectionWithMetrics) => ({
+      section: s as ReportSection,
+      metrics: s.metrics ?? [],
     }));
-  }, [sections, metrics]);
+  }, [report]);
 
   /* ── Action handler ─────────────────────────────────────────────────────── */
 
   async function handleAction(action: ActionConfig) {
     if (!report) return;
-    await mockDb.transaction(async (tx) => {
-      await tx.reports.update({
-        where: { id: report.id },
-        data: { status: action.targetStatus, updatedAt: new Date().toISOString() },
-      });
-      await tx.reportEvents.create({
-        data: {
-          id: crypto.randomUUID(),
-          reportId: report.id,
-          eventType: action.eventType,
-          actorId: currentUser?.id ?? "",
-          timestamp: new Date().toISOString(),
-          previousStatus: report.status,
-          newStatus: action.targetStatus,
-        },
-      });
-    });
+    const endpointMap: Record<string, string> = {
+      approve: API_ROUTES.reports.approve(report.id),
+      review: API_ROUTES.reports.review(report.id),
+      "request-edits": API_ROUTES.reports.requestEdit(report.id),
+      lock: API_ROUTES.reports.lock(report.id),
+    };
+    const url = endpointMap[action.key];
+    if (!url) return;
+    await fetch(url, { method: "POST", credentials: "include" });
+    refetchReport();
   }
 
   /* ── Loading / not found ────────────────────────────────────────────────── */
 
-  const isLoading =
-    reports === undefined ||
-    templates === undefined ||
-    sections === undefined ||
-    metrics === undefined ||
-    events === undefined;
+  const isLoading = report === undefined || templates === undefined || events === undefined;
 
   if (isLoading) return <LoadingSkeleton rows={6} />;
 
@@ -376,16 +348,18 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
             </Button>
             <Button
               icon={<DownloadOutlined />}
-              onClick={() =>
+              onClick={() => {
+                const secs = sectionsWithMetrics.map((s) => s.section);
+                const mets = sectionsWithMetrics.flatMap((s) => s.metrics);
                 exportReportDetail(
                   report,
-                  sections ?? [],
-                  metrics ?? [],
+                  secs,
+                  mets,
                   templates ?? [],
                   campuses ?? [],
                   users ?? [],
-                )
-              }
+                );
+              }}
             >
               {(rk.export as Record<string, string>).button}
             </Button>

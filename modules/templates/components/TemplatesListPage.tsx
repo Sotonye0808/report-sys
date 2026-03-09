@@ -9,8 +9,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Tag } from "antd";
 import { PlusOutlined, EditOutlined, StarOutlined } from "@ant-design/icons";
-import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
-import { mockDb } from "@/lib/data/mockDb";
+import { useApiData } from "@/lib/hooks/useApiData";
+import { API_ROUTES } from "@/config/routes";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
@@ -90,9 +90,7 @@ export function TemplatesListPage() {
   const [search, setSearch] = useState("");
   const [showArchived, setShowArchived] = useState(false);
 
-  const templates = useMockDbSubscription<ReportTemplate[]>("reportTemplates", () =>
-    mockDb.reportTemplates.findMany({}),
-  );
+  const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
 
   const filtered = templates
     ? templates

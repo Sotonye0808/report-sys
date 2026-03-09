@@ -1,0 +1,614 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Harvesters Reporting System — Prisma Schema
+// Maps 1:1 to types/global.ts domain interfaces
+// ─────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  SUPERADMIN
+  SPO
+  CEO
+  CHURCH_MINISTRY
+  GROUP_PASTOR
+  GROUP_ADMIN
+  CAMPUS_PASTOR
+  CAMPUS_ADMIN
+  DATA_ENTRY
+  MEMBER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  PREFER_NOT_TO_SAY
+}
+
+enum ReportStatus {
+  DRAFT
+  SUBMITTED
+  REQUIRES_EDITS
+  APPROVED
+  REVIEWED
+  LOCKED
+}
+
+enum ReportPeriodType {
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum MetricFieldType {
+  NUMBER
+  PERCENTAGE
+  TEXT
+  CURRENCY
+}
+
+enum MetricCalculationType {
+  SUM
+  AVERAGE
+  SNAPSHOT
+}
+
+enum ReportEventType {
+  CREATED
+  SUBMITTED
+  EDIT_REQUESTED
+  EDIT_SUBMITTED
+  EDIT_APPROVED
+  EDIT_REJECTED
+  EDIT_APPLIED
+  APPROVED
+  REVIEWED
+  LOCKED
+  DEADLINE_PASSED
+  UPDATE_REQUESTED
+  UPDATE_APPROVED
+  UPDATE_REJECTED
+  DATA_ENTRY_CREATED
+  TEMPLATE_VERSION_NOTE
+  AUTO_APPROVED
+}
+
+enum ReportEditStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+enum ReportUpdateRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  REPORT_SUBMITTED
+  REPORT_EDIT_REQUESTED
+  REPORT_APPROVED
+  REPORT_REVIEWED
+  REPORT_LOCKED
+  REPORT_EDIT_SUBMITTED
+  REPORT_EDIT_APPROVED
+  REPORT_EDIT_REJECTED
+  REPORT_UPDATE_REQUESTED
+  REPORT_UPDATE_APPROVED
+  REPORT_UPDATE_REJECTED
+  REPORT_DEADLINE_REMINDER
+  GOAL_UNLOCK_REQUESTED
+  GOAL_UNLOCK_APPROVED
+  GOAL_UNLOCK_REJECTED
+}
+
+enum GoalMode {
+  ANNUAL
+  MONTHLY
+  CAMPUS_OVERRIDE
+}
+
+enum GoalEditRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum InviteLinkType {
+  CAMPUS
+  GROUP
+  DIRECT
+}
+
+// ─── Models ──────────────────────────────────────────────────────────────────
+
+model User {
+  id             String   @id @default(uuid())
+  organisationId String?
+  email          String   @unique
+  passwordHash   String
+  firstName      String
+  lastName       String
+  phone          String?
+  gender         Gender?
+  role           UserRole @default(MEMBER)
+  campusId       String?
+  orgGroupId     String?
+  avatar         String?
+  avatarUrl      String?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  campus   Campus?   @relation("CampusUsers", fields: [campusId], references: [id])
+  orgGroup OrgGroup? @relation("OrgGroupUsers", fields: [orgGroupId], references: [id])
+
+  // Reverse relations
+  createdTemplates        ReportTemplate[]        @relation("TemplateCreator")
+  createdTemplateVersions ReportTemplateVersion[] @relation("TemplateVersionCreator")
+  submittedReports        Report[]                @relation("ReportSubmitter")
+  reviewedReports         Report[]                @relation("ReportReviewer")
+  approvedReports         Report[]                @relation("ReportApprover")
+  createdReports          Report[]                @relation("ReportCreator")
+  dataEntryReports        Report[]                @relation("DataEntryCreator")
+  reportEdits             ReportEdit[]            @relation("EditSubmitter")
+  reviewedEdits           ReportEdit[]            @relation("EditReviewer")
+  reportUpdateRequests    ReportUpdateRequest[]   @relation("UpdateRequester")
+  reviewedUpdates         ReportUpdateRequest[]   @relation("UpdateReviewer")
+  reportEvents            ReportEvent[]           @relation("EventActor")
+  reportVersions          ReportVersion[]         @relation("VersionCreator")
+  goals                   Goal[]                  @relation("GoalCreator")
+  lockedGoals             Goal[]                  @relation("GoalLocker")
+  goalEditRequests        GoalEditRequest[]       @relation("GoalEditRequester")
+  reviewedGoalEdits       GoalEditRequest[]       @relation("GoalEditReviewer")
+  notifications           Notification[]          @relation("NotificationRecipient")
+  createdInviteLinks      InviteLink[]            @relation("InviteLinkCreator")
+  ledOrgGroups            OrgGroup[]              @relation("OrgGroupLeader")
+  adminedCampuses         Campus[]                @relation("CampusAdmin")
+  lockedMetrics           ReportMetric[]          @relation("MetricLocker")
+
+  @@index([email])
+  @@index([role])
+  @@index([campusId])
+  @@index([orgGroupId])
+  @@map("users")
+}
+
+model OrgGroup {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  country     String
+  leaderId    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  leader   User?    @relation("OrgGroupLeader", fields: [leaderId], references: [id])
+  campuses Campus[] @relation("GroupCampuses")
+  users    User[]   @relation("OrgGroupUsers")
+  reports  Report[] @relation("ReportOrgGroup")
+  goals    Goal[]   @relation("GoalOrgGroup")
+
+  @@map("org_groups")
+}
+
+model Campus {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  parentId    String
+  adminId     String?
+  country     String
+  location    String
+  address     String?
+  phone       String?
+  memberCount Int?     @default(0)
+  inviteCode  String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  orgGroup      OrgGroup      @relation("GroupCampuses", fields: [parentId], references: [id])
+  admin         User?         @relation("CampusAdmin", fields: [adminId], references: [id])
+  users         User[]        @relation("CampusUsers")
+  reports       Report[]      @relation("ReportCampus")
+  goals         Goal[]        @relation("GoalCampus")
+  metricEntries MetricEntry[] @relation("MetricEntryCampus")
+
+  @@index([parentId])
+  @@map("campuses")
+}
+
+// ─── Report Templates ────────────────────────────────────────────────────────
+
+model ReportTemplate {
+  id             String   @id @default(uuid())
+  organisationId String
+  name           String
+  description    String?
+  version        Int      @default(1)
+  isActive       Boolean  @default(true)
+  isDefault      Boolean  @default(false)
+  createdById    String
+  campusId       String?
+  orgGroupId     String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  createdBy User                    @relation("TemplateCreator", fields: [createdById], references: [id])
+  sections  ReportTemplateSection[]
+  versions  ReportTemplateVersion[]
+  reports   Report[]                @relation("ReportTemplate")
+  goals     Goal[]                  @relation("GoalTemplateMetric")
+
+  @@map("report_templates")
+}
+
+model ReportTemplateSection {
+  id          String  @id @default(uuid())
+  templateId  String
+  name        String
+  description String?
+  order       Int
+  isRequired  Boolean @default(true)
+
+  // Relations
+  template ReportTemplate         @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  metrics  ReportTemplateMetric[]
+
+  @@index([templateId])
+  @@map("report_template_sections")
+}
+
+model ReportTemplateMetric {
+  id               String                @id @default(uuid())
+  sectionId        String
+  name             String
+  description      String?
+  fieldType        MetricFieldType       @default(NUMBER)
+  calculationType  MetricCalculationType @default(SUM)
+  isRequired       Boolean               @default(true)
+  minValue         Float?
+  maxValue         Float?
+  order            Int
+  capturesGoal     Boolean               @default(false)
+  capturesAchieved Boolean               @default(false)
+  capturesYoY      Boolean               @default(false)
+
+  // Relations
+  section       ReportTemplateSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  reportMetrics ReportMetric[]
+  metricEntries MetricEntry[]
+  goals         Goal[]                @relation("GoalMetric")
+
+  @@index([sectionId])
+  @@map("report_template_metrics")
+}
+
+model ReportTemplateVersion {
+  id            String   @id @default(uuid())
+  templateId    String
+  versionNumber Int
+  snapshot      Json
+  createdAt     DateTime @default(now())
+  createdById   String
+
+  // Relations
+  template  ReportTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  createdBy User           @relation("TemplateVersionCreator", fields: [createdById], references: [id])
+
+  @@index([templateId])
+  @@map("report_template_versions")
+}
+
+// ─── Reports ─────────────────────────────────────────────────────────────────
+
+model Report {
+  id                String           @id @default(uuid())
+  organisationId    String?
+  title             String?
+  templateId        String
+  templateVersionId String?
+  campusId          String
+  orgGroupId        String
+  period            String?
+  periodType        ReportPeriodType
+  periodYear        Int
+  periodMonth       Int?
+  periodWeek        Int?
+  status            ReportStatus     @default(DRAFT)
+  createdById       String?
+  submittedById     String?
+  reviewedById      String?
+  approvedById      String?
+  deadline          DateTime?
+  lockedAt          DateTime?
+  isDataEntry       Boolean          @default(false)
+  dataEntryById     String?
+  dataEntryDate     DateTime?
+  notes             String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  // Relations
+  template    ReportTemplate @relation("ReportTemplate", fields: [templateId], references: [id])
+  campus      Campus         @relation("ReportCampus", fields: [campusId], references: [id])
+  orgGroup    OrgGroup       @relation("ReportOrgGroup", fields: [orgGroupId], references: [id])
+  createdBy   User?          @relation("ReportCreator", fields: [createdById], references: [id])
+  submittedBy User?          @relation("ReportSubmitter", fields: [submittedById], references: [id])
+  reviewedBy  User?          @relation("ReportReviewer", fields: [reviewedById], references: [id])
+  approvedBy  User?          @relation("ReportApprover", fields: [approvedById], references: [id])
+  dataEntryBy User?          @relation("DataEntryCreator", fields: [dataEntryById], references: [id])
+
+  sections       ReportSection[]
+  edits          ReportEdit[]
+  updateRequests ReportUpdateRequest[]
+  events         ReportEvent[]
+  versions       ReportVersion[]
+
+  @@index([campusId])
+  @@index([orgGroupId])
+  @@index([templateId])
+  @@index([status])
+  @@index([periodYear, periodMonth])
+  @@map("reports")
+}
+
+model ReportSection {
+  id                String @id @default(uuid())
+  reportId          String
+  templateSectionId String
+  sectionName       String
+
+  // Relations
+  report  Report         @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  metrics ReportMetric[]
+
+  @@index([reportId])
+  @@map("report_sections")
+}
+
+model ReportMetric {
+  id                 String                @id @default(uuid())
+  reportSectionId    String
+  templateMetricId   String
+  metricName         String
+  calculationType    MetricCalculationType @default(SUM)
+  monthlyGoal        Float?
+  monthlyAchieved    Float?
+  yoyGoal            Float?
+  computedPercentage Float?
+  isLocked           Boolean               @default(false)
+  lockedAt           DateTime?
+  lockedById         String?
+  comment            String?
+
+  // Relations
+  section        ReportSection        @relation(fields: [reportSectionId], references: [id], onDelete: Cascade)
+  templateMetric ReportTemplateMetric @relation(fields: [templateMetricId], references: [id])
+  lockedBy       User?                @relation("MetricLocker", fields: [lockedById], references: [id])
+
+  @@index([reportSectionId])
+  @@index([templateMetricId])
+  @@map("report_metrics")
+}
+
+// ─── Report Edits & Update Requests ──────────────────────────────────────────
+
+model ReportEdit {
+  id            String           @id @default(uuid())
+  reportId      String
+  submittedById String
+  status        ReportEditStatus @default(DRAFT)
+  reason        String
+  sections      Json
+  reviewedById  String?
+  reviewNotes   String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  // Relations
+  report      Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  submittedBy User   @relation("EditSubmitter", fields: [submittedById], references: [id])
+  reviewedBy  User?  @relation("EditReviewer", fields: [reviewedById], references: [id])
+
+  @@index([reportId])
+  @@map("report_edits")
+}
+
+model ReportUpdateRequest {
+  id            String                    @id @default(uuid())
+  reportId      String
+  requestedById String
+  reason        String
+  sections      Json
+  status        ReportUpdateRequestStatus @default(PENDING)
+  reviewedById  String?
+  reviewNotes   String?
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+
+  // Relations
+  report      Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  requestedBy User   @relation("UpdateRequester", fields: [requestedById], references: [id])
+  reviewedBy  User?  @relation("UpdateReviewer", fields: [reviewedById], references: [id])
+
+  @@index([reportId])
+  @@map("report_update_requests")
+}
+
+// ─── Audit Trail ─────────────────────────────────────────────────────────────
+
+model ReportEvent {
+  id             String          @id @default(uuid())
+  reportId       String
+  eventType      ReportEventType
+  actorId        String
+  timestamp      DateTime        @default(now())
+  details        String?
+  previousStatus ReportStatus?
+  newStatus      ReportStatus?
+  snapshotId     String?
+
+  // Relations
+  report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  actor  User   @relation("EventActor", fields: [actorId], references: [id])
+
+  @@index([reportId])
+  @@index([eventType])
+  @@map("report_events")
+}
+
+model ReportVersion {
+  id            String   @id @default(uuid())
+  reportId      String
+  versionNumber Int
+  snapshot      Json
+  createdAt     DateTime @default(now())
+  createdById   String
+  reason        String?
+
+  // Relations
+  report    Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  createdBy User   @relation("VersionCreator", fields: [createdById], references: [id])
+
+  @@index([reportId])
+  @@map("report_versions")
+}
+
+// ─── Goals ───────────────────────────────────────────────────────────────────
+
+model Goal {
+  id               String    @id @default(uuid())
+  campusId         String
+  orgGroupId       String?
+  templateId       String?
+  templateMetricId String
+  metricName       String
+  mode             GoalMode  @default(ANNUAL)
+  year             Int
+  month            Int?
+  targetValue      Float
+  isLocked         Boolean   @default(false)
+  lockedAt         DateTime?
+  lockedById       String?
+  createdById      String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // Relations
+  campus         Campus               @relation("GoalCampus", fields: [campusId], references: [id])
+  orgGroup       OrgGroup?            @relation("GoalOrgGroup", fields: [orgGroupId], references: [id])
+  template       ReportTemplate?      @relation("GoalTemplateMetric", fields: [templateId], references: [id])
+  templateMetric ReportTemplateMetric @relation("GoalMetric", fields: [templateMetricId], references: [id])
+  createdBy      User                 @relation("GoalCreator", fields: [createdById], references: [id])
+  lockedBy       User?                @relation("GoalLocker", fields: [lockedById], references: [id])
+  editRequests   GoalEditRequest[]
+
+  @@index([campusId, templateMetricId, year])
+  @@map("goals")
+}
+
+model GoalEditRequest {
+  id            String                @id @default(uuid())
+  goalId        String
+  requestedById String
+  reason        String
+  proposedValue Float
+  status        GoalEditRequestStatus @default(PENDING)
+  reviewedById  String?
+  reviewNotes   String?
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+
+  // Relations
+  goal        Goal  @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  requestedBy User  @relation("GoalEditRequester", fields: [requestedById], references: [id])
+  reviewedBy  User? @relation("GoalEditReviewer", fields: [reviewedById], references: [id])
+
+  @@index([goalId])
+  @@map("goal_edit_requests")
+}
+
+// ─── Metric Entries (aggregated snapshots) ───────────────────────────────────
+
+model MetricEntry {
+  id                 String   @id @default(uuid())
+  reportMetricId     String?
+  templateMetricId   String
+  campusId           String
+  year               Int
+  month              Int
+  goalValue          Float?
+  achievedValue      Float?
+  comment            String?
+  computedPercentage Float?
+  createdAt          DateTime @default(now())
+
+  // Relations
+  templateMetric ReportTemplateMetric @relation(fields: [templateMetricId], references: [id])
+  campus         Campus               @relation("MetricEntryCampus", fields: [campusId], references: [id])
+
+  @@index([campusId, templateMetricId, year, month])
+  @@map("metric_entries")
+}
+
+// ─── Notifications ───────────────────────────────────────────────────────────
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  relatedId String?
+  reportId  String?
+  read      Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  // Relations
+  user User @relation("NotificationRecipient", fields: [userId], references: [id])
+
+  @@index([userId, read])
+  @@map("notifications")
+}
+
+// ─── Invite Links ────────────────────────────────────────────────────────────
+
+model InviteLink {
+  id          String         @id @default(uuid())
+  token       String         @unique
+  type        InviteLinkType
+  targetId    String?
+  targetRole  UserRole?
+  campusId    String?
+  groupId     String?
+  note        String?
+  createdById String
+  usedAt      DateTime?
+  expiresAt   DateTime?
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+
+  // Relations
+  createdBy User @relation("InviteLinkCreator", fields: [createdById], references: [id])
+
+  @@index([token])
+  @@map("invite_links")
+}

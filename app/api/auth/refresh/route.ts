@@ -1,6 +1,7 @@
 import { type NextRequest } from "next/server";
 import { z } from "zod";
-import { mockDb, dbReady } from "@/lib/data/mockDb";
+import { db } from "@/lib/data/db";
+import { UserRole } from "@/types/global";
 import {
     verifyRefreshToken,
     generateTokens,
@@ -26,8 +27,7 @@ export async function POST(req: NextRequest) {
         const payload = verifyRefreshToken(refreshToken);
         if (!payload) return unauthorizedResponse("Invalid or expired refresh token");
 
-        await dbReady;
-        const userProfile = await mockDb.users.findUnique({ where: { id: payload.userId } });
+        const userProfile = await db.user.findUnique({ where: { id: payload.userId } });
         if (!userProfile || !userProfile.isActive) {
             return unauthorizedResponse("User not found or inactive");
         }
@@ -37,10 +37,10 @@ export async function POST(req: NextRequest) {
             email: userProfile.email,
             firstName: userProfile.firstName,
             lastName: userProfile.lastName,
-            role: userProfile.role,
-            campusId: userProfile.campusId,
-            orgGroupId: userProfile.orgGroupId,
-            avatar: userProfile.avatar,
+            role: userProfile.role as UserRole,
+            campusId: userProfile.campusId ?? undefined,
+            orgGroupId: userProfile.orgGroupId ?? undefined,
+            avatar: userProfile.avatar ?? undefined,
         };
 
         const tokens = generateTokens(authUser);

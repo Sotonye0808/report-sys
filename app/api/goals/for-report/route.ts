@@ -22,7 +22,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
-import { mockDb } from "@/lib/data/mockDb";
+import { db } from "@/lib/data/db";
 import { UserRole, GoalMode } from "@/types/global";
 
 const READ_ROLES: UserRole[] = [
@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Resolve the campus to find its orgGroupId for group-level goal inheritance
-    const campus = await mockDb.campuses.findUnique({ where: { id: campusId } });
+    const campus = await db.campus.findUnique({ where: { id: campusId } });
     if (!campus) {
         return NextResponse.json(
             { success: false, error: "Campus not found." },
@@ -94,11 +94,10 @@ export async function GET(req: NextRequest) {
     const orgGroupId = campus.parentId; // Campus.parentId is the OrgGroup id
 
     // Fetch all relevant goals in one pass (campus + group for the given year)
-    const allGoals = await mockDb.goals.findMany({
-        where: (g: Goal) => {
-            if (g.year !== year) return false;
-            // Must be for this campus OR for the group that owns this campus
-            return g.campusId === campusId || g.campusId === orgGroupId;
+    const allGoals = await db.goal.findMany({
+        where: {
+            year,
+            campusId: { in: [campusId, orgGroupId] },
         },
     });
 

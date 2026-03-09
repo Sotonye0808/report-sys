@@ -10,8 +10,8 @@ import { useRouter } from "next/navigation";
 import { Tooltip } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import { useMockDbSubscription } from "@/lib/hooks/useMockDbSubscription";
-import { mockDb } from "@/lib/data/mockDb";
+import { useApiData } from "@/lib/hooks/useApiData";
+import { API_ROUTES } from "@/config/routes";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
@@ -43,9 +43,7 @@ export function UsersListPage() {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [currentPage, setPage] = useState(1);
 
-  const users = useMockDbSubscription<UserProfile[]>("users", async () =>
-    mockDb.users.findMany({}),
-  );
+  const { data: users } = useApiData<UserProfile[]>(API_ROUTES.users.list);
 
   const filtered = useMemo(() => {
     if (!users) return [];
