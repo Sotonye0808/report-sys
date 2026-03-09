@@ -98,7 +98,7 @@ export async function GET(req: NextRequest) {
             db.report.count({ where }),
         ]);
 
-        const body = successResponse({ data: reports, total, page, pageSize });
+        const body = successResponse({ reports, total, page, pageSize });
         await cache.set(cacheKey, JSON.stringify(body), 30);
         return NextResponse.json(body);
     } catch (err) {

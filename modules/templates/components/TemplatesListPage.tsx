@@ -28,15 +28,15 @@ type TemplateRow = ReportTemplate & {
 };
 
 interface ColumnConfig {
-  key:     string;
-  title:   string;
-  render:  (row: TemplateRow) => React.ReactNode;
-  width?:  number;
+  key: string;
+  title: string;
+  render: (row: TemplateRow) => React.ReactNode;
+  width?: number;
 }
 
 const TEMPLATE_COLUMNS: ColumnConfig[] = [
   {
-    key:   "name",
+    key: "name",
     title: CONTENT.templates.nameLabel as string,
     render: (row) => (
       <div>
@@ -48,7 +48,7 @@ const TEMPLATE_COLUMNS: ColumnConfig[] = [
     ),
   },
   {
-    key:   "status",
+    key: "status",
     title: "Status",
     width: 140,
     render: (row) => (
@@ -64,7 +64,7 @@ const TEMPLATE_COLUMNS: ColumnConfig[] = [
     ),
   },
   {
-    key:   "fields",
+    key: "fields",
     title: "Fields",
     width: 80,
     render: (row) => (
@@ -74,14 +74,10 @@ const TEMPLATE_COLUMNS: ColumnConfig[] = [
     ),
   },
   {
-    key:   "created",
+    key: "created",
     title: "Created",
     width: 130,
-    render: (row) => (
-      <span className="text-xs text-ds-text-subtle">
-        {fmtDate(row.createdAt)}
-      </span>
-    ),
+    render: (row) => <span className="text-xs text-ds-text-subtle">{fmtDate(row.createdAt)}</span>,
   },
 ];
 
@@ -110,8 +106,7 @@ export function TemplatesListPage() {
           const aDefault = (a as TemplateRow).isDefault ? -1 : 0;
           const bDefault = (b as TemplateRow).isDefault ? -1 : 0;
           return (
-            aDefault - bDefault ||
-            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+            aDefault - bDefault || new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
           );
         })
     : [];
@@ -119,7 +114,7 @@ export function TemplatesListPage() {
   const columns = [
     ...TEMPLATE_COLUMNS,
     {
-      key:   "actions",
+      key: "actions",
       title: "",
       width: 80,
       render: (row: TemplateRow) => (
@@ -162,10 +157,10 @@ export function TemplatesListPage() {
           searchPlaceholder="Search templates…"
           filters={[
             {
-              key:      "showArchived",
-              label:    "Show archived",
-              type:     "checkbox",
-              value:    showArchived,
+              key: "showArchived",
+              label: "Show archived",
+              type: "checkbox",
+              value: showArchived,
               onChange: (v) => setShowArchived(v as boolean),
             },
           ]}

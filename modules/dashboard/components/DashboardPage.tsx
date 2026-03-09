@@ -191,18 +191,15 @@ export function DashboardPage() {
       ? `${API_ROUTES.reports.list}?campusId=${user.campusId}`
       : API_ROUTES.reports.list
     : null;
-  const { data: allReports } = useApiData<Report[]>(reportsUrl);
+  const { data: reportsPage } = useApiData<{ reports: Report[]; total: number }>(reportsUrl);
+  const allReports = reportsPage?.reports;
 
   const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
 
   // System-mode-only subscriptions — empty for non-superadmin
-  const { data: allUsers } = useApiData<UserProfile[]>(
-    isSuperadmin ? API_ROUTES.users.list : null,
-  );
+  const { data: allUsers } = useApiData<UserProfile[]>(isSuperadmin ? API_ROUTES.users.list : null);
 
-  const { data: campuses } = useApiData<Campus[]>(
-    isSuperadmin ? API_ROUTES.org.campuses : null,
-  );
+  const { data: campuses } = useApiData<Campus[]>(isSuperadmin ? API_ROUTES.org.campuses : null);
 
   /* ── Scope filtering ────────────────────────────────────────────────────── */
 

@@ -104,7 +104,8 @@ export function ReportsListPage() {
       ? `${API_ROUTES.reports.list}?campusId=${user.campusId}`
       : API_ROUTES.reports.list
     : null;
-  const { data: allReports } = useApiData<Report[]>(reportsUrl);
+  const { data: reportsPage } = useApiData<{ reports: Report[]; total: number }>(reportsUrl);
+  const allReports = reportsPage?.reports;
 
   const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
 
