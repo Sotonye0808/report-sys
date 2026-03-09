@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
     const cacheKey = `notifications:${auth.user.id}${unreadOnly ? ":unread" : ""}`;
     const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(successResponse(JSON.parse(cached)));
+    if (cached) return NextResponse.json(successResponse(cached));
 
     const where: { userId: string; read?: boolean } = { userId: auth.user.id };
     if (unreadOnly) where.read = false;

@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
         const cacheKey = `reports:list:${auth.user.id}:${JSON.stringify(query)}`;
         const cached = await cache.get(cacheKey);
         if (cached) {
-            return NextResponse.json(JSON.parse(cached));
+            return NextResponse.json(cached);
         }
 
         /* Build Prisma where clause */
@@ -98,9 +98,9 @@ export async function GET(req: NextRequest) {
             db.report.count({ where }),
         ]);
 
-        const body = successResponse({ reports, total, page, pageSize });
-        await cache.set(cacheKey, JSON.stringify(body), 30);
-        return NextResponse.json(body);
+        const payload = { success: true, data: { reports, total, page, pageSize } };
+        await cache.set(cacheKey, JSON.stringify(payload), 30);
+        return NextResponse.json(payload);
     } catch (err) {
         return handleApiError(err);
     }

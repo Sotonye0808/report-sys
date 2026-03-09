@@ -59,15 +59,16 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Static assets — cache-first
+  // Static assets — cache-first (but never cache the SW itself)
   if (
-    url.pathname.startsWith("/_next/") ||
-    url.pathname.startsWith("/logo/") ||
-    url.pathname.endsWith(".js") ||
-    url.pathname.endsWith(".css") ||
-    url.pathname.endsWith(".svg") ||
-    url.pathname.endsWith(".png") ||
-    url.pathname.endsWith(".woff2")
+    url.pathname !== "/sw.js" &&
+    (url.pathname.startsWith("/_next/") ||
+      url.pathname.startsWith("/logo/") ||
+      url.pathname.endsWith(".js") ||
+      url.pathname.endsWith(".css") ||
+      url.pathname.endsWith(".svg") ||
+      url.pathname.endsWith(".png") ||
+      url.pathname.endsWith(".woff2"))
   ) {
     event.respondWith(
       caches.match(request).then(

@@ -5,8 +5,9 @@
 
 import { NextResponse } from "next/server";
 
-export function successResponse<T>(data: T, status = 200) {
-    return NextResponse.json({ success: true, data } satisfies ApiResponse<T>, { status });
+/** Returns a plain { success: true, data } object — wrap in NextResponse.json() at the call site. */
+export function successResponse<T>(data: T): { success: true; data: T } {
+    return { success: true, data };
 }
 
 export function errorResponse(error: string, status: number) {

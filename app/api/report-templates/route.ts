@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
 
     const cacheKey = "templates:list";
     const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(JSON.parse(cached));
+    if (cached) return NextResponse.json(cached);
 
     const templates = await db.reportTemplate.findMany({
         orderBy: { createdAt: "desc" },

@@ -255,7 +255,9 @@ export function UserDetailPage({ params }: PageProps) {
 function RecentUserReports({ userId }: { userId: string }) {
   const router = useRouter();
 
-  const { data: reportsPage } = useApiData<{ reports: Report[]; total: number }>(API_ROUTES.reports.list);
+  const { data: reportsPage } = useApiData<{ reports: Report[]; total: number }>(
+    API_ROUTES.reports.list,
+  );
   const reports = reportsPage?.reports;
 
   const recent = reports

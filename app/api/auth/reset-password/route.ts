@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         );
     }
 
-    const { userId, expiresAt } = JSON.parse(raw) as { userId: string; expiresAt: string };
+    const { userId, expiresAt } = (typeof raw === 'string' ? JSON.parse(raw) : raw) as { userId: string; expiresAt: string };
 
     if (new Date(expiresAt) < new Date()) {
         await cache.del(`pwd-reset:${body.token}`);

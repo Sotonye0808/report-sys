@@ -1,4 +1,4 @@
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/data/db";
 import {
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
         const tokens = generateTokens(authUser);
         await setAuthCookies(tokens, rememberMe);
 
-        return successResponse({ user: authUser }, 200);
+        return NextResponse.json(successResponse({ user: authUser }), { status: 200 });
     } catch (err) {
         return handleApiError(err);
     }

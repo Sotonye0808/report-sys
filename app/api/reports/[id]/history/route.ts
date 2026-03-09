@@ -36,7 +36,7 @@ export async function GET(
 
         const cacheKey = `report:${id}:history`;
         const cached = await cache.get(cacheKey);
-        if (cached) return NextResponse.json(successResponse(JSON.parse(cached)));
+        if (cached) return NextResponse.json(successResponse(cached));
 
         const events = await db.reportEvent.findMany({
             where: { reportId: id },

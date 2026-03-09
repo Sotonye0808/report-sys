@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     }
 
     const cached = await cache.get("org:campuses:list");
-    if (cached) return NextResponse.json(JSON.parse(cached));
+    if (cached) return NextResponse.json(cached);
 
     const campuses = await db.campus.findMany({ orderBy: { name: "asc" } });
     const response = { success: true, data: campuses };
