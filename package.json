@@ -9,7 +9,14 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^2.0.2",
@@ -34,9 +41,6 @@
     "resend": "^6.9.3",
     "xlsx": "^0.18.5",
     "zod": "^4.3.5"
-  },
-  "prisma": {
-    "seed": "npx tsx prisma/seed.ts"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
