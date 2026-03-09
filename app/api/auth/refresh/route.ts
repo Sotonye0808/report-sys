@@ -1,4 +1,4 @@
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
         const tokens = generateTokens(authUser);
         await setAuthCookies(tokens);
 
-        return successResponse({ user: authUser });
+        return NextResponse.json(successResponse({ user: authUser }));
     } catch (err) {
         return handleApiError(err);
     }

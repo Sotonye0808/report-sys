@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     }
 
     const cached = await cache.get("org:groups:list");
-    if (cached) return NextResponse.json(JSON.parse(cached));
+    if (cached) return NextResponse.json(cached);
 
     const groups = await db.orgGroup.findMany({ orderBy: { name: "asc" } });
     const response = { success: true, data: groups };

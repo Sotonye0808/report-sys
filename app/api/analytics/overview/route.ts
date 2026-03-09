@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
 
     const cacheKey = `analytics:overview:${auth.user.id}:${JSON.stringify(query)}`;
     const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(JSON.parse(cached));
+    if (cached) return NextResponse.json(cached);
 
     const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
 

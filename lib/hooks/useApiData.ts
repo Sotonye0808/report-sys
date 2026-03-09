@@ -35,10 +35,14 @@ export function useApiData<T>(
     fetch(url, { credentials: "include" })
       .then(async (res) => {
         if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
+          const text = await res.text().catch(() => "");
+          let body: { error?: string } = {};
+          try { body = text ? JSON.parse(text) : {}; } catch { /* ignore */ }
           throw new Error(body.error || `Request failed (${res.status})`);
         }
-        return res.json();
+        // Guard against empty / non-JSON responses (e.g., 204 No Content)
+        const text = await res.text().catch(() => "");
+        return text ? JSON.parse(text) : {};
       })
       .then((json) => {
         if (!cancelled) {

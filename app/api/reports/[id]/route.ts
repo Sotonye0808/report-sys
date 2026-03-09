@@ -40,7 +40,7 @@ export async function GET(
 
         const cacheKey = `report:${id}`;
         const cached = await cache.get(cacheKey);
-        if (cached) return NextResponse.json(successResponse(JSON.parse(cached)));
+        if (cached) return NextResponse.json(successResponse(cached));
 
         const report = await db.report.findUnique({
             where: { id },

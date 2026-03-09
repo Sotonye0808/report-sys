@@ -34,7 +34,7 @@ export async function GET(
 
     const cacheKey = `users:detail:${id}`;
     const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(JSON.parse(cached));
+    if (cached) return NextResponse.json(cached);
 
     const user = await db.user.findUnique({
         where: { id },

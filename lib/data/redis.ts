@@ -39,8 +39,14 @@ function key(k: string): string {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const cache = {
-    async get(k: string): Promise<string | null> {
-        const val = await redis.get<string>(key(k));
+    /**
+     * The Upstash REST SDK automatically deserialises JSON when reading, so the
+     * returned value is already a parsed object even though we passed a JSON
+     * string to `set()`.  We accept `unknown` here so callers can use the value
+     * directly without calling `JSON.parse()` again.
+     */
+    async get(k: string): Promise<unknown> {
+        const val = await redis.get<unknown>(key(k));
         return val ?? null;
     },
 

@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
     const cacheKey = `users:list:${req.url}`;
     const cached = await cache.get(cacheKey);
     if (cached) {
-        return NextResponse.json(JSON.parse(cached));
+        return NextResponse.json(cached);
     }
 
     const query = ListUsersSchema.parse(
