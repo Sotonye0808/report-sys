@@ -17,6 +17,7 @@ import {
   BulbOutlined,
   BellOutlined,
   CheckOutlined,
+  MobileOutlined,
 } from "@ant-design/icons";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/providers/AuthProvider";
@@ -54,7 +55,15 @@ function SectionHeading({ title }: { title: string }) {
   );
 }
 
-function SectionCard({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
+function SectionCard({
+  icon,
+  title,
+  children,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6">
       <div className="flex items-center gap-2 mb-5">
@@ -72,7 +81,7 @@ function SectionCard({ icon, title, children }: { icon: React.ReactNode; title: 
 
 function ProfileTab({ user }: { user: AuthUser }) {
   const [editing, setEditing] = useState(false);
-  const [saving,  setSaving]  = useState(false);
+  const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
@@ -80,16 +89,20 @@ function ProfileTab({ user }: { user: AuthUser }) {
   useEffect(() => {
     fetch(API_ROUTES.users.profile)
       .then((r) => r.json())
-      .then((j) => { if (j.success) setProfile(j.data); })
-      .catch(() => {/* no-op */})
+      .then((j) => {
+        if (j.success) setProfile(j.data);
+      })
+      .catch(() => {
+        /* no-op */
+      })
       .finally(() => setLoading(false));
   }, []);
 
   const handleEdit = () => {
     form.setFieldsValue({
       firstName: profile?.firstName ?? user.firstName,
-      lastName:  profile?.lastName  ?? user.lastName,
-      phone:     profile?.phone ?? "",
+      lastName: profile?.lastName ?? user.lastName,
+      phone: profile?.phone ?? "",
     });
     setEditing(true);
   };
@@ -125,8 +138,9 @@ function ProfileTab({ user }: { user: AuthUser }) {
   if (loading) return <LoadingSkeleton rows={5} />;
 
   const displayName = `${profile?.firstName ?? user.firstName} ${profile?.lastName ?? user.lastName}`;
-  const campus  = user.campusId;
-  const initials = `${(profile?.firstName ?? user.firstName)[0] ?? ""}${(profile?.lastName ?? user.lastName)[0] ?? ""}`.toUpperCase();
+  const campus = user.campusId;
+  const initials =
+    `${(profile?.firstName ?? user.firstName)[0] ?? ""}${(profile?.lastName ?? user.lastName)[0] ?? ""}`.toUpperCase();
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -180,7 +194,9 @@ function ProfileTab({ user }: { user: AuthUser }) {
                 {CONTENT.common.cancel as string}
               </Button>
               <Button type="primary" htmlType="submit" icon={<SaveOutlined />} loading={saving}>
-                {saving ? CONTENT.profile.saving as string : CONTENT.profile.saveChanges as string}
+                {saving
+                  ? (CONTENT.profile.saving as string)
+                  : (CONTENT.profile.saveChanges as string)}
               </Button>
             </div>
           </Form>
@@ -188,11 +204,23 @@ function ProfileTab({ user }: { user: AuthUser }) {
       ) : (
         <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6">
           <SectionHeading title={CONTENT.profile.accountInfoLabel as string} />
-          <InfoRow label={CONTENT.profile.firstNameLabel as string} value={profile?.firstName ?? user.firstName} />
-          <InfoRow label={CONTENT.profile.lastNameLabel as string}  value={profile?.lastName  ?? user.lastName} />
-          <InfoRow label={CONTENT.profile.emailLabel as string}     value={profile?.email ?? user.email} />
-          <InfoRow label={CONTENT.profile.phoneLabel as string}     value={profile?.phone} />
-          <InfoRow label={CONTENT.profile.roleLabel as string}      value={ROLE_CONFIG[user.role]?.label ?? user.role} />
+          <InfoRow
+            label={CONTENT.profile.firstNameLabel as string}
+            value={profile?.firstName ?? user.firstName}
+          />
+          <InfoRow
+            label={CONTENT.profile.lastNameLabel as string}
+            value={profile?.lastName ?? user.lastName}
+          />
+          <InfoRow
+            label={CONTENT.profile.emailLabel as string}
+            value={profile?.email ?? user.email}
+          />
+          <InfoRow label={CONTENT.profile.phoneLabel as string} value={profile?.phone} />
+          <InfoRow
+            label={CONTENT.profile.roleLabel as string}
+            value={ROLE_CONFIG[user.role]?.label ?? user.role}
+          />
           {campus && <InfoRow label={CONTENT.profile.campusLabel as string} value={campus} />}
           <InfoRow
             label={CONTENT.profile.memberSince as string}
@@ -302,7 +330,9 @@ function SecurityTab() {
             />
           </Form.Item>
           <Button type="primary" htmlType="submit" loading={saving} block>
-            {saving ? CONTENT.common.saving as string : CONTENT.profile.updatePassword as string}
+            {saving
+              ? (CONTENT.common.saving as string)
+              : (CONTENT.profile.updatePassword as string)}
           </Button>
         </Form>
       </div>
@@ -316,21 +346,26 @@ function SecurityTab() {
 
 const THEME_OPTIONS = [
   { value: "system", label: (CONTENT.settings as Record<string, string>).themeSystem },
-  { value: "light",  label: (CONTENT.settings as Record<string, string>).themeLight },
-  { value: "dark",   label: (CONTENT.settings as Record<string, string>).themeDark },
+  { value: "light", label: (CONTENT.settings as Record<string, string>).themeLight },
+  { value: "dark", label: (CONTENT.settings as Record<string, string>).themeDark },
 ] as const;
 
 function AppearanceTab() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (!mounted) return <LoadingSkeleton rows={2} />;
 
   return (
     <div className="max-w-md">
-      <SectionCard icon={<BulbOutlined />} title={(CONTENT.settings as Record<string, string>).appearanceSection}>
+      <SectionCard
+        icon={<BulbOutlined />}
+        title={(CONTENT.settings as Record<string, string>).appearanceSection}
+      >
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-sm font-medium text-ds-text-primary">
@@ -397,18 +432,35 @@ function NotifRow({ label, description, checked, onChange }: NotifRowProps) {
 }
 
 const NOTIF_ROWS: Array<{ key: keyof NotifPrefs; labelKey: string; descKey: string }> = [
-  { key: "email",             labelKey: "emailNotificationsLabel",    descKey: "emailNotificationsDescription" },
-  { key: "inApp",             labelKey: "inAppNotificationsLabel",     descKey: "inAppNotificationsDescription" },
-  { key: "deadlineReminders", labelKey: "deadlineRemindersLabel",      descKey: "deadlineRemindersDescription" },
+  { key: "email", labelKey: "emailNotificationsLabel", descKey: "emailNotificationsDescription" },
+  { key: "inApp", labelKey: "inAppNotificationsLabel", descKey: "inAppNotificationsDescription" },
+  {
+    key: "deadlineReminders",
+    labelKey: "deadlineRemindersLabel",
+    descKey: "deadlineRemindersDescription",
+  },
 ];
 
 function NotificationsTab() {
-  const [prefs,  setPrefs]  = useState<NotifPrefs>(DEFAULT_PREFS);
+  const [prefs, setPrefs] = useState<NotifPrefs>(DEFAULT_PREFS);
   const [loaded, setLoaded] = useState(false);
+  const [pushSupported, setPushSupported] = useState(false);
+  const [pushEnabled, setPushEnabled] = useState(false);
+  const [pushLoading, setPushLoading] = useState(false);
 
   useEffect(() => {
     setPrefs(loadPrefs());
     setLoaded(true);
+
+    // Check push notification support
+    if ("serviceWorker" in navigator && "PushManager" in window) {
+      setPushSupported(true);
+      navigator.serviceWorker.ready.then((reg) => {
+        reg.pushManager.getSubscription().then((sub) => {
+          setPushEnabled(!!sub);
+        });
+      });
+    }
   }, []);
 
   const handleChange = (key: keyof NotifPrefs, val: boolean) => {
@@ -417,11 +469,44 @@ function NotificationsTab() {
     if (typeof window !== "undefined") localStorage.setItem(NOTIF_KEY, JSON.stringify(next));
   };
 
+  const handleTogglePush = async () => {
+    if (!pushSupported) return;
+    setPushLoading(true);
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      if (pushEnabled) {
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) await sub.unsubscribe();
+        setPushEnabled(false);
+        message.info((CONTENT.settings as Record<string, string>).pushDisabled);
+      } else {
+        const permission = await Notification.requestPermission();
+        if (permission === "denied") {
+          message.warning((CONTENT.settings as Record<string, string>).pushPermissionDenied);
+          return;
+        }
+        await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+        });
+        setPushEnabled(true);
+        message.success((CONTENT.settings as Record<string, string>).pushEnabled);
+      }
+    } catch {
+      message.error((CONTENT.errors as Record<string, string>).generic);
+    } finally {
+      setPushLoading(false);
+    }
+  };
+
   if (!loaded) return <LoadingSkeleton rows={3} />;
 
   return (
-    <div className="max-w-md">
-      <SectionCard icon={<BellOutlined />} title={(CONTENT.settings as Record<string, string>).notificationsSection}>
+    <div className="max-w-md space-y-6">
+      <SectionCard
+        icon={<BellOutlined />}
+        title={(CONTENT.settings as Record<string, string>).notificationsSection}
+      >
         {NOTIF_ROWS.map((row) => (
           <NotifRow
             key={row.key}
@@ -439,6 +524,30 @@ function NotificationsTab() {
           >
             {(CONTENT.settings as Record<string, string>).savePreferences}
           </Button>
+        </div>
+      </SectionCard>
+
+      <SectionCard
+        icon={<MobileOutlined />}
+        title={(CONTENT.settings as Record<string, string>).pushNotificationsSection}
+      >
+        <div className="flex items-start justify-between gap-4 py-3">
+          <div className="flex-1">
+            <p className="text-sm font-medium text-ds-text-primary">
+              {(CONTENT.settings as Record<string, string>).pushNotificationsLabel}
+            </p>
+            <p className="text-xs text-ds-text-subtle mt-0.5">
+              {pushSupported
+                ? (CONTENT.settings as Record<string, string>).pushNotificationsDescription
+                : (CONTENT.settings as Record<string, string>).pushNotSupported}
+            </p>
+          </div>
+          <Switch
+            checked={pushEnabled}
+            onChange={handleTogglePush}
+            loading={pushLoading}
+            disabled={!pushSupported}
+          />
         </div>
       </SectionCard>
     </div>
@@ -507,4 +616,3 @@ export function ProfilePage({ defaultTab }: { defaultTab?: string }) {
     </PageLayout>
   );
 }
-

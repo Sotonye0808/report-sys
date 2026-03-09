@@ -18,6 +18,7 @@ enum UserRole {
   SUPERADMIN
   SPO
   CEO
+  OFFICE_OF_CEO
   CHURCH_MINISTRY
   GROUP_PASTOR
   GROUP_ADMIN
@@ -177,6 +178,7 @@ model User {
   ledOrgGroups            OrgGroup[]              @relation("OrgGroupLeader")
   adminedCampuses         Campus[]                @relation("CampusAdmin")
   lockedMetrics           ReportMetric[]          @relation("MetricLocker")
+  bugReports              BugReport[]             @relation("BugReportCreator")
 
   @@index([email])
   @@index([role])
@@ -611,4 +613,44 @@ model InviteLink {
 
   @@index([token])
   @@map("invite_links")
+}
+
+// ─── Bug Reports ─────────────────────────────────────────────────────────────
+
+enum BugReportStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum BugReportCategory {
+  UI_DISPLAY
+  NAVIGATION
+  DATA_ISSUE
+  PERFORMANCE
+  AUTHENTICATION
+  REPORT_SUBMISSION
+  NOTIFICATION
+  OTHER
+}
+
+model BugReport {
+  id            String            @id @default(uuid())
+  category      BugReportCategory
+  description   String
+  screenshotUrl String?
+  contactEmail  String
+  status        BugReportStatus   @default(OPEN)
+  adminNotes    String?
+  createdById   String
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  // Relations
+  createdBy User @relation("BugReportCreator", fields: [createdById], references: [id])
+
+  @@index([status])
+  @@index([createdById])
+  @@map("bug_reports")
 }

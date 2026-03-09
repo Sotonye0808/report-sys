@@ -30,11 +30,11 @@ export const REPORT_STATUS_TRANSITIONS: Record<
     [ReportStatus.SUBMITTED]: [
         {
             to: ReportStatus.REQUIRES_EDITS,
-            requiredRole: [UserRole.CAMPUS_PASTOR, UserRole.GROUP_ADMIN, UserRole.GROUP_PASTOR, UserRole.CHURCH_MINISTRY, UserRole.CEO, UserRole.SPO, UserRole.SUPERADMIN],
+            requiredRole: [UserRole.CAMPUS_PASTOR, UserRole.GROUP_ADMIN, UserRole.GROUP_PASTOR, UserRole.CHURCH_MINISTRY, UserRole.CEO, UserRole.OFFICE_OF_CEO, UserRole.SPO, UserRole.SUPERADMIN],
         },
         {
             to: ReportStatus.APPROVED,
-            requiredRole: [UserRole.CAMPUS_PASTOR, UserRole.GROUP_ADMIN, UserRole.CHURCH_MINISTRY, UserRole.CEO, UserRole.SPO, UserRole.SUPERADMIN],
+            requiredRole: [UserRole.CAMPUS_PASTOR, UserRole.GROUP_ADMIN, UserRole.CHURCH_MINISTRY, UserRole.CEO, UserRole.OFFICE_OF_CEO, UserRole.SPO, UserRole.SUPERADMIN],
         },
     ],
     [ReportStatus.REQUIRES_EDITS]: [
@@ -46,7 +46,7 @@ export const REPORT_STATUS_TRANSITIONS: Record<
     [ReportStatus.APPROVED]: [
         {
             to: ReportStatus.REVIEWED,
-            requiredRole: [UserRole.GROUP_PASTOR, UserRole.CEO, UserRole.SPO, UserRole.SUPERADMIN],
+            requiredRole: [UserRole.GROUP_PASTOR, UserRole.CEO, UserRole.OFFICE_OF_CEO, UserRole.SPO, UserRole.SUPERADMIN],
         },
     ],
     [ReportStatus.REVIEWED]: [

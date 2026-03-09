@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { verifyAuth } from "@/lib/utils/auth";
 import { TemplateDetailPage } from "@/modules/templates";
 import { APP_ROUTES } from "@/config/routes";
 import { UserRole } from "@/types/global";
+import { CONTENT } from "@/config/content";
+import { db } from "@/lib/data/db";
 
 const TEMPLATES_ALLOWED_ROLES: UserRole[] = [
   UserRole.SUPERADMIN,
@@ -15,6 +18,15 @@ const TEMPLATES_ALLOWED_ROLES: UserRole[] = [
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const template = await db.reportTemplate.findUnique({ where: { id }, select: { name: true } });
+  return {
+    title: template ? `${template.name} — Template` : (CONTENT.templates.pageTitle as string),
+    description: CONTENT.seo.templateDetailDescription,
+  };
 }
 
 export default async function Page({ params }: PageProps) {

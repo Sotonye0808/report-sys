@@ -10,8 +10,8 @@
 
 const CACHE_NAME = "hrs-cache-v1";
 
-/** Precache list — populated at build time or kept minimal for dev */
-const PRECACHE_URLS = ["/offline"];
+/** Precache list — app shell routes cached on install for offline access */
+const PRECACHE_URLS = ["/offline", "/dashboard", "/reports", "/profile"];
 
 /* ── Install ────────────────────────────────────────────────────────────────── */
 self.addEventListener("install", (event) => {

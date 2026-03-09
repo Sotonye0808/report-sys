@@ -48,6 +48,10 @@ export const APP_ROUTES = {
     invites: "/invites",
     goals: "/goals",
 
+    /* — Bug Reports — */
+    bugReports: "/bug-reports",
+    bugReportsManage: "/bug-reports/manage",
+
     /* — Member (scaffolded, no routes built yet) — */
     member: {
         dashboard: "/member/dashboard",
@@ -60,6 +64,7 @@ export const ROLE_DASHBOARD_ROUTES: Record<UserRole, string> = {
     [UserRole.SUPERADMIN]: APP_ROUTES.dashboard,
     [UserRole.SPO]: APP_ROUTES.dashboard,
     [UserRole.CEO]: APP_ROUTES.dashboard,
+    [UserRole.OFFICE_OF_CEO]: APP_ROUTES.dashboard,
     [UserRole.CHURCH_MINISTRY]: APP_ROUTES.dashboard,
     [UserRole.GROUP_PASTOR]: APP_ROUTES.dashboard,
     [UserRole.GROUP_ADMIN]: APP_ROUTES.dashboard,
@@ -127,7 +132,7 @@ export const API_ROUTES = {
         detail: (id: string) => `/api/goals/${id}`,
         unlockRequest: (id: string) => `/api/goals/${id}/unlock-request`,
         approveUnlock: (id: string) => `/api/goals/${id}/unlock-request/approve`,
-        rejectUnlock:  (id: string) => `/api/goals/${id}/unlock-request/reject`,
+        rejectUnlock: (id: string) => `/api/goals/${id}/unlock-request/reject`,
     },
     notifications: {
         list: "/api/notifications",
@@ -139,5 +144,9 @@ export const API_ROUTES = {
         create: "/api/invite-links",
         validate: (token: string) => `/api/invite-links/${token}`,
         revoke: (id: string) => `/api/invite-links/${id}`,
+    },
+    bugReports: {
+        list: "/api/bug-reports",
+        detail: (id: string) => `/api/bug-reports/${id}`,
     },
 } as const;

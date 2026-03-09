@@ -1,11 +1,12 @@
+import type { Metadata } from "next";
 import { GoalsPage } from "@/modules/goals";
 import { CONTENT } from "@/config/content";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: (CONTENT.goals as Record<string, unknown>).pageTitle as string,
+  title: CONTENT.goals.pageTitle as string,
+  description: CONTENT.seo.goalsDescription,
 };
 
 export default function Page() {
-    return <GoalsPage />;
+  return <GoalsPage />;
 }

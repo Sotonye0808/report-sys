@@ -65,6 +65,7 @@ const ROLE_COLOR: Record<UserRole, string> = {
   SUPERADMIN: "red",
   SPO: "volcano",
   CEO: "orange",
+  OFFICE_OF_CEO: "volcano",
   CHURCH_MINISTRY: "gold",
   GROUP_PASTOR: "purple",
   GROUP_ADMIN: "geekblue",

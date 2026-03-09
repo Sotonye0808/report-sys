@@ -47,6 +47,7 @@ export const GLOBAL_SCOPE_ROLES: UserRole[] = [
     UserRole.SUPERADMIN,
     UserRole.SPO,
     UserRole.CEO,
+    UserRole.OFFICE_OF_CEO,
     UserRole.CHURCH_MINISTRY,
 ];
 
