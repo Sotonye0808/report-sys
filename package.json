@@ -6,6 +6,7 @@
     "dev": "next dev",
     "dev:webpack": "next dev --turbopack=false",
     "build": "next build",
+    "postbuild": "npm run db:seed:base",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
