@@ -1,6 +1,6 @@
 /**
- * app/api/invite-links/[token]/route.ts
- * GET /api/invite-links/:token  — validate invite link (public — no auth required)
+ * app/api/invite-links/validate/[token]/route.ts
+ * GET /api/invite-links/validate/:token  — validate invite link (public — no auth required)
  */
 
 import { NextRequest, NextResponse } from "next/server";

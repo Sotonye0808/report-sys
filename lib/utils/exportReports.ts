@@ -3,9 +3,10 @@
  *
  * Client-side Excel (.xlsx) export utilities using SheetJS.
  *
- * Two exported functions:
- *  - exportReportsList  — exports the currently-filtered reports list
- *  - exportReportDetail — exports a single report (metadata + metrics sheets)
+ * Exported functions:
+ *  - exportReportsList       — single-sheet list export
+ *  - exportReportDetail      — two-sheet single-report export
+ *  - exportReportsWithOptions — full-featured export driven by ExportDialogOptions
  */
 
 import * as XLSX from "xlsx";
@@ -24,6 +25,26 @@ function pct(achieved?: number, goal?: number): string {
 
 function safeStr(v: unknown): string {
     return v == null ? "" : String(v);
+}
+
+/* ── ExportDialogOptions ────────────────────────────────────────────────── */
+
+export type ExportGrouping = "none" | "campus" | "month" | "quarter";
+export type ExportFormat = "single" | "per-campus";
+
+export interface ExportDialogOptions {
+    /** Which reports to export — already filtered by caller */
+    reports: Report[];
+    templates: ReportTemplate[];
+    campuses: Campus[];
+    grouping: ExportGrouping;
+    includeMetrics: boolean;
+    includeGoals: boolean;
+    includeComments: boolean;
+    format: ExportFormat;
+    /** Optional per-report sections/metrics for metric export */
+    sections?: ReportSection[];
+    metrics?: ReportMetric[];
 }
 
 /* ── exportReportsList ──────────────────────────────────────────────────── */
@@ -181,3 +202,136 @@ export function exportReportDetail(
         .slice(0, 50);
     XLSX.writeFile(wb, `${safeName}.xlsx`);
 }
+
+/* ── exportReportsWithOptions ───────────────────────────────────────────── */
+
+/**
+ * Full-featured export driven by ExportDialogOptions.
+ * Supports grouping (campus / month / quarter), multi-sheet per-campus format,
+ * and optional metric / goal / comment columns.
+ */
+export function exportReportsWithOptions(opts: ExportDialogOptions): void {
+    const {
+        reports,
+        templates,
+        campuses,
+        grouping,
+        includeMetrics,
+        includeGoals,
+        includeComments,
+        format,
+        sections = [],
+        metrics = [],
+    } = opts;
+
+    const campusMap = Object.fromEntries(campuses.map((c) => [c.id, c.name]));
+    const timestamp = new Date().toISOString().slice(0, 10);
+    const wb = XLSX.utils.book_new();
+
+    /* ── Build base columns (always included) ─────────────────────────── */
+
+    type ColDef = { header: string; wch: number; value: (r: Report) => string | number };
+
+    const baseCols: ColDef[] = [
+        { header: ec.colTitle, wch: 40, value: (r) => getReportLabel(r, templates) },
+        { header: ec.colCampus, wch: 24, value: (r) => campusMap[r.campusId] ?? r.campusId },
+        { header: ec.colPeriod, wch: 18, value: (r) => formatReportPeriod(r) },
+        { header: ec.colStatus, wch: 16, value: (r) => (CONTENT.reports.status as Record<string, string>)?.[r.status] ?? r.status },
+        { header: ec.colTemplate, wch: 28, value: (r) => templates.find((t) => t.id === r.templateId)?.name ?? "" },
+        { header: ec.colDeadline, wch: 14, value: (r) => fmtDate(r.deadline) },
+        { header: ec.colCreatedAt, wch: 14, value: (r) => fmtDate(r.createdAt) },
+    ];
+
+    /* ── Determine grouping key ───────────────────────────────────────── */
+
+    function groupKey(r: Report): string {
+        if (grouping === "campus") return campusMap[r.campusId] ?? r.campusId;
+        if (grouping === "month") return r.periodMonth != null ? `${r.periodYear}-${String(r.periodMonth).padStart(2, "0")}` : String(r.periodYear);
+        if (grouping === "quarter" && r.periodMonth != null) return `${r.periodYear} Q${Math.ceil(r.periodMonth / 3)}`;
+        return "all";
+    }
+
+    /* ── Build grouped buckets ────────────────────────────────────────── */
+
+    const buckets: Map<string, Report[]> = new Map();
+    for (const r of reports) {
+        const k = groupKey(r);
+        if (!buckets.has(k)) buckets.set(k, []);
+        buckets.get(k)!.push(r);
+    }
+
+    /* ── Build worksheet for a group of reports ─────────────────────── */
+
+    function buildSheet(groupReports: Report[]): XLSX.WorkSheet {
+        const header = baseCols.map((c) => c.header);
+        const rows: (string | number)[][] = groupReports.map((r) => baseCols.map((c) => c.value(r)));
+
+        // Optional: append per-report metric summary rows
+        if (includeMetrics || includeGoals || includeComments) {
+            const metricDataRows: (string | number)[][] = [];
+            for (const r of groupReports) {
+                const rSections = sections.filter((s) => s.reportId === r.id);
+                for (const sec of rSections) {
+                    const secMetrics = metrics.filter((m) => m.reportSectionId === sec.id);
+                    for (const m of secMetrics) {
+                        metricDataRows.push([
+                            getReportLabel(r, templates),
+                            campusMap[r.campusId] ?? r.campusId,
+                            sec.sectionName,
+                            m.metricName,
+                            ...(includeMetrics ? [m.monthlyAchieved ?? ""] : []),
+                            ...(includeGoals ? [m.monthlyGoal ?? ""] : []),
+                            ...(includeMetrics && includeGoals ? [pct(m.monthlyAchieved, m.monthlyGoal)] : []),
+                            ...(includeComments ? [safeStr(m.comment)] : []),
+                        ]);
+                    }
+                }
+            }
+            if (metricDataRows.length > 0) {
+                const metricHeader = [
+                    ec.colTitle, ec.colCampus, ec.colSection, ec.colMetric,
+                    ...(includeMetrics ? [ec.colAchieved] : []),
+                    ...(includeGoals ? [ec.colGoal] : []),
+                    ...(includeMetrics && includeGoals ? [ec.colPercentage] : []),
+                    ...(includeComments ? [ec.colComment] : []),
+                ];
+                // Append metric data below a blank row separator
+                const ws = XLSX.utils.aoa_to_sheet([
+                    header, ...rows,
+                    [],
+                    metricHeader, ...metricDataRows,
+                ]);
+                ws["!cols"] = baseCols.map((c) => ({ wch: c.wch }));
+                return ws;
+            }
+        }
+
+        const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+        ws["!cols"] = baseCols.map((c) => ({ wch: c.wch }));
+        return ws;
+    }
+
+    /* ── Single-sheet vs per-campus format ───────────────────────────── */
+
+    if (format === "per-campus") {
+        // One sheet per bucket, sheet name = campus name (truncated to 31 chars)
+        for (const [key, groupReports] of buckets) {
+            const sheetName = key.slice(0, 31);
+            XLSX.utils.book_append_sheet(wb, buildSheet(groupReports), sheetName);
+        }
+    } else {
+        if (grouping === "none" || buckets.size === 1) {
+            // Single flat sheet
+            XLSX.utils.book_append_sheet(wb, buildSheet(reports), ec.sheetList);
+        } else {
+            // All groups on separate sheets within single workbook
+            for (const [key, groupReports] of buckets) {
+                const sheetName = key.slice(0, 31);
+                XLSX.utils.book_append_sheet(wb, buildSheet(groupReports), sheetName);
+            }
+        }
+    }
+
+    XLSX.writeFile(wb, `${ec.listFilename}-${timestamp}.xlsx`);
+}
+

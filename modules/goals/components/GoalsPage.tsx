@@ -338,113 +338,115 @@ function BulkGoalTable({
     children: (
       <div className="space-y-0">
         {/* Column headers */}
-        <div
-          className={`grid gap-3 pb-2 border-b border-ds-border-subtle text-xs font-semibold text-ds-text-secondary ${mode === GoalMode.MONTHLY ? "grid-cols-[200px_1fr]" : "grid-cols-[200px_160px_120px]"}`}
-        >
-          <span>{g.metricColumn as string}</span>
-          {mode === GoalMode.ANNUAL ? (
-            <>
-              <span>{g.annualTargetShort as string}</span>
-              <span className="text-right">Status</span>
-            </>
-          ) : (
-            <div className="grid grid-cols-12 gap-1">
-              {MONTH_LABELS.map((lbl) => (
-                <span key={lbl} className="text-center truncate">
-                  {lbl}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
+        <div className="overflow-x-auto">
+          <div
+            className={`grid gap-3 pb-2 border-b border-ds-border-subtle text-xs font-semibold text-ds-text-secondary ${mode === GoalMode.MONTHLY ? "grid-cols-[200px_1fr] min-w-[800px]" : "grid-cols-[200px_160px_120px]"}`}
+          >
+            <span>{g.metricColumn as string}</span>
+            {mode === GoalMode.ANNUAL ? (
+              <>
+                <span>{g.annualTargetShort as string}</span>
+                <span className="text-right">Status</span>
+              </>
+            ) : (
+              <div className="grid grid-cols-12 gap-1">
+                {MONTH_LABELS.map((lbl) => (
+                  <span key={lbl} className="text-center truncate">
+                    {lbl}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
 
-        {metrics.map((metric) => {
-          const existingGoal =
-            mode === GoalMode.ANNUAL
-              ? goalMap[goalKey(campusId, metric.id, year, GoalMode.ANNUAL)]
-              : undefined;
-          const isLocked = (existingGoal?.isLocked ?? false) && !isSuperadmin;
+          {metrics.map((metric) => {
+            const existingGoal =
+              mode === GoalMode.ANNUAL
+                ? goalMap[goalKey(campusId, metric.id, year, GoalMode.ANNUAL)]
+                : undefined;
+            const isLocked = (existingGoal?.isLocked ?? false) && !isSuperadmin;
 
-          return (
-            <div
-              key={metric.id}
-              className={`grid gap-3 py-3 border-b border-ds-border-subtle last:border-none items-center ${mode === GoalMode.MONTHLY ? "grid-cols-[200px_1fr]" : "grid-cols-[200px_160px_120px]"}`}
-            >
-              {/* Metric name */}
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-sm text-ds-text-primary truncate">{metric.name}</span>
-                {isLocked && (
-                  <Tooltip title={g.lockedNote as string}>
-                    <LockOutlined className="text-orange-400 text-xs shrink-0" />
-                  </Tooltip>
+            return (
+              <div
+                key={metric.id}
+                className={`grid gap-3 py-3 border-b border-ds-border-subtle last:border-none items-center ${mode === GoalMode.MONTHLY ? "grid-cols-[200px_1fr] min-w-[800px]" : "grid-cols-[200px_160px_120px]"}`}
+              >
+                {/* Metric name */}
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="text-sm text-ds-text-primary truncate">{metric.name}</span>
+                  {isLocked && (
+                    <Tooltip title={g.lockedNote as string}>
+                      <LockOutlined className="text-orange-400 text-xs shrink-0" />
+                    </Tooltip>
+                  )}
+                </div>
+
+                {mode === GoalMode.ANNUAL ? (
+                  <>
+                    {/* Annual target input */}
+                    <InputNumber
+                      className="w-full"
+                      min={0}
+                      value={annValues[metric.id]}
+                      disabled={!canEdit || isLocked}
+                      placeholder={g.noGoalSet as string}
+                      onChange={(v) =>
+                        setAnnValues((prev) => ({ ...prev, [metric.id]: v ?? undefined }))
+                      }
+                    />
+                    {/* Lock / edit action */}
+                    <div className="flex justify-end">
+                      {isLocked ? (
+                        <Button
+                          size="small"
+                          icon={<UnlockOutlined />}
+                          onClick={() => setUnlockGoal(existingGoal)}
+                        >
+                          {g.requestUnlock as string}
+                        </Button>
+                      ) : existingGoal ? (
+                        <Tag color="green">
+                          <UnlockOutlined className="mr-1" />
+                          Set
+                        </Tag>
+                      ) : (
+                        <Tag color="default">{g.noGoalSet as string}</Tag>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  /* Monthly mode — 12 mini inputs */
+                  <div className="grid grid-cols-12 gap-1">
+                    {MONTH_LABELS.map((_, idx) => {
+                      const month = idx + 1;
+                      const monthGoal =
+                        goalMap[goalKey(campusId, metric.id, year, GoalMode.MONTHLY, month)];
+                      const monthLocked = (monthGoal?.isLocked ?? false) && !isSuperadmin;
+                      return (
+                        <InputNumber
+                          key={month}
+                          size="small"
+                          className="w-full"
+                          min={0}
+                          value={monthValues[metric.id]?.[month] ?? monthGoal?.targetValue}
+                          disabled={!canEdit || monthLocked}
+                          placeholder="0"
+                          controls={false}
+                          onChange={(v) =>
+                            setMonthValues((prev) => ({
+                              ...prev,
+                              [metric.id]: { ...(prev[metric.id] ?? {}), [month]: v ?? 0 },
+                            }))
+                          }
+                        />
+                      );
+                    })}
+                  </div>
                 )}
               </div>
-
-              {mode === GoalMode.ANNUAL ? (
-                <>
-                  {/* Annual target input */}
-                  <InputNumber
-                    className="w-full"
-                    min={0}
-                    value={annValues[metric.id]}
-                    disabled={!canEdit || isLocked}
-                    placeholder={g.noGoalSet as string}
-                    onChange={(v) =>
-                      setAnnValues((prev) => ({ ...prev, [metric.id]: v ?? undefined }))
-                    }
-                  />
-                  {/* Lock / edit action */}
-                  <div className="flex justify-end">
-                    {isLocked ? (
-                      <Button
-                        size="small"
-                        icon={<UnlockOutlined />}
-                        onClick={() => setUnlockGoal(existingGoal)}
-                      >
-                        {g.requestUnlock as string}
-                      </Button>
-                    ) : existingGoal ? (
-                      <Tag color="green">
-                        <UnlockOutlined className="mr-1" />
-                        Set
-                      </Tag>
-                    ) : (
-                      <Tag color="default">{g.noGoalSet as string}</Tag>
-                    )}
-                  </div>
-                </>
-              ) : (
-                /* Monthly mode — 12 mini inputs */
-                <div className="grid grid-cols-12 gap-1">
-                  {MONTH_LABELS.map((_, idx) => {
-                    const month = idx + 1;
-                    const monthGoal =
-                      goalMap[goalKey(campusId, metric.id, year, GoalMode.MONTHLY, month)];
-                    const monthLocked = (monthGoal?.isLocked ?? false) && !isSuperadmin;
-                    return (
-                      <InputNumber
-                        key={month}
-                        size="small"
-                        className="w-full"
-                        min={0}
-                        value={monthValues[metric.id]?.[month] ?? monthGoal?.targetValue}
-                        disabled={!canEdit || monthLocked}
-                        placeholder="0"
-                        controls={false}
-                        onChange={(v) =>
-                          setMonthValues((prev) => ({
-                            ...prev,
-                            [metric.id]: { ...(prev[metric.id] ?? {}), [month]: v ?? 0 },
-                          }))
-                        }
-                      />
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     ),
   }));

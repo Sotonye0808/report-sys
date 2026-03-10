@@ -6,7 +6,7 @@
  * Visible to roles that can invite others (see allowedRoles in nav.ts).
  */
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Form, Select, message, Tooltip, Tag, Space, Popconfirm, Empty } from "antd";
 import { PlusOutlined, CopyOutlined, StopOutlined, LinkOutlined } from "@ant-design/icons";
 import { useAuth } from "@/providers/AuthProvider";
@@ -19,6 +19,7 @@ import Button from "@/components/ui/Button";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { ROLE_CONFIG } from "@/config/roles";
+import { CAMPUS_SCOPED_ROLES, GROUP_SCOPED_ROLES } from "@/config/hierarchy";
 import Table from "@/components/ui/Table";
 
 /* ── Invitable roles: hierarchy-based ───────────────────────────────────────── */
@@ -90,6 +91,10 @@ interface CreateFormProps {
 function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
   const [form] = Form.useForm();
   const [saving, setSaving] = useState(false);
+  const selectedRole = Form.useWatch("targetRole", form) as UserRole | undefined;
+
+  const { data: campuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
+  const { data: orgGroups } = useApiData<OrgGroup[]>(API_ROUTES.org.groups);
 
   const invitableRoles = getInvitableRoles(currentRole);
   if (invitableRoles.length === 0) return null;
@@ -99,10 +104,18 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
     label: ROLE_CONFIG[r]?.label ?? r,
   }));
 
+  const showCampusField = selectedRole ? CAMPUS_SCOPED_ROLES.includes(selectedRole) : false;
+  const showGroupField = selectedRole ? GROUP_SCOPED_ROLES.includes(selectedRole) : false;
+
+  const campusOptions = (campuses ?? []).map((c) => ({ value: c.id, label: c.name }));
+  const groupOptions = (orgGroups ?? []).map((g) => ({ value: g.id, label: g.name }));
+
   const handleSubmit = async (values: {
     targetRole: UserRole;
     expiresInHours: number;
     note?: string;
+    campusId?: string;
+    groupId?: string;
   }) => {
     setSaving(true);
     try {
@@ -144,8 +157,30 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
           rules={[{ required: true }]}
           className="min-w-[180px]"
         >
-          <Select options={roleOptions} placeholder="Select role" />
+          <Select options={roleOptions} placeholder="Select role" onChange={() => {
+            form.setFieldsValue({ campusId: undefined, groupId: undefined });
+          }} />
         </Form.Item>
+        {showCampusField && (
+          <Form.Item
+            name="campusId"
+            label={CONTENT.invites.campusLabel as string ?? "Campus"}
+            rules={[{ required: true, message: "Campus is required for this role" }]}
+            className="min-w-[180px]"
+          >
+            <Select options={campusOptions} placeholder="Select campus" allowClear />
+          </Form.Item>
+        )}
+        {showGroupField && (
+          <Form.Item
+            name="groupId"
+            label={CONTENT.invites.groupLabel as string ?? "Group"}
+            rules={[{ required: true, message: "Group is required for this role" }]}
+            className="min-w-[180px]"
+          >
+            <Select options={groupOptions} placeholder="Select group" allowClear />
+          </Form.Item>
+        )}
         <Form.Item
           name="expiresInHours"
           label={CONTENT.invites.expiresInLabel as string}

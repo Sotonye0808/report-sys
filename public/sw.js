@@ -4,14 +4,23 @@
  *
  * Strategies:
  *  - Static assets (JS, CSS, fonts, images): cache-first
- *  - HTML navigation requests: network-first, fall back to /offline
+ *  - HTML navigation requests: network-first, fall back to cache, then /offline
  *  - API calls: network-only (data freshness is critical)
  */
 
-const CACHE_NAME = "hrs-cache-v1";
+const CACHE_NAME = "hrs-cache-v2";
 
 /** Precache list — app shell routes cached on install for offline access */
-const PRECACHE_URLS = ["/offline", "/dashboard", "/reports", "/profile"];
+const PRECACHE_URLS = [
+  "/offline",
+  "/dashboard",
+  "/reports",
+  "/analytics",
+  "/profile",
+  "/goals",
+  "/inbox",
+  "/login",
+];
 
 /* ── Install ────────────────────────────────────────────────────────────────── */
 self.addEventListener("install", (event) => {
@@ -31,6 +40,16 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+/* ── Global error handlers — prevent SW crashes from stalling fetches ────── */
+self.addEventListener("error", (event) => {
+  console.error("[SW] Uncaught error:", event.error);
+});
+
+self.addEventListener("unhandledrejection", (event) => {
+  console.error("[SW] Unhandled rejection:", event.reason);
+  event.preventDefault();
+});
+
 /* ── Fetch ──────────────────────────────────────────────────────────────────── */
 self.addEventListener("fetch", (event) => {
   const { request } = event;
@@ -42,7 +61,7 @@ self.addEventListener("fetch", (event) => {
   // API routes — always network (data must be fresh)
   if (url.pathname.startsWith("/api/")) return;
 
-  // Navigation requests — network-first, fall back to /offline
+  // Navigation requests — network-first, fall back to cache, then /offline
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request)
@@ -54,7 +73,14 @@ self.addEventListener("fetch", (event) => {
           }
           return response;
         })
-        .catch(() => caches.match(request).then((cached) => cached || caches.match("/offline"))),
+        .catch(() =>
+          caches
+            .match(request)
+            .then(
+              (cached) =>
+                cached || caches.match("/offline") || new Response("Offline", { status: 503 }),
+            ),
+        ),
     );
     return;
   }
@@ -100,8 +126,8 @@ self.addEventListener("push", (event) => {
 
   const options = {
     body: payload.body || "",
-    icon: "/logo/icon-192.svg",
-    badge: "/logo/icon-192.svg",
+    icon: "/logo/dark-bg-harvesters-Logo.jpg",
+    badge: "/logo/dark-bg-harvesters-Logo.jpg",
     tag: payload.tag || "hrs-notification",
     data: payload.data || {},
     actions: payload.actions || [],

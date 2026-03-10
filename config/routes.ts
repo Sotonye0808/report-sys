@@ -125,6 +125,7 @@ export const API_ROUTES = {
         reports: "/api/analytics/reports",
         compliance: "/api/analytics/compliance",
         goals: "/api/analytics/goals",
+        quarterly: "/api/analytics/quarterly",
     },
     goals: {
         list: "/api/goals",
@@ -142,7 +143,7 @@ export const API_ROUTES = {
     inviteLinks: {
         list: "/api/invite-links",
         create: "/api/invite-links",
-        validate: (token: string) => `/api/invite-links/${token}`,
+        validate: (token: string) => `/api/invite-links/validate/${token}`,
         revoke: (id: string) => `/api/invite-links/${id}`,
     },
     bugReports: {

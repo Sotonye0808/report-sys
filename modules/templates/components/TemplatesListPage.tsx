@@ -188,7 +188,15 @@ export function TemplatesListPage() {
             />
           </div>
         ) : (
-          <Table dataSource={filtered} columns={columns} rowKey="id" />
+          <Table
+            dataSource={filtered}
+            columns={columns}
+            rowKey="id"
+            onRow={(record) => ({
+              onClick: () => router.push(APP_ROUTES.templateDetail((record as TemplateRow).id)),
+              style: { cursor: "pointer" },
+            })}
+          />
         )}
       </div>
     </PageLayout>

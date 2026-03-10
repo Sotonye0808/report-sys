@@ -9,7 +9,7 @@
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Select } from "antd";
-import { PlusOutlined, LockOutlined, EyeOutlined, EditOutlined } from "@ant-design/icons";
+import { PlusOutlined, LockOutlined, EyeOutlined, EditOutlined, DownloadOutlined } from "@ant-design/icons";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
 import { useApiData } from "@/lib/hooks/useApiData";
@@ -26,6 +26,7 @@ import { FilterToolbar } from "@/components/ui/FilterToolbar";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { Table } from "@/components/ui/Table";
 import { Pagination } from "@/components/ui/Pagination";
+import { ExportDialog } from "./ExportDialog";
 import { UserRole, ReportStatus } from "@/types/global";
 import type { ColumnsType } from "antd/es/table";
 
@@ -84,6 +85,7 @@ export function ReportsListPage() {
     periodYear: "",
   });
   const [page, setPage] = useState(1);
+  const [exportOpen, setExportOpen] = useState(false);
 
   function updateFilter(patch: Partial<Filters>) {
     setFilters((prev) => ({ ...prev, ...patch }));
@@ -317,6 +319,13 @@ export function ReportsListPage() {
                 {CONTENT.reports.newReport}
               </Button>
             )}
+            <Button
+              icon={<DownloadOutlined />}
+              onClick={() => setExportOpen(true)}
+              disabled={!filteredReports || filteredReports.length === 0}
+            >
+              {((CONTENT.reports as unknown as Record<string, Record<string, string>>).export?.button) ?? "Export"}
+            </Button>
           </div>
         }
       />
@@ -348,6 +357,10 @@ export function ReportsListPage() {
             scroll={{ x: 700 }}
             emptyTitle={CONTENT.reports.emptyState.title}
             emptyDescription={CONTENT.reports.emptyState.description}
+            onRow={(record) => ({
+              onClick: () => router.push(APP_ROUTES.reportDetail(record.id)),
+              style: { cursor: "pointer" },
+            })}
           />
           {total > PAGE_SIZE && (
             <Pagination
@@ -359,6 +372,14 @@ export function ReportsListPage() {
           )}
         </>
       )}
+
+      <ExportDialog
+        open={exportOpen}
+        onClose={() => setExportOpen(false)}
+        reports={filteredReports ?? []}
+        templates={templates ?? []}
+        campuses={campuses ?? []}
+      />
     </PageLayout>
   );
 }

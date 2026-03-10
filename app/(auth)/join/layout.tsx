@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/logo/icon-512.svg",
+        url: "/logo/white-bg-harvesters-Logo.svg",
         width: 512,
         height: 512,
         alt: "Harvesters International Christian Centre",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: `${CONTENT.seo.joinTitle} — Harvesters Reporting System`,
     description: CONTENT.seo.joinDescription,
-    images: ["/logo/icon-512.svg"],
+    images: ["/logo/white-bg-harvesters-Logo.svg"],
   },
 };
 

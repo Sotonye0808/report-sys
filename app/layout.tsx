@@ -38,7 +38,7 @@ export const metadata: Metadata = {
       "The central report management platform for Harvesters International Christian Centre.",
     images: [
       {
-        url: "/logo/icon-512.svg",
+        url: "/logo/white-bg-harvesters-Logo.svg",
         width: 512,
         height: 512,
         alt: "Harvesters International Christian Centre",
@@ -50,14 +50,15 @@ export const metadata: Metadata = {
     title: "Harvesters Reporting System",
     description:
       "The central report management platform for Harvesters International Christian Centre.",
-    images: ["/logo/icon-512.svg"],
+    images: ["/logo/white-bg-harvesters-Logo.svg"],
   },
   icons: {
     icon: [
+      { url: "/logo/dark-bg-harvesters-Logo.ico", type: "image/x-icon", sizes: "any" },
       { url: "/logo/icon-192.svg", type: "image/svg+xml", sizes: "192x192" },
-      { url: "/logo/icon-512.svg", type: "image/svg+xml", sizes: "any" },
+      { url: "/logo/icon-512.svg", type: "image/svg+xml", sizes: "512x512" },
     ],
-    apple: [{ url: "/logo/icon-192.svg", sizes: "180x180", type: "image/svg+xml" }],
+    apple: [{ url: "/logo/white-bg-harvesters-Logo.svg", sizes: "180x180", type: "image/svg+xml" }],
   },
   appleWebApp: {
     title: "HRS",
