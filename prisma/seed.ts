@@ -269,6 +269,189 @@ async function seedTemplate() {
     }
 }
 
+// ---------------------------------------------------------------------------
+// Seed all 12 DEFAULT template sections + metrics for a single report.
+// `scale` is a campus-size multiplier (e.g. 1.0 = Lekki, 0.35 = London).
+// Percentage-type metrics (return rates, engagement rates) are NOT scaled
+// because they represent ratios, not absolute counts.
+// ---------------------------------------------------------------------------
+async function seedReportSections(reportId: string, scale: number) {
+    const n = (base: number) => Math.max(1, Math.round(base * scale));
+    const pct = (achieved: number, goal: number) =>
+        goal > 0 ? parseFloat(((achieved / goal) * 100).toFixed(1)) : null;
+
+    // ── Church Planting ──────────────────────────────────────────────────────
+    const secCp = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-cp", sectionName: "Church Planting" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secCp.id, templateMetricId: "std-cp-churches",    metricName: "No. of Churches to be Planted",       calculationType: "SUM",      monthlyGoal: n(5),    monthlyAchieved: n(4),    yoyGoal: n(4),    computedPercentage: pct(n(4),    n(5))    },
+            { reportSectionId: secCp.id, templateMetricId: "std-cp-plant-cells", metricName: "No. of Plant Cells and Small Groups", calculationType: "SUM",      monthlyGoal: n(10),   monthlyAchieved: n(8),    yoyGoal: n(7),    computedPercentage: pct(n(8),    n(10))   },
+            { reportSectionId: secCp.id, templateMetricId: "std-cp-cell-plants", metricName: "No. of Church Plant Cells",           calculationType: "SUM",      monthlyGoal: n(3),    monthlyAchieved: n(3),    yoyGoal: n(2),    computedPercentage: pct(n(3),    n(3))    },
+        ],
+    });
+
+    // ── Attendance ───────────────────────────────────────────────────────────
+    const secAtt = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-att", sectionName: "Attendance" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secAtt.id, templateMetricId: "std-att-sun-male",          metricName: "Sunday Attendance — Male",                  calculationType: "AVERAGE",  monthlyGoal: n(1200), monthlyAchieved: n(1150), yoyGoal: n(1000), computedPercentage: pct(n(1150), n(1200)) },
+            { reportSectionId: secAtt.id, templateMetricId: "std-att-sun-female",        metricName: "Sunday Attendance — Female",                calculationType: "AVERAGE",  monthlyGoal: n(1300), monthlyAchieved: n(1190), yoyGoal: n(1100), computedPercentage: pct(n(1190), n(1300)) },
+            { reportSectionId: secAtt.id, templateMetricId: "std-att-sun-children",      metricName: "Sunday Attendance — Children",              calculationType: "AVERAGE",  monthlyGoal: n(400),  monthlyAchieved: n(382),  yoyGoal: n(350),  computedPercentage: pct(n(382),  n(400))  },
+            { reportSectionId: secAtt.id, templateMetricId: "std-att-first-timers",      metricName: "First Timers",                              calculationType: "SUM",      monthlyGoal: n(150),  monthlyAchieved: n(163),  yoyGoal: n(130),  computedPercentage: pct(n(163),  n(150))  },
+            { reportSectionId: secAtt.id, templateMetricId: "std-att-worker",            metricName: "Worker Attendance",                         calculationType: "AVERAGE",  monthlyGoal: n(200),  monthlyAchieved: n(188),  yoyGoal: n(172),  computedPercentage: pct(n(188),  n(200))  },
+            { reportSectionId: secAtt.id, templateMetricId: "std-att-growth-track",      metricName: "Growth Track Attendance",                   calculationType: "AVERAGE",  monthlyGoal: n(120),  monthlyAchieved: n(111),  yoyGoal: n(98),   computedPercentage: pct(n(111),  n(120))  },
+            { reportSectionId: secAtt.id, templateMetricId: "std-att-growth-track-uniq", metricName: "Growth Track Unique Attendance",            calculationType: "SNAPSHOT", monthlyGoal: n(500),  monthlyAchieved: n(462),  yoyGoal: n(415),  computedPercentage: pct(n(462),  n(500))  },
+            { reportSectionId: secAtt.id, templateMetricId: "std-att-midweek",           metricName: "Midweek Attendance",                        calculationType: "AVERAGE",  monthlyGoal: n(600),  monthlyAchieved: n(574),  yoyGoal: n(528),  computedPercentage: pct(n(574),  n(600))  },
+            { reportSectionId: secAtt.id, templateMetricId: "std-att-worker-midweek",    metricName: "Workers Attendance: Midweek",               calculationType: "AVERAGE",  monthlyGoal: n(180),  monthlyAchieved: n(168),  yoyGoal: n(155),  computedPercentage: pct(n(168),  n(180))  },
+            { reportSectionId: secAtt.id, templateMetricId: "std-att-sg",                metricName: "Small Group Attendance",                    calculationType: "AVERAGE",  monthlyGoal: n(350),  monthlyAchieved: n(334),  yoyGoal: n(308),  computedPercentage: pct(n(334),  n(350))  },
+            { reportSectionId: secAtt.id, templateMetricId: "std-att-cell-leaders",      metricName: "Monthly Cell Leaders Attendance (Meeting)", calculationType: "SNAPSHOT", monthlyGoal: n(50),   monthlyAchieved: n(47),   yoyGoal: n(43),   computedPercentage: pct(n(47),   n(50))   },
+        ],
+    });
+
+    // ── NLP ──────────────────────────────────────────────────────────────────
+    const secNlp = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-nlp", sectionName: "NLP" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secNlp.id, templateMetricId: "std-nlp-cells",      metricName: "No. of NLP Cells", calculationType: "SNAPSHOT", monthlyGoal: n(25),  monthlyAchieved: n(23),  yoyGoal: n(20),  computedPercentage: pct(n(23),  n(25))  },
+            { reportSectionId: secNlp.id, templateMetricId: "std-nlp-leads",      metricName: "NLP Leads",        calculationType: "SUM",      monthlyGoal: n(100), monthlyAchieved: n(94),  yoyGoal: n(85),  computedPercentage: pct(n(94),  n(100)) },
+            { reportSectionId: secNlp.id, templateMetricId: "std-nlp-mobilizers", metricName: "Mobilizers",       calculationType: "SUM",      monthlyGoal: n(30),  monthlyAchieved: n(27),  yoyGoal: n(24),  computedPercentage: pct(n(27),  n(30))  },
+        ],
+    });
+
+    // ── Salvation ────────────────────────────────────────────────────────────
+    const secSal = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-sal", sectionName: "Salvation" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secSal.id, templateMetricId: "std-sal-service",  metricName: "Soul Saved in Service",  calculationType: "SUM", monthlyGoal: n(200), monthlyAchieved: n(195), yoyGoal: n(180), computedPercentage: pct(n(195), n(200)), comment: "Strong altar call responses across all services." },
+            { reportSectionId: secSal.id, templateMetricId: "std-sal-cell",     metricName: "Soul Saved in Cell",     calculationType: "SUM", monthlyGoal: n(50),  monthlyAchieved: n(44),  yoyGoal: n(38),  computedPercentage: pct(n(44),  n(50))  },
+            { reportSectionId: secSal.id, templateMetricId: "std-sal-nextgen",  metricName: "Soul Saved in Next Gen", calculationType: "SUM", monthlyGoal: n(30),  monthlyAchieved: n(26),  yoyGoal: n(22),  computedPercentage: pct(n(26),  n(30))  },
+            { reportSectionId: secSal.id, templateMetricId: "std-sal-baptized", metricName: "No. of People Baptized", calculationType: "SUM", monthlyGoal: n(40),  monthlyAchieved: n(36),  yoyGoal: n(32),  computedPercentage: pct(n(36),  n(40))  },
+        ],
+    });
+
+    // ── Small Group ──────────────────────────────────────────────────────────
+    const secSg = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-sg", sectionName: "Small Group" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secSg.id, templateMetricId: "std-sg-groups",      metricName: "No. of Small Groups",           calculationType: "SNAPSHOT", monthlyGoal: n(80),  monthlyAchieved: n(76),  yoyGoal: n(70),  computedPercentage: pct(n(76),  n(80))  },
+            { reportSectionId: secSg.id, templateMetricId: "std-sg-leaders",     metricName: "No. of Small Group Leaders",    calculationType: "SNAPSHOT", monthlyGoal: n(80),  monthlyAchieved: n(75),  yoyGoal: n(68),  computedPercentage: pct(n(75),  n(80))  },
+            { reportSectionId: secSg.id, templateMetricId: "std-sg-asst-leaders",metricName: "No. of Assistant Cell Leaders", calculationType: "SNAPSHOT", monthlyGoal: n(40),  monthlyAchieved: n(38),  yoyGoal: n(34),  computedPercentage: pct(n(38),  n(40))  },
+            { reportSectionId: secSg.id, templateMetricId: "std-sg-cells-held",  metricName: "No. of Cells that Held",        calculationType: "SUM",      monthlyGoal: n(200), monthlyAchieved: n(187), yoyGoal: n(172), computedPercentage: pct(n(187), n(200)) },
+        ],
+    });
+
+    // ── HAEF ─────────────────────────────────────────────────────────────────
+    const secHaef = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-haef", sectionName: "HAEF" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secHaef.id, templateMetricId: "std-haef-reach",  metricName: "Project Reach",  calculationType: "SUM", monthlyGoal: n(500), monthlyAchieved: n(478), yoyGoal: n(442), computedPercentage: pct(n(478), n(500)) },
+            { reportSectionId: secHaef.id, templateMetricId: "std-haef-impact", metricName: "Project Impact", calculationType: "SUM", monthlyGoal: n(200), monthlyAchieved: n(188), yoyGoal: n(170), computedPercentage: pct(n(188), n(200)) },
+        ],
+    });
+
+    // ── Discipleship ─────────────────────────────────────────────────────────
+    const secDisc = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-disc", sectionName: "Discipleship" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secDisc.id, templateMetricId: "std-disc-fc-att",  metricName: "Foundation Course Attendance", calculationType: "SUM", monthlyGoal: n(60),  monthlyAchieved: n(56),  yoyGoal: n(50),  computedPercentage: pct(n(56),  n(60))  },
+            { reportSectionId: secDisc.id, templateMetricId: "std-disc-fc-grad", metricName: "Foundation Course Graduants", calculationType: "SUM", monthlyGoal: n(30),  monthlyAchieved: n(28),  yoyGoal: n(25),  computedPercentage: pct(n(28),  n(30))  },
+            { reportSectionId: secDisc.id, templateMetricId: "std-disc-alc",     metricName: "ALC Attendance",              calculationType: "SUM", monthlyGoal: n(40),  monthlyAchieved: n(37),  yoyGoal: n(33),  computedPercentage: pct(n(37),  n(40))  },
+            { reportSectionId: secDisc.id, templateMetricId: "std-disc-blc",     metricName: "BLC Attendance",              calculationType: "SUM", monthlyGoal: n(25),  monthlyAchieved: n(22),  yoyGoal: n(20),  computedPercentage: pct(n(22),  n(25))  },
+            { reportSectionId: secDisc.id, templateMetricId: "std-disc-plc",     metricName: "PLC Attendance",              calculationType: "SUM", monthlyGoal: n(15),  monthlyAchieved: n(13),  yoyGoal: n(11),  computedPercentage: pct(n(13),  n(15))  },
+            { reportSectionId: secDisc.id, templateMetricId: "std-disc-cpc",     metricName: "CPC Attendance",              calculationType: "SUM", monthlyGoal: n(10),  monthlyAchieved: n(9),   yoyGoal: n(8),   computedPercentage: pct(n(9),   n(10))  },
+        ],
+    });
+
+    // ── Partnership ──────────────────────────────────────────────────────────
+    const secPart = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-part", sectionName: "Partnership" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secPart.id, templateMetricId: "std-part-partners", metricName: "No. of Partners", calculationType: "SUM", monthlyGoal: n(500), monthlyAchieved: n(482), yoyGoal: n(445), computedPercentage: pct(n(482), n(500)) },
+        ],
+    });
+
+    // ── Project ──────────────────────────────────────────────────────────────
+    const secProj = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-proj", sectionName: "Project" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secProj.id, templateMetricId: "std-proj-ongoing",       metricName: "No. of Ongoing Projects",   calculationType: "SNAPSHOT", monthlyGoal: n(5), monthlyAchieved: n(4), yoyGoal: n(4), computedPercentage: pct(n(4), n(5)) },
+            { reportSectionId: secProj.id, templateMetricId: "std-proj-phase-closure", metricName: "Project Phase and Closure", calculationType: "SNAPSHOT", monthlyGoal: n(2), monthlyAchieved: n(2), yoyGoal: n(2), computedPercentage: pct(n(2), n(2)) },
+        ],
+    });
+
+    // ── Transformation ───────────────────────────────────────────────────────
+    const secTrans = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-trans", sectionName: "Transformation" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secTrans.id, templateMetricId: "std-trans-testimonies", metricName: "No. of Testimonies",      calculationType: "SUM", monthlyGoal: n(50), monthlyAchieved: n(46), yoyGoal: n(42), computedPercentage: pct(n(46), n(50)) },
+            { reportSectionId: secTrans.id, templateMetricId: "std-trans-births",      metricName: "No. of Births",           calculationType: "SUM", monthlyGoal: n(10), monthlyAchieved: n(8),  yoyGoal: n(7),  computedPercentage: pct(n(8),  n(10)) },
+            { reportSectionId: secTrans.id, templateMetricId: "std-trans-dedications", metricName: "No. of Babies Dedicated", calculationType: "SUM", monthlyGoal: n(8),  monthlyAchieved: n(7),  yoyGoal: n(6),  computedPercentage: pct(n(7),  n(8))  },
+            { reportSectionId: secTrans.id, templateMetricId: "std-trans-weddings",    metricName: "No. of Weddings",         calculationType: "SUM", monthlyGoal: n(5),  monthlyAchieved: n(4),  yoyGoal: n(4),  computedPercentage: pct(n(4),  n(5))  },
+        ],
+    });
+
+    // ── Assimilation ─────────────────────────────────────────────────────────
+    const secAssim = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-assim", sectionName: "Assimilation" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secAssim.id, templateMetricId: "std-assim-sg",        metricName: "No. Assimilated into Small Groups", calculationType: "SUM",      monthlyGoal: n(80),  monthlyAchieved: n(74),  yoyGoal: n(66),  computedPercentage: pct(n(74),  n(80))  },
+            { reportSectionId: secAssim.id, templateMetricId: "std-assim-workforce", metricName: "No. Assimilated into Work Force",  calculationType: "SUM",      monthlyGoal: n(40),  monthlyAchieved: n(37),  yoyGoal: n(33),  computedPercentage: pct(n(37),  n(40))  },
+            { reportSectionId: secAssim.id, templateMetricId: "std-assim-workers",   metricName: "No. of Workers",                  calculationType: "SNAPSHOT", monthlyGoal: n(350), monthlyAchieved: n(338), yoyGoal: n(312), computedPercentage: pct(n(338), n(350)) },
+            { reportSectionId: secAssim.id, templateMetricId: "std-assim-leaders",   metricName: "No. of Leaders",                  calculationType: "SNAPSHOT", monthlyGoal: n(120), monthlyAchieved: n(114), yoyGoal: n(104), computedPercentage: pct(n(114), n(120)) },
+        ],
+    });
+
+    // ── Next Gen ─────────────────────────────────────────────────────────────
+    const secNg = await prisma.reportSection.create({
+        data: { reportId, templateSectionId: "std-ng", sectionName: "Next Gen" },
+    });
+    await prisma.reportMetric.createMany({
+        data: [
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-att-kidzone",     metricName: "Next Gen Attendance — Kidzone",             calculationType: "AVERAGE",  monthlyGoal: n(300), monthlyAchieved: n(287), yoyGoal: n(262), computedPercentage: pct(n(287), n(300)) },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-att-stir",        metricName: "Next Gen Attendance — Stir House",          calculationType: "AVERAGE",  monthlyGoal: n(250), monthlyAchieved: n(238), yoyGoal: n(218), computedPercentage: pct(n(238), n(250)) },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-ft-kidzone",      metricName: "First Timers — Kidzone",                    calculationType: "SUM",      monthlyGoal: n(20),  monthlyAchieved: n(18),  yoyGoal: n(15),  computedPercentage: pct(n(18),  n(20))  },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-ft-stir",         metricName: "First Timers — Stir House",                 calculationType: "SUM",      monthlyGoal: n(15),  monthlyAchieved: n(14),  yoyGoal: n(12),  computedPercentage: pct(n(14),  n(15))  },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-wrkr-kidzone",    metricName: "Workers Attendance — Kidzone",              calculationType: "AVERAGE",  monthlyGoal: n(30),  monthlyAchieved: n(28),  yoyGoal: n(25),  computedPercentage: pct(n(28),  n(30))  },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-wrkr-stir",       metricName: "Workers Attendance — Stir House",           calculationType: "AVERAGE",  monthlyGoal: n(25),  monthlyAchieved: n(23),  yoyGoal: n(21),  computedPercentage: pct(n(23),  n(25))  },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-bap-water-kz",    metricName: "No. of Baptized (Water) — Kidzone",         calculationType: "SUM",      monthlyGoal: n(5),   monthlyAchieved: n(4),   yoyGoal: n(4),   computedPercentage: pct(n(4),   n(5))   },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-bap-water-sh",    metricName: "No. of Baptized (Water) — Stir House",      calculationType: "SUM",      monthlyGoal: n(5),   monthlyAchieved: n(4),   yoyGoal: n(3),   computedPercentage: pct(n(4),   n(5))   },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-bap-hg-kz",       metricName: "No. of Baptized (Holy Ghost) — Kidzone",    calculationType: "SUM",      monthlyGoal: n(8),   monthlyAchieved: n(7),   yoyGoal: n(6),   computedPercentage: pct(n(7),   n(8))   },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-bap-hg-sh",       metricName: "No. of Baptized (Holy Ghost) — Stir House", calculationType: "SUM",      monthlyGoal: n(8),   monthlyAchieved: n(6),   yoyGoal: n(5),   computedPercentage: pct(n(6),   n(8))   },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-return-kidzone",  metricName: "Next Gen Return Rate — Kidzone",            calculationType: "SNAPSHOT", monthlyGoal: 75,     monthlyAchieved: 72,     yoyGoal: 68,     computedPercentage: pct(72, 75) },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-return-stir",     metricName: "Next Gen Return Rate — Stir House",         calculationType: "SNAPSHOT", monthlyGoal: 70,     monthlyAchieved: 66,     yoyGoal: 62,     computedPercentage: pct(66, 70) },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-pdpf-kidzone",    metricName: "No. of PD/PF Participants — Kidzone",       calculationType: "SUM",      monthlyGoal: n(40),  monthlyAchieved: n(36),  yoyGoal: n(32),  computedPercentage: pct(n(36),  n(40))  },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-pdpf-stir",       metricName: "No. of PD/PF Participants — Stir House",    calculationType: "SUM",      monthlyGoal: n(35),  monthlyAchieved: n(31),  yoyGoal: n(28),  computedPercentage: pct(n(31),  n(35))  },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-teen-leaders",    metricName: "No. of Teen Leaders — Stir House",          calculationType: "SNAPSHOT", monthlyGoal: n(20),  monthlyAchieved: n(18),  yoyGoal: n(16),  computedPercentage: pct(n(18),  n(20))  },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-served-kidzone",  metricName: "No. that Served — Kidzone",                 calculationType: "SNAPSHOT", monthlyGoal: n(30),  monthlyAchieved: n(28),  yoyGoal: n(25),  computedPercentage: pct(n(28),  n(30))  },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-served-stir",     metricName: "No. that Served — Stir House",              calculationType: "SNAPSHOT", monthlyGoal: n(25),  monthlyAchieved: n(23),  yoyGoal: n(21),  computedPercentage: pct(n(23),  n(25))  },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-parental-kidzone",metricName: "Parental Engagement Rate — Kidzone",        calculationType: "SNAPSHOT", monthlyGoal: 60,     monthlyAchieved: 56,     yoyGoal: 52,     computedPercentage: pct(56, 60) },
+            { reportSectionId: secNg.id, templateMetricId: "std-ng-parental-stir",   metricName: "Parental Engagement Rate — Stir House",     calculationType: "SNAPSHOT", monthlyGoal: 55,     monthlyAchieved: 51,     yoyGoal: 47,     computedPercentage: pct(51, 55) },
+        ],
+    });
+}
+
 async function seedReports() {
     const now = new Date();
     console.log("[seed] Creating sample reports...");
@@ -307,24 +490,14 @@ async function seedReports() {
         });
     }
 
-    // Sections + metrics for Lekki submitted — aligned with DEFAULT_REPORT_TEMPLATE IDs
-    const lekkiSec1 = await prisma.reportSection.create({
-        data: { reportId: "report-lekki-submitted", templateSectionId: "std-att", sectionName: "Attendance" },
-    });
-    await prisma.reportMetric.createMany({
-        data: [
-            { reportSectionId: lekkiSec1.id, templateMetricId: "std-att-sun-male", metricName: "Sunday Attendance — Male", calculationType: "AVERAGE", monthlyGoal: 1200, monthlyAchieved: 1150, yoyGoal: 1000, computedPercentage: 95.8 },
-            { reportSectionId: lekkiSec1.id, templateMetricId: "std-att-sun-female", metricName: "Sunday Attendance — Female", calculationType: "AVERAGE", monthlyGoal: 1300, monthlyAchieved: 1190, yoyGoal: 1100, computedPercentage: 91.5 },
-            { reportSectionId: lekkiSec1.id, templateMetricId: "std-att-first-timers", metricName: "First Timers", calculationType: "SUM", monthlyGoal: 150, monthlyAchieved: 163, computedPercentage: 108.7 },
-        ],
-    });
-
-    const lekkiSec2 = await prisma.reportSection.create({
-        data: { reportId: "report-lekki-submitted", templateSectionId: "std-sal", sectionName: "Salvation" },
-    });
-    await prisma.reportMetric.create({
-        data: { reportSectionId: lekkiSec2.id, templateMetricId: "std-sal-service", metricName: "Soul Saved in Service", calculationType: "SUM", monthlyGoal: 200, monthlyAchieved: 195, computedPercentage: 97.5, comment: "Strong altar call responses across all services." },
-    });
+    // Sections + metrics for all reports — all 12 DEFAULT template sections,
+    // scaled by campus size so values are realistic for each location.
+    console.log("[seed] Creating report sections and metrics...");
+    await seedReportSections("report-lekki-draft",     1.00);
+    await seedReportSections("report-lekki-submitted", 1.00);
+    await seedReportSections("report-ikeja-approved",  0.75);
+    await seedReportSections("report-abuja-edits",     0.85);
+    await seedReportSections("report-london-locked",   0.35);
 
     console.log("[seed] Creating report events...");
     const tMinus = (minutesAgo: number) => new Date(Date.now() - minutesAgo * 60 * 1000);
