@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/providers/AuthProvider";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES } from "@/config/routes";
+import Image from "next/image";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
@@ -61,9 +62,14 @@ function LoginForm() {
     <div className="bg-ds-surface-elevated border border-ds-border-base rounded-ds-2xl shadow-ds-xl p-8 space-y-6">
       {/* Logo / Brand */}
       <div className="text-center space-y-1">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-ds-xl bg-ds-brand-accent mb-2">
-          <span className="text-white font-bold text-xl">H</span>
-        </div>
+        <Image
+          src="/logo/dark-bg-harvesters-Logo.jpg"
+          alt="Harvesters"
+          width={48}
+          height={48}
+          className="rounded-ds-xl mb-2"
+          priority
+        />
         <h1 className="text-2xl font-bold text-ds-text-primary">{CONTENT.auth.loginTitle}</h1>
         <p className="text-sm text-ds-text-secondary">{CONTENT.auth.loginSubtitle}</p>
       </div>

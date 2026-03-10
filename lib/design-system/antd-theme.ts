@@ -128,6 +128,11 @@ export function getAntdTheme(isDark: boolean): ThemeConfig {
             Message: {
                 borderRadiusLG: 12,
             },
+            Tooltip: {
+                colorBgSpotlight: isDark ? palette.black.elevated : palette.neutral[900],
+                colorTextLightSolid: isDark ? "#F8FAFC" : "#FFFFFF",
+                borderRadius: 8,
+            },
         },
     };
 }

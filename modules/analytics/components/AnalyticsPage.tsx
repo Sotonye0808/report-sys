@@ -82,6 +82,41 @@ interface AnalyticsOverview {
   statusTrend: StatusTrendRow[];
 }
 
+interface QuarterlyTotals {
+  total: number;
+  submitted: number;
+  approved: number;
+  compliance: number;
+}
+
+interface QuarterlyMonthRow {
+  month: number;
+  label: string;
+  total: number;
+  submitted: number;
+  approved: number;
+  compliance: number;
+}
+
+interface QuarterlyCampusRow {
+  campusId: string;
+  submitted: number;
+  approved: number;
+  total: number;
+  complianceRate: number;
+}
+
+interface QuarterlySummaryData {
+  year: number;
+  quarter: number;
+  label: string;
+  current: QuarterlyTotals;
+  previous: QuarterlyTotals & { label: string };
+  qoqDelta: { total: number; submitted: number; approved: number; compliance: number };
+  campusBreakdown: QuarterlyCampusRow[];
+  monthlyBreakdown: QuarterlyMonthRow[];
+}
+
 interface MetricPoint {
   period: string;
   periodLabel: string;
@@ -268,6 +303,11 @@ export function AnalyticsPage() {
   const [metricsLoading, setMetricsLoading] = useState(false);
   const [availableMetrics, setAvailableMetrics] = useState<AvailableMetric[]>([]);
 
+  /* Quarterly tab state */
+  const [selectedQuarter, setSelectedQuarter] = useState<number>(Math.ceil((new Date().getMonth() + 1) / 3));
+  const [quarterlyData, setQuarterlyData] = useState<QuarterlySummaryData | null>(null);
+  const [quarterlyLoading, setQuarterlyLoading] = useState(false);
+
   const isSuperadmin = role === UserRole.SUPERADMIN;
   const canSeeCrossCampus = CHART_ROLES.includes(role as UserRole);
 
@@ -346,7 +386,26 @@ export function AnalyticsPage() {
     fetchMetrics();
   }, [fetchMetrics]);
 
-  /* â”€â”€ Derived â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Fetch quarterly summary ────────────────────────────────────────────── */
+
+  const fetchQuarterly = useCallback(async () => {
+    setQuarterlyLoading(true);
+    try {
+      const params = new URLSearchParams({ year: String(year), quarter: String(selectedQuarter) });
+      if (effectiveCampusId) params.set("campusId", effectiveCampusId);
+      const res = await fetch(API_ROUTES.analytics.quarterly + "?" + params.toString());
+      const json = await res.json();
+      if (json.success) setQuarterlyData(json.data as QuarterlySummaryData);
+    } catch {
+      /* silent */
+    } finally {
+      setQuarterlyLoading(false);
+    }
+  }, [year, selectedQuarter, effectiveCampusId]);
+
+  useEffect(() => {
+    fetchQuarterly();
+  }, [fetchQuarterly]);
 
   const visibleKpis = KPI_CARDS.filter((k) =>
     role ? k.allowedRoles.includes(role as UserRole) : true,
@@ -806,6 +865,102 @@ export function AnalyticsPage() {
 
   /* â”€â”€ Tab items (config-driven) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
+  /* ── Quarterly tab ──────────────────────────────────────────────────────── */
+
+  const quarterlyBrNamed = (quarterlyData?.campusBreakdown ?? []).map((row) => ({
+    ...row,
+    name: allCampuses?.find((c) => c.id === row.campusId)?.name ?? row.campusId,
+  }));
+
+  const QUARTER_OPTIONS = [1, 2, 3, 4].map((q) => ({ value: q, label: `Q${q}` }));
+
+  function DeltaBadge({ value, suffix = "" }: { value: number; suffix?: string }) {
+    const color = value > 0 ? "text-ds-state-success" : value < 0 ? "text-ds-state-error" : "text-ds-text-subtle";
+    const prefix = value > 0 ? "+" : "";
+    return <span className={`text-xs font-semibold ${color}`}>{prefix}{value}{suffix}</span>;
+  }
+
+  const quarterlyTab =
+    quarterlyLoading || !quarterlyData ? (
+      <LoadingSkeleton rows={6} />
+    ) : (
+      <div className="space-y-6">
+        {/* Quarter selector */}
+        <div className="flex items-center gap-3">
+          <Select
+            value={selectedQuarter}
+            options={QUARTER_OPTIONS}
+            onChange={setSelectedQuarter}
+            style={{ width: 80 }}
+            size="middle"
+          />
+        </div>
+
+        {/* Quarterly KPIs with QoQ delta */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { label: CONTENT.analytics.quarterlySubmittedLabel as string, cur: quarterlyData.current.submitted, delta: quarterlyData.qoqDelta.submitted },
+            { label: CONTENT.analytics.quarterlyApprovedLabel as string, cur: quarterlyData.current.approved, delta: quarterlyData.qoqDelta.approved },
+            { label: CONTENT.analytics.quarterlyComplianceLabel as string, cur: quarterlyData.current.compliance, delta: quarterlyData.qoqDelta.compliance, suffix: "%" },
+            { label: CONTENT.dashboard.kpi.totalReports as string, cur: quarterlyData.current.total, delta: quarterlyData.qoqDelta.total },
+          ].map((item) => (
+            <Card key={item.label} className="!p-5">
+              <p className="text-xs font-medium text-ds-text-subtle mb-1">{item.label}</p>
+              <p className="text-3xl font-bold text-ds-text-primary tracking-tight">
+                {item.cur}{item.suffix ?? ""}
+              </p>
+              <div className="mt-1 flex items-center gap-1">
+                <DeltaBadge value={item.delta} suffix={item.suffix === "%" ? "pp" : ""} />
+                <span className="text-xs text-ds-text-subtle">{CONTENT.analytics.quarterlyQoqLabel as string}</span>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {/* Monthly breakdown within quarter */}
+        {quarterlyData.monthlyBreakdown.length > 0 && (
+          <ChartCard title={CONTENT.analytics.quarterlyTitle as string}>
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={quarterlyData.monthlyBreakdown}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                <XAxis dataKey="label" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                <Tooltip contentStyle={TOOLTIP_STYLE} />
+                <Legend />
+                <Bar dataKey="submitted" name={CONTENT.analytics.chartLabels.submitted as string} fill="var(--ds-chart-1)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="approved" name={CONTENT.analytics.chartLabels.approved as string} fill="var(--ds-chart-2)" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        )}
+
+        {/* Top campuses this quarter */}
+        {canSeeCrossCampus && quarterlyBrNamed.length > 0 && (
+          <ChartCard title={CONTENT.analytics.quarterlyTopCampuses as string}>
+            <div className="space-y-4">
+              {quarterlyBrNamed.slice(0, 10).map((row) => (
+                <div key={row.campusId}>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-sm text-ds-text-primary truncate">{row.name}</span>
+                    <span className="text-xs font-semibold text-ds-text-secondary ml-4 flex-shrink-0">
+                      {row.complianceRate}%
+                    </span>
+                  </div>
+                  <Progress
+                    percent={Math.min(row.complianceRate, 100)}
+                    showInfo={false}
+                    strokeColor="var(--ds-brand-accent)"
+                    trailColor="var(--ds-surface-sunken)"
+                    size="small"
+                  />
+                </div>
+              ))}
+            </div>
+          </ChartCard>
+        )}
+      </div>
+    );
+
   const TAB_ITEMS = [
     { key: "overview", label: CONTENT.analytics.tab.overview as string, children: overviewTab },
     { key: "metrics", label: CONTENT.analytics.tab.metrics as string, children: metricsTab },
@@ -814,6 +969,11 @@ export function AnalyticsPage() {
       key: "compliance",
       label: CONTENT.analytics.tab.compliance as string,
       children: complianceTab,
+    },
+    {
+      key: "quarterly",
+      label: CONTENT.analytics.tab.quarterly as string,
+      children: quarterlyTab,
     },
   ];
 

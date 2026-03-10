@@ -16,8 +16,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     checkAuth();
+
+    // Re-validate auth when coming back online
+    const handleOnline = () => checkAuth();
+    window.addEventListener("online", handleOnline);
+    return () => window.removeEventListener("online", handleOnline);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const persistUser = (u: AuthUser | null) => {
+    setUser(u);
+    try {
+      if (u) {
+        localStorage.setItem("hrs:auth-user", JSON.stringify(u));
+      } else {
+        localStorage.removeItem("hrs:auth-user");
+      }
+    } catch {
+      /* localStorage unavailable */
+    }
+  };
 
   const checkAuth = async () => {
     try {
@@ -26,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (meRes.ok) {
         const data: ApiResponse<AuthUser> = await meRes.json();
         if (data.success) {
-          setUser(data.data);
+          persistUser(data.data);
           return;
         }
       }
@@ -40,14 +58,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (refreshRes.ok) {
           const refreshData: ApiResponse<{ user: AuthUser }> = await refreshRes.json();
           if (refreshData.success) {
-            setUser(refreshData.data.user);
+            persistUser(refreshData.data.user);
             return;
           }
         }
       }
 
-      setUser(null);
+      persistUser(null);
     } catch {
+      // Network failure — fall back to cached user for offline resilience
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        try {
+          const cached = localStorage.getItem("hrs:auth-user");
+          if (cached) {
+            setUser(JSON.parse(cached) as AuthUser);
+            return;
+          }
+        } catch {
+          /* localStorage unavailable */
+        }
+      }
       setUser(null);
     } finally {
       setIsLoading(false);
@@ -73,7 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error(!data.success ? data.error : "Login failed");
     }
 
-    setUser(data.data.user);
+    persistUser(data.data.user);
     message.success("Welcome back!");
     // Redirect to the `from` param if provided, otherwise fall back to role dashboard
     const destination = redirectTo ?? ROLE_DASHBOARD_ROUTES[data.data.user.role];
@@ -86,7 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // swallow — still clear state
     } finally {
-      setUser(null);
+      persistUser(null);
       message.success("Logged out successfully.");
       router.push("/login");
     }

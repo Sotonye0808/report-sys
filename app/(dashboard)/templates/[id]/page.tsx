@@ -13,6 +13,7 @@ const TEMPLATES_ALLOWED_ROLES: UserRole[] = [
   UserRole.GROUP_PASTOR,
   UserRole.SPO,
   UserRole.CEO,
+  UserRole.OFFICE_OF_CEO,
   UserRole.CHURCH_MINISTRY,
 ];
 

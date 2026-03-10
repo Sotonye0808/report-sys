@@ -7,7 +7,7 @@
  * On submit → POST /api/auth/register with inviteToken, which assigns role/campus.
  */
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Form, Alert, Spin } from "antd";
 import {
@@ -16,7 +16,10 @@ import {
   MailOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
+  ClockCircleOutlined,
+  ExclamationCircleOutlined,
 } from "@ant-design/icons";
+import Image from "next/image";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES, APP_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
@@ -25,34 +28,71 @@ import Input from "@/components/ui/Input";
 /* ── Invite metadata returned by GET /api/invite-links/[token] ───────────── */
 
 interface InviteMeta {
-  token:     string;
+  token: string;
   targetRole: string;
   campusId?: string;
-  groupId?:  string;
+  groupId?: string;
   expiresAt: string;
 }
 
 /* ── Registration form values ─────────────────────────────────────────────── */
 
 interface JoinFormValues {
-  firstName:       string;
-  lastName:        string;
-  email:           string;
-  password:        string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
   confirmPassword: string;
+}
+
+/* ── Success redirect with countdown ──────────────────────────────────────── */
+
+function SuccessRedirect({ router }: { router: ReturnType<typeof useRouter> }) {
+  const [seconds, setSeconds] = useState(5);
+
+  useEffect(() => {
+    if (seconds <= 0) {
+      router.push(APP_ROUTES.login);
+      return;
+    }
+    const timer = setTimeout(() => setSeconds((s) => s - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [seconds, router]);
+
+  return (
+    <div className="flex flex-col items-center gap-4 text-center">
+      <CheckCircleOutlined className="text-4xl text-ds-brand-accent" />
+      <h2 className="text-lg font-semibold text-ds-text-primary">
+        {(CONTENT.auth.registrationSuccessTitle as string) ?? "Account Created!"}
+      </h2>
+      <p className="text-sm text-ds-text-secondary">
+        {(CONTENT.auth.registrationSuccessMessage as string) ??
+          "Your account is ready. Please log in."}
+      </p>
+      <p className="text-xs text-ds-text-subtle">
+        {(CONTENT.auth.redirectingIn as string) ?? "Redirecting to login in"} {seconds}s…
+      </p>
+      <Button type="primary" onClick={() => router.push(APP_ROUTES.login)}>
+        {CONTENT.auth.loginButton as string}
+      </Button>
+    </div>
+  );
 }
 
 /* ── Inner component — uses useSearchParams (must be inside Suspense) ─────── */
 
 function JoinForm() {
   const searchParams = useSearchParams();
-  const router       = useRouter();
-  const token        = searchParams.get("token") ?? "";
+  const router = useRouter();
+  const token = searchParams.get("token") ?? "";
 
-  const [invite,    setInvite]    = useState<InviteMeta | null>(null);
-  const [status,    setStatus]    = useState<"loading" | "valid" | "invalid" | "done">("loading");
-  const [errorMsg,  setErrorMsg]  = useState<string>("");
+  const [invite, setInvite] = useState<InviteMeta | null>(null);
+  const [status, setStatus] = useState<
+    "loading" | "valid" | "invalid" | "expired" | "used" | "done"
+  >("loading");
+  const [errorMsg, setErrorMsg] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
+  const [countdown, setCountdown] = useState(5);
 
   const [form] = Form.useForm<JoinFormValues>();
 
@@ -66,11 +106,18 @@ function JoinForm() {
 
     const validate = async () => {
       try {
-        const res  = await fetch(API_ROUTES.inviteLinks.validate(token));
+        const res = await fetch(API_ROUTES.inviteLinks.validate(token));
         const json = await res.json();
         if (!res.ok || !json.success) {
-          setStatus("invalid");
-          setErrorMsg(json.error ?? "This invite link is invalid or has expired.");
+          const errText = (json.error ?? "") as string;
+          if (errText.toLowerCase().includes("expired")) {
+            setStatus("expired");
+          } else if (errText.toLowerCase().includes("already been used")) {
+            setStatus("used");
+          } else {
+            setStatus("invalid");
+          }
+          setErrorMsg(errText || "This invite link is invalid or has expired.");
         } else {
           setInvite(json.data);
           setStatus("valid");
@@ -95,14 +142,14 @@ function JoinForm() {
 
     setSubmitting(true);
     try {
-      const res  = await fetch("/api/auth/register", {
-        method:  "POST",
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          firstName:   values.firstName,
-          lastName:    values.lastName,
-          email:       values.email,
-          password:    values.password,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          password: values.password,
           inviteToken: token,
         }),
       });
@@ -129,17 +176,34 @@ function JoinForm() {
     );
   }
 
-  /* ── Invalid / expired ────────────────────────────────────────────────── */
-  if (status === "invalid") {
+  /* ── Invalid / expired / used ───────────────────────────────────────── */
+  if (status === "invalid" || status === "expired" || status === "used") {
+    const stateConfig = {
+      expired: {
+        icon: <ClockCircleOutlined className="text-4xl text-ds-state-warning" />,
+        title: (CONTENT.auth.inviteExpiredTitle as string) ?? "Invite Link Expired",
+        description:
+          errorMsg ||
+          "This invite link has expired. Please request a new one from your administrator.",
+      },
+      used: {
+        icon: <ExclamationCircleOutlined className="text-4xl text-ds-text-subtle" />,
+        title: (CONTENT.auth.inviteUsedTitle as string) ?? "Invite Already Used",
+        description: errorMsg || "This invite link has already been used to create an account.",
+      },
+      invalid: {
+        icon: <CloseCircleOutlined className="text-4xl text-ds-state-error" />,
+        title: (CONTENT.auth.inviteInvalidTitle as string) ?? "Invalid Invite Link",
+        description: errorMsg || "This invite link is invalid or has already been used.",
+      },
+    };
+    const cfg = stateConfig[status];
+
     return (
       <div className="flex flex-col items-center gap-4 text-center">
-        <CloseCircleOutlined className="text-4xl text-ds-state-error" />
-        <h2 className="text-lg font-semibold text-ds-text-primary">
-          {(CONTENT.auth.inviteInvalidTitle as string) ?? "Invalid Invite Link"}
-        </h2>
-        <p className="text-sm text-ds-text-secondary">
-          {errorMsg || "This invite link is invalid or has already been used."}
-        </p>
+        {cfg.icon}
+        <h2 className="text-lg font-semibold text-ds-text-primary">{cfg.title}</h2>
+        <p className="text-sm text-ds-text-secondary">{cfg.description}</p>
         <Button onClick={() => router.push(APP_ROUTES.login)}>
           {(CONTENT.auth.goToLogin as string) ?? "Go to Login"}
         </Button>
@@ -147,23 +211,9 @@ function JoinForm() {
     );
   }
 
-  /* ── Success ──────────────────────────────────────────────────────────── */
+  /* ── Success — auto-redirect with countdown ────────────────────────── */
   if (status === "done") {
-    return (
-      <div className="flex flex-col items-center gap-4 text-center">
-        <CheckCircleOutlined className="text-4xl text-ds-brand-accent" />
-        <h2 className="text-lg font-semibold text-ds-text-primary">
-          {(CONTENT.auth.registrationSuccessTitle as string) ?? "Account Created!"}
-        </h2>
-        <p className="text-sm text-ds-text-secondary">
-          {(CONTENT.auth.registrationSuccessMessage as string) ??
-            "Your account is ready. Please log in."}
-        </p>
-        <Button type="primary" onClick={() => router.push(APP_ROUTES.login)}>
-          {(CONTENT.auth.loginButton as string)}
-        </Button>
-      </div>
-    );
+    return <SuccessRedirect router={router} />;
   }
 
   /* ── Registration form ────────────────────────────────────────────────── */
@@ -181,8 +231,14 @@ function JoinForm() {
       )}
 
       {errorMsg && (
-        <Alert type="error" message={errorMsg} showIcon closable className="mb-4"
-          onClose={() => setErrorMsg("")} />
+        <Alert
+          type="error"
+          message={errorMsg}
+          showIcon
+          closable
+          className="mb-4"
+          onClose={() => setErrorMsg("")}
+        />
       )}
 
       <Form form={form} layout="vertical" onFinish={handleSubmit} requiredMark={false}>
@@ -209,7 +265,7 @@ function JoinForm() {
           label={CONTENT.auth.emailLabel as string}
           rules={[
             { required: true, message: CONTENT.auth.errors.emailRequired as string },
-            { type: "email",  message: CONTENT.auth.errors.emailInvalid as string },
+            { type: "email", message: CONTENT.auth.errors.emailInvalid as string },
           ]}
         >
           <Input
@@ -225,7 +281,7 @@ function JoinForm() {
           label={CONTENT.auth.passwordLabel as string}
           rules={[
             { required: true, message: CONTENT.auth.errors.passwordRequired as string },
-            { min: 8,          message: CONTENT.auth.errors.passwordTooShort as string },
+            { min: 8, message: CONTENT.auth.errors.passwordTooShort as string },
           ]}
         >
           <Input.Password
@@ -261,19 +317,13 @@ function JoinForm() {
 
       <p className="mt-4 text-center text-sm text-ds-text-secondary">
         {(CONTENT.auth.alreadyHaveAccount as string) ?? "Already have an account?"}{" "}
-        <a
-          href={APP_ROUTES.login}
-          className="text-ds-brand-accent hover:underline font-medium"
-        >
+        <a href={APP_ROUTES.login} className="text-ds-brand-accent hover:underline font-medium">
           {CONTENT.auth.loginLink as string}
         </a>
       </p>
       <p className="mt-2 text-center text-xs text-ds-text-subtle">
         {CONTENT.auth.noInvite as string}{" "}
-        <a
-          href={APP_ROUTES.register}
-          className="text-ds-brand-accent hover:underline"
-        >
+        <a href={APP_ROUTES.register} className="text-ds-brand-accent hover:underline">
           {CONTENT.auth.registerWithoutInvite as string}
         </a>
       </p>
@@ -289,9 +339,14 @@ export default function JoinPage() {
       <div className="w-full max-w-md">
         {/* Brand header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-ds-2xl bg-ds-brand-accent mb-4">
-            <span className="text-white font-bold text-2xl">H</span>
-          </div>
+          <Image
+            src="/logo/dark-bg-harvesters-Logo.jpg"
+            alt="Harvesters"
+            width={56}
+            height={56}
+            className="rounded-ds-2xl mb-4"
+            priority
+          />
           <h1 className="text-2xl font-bold text-ds-text-primary tracking-tight">
             {CONTENT.auth.joinTitle as string}
           </h1>

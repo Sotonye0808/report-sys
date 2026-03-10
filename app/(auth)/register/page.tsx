@@ -10,6 +10,7 @@ import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Form, Alert } from "antd";
 import Link from "next/link";
+import Image from "next/image";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
@@ -92,9 +93,14 @@ function RegisterPageContent() {
     <div className="bg-ds-surface-elevated border border-ds-border-base rounded-ds-2xl shadow-ds-xl p-8 space-y-6">
       {/* Header */}
       <div className="text-center space-y-1">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-ds-xl bg-ds-brand-accent mb-2">
-          <span className="text-white font-bold text-xl">H</span>
-        </div>
+        <Image
+          src="/logo/dark-bg-harvesters-Logo.jpg"
+          alt="Harvesters"
+          width={48}
+          height={48}
+          className="rounded-ds-xl mb-2"
+          priority
+        />
         <h1 className="text-2xl font-bold text-ds-text-primary">{CONTENT.auth.registerTitle}</h1>
         <p className="text-sm text-ds-text-secondary">{CONTENT.auth.registerSubtitle}</p>
         {inviteToken && (

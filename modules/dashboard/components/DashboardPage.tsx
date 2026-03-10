@@ -223,6 +223,18 @@ export function DashboardPage() {
       [ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.LOCKED].includes(x.status),
     ).length;
 
+    // Current quarter compliance
+    const now = new Date();
+    const currentQ = Math.ceil((now.getMonth() + 1) / 3);
+    const currentYear = now.getFullYear();
+    const qMonths = [(currentQ - 1) * 3 + 1, (currentQ - 1) * 3 + 2, (currentQ - 1) * 3 + 3];
+    const qReports = r.filter((x) => x.periodYear === currentYear && qMonths.includes(x.periodMonth ?? 0));
+    const qSubmitted = qReports.filter((x) => x.status !== ReportStatus.DRAFT).length;
+    const qApproved = qReports.filter((x) =>
+      [ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.LOCKED].includes(x.status),
+    ).length;
+    const quarterlyCompliance = qSubmitted > 0 ? Math.round((qApproved / qSubmitted) * 100) : 0;
+
     return {
       totalReports: r.length,
       pending: r.filter((x) => x.status === ReportStatus.SUBMITTED).length,
@@ -230,8 +242,10 @@ export function DashboardPage() {
       draft: r.filter((x) => x.status === ReportStatus.DRAFT).length,
       requiresEdits: r.filter((x) => x.status === ReportStatus.REQUIRES_EDITS).length,
       compliance: r.length > 0 ? Math.round((completed / r.length) * 100) : 0,
+      quarterlyCompliance,
+      quarterlyLabel: `Q${currentQ}`,
       activeUsers: u.filter((x) => x.isActive).length,
-      activeTemplates: t.filter((x) => x.isDefault !== false).length,
+      activeTemplates: t.filter((x) => x.isActive !== false).length,
       totalCampuses: c.length,
     };
   }, [reports, allUsers, templates, campuses]);
@@ -344,6 +358,15 @@ export function DashboardPage() {
       color: "bg-ds-surface-sunken text-ds-text-subtle",
       href: reportsHref,
       allowedModes: ["report-fill"],
+    },
+    {
+      id: "quarterly-compliance",
+      label: `${CONTENT.dashboard.kpi.quarterlyCompliance} (${counts.quarterlyLabel})`,
+      value: `${counts.quarterlyCompliance}%`,
+      icon: <BarChartOutlined />,
+      color: "bg-ds-brand-secondary/10 text-ds-brand-secondary",
+      href: APP_ROUTES.analytics,
+      allowedModes: ["system", "analytics", "report-review", "report-reviewed"],
     },
   ];
 

@@ -10,14 +10,14 @@ interface AntdProviderProps {
 }
 
 export function AntdProvider({ children }: AntdProviderProps) {
-  const { theme: currentTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const isDark = mounted && currentTheme === "dark";
+  const isDark = mounted && resolvedTheme === "dark";
   const dsTheme = getAntdTheme(isDark);
 
   return (

@@ -10,7 +10,7 @@
  * Inbox bell: always visible for all roles.
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Drawer, Dropdown, Avatar, Badge, Tooltip } from "antd";
 import {
@@ -22,6 +22,7 @@ import {
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
+import Image from "next/image";
 import type { MenuProps } from "antd";
 import { useAuth } from "@/providers/AuthProvider";
 import { useApiData } from "@/lib/hooks/useApiData";
@@ -30,6 +31,7 @@ import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { getNavItems } from "@/config/nav";
 import Button from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { UserRole } from "@/types/global";
 
 const SIDEBAR_FULL_WIDTH = 240;
@@ -58,9 +60,14 @@ function Sidebar({ navItems, currentPath, collapsed, onClose }: SidebarProps) {
           collapsed ? "justify-center px-0 py-5 h-16" : "gap-3 px-5 py-5",
         ].join(" ")}
       >
-        <div className="flex items-center justify-center w-9 h-9 rounded-ds-lg bg-ds-brand-accent flex-shrink-0">
-          <span className="text-white font-bold text-base leading-none">H</span>
-        </div>
+        <Image
+          src="/logo/dark-bg-harvesters-Logo.jpg"
+          alt="Harvesters"
+          width={36}
+          height={36}
+          className="rounded-ds-lg flex-shrink-0"
+          priority
+        />
         {!collapsed && (
           <span className="font-semibold text-ds-text-primary text-sm leading-tight whitespace-nowrap">
             Harvesters
@@ -249,6 +256,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { user, isLoading, logout } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
 
   // Close mobile drawer on route change
   useEffect(() => {
@@ -322,7 +330,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           onLogout={logout}
           unreadCount={unreadCount}
         />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+        <main ref={mainRef} className="flex-1 overflow-y-auto p-4 md:p-6">
+          {children}
+          <ScrollToTop scrollContainerRef={mainRef} />
+        </main>
       </div>
     </div>
   );
