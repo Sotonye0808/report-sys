@@ -103,7 +103,7 @@ function m(
     capturesYoY: boolean,
     description?: string,
 ): MetricDef {
-    return { id, name, fieldType, calculationType: calc, isRequired: required, order, capturesGoal, capturesAchieved, capturesYoY, description };
+    return { id, name, fieldType, calculationType: calc, isRequired: required, order, capturesGoal: true, capturesAchieved, capturesYoY: true, description };
 }
 
 function s(
