@@ -324,9 +324,7 @@ export function ReportsListPage() {
               onClick={() => setExportOpen(true)}
               disabled={!filteredReports || filteredReports.length === 0}
             >
-              {(CONTENT.reports as Record<string, unknown>).export
-                ? ((CONTENT.reports as Record<string, Record<string, string>>).export.button)
-                : "Export"}
+              {((CONTENT.reports as unknown as Record<string, Record<string, string>>).export?.button) ?? "Export"}
             </Button>
           </div>
         }
