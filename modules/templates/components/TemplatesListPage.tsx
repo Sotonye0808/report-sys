@@ -67,11 +67,15 @@ const TEMPLATE_COLUMNS: ColumnConfig[] = [
     key: "fields",
     title: "Fields",
     width: 80,
-    render: (row) => (
-      <span className="text-sm text-ds-text-secondary">
-        {row.fieldCount ?? (row as TemplateRow & { fields?: unknown[] }).fields?.length ?? 0}
-      </span>
-    ),
+    render: (row) => {
+      const count =
+        row.fieldCount ??
+        (row.sections ?? []).reduce(
+          (sum: number, sec: ReportTemplateSection) => sum + (sec.metrics?.length ?? 0),
+          0,
+        );
+      return <span className="text-sm text-ds-text-secondary">{count}</span>;
+    },
   },
   {
     key: "created",
