@@ -94,7 +94,7 @@ function RegisterPageContent() {
       {/* Header */}
       <div className="text-center space-y-1">
         <Image
-          src="/logo/dark-bg-harvesters-Logo.jpg"
+          src="/logo/white-bg-harvesters-Logo.svg"
           alt="Harvesters"
           width={48}
           height={48}
