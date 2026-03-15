@@ -1,63 +1,10 @@
-# Harvesters Reporting System — Project Context
-
-> **Last Updated:** March 2026
-> **Status:** Planning complete — build in progress
-
 ---
 
-## 1. System Purpose
+# Project Context Redirect — Harvesters Reporting System
 
-The Harvesters Central Reporting System is a **standalone, role-based web application** built for Harvesters International Christian Center. It replaces the current fragmented process where campus administrators collect and submit reports in various formats (Excel, WhatsApp, Word documents) with no standardization, accountability, or centralized storage.
+> **IMPORTANT:** This file is no longer the source of truth for project context. All AI agents, Copilot, and automation tools must reference `.ai-system/agents/project-context.md` for the canonical project context, user roles, constraints, and out-of-scope features.
 
-The system standardizes report collection across all campuses and groups by:
-
-1. Providing **superadmin-configurable report templates** with strategic indicators and key metrics
-2. Enabling **hierarchical report submission** — campus departmental leaders fill sections, campus admins compile and submit, the submission flows upward through campus pastors, group admins/pastors, to church ministry, SPO, and CEO
-3. Enforcing **deadlines with escalating reminders** and automatic approval fallback
-4. Maintaining a **full audit trail** — every state change, edit, and approval is recorded with actor and timestamp
-5. Providing **analytics dashboards** for compliance rates, on-time submission, and cross-campus performance comparisons
-
-This system is **standalone today** but designed for future federation into a broader Harvesters CRM platform. Every entity uses UUIDs, every module is barrel-exported, and no IDs are hardcoded — integration with other systems requires minimal changes.
-
----
-
-## 2. Organizational Context
-
-**Organization:** Harvesters International Christian Center
-**Founded:** December 13, 2003, by Pastor Bolaji Idowu
-**Scale:** 70,000+ worshippers across Nigeria, United Kingdom, and United States
-**Mission:** Changing lives by pioneering thriving churches in key global cities that bring hope, connect people with God, influence culture, and lead people to become fully devoted followers of Christ
-
----
-
-## 3. Stakeholder & User Roles
-
-The system has **9 active roles** derived directly from the PRD, plus `MEMBER` scaffolded in types/config for future activation (no routes built in this iteration). All non-SUPERADMIN roles are routed to the `/leader` path and rendered dynamically based on their specific role.
-
-> **Roles not in this system:** `ZONAL_LEADER`, `HOD`, `SMALL_GROUP_LEADER`, `CELL_LEADER` belonged to the CRM layer and are permanently out of scope. The config-driven architecture means removing them only requires changes to `types/global.d.ts` and `config/roles.ts`.
-
-| Role              | Label           | Route         | Primary Responsibility                                                                                          |
-| ----------------- | --------------- | ------------- | --------------------------------------------------------------------------------------------------------------- |
-| `SUPERADMIN`      | Super Admin     | `/superadmin` | Full system access: template management, user management, goal overrides, org management, data entry            |
-| `SPO`             | Senior Pastor   | `/leader`     | Reviews all group reports for executive oversight; approves goal unlock requests; read-all analytics            |
-| `CEO`             | CEO             | `/leader`     | Reviews all group reports for final oversight; approves goal unlock requests; read-all analytics                |
-| `CHURCH_MINISTRY` | Church Ministry | `/leader`     | Reviews and stores all reports; approves goal unlock requests; primary record-keeper with full analytics access |
-| `GROUP_PASTOR`    | Group Pastor    | `/leader`     | Reviews all campus reports under their group; marks reports as Reviewed                                         |
-| `GROUP_ADMIN`     | Group Admin     | `/leader`     | Sets goals (annual/monthly per metric, with campus overrides); consolidates campus reports; marks Reviewed      |
-| `CAMPUS_PASTOR`   | Campus Pastor   | `/leader`     | Reviews submitted campus reports; approves or requests edits                                                    |
-| `CAMPUS_ADMIN`    | Campus Admin    | `/leader`     | Primary report filler; compiles and submits consolidated campus report                                          |
-| `DATA_ENTRY`      | Data Entry      | `/leader`     | Enters historical/back-filled reports with custom date selection; no review/approval capabilities               |
-| `MEMBER`          | Member          | `/member`     | Scaffolded only — defined in enums and ROLE_CONFIG but no routes built in this iteration                        |
-
-### Role Hierarchy Order
-
-```
-SUPERADMIN (0) → SPO (1) → CEO (2) → CHURCH_MINISTRY (3) →
-GROUP_PASTOR (4) → GROUP_ADMIN (5) → CAMPUS_PASTOR (6) → CAMPUS_ADMIN (7) →
-DATA_ENTRY (8) → MEMBER (9, scaffolded)
-```
-
-### Executive Stakeholder Notes
+All .github AI/dev artifacts are now pointers only. Do not update this file except to change the redirect location.
 
 `SPO`, `CEO`, and `CHURCH_MINISTRY` correspond directly to the PRD stakeholders. They share `/leader` routing. Their `ROLE_CONFIG` entries set `reportVisibilityScope: "all"`, `dashboardMode: "analytics"`, and `canApproveGoalUnlock: true`. They have no report-filling or report-approval capabilities.
 

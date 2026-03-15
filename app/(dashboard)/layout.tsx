@@ -61,7 +61,7 @@ function Sidebar({ navItems, currentPath, collapsed, onClose }: SidebarProps) {
         ].join(" ")}
       >
         <Image
-          src="/logo/dark-bg-harvesters-Logo.jpg"
+          src="/logo/white-bg-harvesters-Logo.svg"
           alt="Harvesters"
           width={36}
           height={36}

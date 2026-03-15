@@ -55,8 +55,8 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/logo/dark-bg-harvesters-Logo.ico", type: "image/x-icon", sizes: "any" },
-      { url: "/logo/icon-192.svg", type: "image/svg+xml", sizes: "192x192" },
-      { url: "/logo/icon-512.svg", type: "image/svg+xml", sizes: "512x512" },
+      { url: "/icons/icon-192x192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icons/icon-512x512.png", type: "image/png", sizes: "512x512" },
     ],
     apple: [{ url: "/logo/white-bg-harvesters-Logo.svg", sizes: "180x180", type: "image/svg+xml" }],
   },
