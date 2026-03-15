@@ -1,66 +1,15 @@
-# Harvesters Reporting System — Design System
-
-> **Status:** Specification locked. All implementation must reference this document.
-> **Source of truth:** `app/globals.css` — all tokens defined once here.
-
 ---
 
-## Table of Contents
+# Design System Redirect — Harvesters Reporting System
 
-1. [Design Philosophy](#1-design-philosophy)
-2. [Token Architecture](#2-token-architecture)
-3. [Token Reference — Full Specification](#3-token-reference)
-4. [Typography System](#4-typography-system)
-5. [Layout System](#5-layout-system)
-6. [Component Guidelines](#6-component-guidelines)
-7. [Glassmorphism Rules](#7-glassmorphism-rules)
-8. [Glow Border Strategy](#8-glow-border-strategy)
-9. [Motion System](#9-motion-system)
-10. [Data Visualization Aesthetic](#10-data-visualization-aesthetic)
-11. [Visual Hierarchy Pattern](#11-visual-hierarchy-pattern)
-12. [Responsiveness Strategy](#12-responsiveness-strategy)
-13. [Ant Design Token Bridge](#13-ant-design-token-bridge)
-14. [Implementation File Structure](#14-implementation-file-structure)
-15. [Token Migration Map](#15-token-migration-map)
-16. [Design Anti-Patterns](#16-design-anti-patterns)
+> **IMPORTANT:** This file is no longer the source of truth for the design system. All AI agents, Copilot, and automation tools must reference `.ai-system/agents/design-system.md` for the canonical design system, token rules, and UI/UX patterns.
 
----
-
-## 1. Design Philosophy
-
-### Core Direction
-
-The Harvesters Reporting System UI is built around **data-first minimalism** anchored on the organisation's true brand identity: **sharp black**. The Harvesters Emerald (`#10b981`) is the **single controlled accent** — used for CTAs, interactive states, active nav items, and focused highlights. This creates a high-contrast, premium feel appropriate for a leadership reporting tool that must handle dense data clearly.
-
-**Design keywords:** Precision · Contrast · Structure · Depth · Air · Grid · Subtle Glow · Systematic
-
-### Principles
-
-1. **Brand-black anchor.** Black is not merely a dark mode background — it is the foundational brand tone. Light mode is clean and minimal; dark mode is deeply black with selective depth.
-2. **Single accent.** Only one active accent at a time — Harvesters Emerald. This ensures glow and interactive states carry real visual weight.
-3. **Single source of truth.** All design values are defined once in `app/globals.css`. Ant Design tokens and all component classes are derived references — never independent definitions.
-4. **Semantic over palette.** Components reference `ds-surface-elevated`, not `gray-800`. A full brand refresh requires changing a handful of lines in `globals.css`.
-5. **Glassmorphism with restraint.** Glass surfaces appear only on KPI cards and analytics overview blocks. All report data screens (tables, forms, dense data) use clear, opaque surfaces for readability.
-6. **Glow with intention.** Glow borders are reserved for interaction emphasis: active sidebar items, selected cards, focused inputs. Never decorative at rest.
-7. **Dark mode as a first-class variant.** Every token has a light and dark value. The accent color is identical in both themes; only surfaces and text adapt.
-
----
-
-## 2. Token Architecture
-
-Tokens are organized in three tiers. Components **never** reference Tier 1 directly.
-
-```
-Tier 1: Palette Tokens (raw hex — defined once in :root, never used in component classes)
-   e.g., --palette-emerald-500: #10b981
-
-Tier 2: Semantic Design Tokens (reference palette tokens — describe purpose)
-   e.g., --ds-brand-accent: var(--palette-emerald-500)
-         --ds-surface-elevated: var(--palette-neutral-0)
+All .github AI/dev artifacts are now pointers only. Do not update this file except to change the redirect location.
 
 Tier 3: Tailwind Utility Exposure (@theme inline — Tier 2 exposed as Tailwind classes)
-   e.g., bg-ds-surface-elevated, text-ds-text-primary, border-ds-border-base
-```
+e.g., bg-ds-surface-elevated, text-ds-text-primary, border-ds-border-base
+
+````
 
 ### Semantic Token Categories
 
@@ -186,7 +135,7 @@ Tier 3: Tailwind Utility Exposure (@theme inline — Tier 2 exposed as Tailwind 
     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --ds-font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
 }
-```
+````
 
 ### Dark Mode — `.dark` (overrides only)
 
@@ -237,12 +186,9 @@ Tier 3: Tailwind Utility Exposure (@theme inline — Tier 2 exposed as Tailwind 
 
   /* ── Shadows ── */
   --ds-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
-  --ds-shadow-md:
-    0 4px 8px -2px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.35);
-  --ds-shadow-lg:
-    0 12px 20px -4px rgb(0 0 0 / 0.6), 0 4px 8px -4px rgb(0 0 0 / 0.4);
-  --ds-shadow-xl:
-    0 24px 32px -8px rgb(0 0 0 / 0.7), 0 8px 16px -6px rgb(0 0 0 / 0.5);
+  --ds-shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.35);
+  --ds-shadow-lg: 0 12px 20px -4px rgb(0 0 0 / 0.6), 0 4px 8px -4px rgb(0 0 0 / 0.4);
+  --ds-shadow-xl: 0 24px 32px -8px rgb(0 0 0 / 0.7), 0 8px 16px -6px rgb(0 0 0 / 0.5);
 }
 ```
 
@@ -411,9 +357,7 @@ Every authenticated page follows this strict top-to-bottom structure:
 
 ```tsx
 <div className="flex items-center gap-3 mb-4">
-  <h2 className="text-xl font-semibold text-ds-text-primary tracking-tight">
-    Section Title
-  </h2>
+  <h2 className="text-xl font-semibold text-ds-text-primary tracking-tight">Section Title</h2>
   <div className="h-0.5 w-8 bg-ds-brand-accent rounded-full" />
 </div>
 ```
@@ -774,7 +718,8 @@ export function AntdProvider({ children }: { children: React.ReactNode }) {
           borderRadius: 8,
           fontFamily: getCSSVar("--ds-font-sans"),
         },
-      }}>
+      }}
+    >
       {children}
     </ConfigProvider>
   );

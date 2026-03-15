@@ -242,7 +242,21 @@ export function ReportNewPage() {
             <Form.Item
               name="templateId"
               label={CONTENT.templates.nameLabel as string}
-              rules={[{ required: true, message: "Please select a template." }]}
+              rules={[
+                { required: true, message: "Please select a template." },
+                {
+                  validator: (_, value) => {
+                    const uuidRegex =
+                      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
+                    if (!value || !uuidRegex.test(value)) {
+                      return Promise.reject(
+                        "Invalid template selection. Please select a valid template.",
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             >
               <Select
                 size="large"
@@ -255,7 +269,21 @@ export function ReportNewPage() {
             <Form.Item
               name="campusId"
               label={CONTENT.reports.campusLabel as string}
-              rules={[{ required: true, message: "Please select a campus." }]}
+              rules={[
+                { required: true, message: "Please select a campus." },
+                {
+                  validator: (_, value) => {
+                    const uuidRegex =
+                      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
+                    if (!value || !uuidRegex.test(value)) {
+                      return Promise.reject(
+                        "Invalid campus selection. Please select a valid campus.",
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                },
+              ]}
             >
               <Select
                 size="large"
