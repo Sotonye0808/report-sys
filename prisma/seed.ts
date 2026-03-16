@@ -65,6 +65,8 @@ async function purgeSeedData() {
     await prisma.report.deleteMany({});
     await prisma.reportTemplateVersion.deleteMany({});
     await prisma.reportTemplate.deleteMany({});
+    // Invite links reference users via `createdById` FK — remove them first.
+    await prisma.inviteLink.deleteMany({});
     await prisma.user.deleteMany({});
     await prisma.campus.deleteMany({});
     await prisma.orgGroup.deleteMany({});
@@ -510,7 +512,7 @@ async function main() {
     if (BASE_ONLY) {
         // Base-only seed: org structure + template (no demo users / reports)
         if (!RESET) {
-            const existingGroup = await prisma.orgGroup.findUnique({ where: { id: SEED_IDS.groups.nigeria } });
+            const existingGroup = await prisma.orgGroup.findFirst({ where: { name: "Nigeria Group" } });
             if (existingGroup) {
                 console.log("[seed] Base data already seeded, skipping. Use --reset to overwrite.");
                 return;
@@ -527,7 +529,7 @@ async function main() {
     } else {
         // Full seed: everything
         if (!RESET) {
-            const existing = await prisma.user.findUnique({ where: { id: SEED_IDS.users.superadmin } });
+            const existing = await prisma.user.findUnique({ where: { email: "superadmin@harvesters.org" } });
             if (existing) {
                 console.log("[seed] Already seeded, skipping. Use --reset to overwrite.");
                 return;
