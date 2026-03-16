@@ -84,6 +84,10 @@ export async function POST(req: NextRequest) {
     const body = CreateTemplateSchema.parse(await req.json());
 
     const template = await db.$transaction(async (tx) => {
+        // If no org group is provided for the template, try to infer a sensible
+        // default: the first OrgGroup for the organisation. This ensures seeded
+        // templates (which may have null orgGroupId) receive a valid group id.
+        const defaultGroup = await tx.orgGroup.findFirst({ where: { organisationId: body.organisationId } });
         if (body.isDefault) {
             await tx.reportTemplate.updateMany({
                 where: { isDefault: true },
@@ -95,6 +99,7 @@ export async function POST(req: NextRequest) {
             data: {
                 name: body.name,
                 description: body.description,
+                orgGroupId: defaultGroup?.id ?? null,
                 organisationId: body.organisationId,
                 createdById: auth.user.id,
                 isActive: true,
