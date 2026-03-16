@@ -127,6 +127,7 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
       const json = await res.json();
       if (!res.ok) {
         message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
+        setSaving(false);
         return;
       }
       message.success("Invite link generated!");
@@ -134,6 +135,7 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
       onCreated();
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
+      setSaving(false);
     } finally {
       setSaving(false);
     }

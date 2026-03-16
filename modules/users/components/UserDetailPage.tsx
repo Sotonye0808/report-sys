@@ -66,6 +66,7 @@ export function UserDetailPage({ params }: PageProps) {
     const hasChanges = editRole !== null || editActive !== null;
     if (!hasChanges) {
       message.info("No changes to save.");
+      setSaving(false);
       return;
     }
 
@@ -83,6 +84,7 @@ export function UserDetailPage({ params }: PageProps) {
       const json = await res.json();
       if (!res.ok) {
         message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
+        setSaving(false);
         return;
       }
       message.success(CONTENT.common.successSave as string);
@@ -91,6 +93,7 @@ export function UserDetailPage({ params }: PageProps) {
       refetchUser();
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
+      setSaving(false);
     } finally {
       setSaving(false);
     }

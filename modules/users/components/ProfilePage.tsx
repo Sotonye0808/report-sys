@@ -123,6 +123,7 @@ function ProfileTab({ user }: { user: AuthUser }) {
       const json = await res.json();
       if (!res.ok) {
         message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
+        setSaving(false);
         return;
       }
       setProfile(json.data);
@@ -130,6 +131,7 @@ function ProfileTab({ user }: { user: AuthUser }) {
       setEditing(false);
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
+      setSaving(false);
     } finally {
       setSaving(false);
     }

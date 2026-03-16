@@ -92,6 +92,7 @@ function CampusesTab() {
         if (!res.ok) {
           const j = await res.json();
           message.error(j.error);
+          setSaving(false);
           return;
         }
         message.success(CONTENT.common.successSave as string);
@@ -106,6 +107,7 @@ function CampusesTab() {
         if (!res.ok) {
           const j = await res.json();
           message.error(j.error);
+          setSaving(false);
           return;
         }
         message.success(CONTENT.common.successSave as string);
@@ -115,6 +117,7 @@ function CampusesTab() {
       form.resetFields();
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
+      setSaving(false);
     } finally {
       setSaving(false);
     }
@@ -251,6 +254,7 @@ function GroupsTab() {
         if (!res.ok) {
           const j = await res.json();
           message.error(j.error);
+          setSaving(false);
           return;
         }
         message.success(CONTENT.common.successSave as string);
@@ -265,6 +269,7 @@ function GroupsTab() {
         if (!res.ok) {
           const j = await res.json();
           message.error(j.error);
+          setSaving(false);
           return;
         }
         message.success(CONTENT.common.successSave as string);
@@ -274,6 +279,7 @@ function GroupsTab() {
       form.resetFields();
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
+      setSaving(false);
     } finally {
       setSaving(false);
     }
