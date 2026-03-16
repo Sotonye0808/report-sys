@@ -211,23 +211,26 @@ export function TemplateNewPage() {
 
   /* ── Save ───────────────────────────────────────────────────── */
   const handleSubmit = async (values: HeaderFormValues) => {
-    if (sections.find((s) => !s.name.trim())) {
-      message.error("All sections must have a name.");
-      return;
-    }
-    for (const s of sections) {
-      if (s.metrics.length === 0) {
-        message.error(`Section "${s.name}" must have at least one metric.`);
-        return;
-      }
-      if (s.metrics.find((m) => !m.name.trim())) {
-        message.error(`All metrics in "${s.name}" must have a name.`);
-        return;
-      }
-    }
-
     setSaving(true);
     try {
+      if (sections.find((s) => !s.name.trim())) {
+        message.error("All sections must have a name.");
+        setSaving(false);
+        return;
+      }
+      for (const s of sections) {
+        if (s.metrics.length === 0) {
+          message.error(`Section "${s.name}" must have at least one metric.`);
+          setSaving(false);
+          return;
+        }
+        if (s.metrics.find((m) => !m.name.trim())) {
+          message.error(`All metrics in "${s.name}" must have a name.`);
+          setSaving(false);
+          return;
+        }
+      }
+
       const payload = {
         name: values.name.trim(),
         description: values.description || undefined,
@@ -263,6 +266,7 @@ export function TemplateNewPage() {
       const json = await res.json();
       if (!res.ok) {
         message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
+        setSaving(false);
         return;
       }
       message.success(CONTENT.templates.templateCreated as string);
@@ -276,6 +280,7 @@ export function TemplateNewPage() {
       }
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
+      setSaving(false);
     } finally {
       setSaving(false);
     }

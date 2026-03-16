@@ -88,9 +88,12 @@ export function ReportEditPage({ params }: PageProps) {
     setMetricValues((prev) => ({ ...prev, [metricId]: v }));
 
   const handleSave = async () => {
-    if (!report || !template) return;
     setSaving(true);
     try {
+      if (!report || !template) {
+        setSaving(false);
+        return;
+      }
       const res = await fetch(API_ROUTES.reports.detail(id), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -103,12 +106,14 @@ export function ReportEditPage({ params }: PageProps) {
       const json = await res.json();
       if (!res.ok) {
         message.error(json.error ?? (CONTENT.common.errorDefault as string));
+        setSaving(false);
         return;
       }
       message.success(CONTENT.common.successSave as string);
       router.push(APP_ROUTES.reportDetail(id));
     } catch {
       message.error(CONTENT.common.errorDefault as string);
+      setSaving(false);
     } finally {
       setSaving(false);
     }

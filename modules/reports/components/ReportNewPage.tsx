@@ -158,12 +158,13 @@ export function ReportNewPage() {
   }, []);
 
   const handleSubmit = async (values: NewReportFormValues) => {
-    if (!pickerValue) {
-      message.error("Please select a report period.");
-      return;
-    }
     setLoading(true);
     try {
+      if (!pickerValue) {
+        message.error("Please select a report period.");
+        setLoading(false);
+        return;
+      }
       // Derive period fields from the controlled DatePicker value
       const periodYear = pickerValue.year();
       let periodMonth: number | undefined;
@@ -192,12 +193,14 @@ export function ReportNewPage() {
       const json = await res.json();
       if (!res.ok) {
         message.error(json.error ?? (CONTENT.common.errorDefault as string));
+        setLoading(false);
         return;
       }
       message.success(CONTENT.common.successSave as string);
       router.push(APP_ROUTES.reportDetail(json.data.id));
     } catch {
       message.error(CONTENT.common.errorDefault as string);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
