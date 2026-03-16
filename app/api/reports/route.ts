@@ -126,6 +126,12 @@ export async function POST(req: NextRequest) {
             return errorResponse("Report template not found.", 404);
         }
 
+        // Ensure campus exists and derive orgGroupId when template doesn't specify one.
+        const campus = await db.campus.findUnique({ where: { id: body.campusId } });
+        if (!campus) {
+            return errorResponse("Campus not found.", 404);
+        }
+
         const report = await db.$transaction(async (tx) => {
             const newReport = await tx.report.create({
                 data: {
@@ -133,7 +139,9 @@ export async function POST(req: NextRequest) {
                     title: body.title,
                     templateId: body.templateId,
                     campusId: body.campusId,
-                    orgGroupId: template.orgGroupId ?? "",
+                    // Use template.orgGroupId when present, otherwise fall back to
+                    // the campus' parent group (seeded templates may not set orgGroupId).
+                    orgGroupId: template.orgGroupId ?? campus.parentId,
                     period: body.period,
                     periodType: body.periodType,
                     periodYear: new Date().getFullYear(),

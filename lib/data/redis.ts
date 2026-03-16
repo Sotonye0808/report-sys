@@ -72,21 +72,29 @@ export const cache = {
      * Uses SCAN to avoid blocking the server.
      */
     async invalidatePattern(pattern: string): Promise<number> {
-        let cursor: string | number = 0;
-        let deleted = 0;
-        do {
-            const result = await redis.scan(cursor, {
-                match: key(pattern),
-                count: 100,
-            });
-            const [nextCur, keys] = result as [number | string, string[]];
-            cursor = nextCur;
-            if (keys.length > 0) {
-                await redis.del(...keys);
-                deleted += keys.length;
-            }
-        } while (cursor !== 0);
-        return deleted;
+        try {
+            let cursor: string | number = 0;
+            let deleted = 0;
+            do {
+                const result = await redis.scan(cursor, {
+                    match: key(pattern),
+                    count: 100,
+                });
+                const [nextCur, keys] = result as [number | string, string[]];
+                cursor = nextCur;
+                if (keys.length > 0) {
+                    await redis.del(...keys);
+                    deleted += keys.length;
+                }
+            } while (cursor !== 0);
+            return deleted;
+        } catch (err) {
+            // Cache failures should not break core write operations.
+            // Log and return 0 so callers can continue.
+            // eslint-disable-next-line no-console
+            console.error("[cache] invalidatePattern error:", err);
+            return 0;
+        }
     },
 
     async flush(): Promise<void> {
