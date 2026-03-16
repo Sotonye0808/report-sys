@@ -170,7 +170,13 @@ export async function PUT(
         return full;
     });
 
-    await cache.invalidatePattern(`templates:detail:${id}`);
-    await cache.invalidatePattern("templates:*");
+    try {
+        await cache.invalidatePattern(`templates:detail:${id}`);
+        await cache.invalidatePattern("templates:*");
+    } catch (err) {
+        // Do not fail the request when cache invalidation fails.
+        // eslint-disable-next-line no-console
+        console.error("[cache] invalidatePattern error in PUT /api/report-templates/:id:", err);
+    }
     return NextResponse.json({ success: true, data: updated });
 }
