@@ -108,8 +108,8 @@ export async function PUT(
             return r;
         });
 
-        await cache.invalidatePattern(`report:${id}*`);
-        await cache.invalidatePattern(`reports:list:${auth.user.id}:*`);
+        cache.invalidatePatternAsync(`report:${id}*`);
+        cache.invalidatePatternAsync(`reports:list:${auth.user.id}:*`);
 
         return NextResponse.json(successResponse(updated));
     } catch (err) {

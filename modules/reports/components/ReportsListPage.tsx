@@ -182,7 +182,10 @@ export function ReportsListPage() {
             <p className="text-sm font-medium text-ds-text-primary leading-snug">
               {getReportLabel(r, templates ?? [])}
             </p>
-            <p className="text-xs text-ds-text-subtle mt-0.5">{formatReportPeriod(r)}</p>
+            {/* Only show period if not already included in the label (i.e., if title is used, skip period) */}
+            {!(r.title && r.title.trim().length > 0) && (
+              <p className="text-xs text-ds-text-subtle mt-0.5">{formatReportPeriod(r)}</p>
+            )}
           </div>
         ),
       },

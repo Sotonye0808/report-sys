@@ -375,7 +375,9 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
     <PageLayout>
       <PageHeader
         title={reportLabel}
-        subtitle={formatReportPeriod(report)}
+        subtitle={
+          !(report.title && report.title.trim().length > 0) ? formatReportPeriod(report) : undefined
+        }
         actions={
           <div className="flex gap-2 flex-wrap">
             <Button icon={<ArrowLeftOutlined />} onClick={() => router.push(backHref)}>
