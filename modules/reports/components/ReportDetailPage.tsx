@@ -19,6 +19,7 @@ import {
   CheckOutlined,
   CloseOutlined,
   LockOutlined,
+  UnlockOutlined,
   CheckCircleOutlined,
   PlusCircleOutlined,
   SendOutlined,
@@ -60,6 +61,21 @@ interface ActionConfig {
 }
 
 const REPORT_ACTIONS: ActionConfig[] = [
+  {
+    key: "submit",
+    label: CONTENT.reports.actions?.submit ?? "Submit",
+    type: "primary",
+    icon: <SendOutlined />,
+    targetStatus: ReportStatus.SUBMITTED,
+    eventType: ReportEventType.SUBMITTED,
+    visibleWhen: [ReportStatus.DRAFT, ReportStatus.REQUIRES_EDITS],
+    allowedRoles: [
+      UserRole.CAMPUS_ADMIN,
+      UserRole.DATA_ENTRY,
+      UserRole.GROUP_ADMIN,
+      UserRole.SUPERADMIN,
+    ],
+  },
   {
     key: "approve",
     label: CONTENT.reports.actions?.approve ?? "Approve",
@@ -124,6 +140,16 @@ const REPORT_ACTIONS: ActionConfig[] = [
     visibleWhen: [ReportStatus.APPROVED],
     allowedRoles: [UserRole.SUPERADMIN],
   },
+  {
+    key: "unlock",
+    label: ((CONTENT.reports.actions as any)?.unlock as string) ?? "Unlock",
+    type: "default",
+    icon: <UnlockOutlined />,
+    targetStatus: ReportStatus.DRAFT,
+    eventType: ReportEventType.UNLOCKED,
+    visibleWhen: [ReportStatus.LOCKED],
+    allowedRoles: [UserRole.SUPERADMIN],
+  },
 ];
 
 /* ── Audit trail event config ───────────────────────────────────────────── */
@@ -168,6 +194,11 @@ const AUDIT_EVENT_CONFIG: Record<string, AuditEventConfig> = {
     icon: <CheckOutlined />,
     color: "green",
     dotColor: "bg-green-500",
+  },
+  [ReportEventType.UNLOCKED]: {
+    icon: <UnlockOutlined />,
+    color: "gold",
+    dotColor: "bg-yellow-400",
   },
   [ReportEventType.APPROVED]: {
     icon: <CheckCircleOutlined />,
@@ -296,10 +327,12 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
   async function handleAction(action: ActionConfig) {
     if (!report) return;
     const endpointMap: Record<string, string> = {
+      submit: API_ROUTES.reports.submit(report.id),
       approve: API_ROUTES.reports.approve(report.id),
       review: API_ROUTES.reports.review(report.id),
       "request-edits": API_ROUTES.reports.requestEdit(report.id),
       lock: API_ROUTES.reports.lock(report.id),
+      unlock: API_ROUTES.reports.unlock(report.id),
     };
     const url = endpointMap[action.key];
     if (!url) return;
@@ -330,8 +363,10 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
   /* ── Edit button ────────────────────────────────────────────────────────── */
 
   const canEdit =
-    can.fillReports &&
-    (report.status === ReportStatus.DRAFT || report.status === ReportStatus.REQUIRES_EDITS);
+    (can.fillReports || role === UserRole.SUPERADMIN) &&
+    (report.status === ReportStatus.DRAFT ||
+      report.status === ReportStatus.REQUIRES_EDITS ||
+      report.status === ReportStatus.LOCKED);
 
   const backHref = APP_ROUTES.reports;
   const reportLabel = getReportLabel(report, templates ?? []);

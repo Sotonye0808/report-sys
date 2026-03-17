@@ -3,21 +3,25 @@ This file is a merged representation of a subset of the codebase, containing spe
 # File Summary
 
 ## Purpose
+
 This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
 It is designed to be easily consumable by AI systems for analysis, code review,
 or other automated processes.
 
 ## File Format
+
 The content is organized as follows:
+
 1. This summary section
 2. Repository information
 3. Directory structure
 4. Repository files (if enabled)
 5. Multiple file entries, each consisting of:
-  a. A header with the file path (## File: path/to/file)
-  b. The full contents of the file in a code block
+   a. A header with the file path (## File: path/to/file)
+   b. The full contents of the file in a code block
 
 ## Usage Guidelines
+
 - This file should be treated as read-only. Any changes should be made to the
   original repository files, not this packed version.
 - When processing this file, use the file path to distinguish
@@ -26,6 +30,7 @@ The content is organized as follows:
   the same level of security as you would the original repository.
 
 ## Notes
+
 - Some files may have been excluded based on .gitignore rules and Repomix's configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
 - Only files matching these patterns are included: package.json, app/**, config/**, lib/**, modules/**, providers/**, prisma/schema.prisma, types/**, .github/**, .ai-system/**
@@ -35,6 +40,7 @@ The content is organized as follows:
 - Files are sorted by Git change count (files with more changes are at the bottom)
 
 # Directory Structure
+
 ```
 .ai-system/agents/agent-bootstrap.md
 .ai-system/agents/design-system.md
@@ -220,6 +226,7 @@ types/global.ts
 # Files
 
 ## File: .ai-system/agents/agent-bootstrap.md
+
 ````markdown
 # Agent Bootstrap
 
@@ -316,7 +323,8 @@ Directive: The project uses Tailwind and Ant Design — include both in the desi
 ````
 
 ## File: .ai-system/agents/design-system.md
-````markdown
+
+```markdown
 # Design System
 
 > **Overview:** [FILL IN — Describes the visual language, component patterns, and UX principles for this project. Agents building UI must read this before writing any frontend code.]
@@ -329,26 +337,26 @@ Directive: The project uses Tailwind and Ant Design — include both in the desi
 
 ### Colour Palette
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| primary | [#hex] | [buttons, links, CTAs] |
-| secondary | [#hex] | [accents, highlights] |
-| background | [#hex] | [page background] |
-| surface | [#hex] | [cards, modals] |
-| text-primary | [#hex] | [main body text] |
-| text-muted | [#hex] | [labels, captions] |
-| danger | [#hex] | [errors, destructive actions] |
-| success | [#hex] | [confirmations] |
+| Token        | Value  | Usage                         |
+| ------------ | ------ | ----------------------------- |
+| primary      | [#hex] | [buttons, links, CTAs]        |
+| secondary    | [#hex] | [accents, highlights]         |
+| background   | [#hex] | [page background]             |
+| surface      | [#hex] | [cards, modals]               |
+| text-primary | [#hex] | [main body text]              |
+| text-muted   | [#hex] | [labels, captions]            |
+| danger       | [#hex] | [errors, destructive actions] |
+| success      | [#hex] | [confirmations]               |
 
 ### Typography
 
-| Style | Font | Size | Weight |
-|-------|------|------|--------|
+| Style     | Font   | Size   | Weight   |
+| --------- | ------ | ------ | -------- |
 | Heading 1 | [font] | [size] | [weight] |
 | Heading 2 | [font] | [size] | [weight] |
-| Body | [font] | [size] | [weight] |
-| Caption | [font] | [size] | [weight] |
-| Code | [font] | [size] | [weight] |
+| Body      | [font] | [size] | [weight] |
+| Caption   | [font] | [size] | [weight] |
+| Code      | [font] | [size] | [weight] |
 
 ### Spacing Scale
 
@@ -361,23 +369,28 @@ Directive: The project uses Tailwind and Ant Design — include both in the desi
 > **Section summary:** Standard UI components used across the project. New components should follow these patterns before inventing new ones.
 
 ### Buttons
+
 - Primary: [describe style and usage]
 - Secondary: [describe]
 - Destructive: [describe]
 - Disabled state: [describe]
 
 ### Forms
+
 - Input fields: [style and validation rules]
 - Error messages: [placement and style]
 - Submit buttons: [loading state behaviour]
 
 ### Navigation
+
 - [describe nav pattern: sidebar / topnav / tabs]
 
 ### Cards / Containers
+
 - [describe card pattern, shadow, border radius]
 
 ### Modals / Dialogs
+
 - [describe pattern for confirmations, forms, alerts]
 
 ---
@@ -395,12 +408,12 @@ Directive: The project uses Tailwind and Ant Design — include both in the desi
 
 ## Responsive Breakpoints
 
-| Breakpoint | Value | Target |
-|------------|-------|--------|
-| sm | [e.g. 640px] | Mobile |
-| md | [e.g. 768px] | Tablet |
-| lg | [e.g. 1024px] | Desktop |
-| xl | [e.g. 1280px] | Wide screens |
+| Breakpoint | Value         | Target       |
+| ---------- | ------------- | ------------ |
+| sm         | [e.g. 640px]  | Mobile       |
+| md         | [e.g. 768px]  | Tablet       |
+| lg         | [e.g. 1024px] | Desktop      |
+| xl         | [e.g. 1280px] | Wide screens |
 
 ---
 
@@ -412,10 +425,11 @@ Directive: The project uses Tailwind and Ant Design — include both in the desi
 - Colour contrast must meet WCAG AA (4.5:1 for text)
 - Images must have alt text
 - Forms must have associated labels
-````
+```
 
 ## File: .ai-system/agents/general-instructions.md
-````markdown
+
+```markdown
 # AI Development Protocol — General Instructions
 
 > **Overview:** This is the master instruction file for all AI agents working on this project. Every agent session should begin by reading this file. It defines how agents think, what they reference, and how they behave during development.
@@ -450,12 +464,14 @@ Always consult the following files before taking action, in this order:
 ## Execution Protocol
 
 ### Before implementing any feature:
+
 1. Read task-queue.md and identify the first incomplete task
 2. Confirm the task aligns with system-architecture.md
 3. Check repair-system.md for relevant known issues
 4. If architecture changes are needed, update system-architecture.md first
 
 ### After completing any task:
+
 1. Mark the task done [x] in task-queue.md
 2. Update .ai-system/checkpoints/session-log.md
 3. Add a summary to .ai-system/summaries/dev-history.md
@@ -467,14 +483,14 @@ Always consult the following files before taking action, in this order:
 
 ## Agent Roles
 
-| Agent | Tool | Responsibility |
-|-------|------|----------------|
-| Planner | Continue | Analyze tasks, determine next steps, update task queue |
-| Architect | Continue | Design or update system architecture |
-| Coder | Cline | Implement code changes across multiple files |
-| Reviewer | Continue | Review code quality and architecture consistency |
-| Tester | Cline | Run tests, identify failures, trigger self-heal loop |
-| Historian | Continue | Update summaries, dev-history, and memory files |
+| Agent     | Tool     | Responsibility                                         |
+| --------- | -------- | ------------------------------------------------------ |
+| Planner   | Continue | Analyze tasks, determine next steps, update task queue |
+| Architect | Continue | Design or update system architecture                   |
+| Coder     | Cline    | Implement code changes across multiple files           |
+| Reviewer  | Continue | Review code quality and architecture consistency       |
+| Tester    | Cline    | Run tests, identify failures, trigger self-heal loop   |
+| Historian | Continue | Update summaries, dev-history, and memory files        |
 
 ---
 
@@ -484,10 +500,11 @@ Always consult the following files before taking action, in this order:
 - When proposing architecture changes, describe the change before implementing
 - When encountering ambiguity, ask one clarifying question rather than guessing
 - Keep file edits focused — do not touch modules unrelated to the current task
-````
+```
 
 ## File: .ai-system/agents/project-context.md
-````markdown
+
+```markdown
 # Project Context
 
 > **Overview:** [FILL IN — Brief description of the project, its purpose, who it's for, and what problem it solves. This is the first thing any agent should read to understand the "why" behind the work.]
@@ -506,8 +523,8 @@ Always consult the following files before taking action, in this order:
 
 > **Section summary:** Who uses this system and what they need from it.
 
-| User Type | Needs | Key Interactions |
-|-----------|-------|-----------------|
+| User Type   | Needs            | Key Interactions    |
+| ----------- | ---------------- | ------------------- |
 | [user type] | [what they need] | [how they interact] |
 
 ---
@@ -536,8 +553,8 @@ Active sprint focus: [describe current focus]
 
 > **Section summary:** Decisions that are locked in and should not be revisited unless explicitly flagged.
 
-| Decision | Reason |
-|----------|--------|
+| Decision   | Reason            |
+| ---------- | ----------------- |
 | [decision] | [why it was made] |
 
 ---
@@ -554,12 +571,13 @@ Active sprint focus: [describe current focus]
 
 > **Section summary:** Third-party services and APIs this project connects to.
 
-| Service | Purpose | Auth Method |
-|---------|---------|------------|
+| Service   | Purpose        | Auth Method              |
+| --------- | -------------- | ------------------------ |
 | [service] | [what it does] | [API key / OAuth / etc.] |
-````
+```
 
 ## File: .ai-system/agents/repair-system.md
+
 ````markdown
 # Repair System — Error Knowledge Base
 
@@ -613,12 +631,14 @@ Active sprint focus: [describe current focus]
 ### React / Next.js
 
 **Hydration Mismatch**
+
 - Symptom: `Hydration failed because the initial UI does not match what was rendered on the server`
 - Cause: Browser-only logic (window, localStorage, Date.now()) running during server render
 - Fix: Wrap in `useEffect` or use `dynamic(() => import(...), { ssr: false })`
 - Prevention: Never access browser APIs outside useEffect in components
 
 **Missing Key Prop**
+
 - Symptom: `Each child in a list should have a unique "key" prop`
 - Cause: `.map()` rendering without a stable unique key
 - Fix: Add `key={item.id}` — use a stable unique ID, not the array index
@@ -628,12 +648,14 @@ Active sprint focus: [describe current focus]
 ### Node.js / Backend
 
 **Unhandled Promise Rejection**
+
 - Symptom: Server crashes silently or logs `UnhandledPromiseRejectionWarning`
 - Cause: async function missing try/catch, or `.catch()` not attached to promise
 - Fix: Wrap async route handlers in try/catch, use an async error middleware
 - Prevention: Always use a global async error wrapper for Express routes
 
 **Database Connection Pool Exhausted**
+
 - Symptom: Requests hang indefinitely under load
 - Cause: Connection pool limit too low or connections not being released
 - Fix: Increase pool size in config, ensure `client.release()` in finally blocks
@@ -644,6 +666,7 @@ Active sprint focus: [describe current focus]
 ### Configuration / Environment
 
 **Missing Environment Variable**
+
 - Symptom: `undefined` values in production, features silently broken
 - Cause: Variable defined in `.env.local` but not in production environment
 - Fix: Add to deployment environment variables and validate on startup
@@ -659,6 +682,7 @@ Active sprint focus: [describe current focus]
 ````
 
 ## File: .ai-system/agents/system-architecture.md
+
 ````markdown
 # System Architecture
 
@@ -693,9 +717,9 @@ Client (Browser / Mobile)
 
 > **Section summary:** Each module listed here has a single defined responsibility. Agents should not modify a module's scope without updating this document.
 
-| Module | Responsibility | Key Files | Dependencies |
-|--------|----------------|-----------|--------------|
-| [module name] | [what it does] | [files] | [what it depends on] |
+| Module        | Responsibility | Key Files | Dependencies         |
+| ------------- | -------------- | --------- | -------------------- |
+| [module name] | [what it does] | [files]   | [what it depends on] |
 
 ---
 
@@ -704,16 +728,19 @@ Client (Browser / Mobile)
 > **Section summary:** How a typical request moves through the system from entry point to response.
 
 ### Standard Request Flow
+
 ```
 [describe the path a request takes]
 ```
 
 ### Authentication Flow
+
 ```
 [describe the auth path if applicable]
 ```
 
 ### Data Persistence Flow
+
 ```
 [describe how data is saved and retrieved]
 ```
@@ -724,9 +751,9 @@ Client (Browser / Mobile)
 
 > **Section summary:** All configurable values are listed here. Nothing should be hardcoded in source files that appears in this section.
 
-| Config Key | Purpose | Location | Default |
-|------------|---------|----------|---------|
-| [key] | [what it controls] | [.env / config file] | [value] |
+| Config Key | Purpose            | Location             | Default |
+| ---------- | ------------------ | -------------------- | ------- |
+| [key]      | [what it controls] | [.env / config file] | [value] |
 
 ---
 
@@ -734,12 +761,12 @@ Client (Browser / Mobile)
 
 > **Section summary:** Core technologies in use. New dependencies should be added here when introduced.
 
-| Layer | Technology | Version |
-|-------|------------|---------|
-| Frontend | [e.g. Next.js] | [version] |
-| Backend | [e.g. Node.js / Express] | [version] |
-| Database | [e.g. PostgreSQL] | [version] |
-| Auth | [e.g. JWT] | — |
+| Layer    | Technology               | Version   |
+| -------- | ------------------------ | --------- |
+| Frontend | [e.g. Next.js]           | [version] |
+| Backend  | [e.g. Node.js / Express] | [version] |
+| Database | [e.g. PostgreSQL]        | [version] |
+| Auth     | [e.g. JWT]               | —         |
 
 ---
 
@@ -755,12 +782,13 @@ Client (Browser / Mobile)
 
 > **Section summary:** Log of major architectural changes. See also memory/architecture-history.md for full details.
 
-| Date | Change | Reason |
-|------|--------|--------|
-| [date] | [what changed] | [why] |
+| Date   | Change         | Reason |
+| ------ | -------------- | ------ |
+| [date] | [what changed] | [why]  |
 ````
 
 ## File: .ai-system/checkpoints/session-log.md
+
 ````markdown
 # Development Checkpoints — Session Log
 
@@ -806,6 +834,7 @@ Client (Browser / Mobile)
 Initial .ai-system setup and project bootstrap
 
 **Files Modified:**
+
 - .ai-system/ (entire directory created)
 
 **Next Task:**
@@ -816,6 +845,7 @@ None — fresh project start
 ````
 
 ## File: .ai-system/commands/bootstrap-project.md
+
 ````markdown
 # Bootstrap Project Command
 
@@ -878,6 +908,7 @@ Directive: The project is greenfield — generate opinionated starter architectu
 ````
 
 ## File: .ai-system/commands/dev-cycle.md
+
 ````markdown
 # Dev Cycle Command
 
@@ -943,6 +974,7 @@ Directive: Work in small safe commits — do not refactor anything not directly 
 ````
 
 ## File: .ai-system/commands/fix-build.md
+
 ````markdown
 # Fix Build Command
 
@@ -993,6 +1025,7 @@ Directive: Next.js hydration mismatch on the dashboard page
 ````
 
 ## File: .ai-system/commands/generate-architecture.md
+
 ````markdown
 # Generate Architecture Command
 
@@ -1055,6 +1088,7 @@ Directive: Add a proposed event-driven layer to the existing architecture doc
 ````
 
 ## File: .ai-system/commands/plan-feature.md
+
 ````markdown
 # Plan Feature Command
 
@@ -1103,6 +1137,7 @@ Directive: build a configurable export module that supports CSV, PDF, and JSON
 ````
 
 ## File: .ai-system/commands/refactor-codebase.md
+
 ````markdown
 # Refactor Codebase Command
 
@@ -1166,6 +1201,7 @@ Directive: standardise all API responses through a single response formatter uti
 ````
 
 ## File: .ai-system/commands/self-heal.md
+
 ````markdown
 # Self-Heal Command
 
@@ -1198,6 +1234,7 @@ Do not introduce new features during this loop.
 ````
 
 ## File: .ai-system/commands/update-ai-system.md
+
 ````markdown
 # Update AI System Command
 
@@ -1257,6 +1294,7 @@ Directive: Specifically check for architecture drift in the services layer
 ````
 
 ## File: .ai-system/index/dependency-graph.md
+
 ````markdown
 # Dependency Graph
 
@@ -1291,8 +1329,8 @@ UserService
 
 > **Section summary:** Third-party packages and what they're used for. Review before adding new packages.
 
-| Package | Purpose | Used In |
-|---------|---------|---------|
+| Package   | Purpose   | Used In   |
+| --------- | --------- | --------- |
 | [package] | [purpose] | [modules] |
 
 ---
@@ -1316,6 +1354,7 @@ UserService
 ````
 
 ## File: .ai-system/index/repo-map.md
+
 ````markdown
 # Repository Map
 
@@ -1354,24 +1393,25 @@ project-root/
 
 ## Directory Descriptions
 
-| Directory | Purpose | Key Files |
-|-----------|---------|-----------|
-| [dir] | [what it contains] | [important files] |
+| Directory | Purpose            | Key Files         |
+| --------- | ------------------ | ----------------- |
+| [dir]     | [what it contains] | [important files] |
 
 ---
 
 ## Entry Points
 
-| Purpose | File |
-|---------|------|
-| Frontend dev server | [e.g. src/pages/_app.tsx] |
-| Backend server | [e.g. server/index.js] |
-| Config loading | [e.g. config/index.js] |
-| Environment validation | [e.g. config/env.js] |
+| Purpose                | File                      |
+| ---------------------- | ------------------------- |
+| Frontend dev server    | [e.g. src/pages/_app.tsx] |
+| Backend server         | [e.g. server/index.js]    |
+| Config loading         | [e.g. config/index.js]    |
+| Environment validation | [e.g. config/env.js]      |
 ````
 
 ## File: .ai-system/memory/architecture-history.md
-````markdown
+
+```markdown
 # Architecture History
 
 > **Overview:** Chronological record of how the system architecture has evolved. Useful for understanding why things are structured the way they are, and for identifying patterns in how the codebase has grown.
@@ -1391,9 +1431,10 @@ project-root/
 ---
 
 [New entries added here as architecture evolves]
-````
+```
 
 ## File: .ai-system/memory/lessons-learned.md
+
 ````markdown
 # Lessons Learned
 
@@ -1424,6 +1465,7 @@ project-root/
 ````
 
 ## File: .ai-system/memory/project-decisions.md
+
 ````markdown
 # Project Decisions
 
@@ -1458,7 +1500,8 @@ project-root/
 ````
 
 ## File: .ai-system/planning/project-plan.md
-````markdown
+
+```markdown
 # Project Plan
 
 > **Overview:** High-level feature checklist for the project. Agents update checkboxes as work is completed. Sections represent major development phases. See task-queue.md for granular, sprint-level tasks.
@@ -1524,10 +1567,11 @@ project-root/
 > **Section summary:** Features fully shipped. Archived here for reference.
 
 - [x] [Completed item]
-````
+```
 
 ## File: .ai-system/planning/task-queue.md
-````markdown
+
+```markdown
 # Development Task Queue
 
 > **Overview:** Sprint-level task queue. Agents execute tasks top to bottom within the current sprint. When a task is completed, mark it [x] and add a checkpoint entry. Future tasks are queued below for prioritisation in the next sprint.
@@ -1573,9 +1617,10 @@ project-root/
 ## Notes
 
 [Any context agents need to know about current sprint constraints, blockers, or priorities]
-````
+```
 
 ## File: .ai-system/summaries/dev-history.md
+
 ````markdown
 # Development History
 
@@ -1614,10 +1659,12 @@ project-root/
 Project repository created and .ai-system documentation structure initialized. Bootstrap prompt run to establish initial architecture understanding. Task queue populated with first sprint tasks.
 
 **Completed:**
+
 - .ai-system directory created with all template files
 - Initial project scan completed
 
 **Key Changes:**
+
 - None yet — project start
 
 **Next Sprint Focus:**
@@ -1625,7 +1672,8 @@ Begin first development tasks from task-queue.md
 ````
 
 ## File: .ai-system/testing/test-plan.md
-````markdown
+
+```markdown
 # Test Plan
 
 > **Overview:** Defines what needs to be tested and at what level. Agents reference this when writing tests or running the self-heal loop. Updated as new features are added.
@@ -1670,10 +1718,11 @@ Begin first development tasks from task-queue.md
 - [ ] API response time under normal load
 - [ ] Database query performance
 - [ ] Page load times (frontend)
-````
+```
 
 ## File: .ai-system/testing/test-results.md
-````markdown
+
+```markdown
 # Test Results
 
 > **Overview:** Latest test run results. Updated by agents after running the self-heal loop or test suite. Gives a quick snapshot of current project health.
@@ -1698,20 +1747,21 @@ Begin first development tasks from task-queue.md
 
 ## Active Failures
 
-| Test | Error | Status | Assigned To |
-|------|-------|--------|------------|
+| Test        | Error           | Status                             | Assigned To |
+| ----------- | --------------- | ---------------------------------- | ----------- |
 | [test name] | [error message] | [Investigating / Fixed / Wont Fix] | [agent/dev] |
 
 ---
 
 ## History
 
-| Date | Passed | Failed | Notes |
-|------|--------|--------|-------|
-| [date] | [n] | [n] | [notes] |
-````
+| Date   | Passed | Failed | Notes   |
+| ------ | ------ | ------ | ------- |
+| [date] | [n]    | [n]    | [notes] |
+```
 
 ## File: .github/copilot-instructions.md
+
 ````markdown
 # GitHub Copilot Instructions — Harvesters Reporting System
 
@@ -1953,9 +2003,7 @@ const config = {
 const body = ReportSubmitSchema.parse(await req.json());
 
 // ✅ CORRECT — discriminated union
-type ApiResponse<T> =
-  | { success: true; data: T }
-  | { success: false; error: string; code: number };
+type ApiResponse<T> = { success: true; data: T } | { success: false; error: string; code: number };
 
 // ❌ WRONG
 const config: any = { deadline: 48 };
@@ -1971,13 +2019,9 @@ ONE page route per feature. Role-based rendering at component/section level via 
 ```tsx
 // ✅ CORRECT — one route, role-filtered sections
 // app/leader/reports/[id]/page.tsx
-const sections = REPORT_DETAIL_SECTIONS.filter((s) =>
-  s.allowedRoles.includes(user.role),
-);
+const sections = REPORT_DETAIL_SECTIONS.filter((s) => s.allowedRoles.includes(user.role));
 {
-  sections.map((section) => (
-    <section.Component key={section.id} report={report} />
-  ));
+  sections.map((section) => <section.Component key={section.id} report={report} />);
 }
 
 // ❌ WRONG — role-split routes
@@ -2147,12 +2191,7 @@ interface ReportFormProps {
   onSave?: (values: ReportFormValues) => Promise<void>;
 }
 
-export function ReportForm({
-  template,
-  report,
-  mode,
-  onSave,
-}: ReportFormProps) {
+export function ReportForm({ template, report, mode, onSave }: ReportFormProps) {
   // ...
 }
 ```
@@ -2166,9 +2205,7 @@ Every heading, label, placeholder, tooltip, empty state, button text, and error 
 Every config object that drives rendered UI must carry `allowedRoles: UserRole[]`. Components filter by the current user's role before rendering:
 
 ```ts
-const visibleColumns = REPORT_TABLE_COLUMNS.filter((col) =>
-  col.allowedRoles.includes(currentRole),
-);
+const visibleColumns = REPORT_TABLE_COLUMNS.filter((col) => col.allowedRoles.includes(currentRole));
 ```
 
 ---
@@ -2184,12 +2221,9 @@ import { ReportListQuerySchema } from "@/modules/reports/services/schemas";
 
 export async function GET(req: NextRequest) {
   const auth = await verifyAuth(req);
-  if (!auth.success)
-    return NextResponse.json({ error: auth.error }, { status: 401 });
+  if (!auth.success) return NextResponse.json({ error: auth.error }, { status: 401 });
 
-  const query = ReportListQuerySchema.parse(
-    Object.fromEntries(new URL(req.url).searchParams),
-  );
+  const query = ReportListQuerySchema.parse(Object.fromEntries(new URL(req.url).searchParams));
 
   const reports = await mockDb.reports.findMany({
     where: buildReportFilter(query, auth.user),
@@ -2200,8 +2234,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const auth = await verifyAuth(req);
-  if (!auth.success)
-    return NextResponse.json({ error: auth.error }, { status: 401 });
+  if (!auth.success) return NextResponse.json({ error: auth.error }, { status: 401 });
 
   const body = CreateReportSchema.parse(await req.json());
 
@@ -2342,6 +2375,7 @@ The only features carried forward from the relics are:
 ````
 
 ## File: .github/design-system.md
+
 ````markdown
 # Harvesters Reporting System — Design System
 
@@ -2517,18 +2551,13 @@ Tier 3: Tailwind Utility Exposure (@theme inline — Tier 2 exposed as Tailwind 
   --ds-radius-full: 9999px;
 
   /* ── Shadows ── */
-  --ds-shadow-sm:
-    0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
-  --ds-shadow-md:
-    0 4px 8px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --ds-shadow-lg:
-    0 12px 20px -4px rgb(0 0 0 / 0.1), 0 4px 8px -4px rgb(0 0 0 / 0.06);
-  --ds-shadow-xl:
-    0 24px 32px -8px rgb(0 0 0 / 0.12), 0 8px 16px -6px rgb(0 0 0 / 0.07);
+  --ds-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --ds-shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --ds-shadow-lg: 0 12px 20px -4px rgb(0 0 0 / 0.1), 0 4px 8px -4px rgb(0 0 0 / 0.06);
+  --ds-shadow-xl: 0 24px 32px -8px rgb(0 0 0 / 0.12), 0 8px 16px -6px rgb(0 0 0 / 0.07);
 
   /* ── Typography ── */
-  --ds-font-sans:
-    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ds-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --ds-font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
 }
 ```
@@ -2582,12 +2611,9 @@ Tier 3: Tailwind Utility Exposure (@theme inline — Tier 2 exposed as Tailwind 
 
   /* ── Shadows ── */
   --ds-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
-  --ds-shadow-md:
-    0 4px 8px -2px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.35);
-  --ds-shadow-lg:
-    0 12px 20px -4px rgb(0 0 0 / 0.6), 0 4px 8px -4px rgb(0 0 0 / 0.4);
-  --ds-shadow-xl:
-    0 24px 32px -8px rgb(0 0 0 / 0.7), 0 8px 16px -6px rgb(0 0 0 / 0.5);
+  --ds-shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.35);
+  --ds-shadow-lg: 0 12px 20px -4px rgb(0 0 0 / 0.6), 0 4px 8px -4px rgb(0 0 0 / 0.4);
+  --ds-shadow-xl: 0 24px 32px -8px rgb(0 0 0 / 0.7), 0 8px 16px -6px rgb(0 0 0 / 0.5);
 }
 ```
 
@@ -2756,9 +2782,7 @@ Every authenticated page follows this strict top-to-bottom structure:
 
 ```tsx
 <div className="flex items-center gap-3 mb-4">
-  <h2 className="text-xl font-semibold text-ds-text-primary tracking-tight">
-    Section Title
-  </h2>
+  <h2 className="text-xl font-semibold text-ds-text-primary tracking-tight">Section Title</h2>
   <div className="h-0.5 w-8 bg-ds-brand-accent rounded-full" />
 </div>
 ```
@@ -3119,7 +3143,8 @@ export function AntdProvider({ children }: { children: React.ReactNode }) {
           borderRadius: 8,
           fontFamily: getCSSVar("--ds-font-sans"),
         },
-      }}>
+      }}
+    >
       {children}
     </ConfigProvider>
   );
@@ -3211,7 +3236,8 @@ Explicitly prohibited in this codebase:
 ````
 
 ## File: .github/plan.md
-````markdown
+
+```markdown
 # Harvesters Reporting System — Development Plan
 
 > **Strategy:** Build from scratch in the `report-sys/` workspace, copying and adapting relic files only where explicitly noted. Once all phases are complete and verified, remove the `relics/` folder.
@@ -3284,7 +3310,7 @@ Explicitly prohibited in this codebase:
 - [x] `MetricFieldType` enum — `NUMBER | PERCENTAGE | TEXT | CURRENCY`
 - [x] `ReportEditStatus` enum — `DRAFT | SUBMITTED | APPROVED | REJECTED`
 - [x] `ReportUpdateRequestStatus` enum — `PENDING | APPROVED | REJECTED`
-- [x] `NotificationType` enum — all notification types including all 10 report-related ones
+- [x] `NotificationType` enum — all notification types including all 11 report-related ones
 - [x] `MetricCalculationType` enum — `SUM | AVERAGE | SNAPSHOT` (how metrics aggregate across periods)
 - [x] `GoalMode` enum — `ANNUAL | MONTHLY | CAMPUS_OVERRIDE` (how a Goal's target is expressed)
 - [x] `GoalEditRequestStatus` enum — `PENDING | APPROVED | REJECTED`
@@ -3805,9 +3831,10 @@ Once all phases are complete and verified, the following files in `relics/` can 
 | P2       | 13    | Analytics — required for oversight roles                                     |
 | P3       | 14–15 | Public pages, PWA, settings — polish                                         |
 | P4       | 16    | Prisma migration — production hardening                                      |
-````
+```
 
 ## File: .github/project-context.md
+
 ````markdown
 # Harvesters Reporting System — Project Context
 
@@ -4422,6 +4449,7 @@ The `relics/` folder contains the previous Harvesters Small Groups CRM. The foll
 ````
 
 ## File: .github/repair-instructions.md
+
 ````markdown
 # Harvesters Reporting System — Repair & Refactor Instructions
 
@@ -4625,9 +4653,7 @@ const kpiCards = getKpiCards(currentRole, analyticsData);
   kpiCards.map((card) => <StatCard key={card.id} {...card} />);
 }
 
-const visibleColumns = REPORT_TABLE_COLUMNS.filter((col) =>
-  col.allowedRoles.includes(currentRole),
-);
+const visibleColumns = REPORT_TABLE_COLUMNS.filter((col) => col.allowedRoles.includes(currentRole));
 <Table columns={visibleColumns} dataSource={reports} />;
 ```
 
@@ -4641,9 +4667,7 @@ const visibleColumns = REPORT_TABLE_COLUMNS.filter((col) =>
 
 ```ts
 // ❌ VIOLATING
-const NAV_ITEMS = [
-  { key: "reports", label: "Reports", href: "/leader/reports" },
-];
+const NAV_ITEMS = [{ key: "reports", label: "Reports", href: "/leader/reports" }];
 
 const COLUMNS = [{ title: "Campus", dataIndex: "campusId" }];
 ```
@@ -4676,9 +4700,7 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 // At render time:
-const visibleNav = NAV_ITEMS.filter((item) =>
-  item.allowedRoles.includes(user.role),
-);
+const visibleNav = NAV_ITEMS.filter((item) => item.allowedRoles.includes(user.role));
 ```
 
 **Role Reference:**
@@ -4778,17 +4800,13 @@ export const ReportListQuerySchema = z.object({
 // app/api/reports/route.ts
 export async function POST(req: NextRequest) {
   const auth = await verifyAuth(req);
-  if (!auth.success)
-    return NextResponse.json({ error: auth.error }, { status: 401 });
+  if (!auth.success) return NextResponse.json({ error: auth.error }, { status: 401 });
 
   let body: z.infer<typeof CreateReportSchema>;
   try {
     body = CreateReportSchema.parse(await req.json());
   } catch (e) {
-    return NextResponse.json(
-      { success: false, error: "Invalid request body" },
-      { status: 400 },
-    );
+    return NextResponse.json({ success: false, error: "Invalid request body" }, { status: 400 });
   }
   // ...
 }
@@ -5036,13 +5054,9 @@ All leader-tier roles (everyone between MEMBER and SUPERADMIN) live under `/lead
 
 // ✅ REPAIRED — single route
 // app/leader/reports/page.tsx
-const sections = REPORT_DETAIL_SECTIONS.filter((s) =>
-  s.allowedRoles.includes(user.role),
-);
+const sections = REPORT_DETAIL_SECTIONS.filter((s) => s.allowedRoles.includes(user.role));
 {
-  sections.map((section) => (
-    <section.Component key={section.id} report={report} />
-  ));
+  sections.map((section) => <section.Component key={section.id} report={report} />);
 }
 ```
 
@@ -5235,7 +5249,8 @@ Run this final verification after all phases are complete. All boxes must be che
 ````
 
 ## File: .github/summaries/production-readiness-sprint.md
-````markdown
+
+```markdown
 # Production-Readiness Sprint — March 2026
 
 ## Group A — Bug Fixes (Critical)
@@ -5291,10 +5306,11 @@ Run this final verification after all phases are complete. All boxes must be che
 
 - [x] Replaced "H" lettermarks in join/register pages with Harvesters brand logo
 - [x] Verified layout.tsx metadata, manifest.ts, sw.js push icons, dashboard sidebar, login page — all correct
-````
+```
 
 ## File: app/(auth)/forgot-password/layout.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { CONTENT } from "@/config/content";
@@ -5307,10 +5323,11 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
-````
+```
 
 ## File: app/(auth)/forgot-password/page.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -5432,10 +5449,11 @@ export default function ForgotPasswordPage() {
     </div>
   );
 }
-````
+```
 
 ## File: app/(auth)/layout.tsx
-````typescript
+
+```typescript
 import type { ReactNode } from "react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
@@ -5451,10 +5469,11 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
     </div>
   );
 }
-````
+```
 
 ## File: app/(auth)/login/layout.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { CONTENT } from "@/config/content";
@@ -5467,10 +5486,11 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
-````
+```
 
 ## File: app/(auth)/register/layout.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { CONTENT } from "@/config/content";
@@ -5483,10 +5503,11 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
-````
+```
 
 ## File: app/(auth)/reset-password/layout.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { CONTENT } from "@/config/content";
@@ -5499,10 +5520,11 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
-````
+```
 
 ## File: app/(auth)/reset-password/page.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -5653,10 +5675,11 @@ export default function ResetPasswordPage() {
     </div>
   );
 }
-````
+```
 
 ## File: app/(dashboard)/analytics/loading.tsx
-````typescript
+
+```typescript
 import { LoadingSkeleton, SkeletonBlock } from "@/components/ui/LoadingSkeleton";
 
 export default function Loading() {
@@ -5668,10 +5691,11 @@ export default function Loading() {
     </div>
   );
 }
-````
+```
 
 ## File: app/(dashboard)/bug-reports/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { BugReportPage } from "@/modules/bug-reports";
 import { CONTENT } from "@/config/content";
@@ -5684,10 +5708,11 @@ export const metadata: Metadata = {
 export default function BugReportsPage() {
   return <BugReportPage />;
 }
-````
+```
 
 ## File: app/(dashboard)/dashboard/loading.tsx
-````typescript
+
+```typescript
 import { LoadingSkeleton, SkeletonBlock, SkeletonCard } from "@/components/ui/LoadingSkeleton";
 
 export default function Loading() {
@@ -5709,10 +5734,11 @@ export default function Loading() {
     </div>
   );
 }
-````
+```
 
 ## File: app/(dashboard)/goals/loading.tsx
-````typescript
+
+```typescript
 import { LoadingSkeleton, SkeletonBlock } from "@/components/ui/LoadingSkeleton";
 
 export default function Loading() {
@@ -5730,10 +5756,11 @@ export default function Loading() {
     </div>
   );
 }
-````
+```
 
 ## File: app/(dashboard)/inbox/loading.tsx
-````typescript
+
+```typescript
 import { LoadingSkeleton, SkeletonBlock } from "@/components/ui/LoadingSkeleton";
 
 export default function Loading() {
@@ -5744,10 +5771,11 @@ export default function Loading() {
     </div>
   );
 }
-````
+```
 
 ## File: app/(dashboard)/invites/loading.tsx
-````typescript
+
+```typescript
 import { LoadingSkeleton, SkeletonBlock } from "@/components/ui/LoadingSkeleton";
 
 export default function Loading() {
@@ -5759,10 +5787,11 @@ export default function Loading() {
     </div>
   );
 }
-````
+```
 
 ## File: app/(dashboard)/reports/loading.tsx
-````typescript
+
+```typescript
 import { LoadingSkeleton, SkeletonBlock } from "@/components/ui/LoadingSkeleton";
 
 export default function Loading() {
@@ -5777,10 +5806,11 @@ export default function Loading() {
     </div>
   );
 }
-````
+```
 
 ## File: app/(dashboard)/settings/page.tsx
-````typescript
+
+```typescript
 import { redirect } from "next/navigation";
 import { APP_ROUTES } from "@/config/routes";
 
@@ -5788,10 +5818,11 @@ import { APP_ROUTES } from "@/config/routes";
 export default function Page() {
   redirect(`${APP_ROUTES.profile}?tab=appearance`);
 }
-````
+```
 
 ## File: app/(dashboard)/templates/loading.tsx
-````typescript
+
+```typescript
 import { LoadingSkeleton, SkeletonBlock } from "@/components/ui/LoadingSkeleton";
 
 export default function Loading() {
@@ -5805,10 +5836,11 @@ export default function Loading() {
     </div>
   );
 }
-````
+```
 
 ## File: app/(dashboard)/users/loading.tsx
-````typescript
+
+```typescript
 import { LoadingSkeleton, SkeletonBlock } from "@/components/ui/LoadingSkeleton";
 
 export default function Loading() {
@@ -5819,10 +5851,11 @@ export default function Loading() {
     </div>
   );
 }
-````
+```
 
 ## File: app/api/analytics/quarterly/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/analytics/quarterly/route.ts
  * GET /api/analytics/quarterly
@@ -5844,127 +5877,135 @@ import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole, ReportStatus } from "@/types/global";
 
 const QuerySchema = z.object({
-    year: z.coerce.number().optional(),
-    quarter: z.coerce.number().min(1).max(4).optional(),
-    campusId: z.string().optional(),
+  year: z.coerce.number().optional(),
+  quarter: z.coerce.number().min(1).max(4).optional(),
+  campusId: z.string().optional(),
 });
 
 function getQuarterMonths(q: number): number[] {
-    return [(q - 1) * 3 + 1, (q - 1) * 3 + 2, (q - 1) * 3 + 3];
+  return [(q - 1) * 3 + 1, (q - 1) * 3 + 2, (q - 1) * 3 + 3];
 }
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  const auth = await verifyAuth(req);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
+
+  const query = QuerySchema.parse(Object.fromEntries(new URL(req.url).searchParams));
+
+  const now = new Date();
+  const year = query.year ?? now.getFullYear();
+  const quarter = query.quarter ?? Math.ceil((now.getMonth() + 1) / 3);
+
+  const cacheKey = `analytics:quarterly:${auth.user.id}:${year}:Q${quarter}:${query.campusId ?? "all"}`;
+  const cached = await cache.get(cacheKey);
+  if (cached) return NextResponse.json(cached);
+
+  const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
+
+  /* ── Build where clause ─────────────────────────────────────────────── */
+  const months = getQuarterMonths(quarter);
+  const where: Record<string, unknown> = {
+    periodYear: year,
+    periodMonth: { in: months },
+  };
+  if (roleConfig?.reportVisibilityScope === "campus" && auth.user.campusId) {
+    where.campusId = auth.user.campusId;
+  }
+  if (query.campusId) where.campusId = query.campusId;
+
+  const reports = await db.report.findMany({ where });
+
+  /* ── Previous quarter data for QoQ comparison ─────────────────────── */
+  const prevQ = quarter === 1 ? 4 : quarter - 1;
+  const prevYear = quarter === 1 ? year - 1 : year;
+  const prevMonths = getQuarterMonths(prevQ);
+  const prevWhere: Record<string, unknown> = {
+    periodYear: prevYear,
+    periodMonth: { in: prevMonths },
+  };
+  if (where.campusId) prevWhere.campusId = where.campusId;
+  if (roleConfig?.reportVisibilityScope === "campus" && auth.user.campusId) {
+    prevWhere.campusId = auth.user.campusId;
+  }
+  const prevReports = await db.report.findMany({ where: prevWhere });
+
+  /* ── Compute totals ────────────────────────────────────────────────── */
+  function computeTotals(rpts: typeof reports) {
+    const total = rpts.length;
+    const submitted = rpts.filter((r) => r.status !== ReportStatus.DRAFT).length;
+    const approved = rpts.filter((r) =>
+      [ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.LOCKED].includes(
+        r.status as ReportStatus,
+      ),
+    ).length;
+    const compliance = submitted > 0 ? Math.round((approved / submitted) * 100) : 0;
+    return { total, submitted, approved, compliance };
+  }
+
+  const current = computeTotals(reports);
+  const previous = computeTotals(prevReports);
+
+  const qoqDelta = {
+    total: current.total - previous.total,
+    submitted: current.submitted - previous.submitted,
+    approved: current.approved - previous.approved,
+    compliance: current.compliance - previous.compliance,
+  };
+
+  /* ── Campus breakdown ──────────────────────────────────────────────── */
+  const campusMap: Record<string, { submitted: number; approved: number; total: number }> = {};
+  for (const r of reports) {
+    if (!campusMap[r.campusId]) campusMap[r.campusId] = { submitted: 0, approved: 0, total: 0 };
+    campusMap[r.campusId].total++;
+    if (r.status !== ReportStatus.DRAFT) campusMap[r.campusId].submitted++;
+    if (
+      [ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.LOCKED].includes(
+        r.status as ReportStatus,
+      )
+    ) {
+      campusMap[r.campusId].approved++;
     }
+  }
+  const campusBreakdown = Object.entries(campusMap)
+    .map(([campusId, stats]) => ({
+      campusId,
+      total: stats.total,
+      submitted: stats.submitted,
+      approved: stats.approved,
+      complianceRate:
+        stats.submitted > 0 ? Math.round((stats.approved / stats.submitted) * 100) : 0,
+    }))
+    .sort((a, b) => b.complianceRate - a.complianceRate);
 
-    const query = QuerySchema.parse(Object.fromEntries(new URL(req.url).searchParams));
+  /* ── Monthly breakdown within quarter ──────────────────────────────── */
+  const monthlyBreakdown = months.map((m) => {
+    const monthReports = reports.filter((r) => r.periodMonth === m);
+    const totals = computeTotals(monthReports);
+    return { month: m, label: `${year}-${String(m).padStart(2, "0")}`, ...totals };
+  });
 
-    const now = new Date();
-    const year = query.year ?? now.getFullYear();
-    const quarter = query.quarter ?? Math.ceil((now.getMonth() + 1) / 3);
+  const data = {
+    year,
+    quarter,
+    label: `${year} Q${quarter}`,
+    current,
+    previous: { ...previous, label: `${prevYear} Q${prevQ}` },
+    qoqDelta,
+    campusBreakdown,
+    monthlyBreakdown,
+  };
 
-    const cacheKey = `analytics:quarterly:${auth.user.id}:${year}:Q${quarter}:${query.campusId ?? "all"}`;
-    const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(cached);
-
-    const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
-
-    /* ── Build where clause ─────────────────────────────────────────────── */
-    const months = getQuarterMonths(quarter);
-    const where: Record<string, unknown> = {
-        periodYear: year,
-        periodMonth: { in: months },
-    };
-    if (roleConfig?.reportVisibilityScope === "campus" && auth.user.campusId) {
-        where.campusId = auth.user.campusId;
-    }
-    if (query.campusId) where.campusId = query.campusId;
-
-    const reports = await db.report.findMany({ where });
-
-    /* ── Previous quarter data for QoQ comparison ─────────────────────── */
-    const prevQ = quarter === 1 ? 4 : quarter - 1;
-    const prevYear = quarter === 1 ? year - 1 : year;
-    const prevMonths = getQuarterMonths(prevQ);
-    const prevWhere: Record<string, unknown> = {
-        periodYear: prevYear,
-        periodMonth: { in: prevMonths },
-    };
-    if (where.campusId) prevWhere.campusId = where.campusId;
-    if (roleConfig?.reportVisibilityScope === "campus" && auth.user.campusId) {
-        prevWhere.campusId = auth.user.campusId;
-    }
-    const prevReports = await db.report.findMany({ where: prevWhere });
-
-    /* ── Compute totals ────────────────────────────────────────────────── */
-    function computeTotals(rpts: typeof reports) {
-        const total = rpts.length;
-        const submitted = rpts.filter((r) => r.status !== ReportStatus.DRAFT).length;
-        const approved = rpts.filter((r) =>
-            [ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.LOCKED].includes(r.status as ReportStatus),
-        ).length;
-        const compliance = submitted > 0 ? Math.round((approved / submitted) * 100) : 0;
-        return { total, submitted, approved, compliance };
-    }
-
-    const current = computeTotals(reports);
-    const previous = computeTotals(prevReports);
-
-    const qoqDelta = {
-        total: current.total - previous.total,
-        submitted: current.submitted - previous.submitted,
-        approved: current.approved - previous.approved,
-        compliance: current.compliance - previous.compliance,
-    };
-
-    /* ── Campus breakdown ──────────────────────────────────────────────── */
-    const campusMap: Record<string, { submitted: number; approved: number; total: number }> = {};
-    for (const r of reports) {
-        if (!campusMap[r.campusId]) campusMap[r.campusId] = { submitted: 0, approved: 0, total: 0 };
-        campusMap[r.campusId].total++;
-        if (r.status !== ReportStatus.DRAFT) campusMap[r.campusId].submitted++;
-        if ([ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.LOCKED].includes(r.status as ReportStatus)) {
-            campusMap[r.campusId].approved++;
-        }
-    }
-    const campusBreakdown = Object.entries(campusMap)
-        .map(([campusId, stats]) => ({
-            campusId,
-            total: stats.total,
-            submitted: stats.submitted,
-            approved: stats.approved,
-            complianceRate: stats.submitted > 0 ? Math.round((stats.approved / stats.submitted) * 100) : 0,
-        }))
-        .sort((a, b) => b.complianceRate - a.complianceRate);
-
-    /* ── Monthly breakdown within quarter ──────────────────────────────── */
-    const monthlyBreakdown = months.map((m) => {
-        const monthReports = reports.filter((r) => r.periodMonth === m);
-        const totals = computeTotals(monthReports);
-        return { month: m, label: `${year}-${String(m).padStart(2, "0")}`, ...totals };
-    });
-
-    const data = {
-        year,
-        quarter,
-        label: `${year} Q${quarter}`,
-        current,
-        previous: { ...previous, label: `${prevYear} Q${prevQ}` },
-        qoqDelta,
-        campusBreakdown,
-        monthlyBreakdown,
-    };
-
-    const response = { success: true, data };
-    await cache.set(cacheKey, JSON.stringify(response), 120);
-    return NextResponse.json(response);
+  const response = { success: true, data };
+  await cache.set(cacheKey, JSON.stringify(response), 120);
+  return NextResponse.json(response);
 }
-````
+```
 
 ## File: app/api/bug-reports/[id]/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/bug-reports/[id]/route.ts
  * GET   /api/bug-reports/:id — get single bug report
@@ -5976,91 +6017,86 @@ import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db } from "@/lib/data/db";
 import {
-    successResponse,
-    unauthorizedResponse,
-    forbiddenResponse,
-    notFoundResponse,
-    handleApiError,
+  successResponse,
+  unauthorizedResponse,
+  forbiddenResponse,
+  notFoundResponse,
+  handleApiError,
 } from "@/lib/utils/api";
 import { UserRole, BugReportStatus } from "@/types/global";
 
 /* ── Update schema ─────────────────────────────────────────────────────────── */
 
 const UpdateBugReportSchema = z.object({
-    status: z.nativeEnum(BugReportStatus).optional(),
-    adminNotes: z.string().max(5000).optional(),
+  status: z.nativeEnum(BugReportStatus).optional(),
+  adminNotes: z.string().max(5000).optional(),
 });
 
 /* ── GET ───────────────────────────────────────────────────────────────────── */
 
-export async function GET(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const { id } = await params;
+    const { id } = await params;
 
-        const bugReport = await db.bugReport.findUnique({
-            where: { id },
-            include: {
-                createdBy: {
-                    select: { id: true, firstName: true, lastName: true, email: true },
-                },
-            },
-        });
-        if (!bugReport) return notFoundResponse("Bug report not found.");
+    const bugReport = await db.bugReport.findUnique({
+      where: { id },
+      include: {
+        createdBy: {
+          select: { id: true, firstName: true, lastName: true, email: true },
+        },
+      },
+    });
+    if (!bugReport) return notFoundResponse("Bug report not found.");
 
-        // Non-superadmins can only view their own reports
-        if (auth.user.role !== UserRole.SUPERADMIN && bugReport.createdById !== auth.user.id) {
-            return forbiddenResponse("You do not have access to this bug report.");
-        }
-
-        return NextResponse.json(successResponse(bugReport));
-    } catch (err) {
-        return handleApiError(err);
+    // Non-superadmins can only view their own reports
+    if (auth.user.role !== UserRole.SUPERADMIN && bugReport.createdById !== auth.user.id) {
+      return forbiddenResponse("You do not have access to this bug report.");
     }
+
+    return NextResponse.json(successResponse(bugReport));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
 
 /* ── PATCH ─────────────────────────────────────────────────────────────────── */
 
-export async function PATCH(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        if (auth.user.role !== UserRole.SUPERADMIN) {
-            return forbiddenResponse("Only SUPERADMIN can update bug reports.");
-        }
-
-        const { id } = await params;
-        const body = UpdateBugReportSchema.parse(await req.json());
-
-        const existing = await db.bugReport.findUnique({ where: { id } });
-        if (!existing) return notFoundResponse("Bug report not found.");
-
-        const updated = await db.bugReport.update({
-            where: { id },
-            data: {
-                ...(body.status !== undefined && { status: body.status }),
-                ...(body.adminNotes !== undefined && { adminNotes: body.adminNotes }),
-            },
-        });
-
-        return NextResponse.json(successResponse(updated));
-    } catch (err) {
-        return handleApiError(err);
+    if (auth.user.role !== UserRole.SUPERADMIN) {
+      return forbiddenResponse("Only SUPERADMIN can update bug reports.");
     }
+
+    const { id } = await params;
+    const body = UpdateBugReportSchema.parse(await req.json());
+
+    const existing = await db.bugReport.findUnique({ where: { id } });
+    if (!existing) return notFoundResponse("Bug report not found.");
+
+    const updated = await db.bugReport.update({
+      where: { id },
+      data: {
+        ...(body.status !== undefined && { status: body.status }),
+        ...(body.adminNotes !== undefined && { adminNotes: body.adminNotes }),
+      },
+    });
+
+    return NextResponse.json(successResponse(updated));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/bug-reports/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/bug-reports/route.ts
  * GET  /api/bug-reports — list bug reports (own for regular users, all for SUPERADMIN)
@@ -6071,101 +6107,96 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db } from "@/lib/data/db";
-import {
-    successResponse,
-    unauthorizedResponse,
-    handleApiError,
-} from "@/lib/utils/api";
+import { successResponse, unauthorizedResponse, handleApiError } from "@/lib/utils/api";
 import { UserRole, BugReportCategory } from "@/types/global";
 
 /* ── Schemas ───────────────────────────────────────────────────────────────── */
 
 const CreateBugReportSchema = z.object({
-    category: z.nativeEnum(BugReportCategory),
-    description: z.string().min(10).max(2000),
-    screenshotUrl: z.string().optional(),
-    contactEmail: z.string().email(),
+  category: z.nativeEnum(BugReportCategory),
+  description: z.string().min(10).max(2000),
+  screenshotUrl: z.string().optional(),
+  contactEmail: z.string().email(),
 });
 
 const ListQuerySchema = z.object({
-    page: z.coerce.number().int().min(1).default(1),
-    pageSize: z.coerce.number().int().min(1).max(100).default(20),
-    status: z.string().optional(),
-    category: z.nativeEnum(BugReportCategory).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(20),
+  status: z.string().optional(),
+  category: z.nativeEnum(BugReportCategory).optional(),
 });
 
 /* ── GET ───────────────────────────────────────────────────────────────────── */
 
 export async function GET(req: NextRequest) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const params = Object.fromEntries(new URL(req.url).searchParams);
-        const query = ListQuerySchema.parse(params);
-        const { page, pageSize, status, category } = query;
+    const params = Object.fromEntries(new URL(req.url).searchParams);
+    const query = ListQuerySchema.parse(params);
+    const { page, pageSize, status, category } = query;
 
-        const where: Record<string, unknown> = {};
+    const where: Record<string, unknown> = {};
 
-        // Non-superadmins only see their own bug reports
-        if (auth.user.role !== UserRole.SUPERADMIN) {
-            where.createdById = auth.user.id;
-        }
-
-        if (status) where.status = status;
-        if (category) where.category = category;
-
-        const [bugReports, total] = await Promise.all([
-            db.bugReport.findMany({
-                where,
-                orderBy: { createdAt: "desc" },
-                skip: (page - 1) * pageSize,
-                take: pageSize,
-                include: {
-                    createdBy: {
-                        select: { id: true, firstName: true, lastName: true, email: true },
-                    },
-                },
-            }),
-            db.bugReport.count({ where }),
-        ]);
-
-        return NextResponse.json(
-            successResponse({ bugReports, total, page, pageSize }),
-        );
-    } catch (err) {
-        return handleApiError(err);
+    // Non-superadmins only see their own bug reports
+    if (auth.user.role !== UserRole.SUPERADMIN) {
+      where.createdById = auth.user.id;
     }
+
+    if (status) where.status = status;
+    if (category) where.category = category;
+
+    const [bugReports, total] = await Promise.all([
+      db.bugReport.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        include: {
+          createdBy: {
+            select: { id: true, firstName: true, lastName: true, email: true },
+          },
+        },
+      }),
+      db.bugReport.count({ where }),
+    ]);
+
+    return NextResponse.json(successResponse({ bugReports, total, page, pageSize }));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
 
 /* ── POST ──────────────────────────────────────────────────────────────────── */
 
 export async function POST(req: NextRequest) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const body = CreateBugReportSchema.parse(await req.json());
+    const body = CreateBugReportSchema.parse(await req.json());
 
-        const bugReport = await db.bugReport.create({
-            data: {
-                category: body.category,
-                description: body.description,
-                screenshotUrl: body.screenshotUrl ?? null,
-                contactEmail: body.contactEmail,
-                createdById: auth.user.id,
-            },
-        });
+    const bugReport = await db.bugReport.create({
+      data: {
+        category: body.category,
+        description: body.description,
+        screenshotUrl: body.screenshotUrl ?? null,
+        contactEmail: body.contactEmail,
+        createdById: auth.user.id,
+      },
+    });
 
-        return NextResponse.json(successResponse(bugReport), { status: 201 });
-    } catch (err) {
-        return handleApiError(err);
-    }
+    return NextResponse.json(successResponse(bugReport), { status: 201 });
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/invite-links/[id]/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/invite-links/[id]/route.ts
  * DELETE /api/invite-links/:id — revoke an invite link (set isActive: false)
@@ -6177,64 +6208,56 @@ import { db } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const ALLOWED_ROLES = [
-    UserRole.SUPERADMIN,
-    UserRole.CAMPUS_ADMIN,
-    UserRole.CAMPUS_PASTOR,
-    UserRole.GROUP_ADMIN,
-    UserRole.GROUP_PASTOR,
-    UserRole.SPO,
-    UserRole.CEO,
-    UserRole.CHURCH_MINISTRY,
+  UserRole.SUPERADMIN,
+  UserRole.CAMPUS_ADMIN,
+  UserRole.CAMPUS_PASTOR,
+  UserRole.GROUP_ADMIN,
+  UserRole.GROUP_PASTOR,
+  UserRole.SPO,
+  UserRole.CEO,
+  UserRole.CHURCH_MINISTRY,
 ];
 
-export async function DELETE(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    const auth = await verifyAuth(req, ALLOWED_ROLES);
-    if (!auth.success) {
-        return NextResponse.json(
-            { success: false, error: auth.error },
-            { status: auth.status ?? 401 },
-        );
-    }
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await verifyAuth(req, ALLOWED_ROLES);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const { id } = await params;
+  const { id } = await params;
 
-    const link = await db.inviteLink.findUnique({ where: { id } });
-    if (!link) {
-        return NextResponse.json(
-            { success: false, error: "Invite link not found" },
-            { status: 404 },
-        );
-    }
+  const link = await db.inviteLink.findUnique({ where: { id } });
+  if (!link) {
+    return NextResponse.json({ success: false, error: "Invite link not found" }, { status: 404 });
+  }
 
-    // Only the creator or a SUPERADMIN can revoke
-    if (link.createdById !== auth.user.id && auth.user.role !== UserRole.SUPERADMIN) {
-        return NextResponse.json(
-            { success: false, error: "You can only revoke your own invite links" },
-            { status: 403 },
-        );
-    }
+  // Only the creator or a SUPERADMIN can revoke
+  if (link.createdById !== auth.user.id && auth.user.role !== UserRole.SUPERADMIN) {
+    return NextResponse.json(
+      { success: false, error: "You can only revoke your own invite links" },
+      { status: 403 },
+    );
+  }
 
-    if (!link.isActive) {
-        return NextResponse.json(
-            { success: false, error: "Invite link is already revoked" },
-            { status: 400 },
-        );
-    }
+  if (!link.isActive) {
+    return NextResponse.json(
+      { success: false, error: "Invite link is already revoked" },
+      { status: 400 },
+    );
+  }
 
-    const updated = await db.inviteLink.update({
-        where: { id },
-        data: { isActive: false },
-    });
+  const updated = await db.inviteLink.update({
+    where: { id },
+    data: { isActive: false },
+  });
 
-    return NextResponse.json({ success: true, data: updated });
+  return NextResponse.json({ success: true, data: updated });
 }
-````
+```
 
 ## File: app/api/invite-links/validate/[token]/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/invite-links/validate/[token]/route.ts
  * GET /api/invite-links/validate/:token  — validate invite link (public — no auth required)
@@ -6243,24 +6266,30 @@ export async function DELETE(
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/data/db";
 
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: Promise<{ token: string }> },
-) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
 
   const link = await db.inviteLink.findUnique({ where: { token } });
 
   if (!link) {
-    return NextResponse.json({ success: false, error: "Invalid or expired invite link." }, { status: 404 });
+    return NextResponse.json(
+      { success: false, error: "Invalid or expired invite link." },
+      { status: 404 },
+    );
   }
 
   if (link.usedAt) {
-    return NextResponse.json({ success: false, error: "This invite link has already been used." }, { status: 410 });
+    return NextResponse.json(
+      { success: false, error: "This invite link has already been used." },
+      { status: 410 },
+    );
   }
 
   if (link.expiresAt && new Date(link.expiresAt) < new Date()) {
-    return NextResponse.json({ success: false, error: "This invite link has expired." }, { status: 410 });
+    return NextResponse.json(
+      { success: false, error: "This invite link has expired." },
+      { status: 410 },
+    );
   }
 
   /* Return public-safe subset */
@@ -6275,10 +6304,11 @@ export async function GET(
     },
   });
 }
-````
+```
 
 ## File: app/error.tsx
-````typescript
+
+```typescript
 "use client";
 
 import { useEffect } from "react";
@@ -6321,10 +6351,11 @@ export default function GlobalError({ error, reset }: ErrorProps) {
     </div>
   );
 }
-````
+```
 
 ## File: app/globals.css
-````css
+
+```css
 /* ══════════════════════════════════════════════════════════════════════════════
    1. IMPORTS
    ══════════════════════════════════════════════════════════════════════════════ */
@@ -6734,10 +6765,11 @@ body {
     scroll-behavior: auto !important;
   }
 }
-````
+```
 
 ## File: app/not-found.tsx
-````typescript
+
+```typescript
 import { Button } from "antd";
 import Link from "next/link";
 import { CONTENT } from "@/config/content";
@@ -6761,10 +6793,11 @@ export default function NotFound() {
     </div>
   );
 }
-````
+```
 
 ## File: app/offline/page.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -6825,10 +6858,11 @@ export default function OfflinePage() {
     </div>
   );
 }
-````
+```
 
 ## File: app/page.tsx
-````typescript
+
+```typescript
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { verifyAccessToken } from "@/lib/utils/auth";
@@ -6857,38 +6891,41 @@ export default async function RootPage() {
   const dashboardRoute = ROLE_DASHBOARD_ROUTES[role] ?? "/login";
   redirect(dashboardRoute);
 }
-````
+```
 
 ## File: app/robots.ts
-````typescript
+
+```typescript
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-    return {
-        rules: {
-            userAgent: "*",
-            disallow: "/", // internal system — disallow all crawlers
-        },
-    };
+  return {
+    rules: {
+      userAgent: "*",
+      disallow: "/", // internal system — disallow all crawlers
+    },
+  };
 }
-````
+```
 
 ## File: app/viewport.ts
-````typescript
+
+```typescript
 import type { Viewport } from "next";
 
 export const viewport: Viewport = {
-    width: "device-width",
-    initialScale: 1,
-    themeColor: [
-        { media: "(prefers-color-scheme: light)", color: "#f8f9fb" },
-        { media: "(prefers-color-scheme: dark)", color: "#0A0A0B" },
-    ],
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8f9fb" },
+    { media: "(prefers-color-scheme: dark)", color: "#0A0A0B" },
+  ],
 };
-````
+```
 
 ## File: lib/data/db.ts
-````typescript
+
+```typescript
 /**
  * lib/data/db.ts
  * Unified database access layer.
@@ -6916,16 +6953,17 @@ export const db = prisma;
  * Call this after any mutating DB operation.
  */
 export async function invalidateCache(...patterns: string[]): Promise<void> {
-    await Promise.all(patterns.map((p) => cache.invalidatePattern(p)));
+  await Promise.all(patterns.map((p) => cache.invalidatePattern(p)));
 }
 
 export { cache } from "./redis";
 export { prisma } from "./prisma";
 export default db;
-````
+```
 
 ## File: lib/data/prisma.ts
-````typescript
+
+```typescript
 /**
  * lib/data/prisma.ts
  * Prisma client singleton for server-side use.
@@ -6937,22 +6975,23 @@ export default db;
 import { PrismaClient } from "@/prisma/generated";
 
 const globalForPrisma = globalThis as typeof globalThis & {
-    __prisma?: PrismaClient;
+  __prisma?: PrismaClient;
 };
 
 if (!globalForPrisma.__prisma) {
-    globalForPrisma.__prisma = new PrismaClient({
-        accelerateUrl: process.env.DATABASE_URL,
-        log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
-    } as ConstructorParameters<typeof PrismaClient>[0]);
+  globalForPrisma.__prisma = new PrismaClient({
+    accelerateUrl: process.env.DATABASE_URL,
+    log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
+  } as ConstructorParameters<typeof PrismaClient>[0]);
 }
 
 export const prisma = globalForPrisma.__prisma;
 export default prisma;
-````
+```
 
 ## File: lib/design-system/tokens.ts
-````typescript
+
+```typescript
 /**
  * Design System Tokens — TypeScript Constants
  *
@@ -6966,34 +7005,34 @@ export default prisma;
 
 /* ── Palette (raw hex) ───────────────────────────────────────────── */
 export const palette = {
-    black: {
-        base: "#0A0A0B",
-        soft: "#111214",
-        elevated: "#16171A",
-    },
-    emerald: {
-        900: "#064e3b",
-        700: "#047857",
-        600: "#059669",
-        500: "#10b981",
-        400: "#34d399",
-        200: "#a7f3d0",
-        50: "#ecfdf5",
-    },
-    neutral: {
-        950: "#0a0a0a",
-        900: "#0f172a",
-        800: "#1e293b",
-        700: "#374151",
-        600: "#4b5563",
-        500: "#64748b",
-        400: "#94a3b8",
-        300: "#cbd5e1",
-        200: "#e5e7eb",
-        100: "#f1f5f9",
-        50: "#f8f9fb",
-        0: "#ffffff",
-    },
+  black: {
+    base: "#0A0A0B",
+    soft: "#111214",
+    elevated: "#16171A",
+  },
+  emerald: {
+    900: "#064e3b",
+    700: "#047857",
+    600: "#059669",
+    500: "#10b981",
+    400: "#34d399",
+    200: "#a7f3d0",
+    50: "#ecfdf5",
+  },
+  neutral: {
+    950: "#0a0a0a",
+    900: "#0f172a",
+    800: "#1e293b",
+    700: "#374151",
+    600: "#4b5563",
+    500: "#64748b",
+    400: "#94a3b8",
+    300: "#cbd5e1",
+    200: "#e5e7eb",
+    100: "#f1f5f9",
+    50: "#f8f9fb",
+    0: "#ffffff",
+  },
 } as const;
 
 /* ── CSS Variable Reference Helper ──────────────────────────────── */
@@ -7001,72 +7040,72 @@ export const cssVar = (name: string) => `var(${name})`;
 
 /* ── Semantic Token References (matching app/globals.css) ────────── */
 export const DS = {
-    brand: {
-        accent: cssVar("--ds-brand-accent"),
-        accentHover: cssVar("--ds-brand-accent-hover"),
-        accentSubtle: cssVar("--ds-brand-accent-subtle"),
-        black: cssVar("--ds-brand-black"),
-        blackSoft: cssVar("--ds-brand-black-soft"),
-        blackElevated: cssVar("--ds-brand-black-elevated"),
-    },
-    status: {
-        success: cssVar("--ds-status-success"),
-        successBg: cssVar("--ds-status-success-bg"),
-        warning: cssVar("--ds-status-warning"),
-        warningBg: cssVar("--ds-status-warning-bg"),
-        error: cssVar("--ds-status-error"),
-        errorBg: cssVar("--ds-status-error-bg"),
-        info: cssVar("--ds-status-info"),
-        infoBg: cssVar("--ds-status-info-bg"),
-    },
-    surface: {
-        base: cssVar("--ds-surface-base"),
-        elevated: cssVar("--ds-surface-elevated"),
-        sunken: cssVar("--ds-surface-sunken"),
-        overlay: cssVar("--ds-surface-overlay"),
-        sidebar: cssVar("--ds-surface-sidebar"),
-        header: cssVar("--ds-surface-header"),
-        glass: cssVar("--ds-surface-glass"),
-    },
-    text: {
-        primary: cssVar("--ds-text-primary"),
-        secondary: cssVar("--ds-text-secondary"),
-        subtle: cssVar("--ds-text-subtle"),
-        inverse: cssVar("--ds-text-inverse"),
-        link: cssVar("--ds-text-link"),
-    },
-    border: {
-        base: cssVar("--ds-border-base"),
-        strong: cssVar("--ds-border-strong"),
-        subtle: cssVar("--ds-border-subtle"),
-        glass: cssVar("--ds-border-glass"),
-    },
-    chart: {
-        1: cssVar("--ds-chart-1"),
-        2: cssVar("--ds-chart-2"),
-        3: cssVar("--ds-chart-3"),
-        4: cssVar("--ds-chart-4"),
-        5: cssVar("--ds-chart-5"),
-        6: cssVar("--ds-chart-6"),
-    },
-    radius: {
-        sm: cssVar("--ds-radius-sm"),
-        md: cssVar("--ds-radius-md"),
-        lg: cssVar("--ds-radius-lg"),
-        xl: cssVar("--ds-radius-xl"),
-        "2xl": cssVar("--ds-radius-2xl"),
-        full: cssVar("--ds-radius-full"),
-    },
-    shadow: {
-        sm: cssVar("--ds-shadow-sm"),
-        md: cssVar("--ds-shadow-md"),
-        lg: cssVar("--ds-shadow-lg"),
-        xl: cssVar("--ds-shadow-xl"),
-    },
-    font: {
-        sans: cssVar("--ds-font-sans"),
-        mono: cssVar("--ds-font-mono"),
-    },
+  brand: {
+    accent: cssVar("--ds-brand-accent"),
+    accentHover: cssVar("--ds-brand-accent-hover"),
+    accentSubtle: cssVar("--ds-brand-accent-subtle"),
+    black: cssVar("--ds-brand-black"),
+    blackSoft: cssVar("--ds-brand-black-soft"),
+    blackElevated: cssVar("--ds-brand-black-elevated"),
+  },
+  status: {
+    success: cssVar("--ds-status-success"),
+    successBg: cssVar("--ds-status-success-bg"),
+    warning: cssVar("--ds-status-warning"),
+    warningBg: cssVar("--ds-status-warning-bg"),
+    error: cssVar("--ds-status-error"),
+    errorBg: cssVar("--ds-status-error-bg"),
+    info: cssVar("--ds-status-info"),
+    infoBg: cssVar("--ds-status-info-bg"),
+  },
+  surface: {
+    base: cssVar("--ds-surface-base"),
+    elevated: cssVar("--ds-surface-elevated"),
+    sunken: cssVar("--ds-surface-sunken"),
+    overlay: cssVar("--ds-surface-overlay"),
+    sidebar: cssVar("--ds-surface-sidebar"),
+    header: cssVar("--ds-surface-header"),
+    glass: cssVar("--ds-surface-glass"),
+  },
+  text: {
+    primary: cssVar("--ds-text-primary"),
+    secondary: cssVar("--ds-text-secondary"),
+    subtle: cssVar("--ds-text-subtle"),
+    inverse: cssVar("--ds-text-inverse"),
+    link: cssVar("--ds-text-link"),
+  },
+  border: {
+    base: cssVar("--ds-border-base"),
+    strong: cssVar("--ds-border-strong"),
+    subtle: cssVar("--ds-border-subtle"),
+    glass: cssVar("--ds-border-glass"),
+  },
+  chart: {
+    1: cssVar("--ds-chart-1"),
+    2: cssVar("--ds-chart-2"),
+    3: cssVar("--ds-chart-3"),
+    4: cssVar("--ds-chart-4"),
+    5: cssVar("--ds-chart-5"),
+    6: cssVar("--ds-chart-6"),
+  },
+  radius: {
+    sm: cssVar("--ds-radius-sm"),
+    md: cssVar("--ds-radius-md"),
+    lg: cssVar("--ds-radius-lg"),
+    xl: cssVar("--ds-radius-xl"),
+    "2xl": cssVar("--ds-radius-2xl"),
+    full: cssVar("--ds-radius-full"),
+  },
+  shadow: {
+    sm: cssVar("--ds-shadow-sm"),
+    md: cssVar("--ds-shadow-md"),
+    lg: cssVar("--ds-shadow-lg"),
+    xl: cssVar("--ds-shadow-xl"),
+  },
+  font: {
+    sans: cssVar("--ds-font-sans"),
+    mono: cssVar("--ds-font-mono"),
+  },
 } as const;
 
 /**
@@ -7074,15 +7113,16 @@ export const DS = {
  * Branch on isDark from your theme context.
  */
 export const chartColors = {
-    light: ["#2563eb", "#10b981", "#7c3aed", "#ea580c", "#0891b2", "#be185d"],
-    dark: ["#60a5fa", "#34d399", "#a78bfa", "#fb923c", "#22d3ee", "#f472b6"],
+  light: ["#2563eb", "#10b981", "#7c3aed", "#ea580c", "#0891b2", "#be185d"],
+  dark: ["#60a5fa", "#34d399", "#a78bfa", "#fb923c", "#22d3ee", "#f472b6"],
 } as const;
 
 export default DS;
-````
+```
 
 ## File: lib/email/resend.ts
-````typescript
+
+```typescript
 /**
  * lib/email/resend.ts
  *
@@ -7103,46 +7143,46 @@ const FROM = process.env.EMAIL_FROM ?? "Harvesters Reporting <noreply@harvesters
 /* ── Low-level send ─────────────────────────────────────────────────────────── */
 
 interface SendEmailParams {
-    to: string | string[];
-    subject: string;
-    html: string;
-    text?: string;
+  to: string | string[];
+  subject: string;
+  html: string;
+  text?: string;
 }
 
 export async function sendEmail({ to, subject, html, text }: SendEmailParams) {
-    if (!process.env.RESEND_API_KEY) {
-        console.warn("[email] RESEND_API_KEY not set — skipping email send:", subject);
-        return null;
-    }
+  if (!process.env.RESEND_API_KEY) {
+    console.warn("[email] RESEND_API_KEY not set — skipping email send:", subject);
+    return null;
+  }
 
-    const { data, error } = await resend.emails.send({
-        from: FROM,
-        to: Array.isArray(to) ? to : [to],
-        subject,
-        html,
-        text,
-    });
+  const { data, error } = await resend.emails.send({
+    from: FROM,
+    to: Array.isArray(to) ? to : [to],
+    subject,
+    html,
+    text,
+  });
 
-    if (error) {
-        console.error("[email] Failed to send:", error);
-        throw new Error(error.message);
-    }
+  if (error) {
+    console.error("[email] Failed to send:", error);
+    throw new Error(error.message);
+  }
 
-    return data;
+  return data;
 }
 
 /* ── Domain-specific email helpers ──────────────────────────────────────────── */
 
 export async function sendInviteEmail(params: {
-    to: string;
-    inviterName: string;
-    role: string;
-    joinUrl: string;
+  to: string;
+  inviterName: string;
+  role: string;
+  joinUrl: string;
 }) {
-    return sendEmail({
-        to: params.to,
-        subject: "You've been invited to Harvesters Reporting System",
-        html: `
+  return sendEmail({
+    to: params.to,
+    subject: "You've been invited to Harvesters Reporting System",
+    html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;padding:32px">
         <div style="background:#10b981;color:#fff;padding:16px 24px;border-radius:12px 12px 0 0">
           <h1 style="margin:0;font-size:20px">Harvesters Reporting System</h1>
@@ -7157,17 +7197,14 @@ export async function sendInviteEmail(params: {
         </div>
       </div>
     `,
-    });
+  });
 }
 
-export async function sendPasswordResetEmail(params: {
-    to: string;
-    resetUrl: string;
-}) {
-    return sendEmail({
-        to: params.to,
-        subject: "Reset Your Password — Harvesters Reporting",
-        html: `
+export async function sendPasswordResetEmail(params: { to: string; resetUrl: string }) {
+  return sendEmail({
+    to: params.to,
+    subject: "Reset Your Password — Harvesters Reporting",
+    html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;padding:32px">
         <div style="background:#10b981;color:#fff;padding:16px 24px;border-radius:12px 12px 0 0">
           <h1 style="margin:0;font-size:20px">Password Reset</h1>
@@ -7181,22 +7218,22 @@ export async function sendPasswordResetEmail(params: {
         </div>
       </div>
     `,
-    });
+  });
 }
 
 export async function sendReportStatusEmail(params: {
-    to: string;
-    reporterName: string;
-    reportTitle: string;
-    newStatus: string;
-    reviewerName?: string;
-    comment?: string;
-    reportUrl: string;
+  to: string;
+  reporterName: string;
+  reportTitle: string;
+  newStatus: string;
+  reviewerName?: string;
+  comment?: string;
+  reportUrl: string;
 }) {
-    return sendEmail({
-        to: params.to,
-        subject: `Report ${params.newStatus}: ${params.reportTitle}`,
-        html: `
+  return sendEmail({
+    to: params.to,
+    subject: `Report ${params.newStatus}: ${params.reportTitle}`,
+    html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;padding:32px">
         <div style="background:#10b981;color:#fff;padding:16px 24px;border-radius:12px 12px 0 0">
           <h1 style="margin:0;font-size:20px">Report Update</h1>
@@ -7211,20 +7248,20 @@ export async function sendReportStatusEmail(params: {
         </div>
       </div>
     `,
-    });
+  });
 }
 
 export async function sendDeadlineReminderEmail(params: {
-    to: string;
-    userName: string;
-    reportTitle: string;
-    deadlineDate: string;
-    reportUrl: string;
+  to: string;
+  userName: string;
+  reportTitle: string;
+  deadlineDate: string;
+  reportUrl: string;
 }) {
-    return sendEmail({
-        to: params.to,
-        subject: `Deadline Approaching: ${params.reportTitle}`,
-        html: `
+  return sendEmail({
+    to: params.to,
+    subject: `Deadline Approaching: ${params.reportTitle}`,
+    html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;padding:32px">
         <div style="background:#f59e0b;color:#fff;padding:16px 24px;border-radius:12px 12px 0 0">
           <h1 style="margin:0;font-size:20px">Deadline Reminder</h1>
@@ -7238,23 +7275,24 @@ export async function sendDeadlineReminderEmail(params: {
         </div>
       </div>
     `,
-    });
+  });
 }
 
 /* ── Utility ────────────────────────────────────────────────────────────────── */
 
 function escapeHtml(str: string): string {
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
-````
+```
 
 ## File: lib/hooks/useDraftCache.ts
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -7278,114 +7316,115 @@ const STORE_NAME = "drafts";
 /* ── IndexedDB helpers ──────────────────────────────────────────────────────── */
 
 function openDb(): Promise<IDBDatabase> {
-    return new Promise((resolve, reject) => {
-        const req = indexedDB.open(DB_NAME, DB_VERSION);
-        req.onupgradeneeded = () => {
-            const db = req.result;
-            if (!db.objectStoreNames.contains(STORE_NAME)) {
-                db.createObjectStore(STORE_NAME);
-            }
-        };
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-    });
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
 }
 
 async function getItem<T>(key: string): Promise<T | undefined> {
-    try {
-        const db = await openDb();
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(STORE_NAME, "readonly");
-            const store = tx.objectStore(STORE_NAME);
-            const req = store.get(key);
-            req.onsuccess = () => {
-                const record = req.result as { data: T; updatedAt: number } | undefined;
-                if (!record) {
-                    resolve(undefined);
-                    return;
-                }
-                // Expire drafts older than 7 days
-                const sevenDays = 7 * 24 * 60 * 60 * 1000;
-                if (Date.now() - record.updatedAt > sevenDays) {
-                    resolve(undefined);
-                    return;
-                }
-                resolve(record.data);
-            };
-            req.onerror = () => reject(req.error);
-        });
-    } catch {
-        return undefined;
-    }
+  try {
+    const db = await openDb();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const store = tx.objectStore(STORE_NAME);
+      const req = store.get(key);
+      req.onsuccess = () => {
+        const record = req.result as { data: T; updatedAt: number } | undefined;
+        if (!record) {
+          resolve(undefined);
+          return;
+        }
+        // Expire drafts older than 7 days
+        const sevenDays = 7 * 24 * 60 * 60 * 1000;
+        if (Date.now() - record.updatedAt > sevenDays) {
+          resolve(undefined);
+          return;
+        }
+        resolve(record.data);
+      };
+      req.onerror = () => reject(req.error);
+    });
+  } catch {
+    return undefined;
+  }
 }
 
 async function setItem<T>(key: string, data: T): Promise<void> {
-    try {
-        const db = await openDb();
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(STORE_NAME, "readwrite");
-            const store = tx.objectStore(STORE_NAME);
-            store.put({ data, updatedAt: Date.now() }, key);
-            tx.oncomplete = () => resolve();
-            tx.onerror = () => reject(tx.error);
-        });
-    } catch {
-        // Silently fail — draft caching is best-effort
-    }
+  try {
+    const db = await openDb();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      const store = tx.objectStore(STORE_NAME);
+      store.put({ data, updatedAt: Date.now() }, key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  } catch {
+    // Silently fail — draft caching is best-effort
+  }
 }
 
 async function removeItem(key: string): Promise<void> {
-    try {
-        const db = await openDb();
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(STORE_NAME, "readwrite");
-            const store = tx.objectStore(STORE_NAME);
-            store.delete(key);
-            tx.oncomplete = () => resolve();
-            tx.onerror = () => reject(tx.error);
-        });
-    } catch {
-        // Silently fail
-    }
+  try {
+    const db = await openDb();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      const store = tx.objectStore(STORE_NAME);
+      store.delete(key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  } catch {
+    // Silently fail
+  }
 }
 
 /* ── Hook ───────────────────────────────────────────────────────────────────── */
 
 export function useDraftCache<T>(draftKey: string) {
-    const [cachedDraft, setCachedDraft] = useState<T | undefined>(undefined);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [cachedDraft, setCachedDraft] = useState<T | undefined>(undefined);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // Load cached draft on mount
-    useEffect(() => {
-        getItem<T>(draftKey).then((data) => {
-            if (data) setCachedDraft(data);
-            setIsLoaded(true);
-        });
-    }, [draftKey]);
+  // Load cached draft on mount
+  useEffect(() => {
+    getItem<T>(draftKey).then((data) => {
+      if (data) setCachedDraft(data);
+      setIsLoaded(true);
+    });
+  }, [draftKey]);
 
-    // Debounced save (300ms)
-    const saveDraft = useCallback(
-        (data: T) => {
-            if (saveTimer.current) clearTimeout(saveTimer.current);
-            saveTimer.current = setTimeout(() => {
-                setItem(draftKey, data);
-            }, 300);
-        },
-        [draftKey],
-    );
+  // Debounced save (300ms)
+  const saveDraft = useCallback(
+    (data: T) => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      saveTimer.current = setTimeout(() => {
+        setItem(draftKey, data);
+      }, 300);
+    },
+    [draftKey],
+  );
 
-    const clearDraft = useCallback(() => {
-        setCachedDraft(undefined);
-        removeItem(draftKey);
-    }, [draftKey]);
+  const clearDraft = useCallback(() => {
+    setCachedDraft(undefined);
+    removeItem(draftKey);
+  }, [draftKey]);
 
-    return { cachedDraft, isLoaded, saveDraft, clearDraft };
+  return { cachedDraft, isLoaded, saveDraft, clearDraft };
 }
-````
+```
 
 ## File: lib/hooks/useRole.ts
-````typescript
+
+```typescript
 "use client";
 
 import { useAuth } from "@/providers/AuthProvider";
@@ -7397,40 +7436,41 @@ import { UserRole } from "@/types/global";
  * Returns the current user's role config and permission helpers.
  */
 export function useRole() {
-    const { user } = useAuth();
-    const role = user?.role;
-    const config = role ? ROLE_CONFIG[role] : null;
+  const { user } = useAuth();
+  const role = user?.role;
+  const config = role ? ROLE_CONFIG[role] : null;
 
-    return {
-        role,
-        config,
-        /** Check if the current user's role is one of the provided roles */
-        hasRole: (roles: UserRole | UserRole[]): boolean => {
-            if (!role) return false;
-            return Array.isArray(roles) ? roles.includes(role) : roles === role;
-        },
-        /** Capabilities shorthand */
-        can: {
-            createReports: config?.canCreateReports ?? false,
-            fillReports: config?.canFillReports ?? false,
-            submitReports: config?.canSubmitReports ?? false,
-            requestEdits: config?.canRequestEdits ?? false,
-            approveReports: config?.canApproveReports ?? false,
-            markReviewed: config?.canMarkReviewed ?? false,
-            lockReports: config?.canLockReports ?? false,
-            manageTemplates: config?.canManageTemplates ?? false,
-            dataEntry: config?.canDataEntry ?? false,
-            manageUsers: config?.canManageUsers ?? false,
-            manageOrg: config?.canManageOrg ?? false,
-            setGoals: config?.canSetGoals ?? false,
-            approveGoalUnlock: config?.canApproveGoalUnlock ?? false,
-        },
-    };
+  return {
+    role,
+    config,
+    /** Check if the current user's role is one of the provided roles */
+    hasRole: (roles: UserRole | UserRole[]): boolean => {
+      if (!role) return false;
+      return Array.isArray(roles) ? roles.includes(role) : roles === role;
+    },
+    /** Capabilities shorthand */
+    can: {
+      createReports: config?.canCreateReports ?? false,
+      fillReports: config?.canFillReports ?? false,
+      submitReports: config?.canSubmitReports ?? false,
+      requestEdits: config?.canRequestEdits ?? false,
+      approveReports: config?.canApproveReports ?? false,
+      markReviewed: config?.canMarkReviewed ?? false,
+      lockReports: config?.canLockReports ?? false,
+      manageTemplates: config?.canManageTemplates ?? false,
+      dataEntry: config?.canDataEntry ?? false,
+      manageUsers: config?.canManageUsers ?? false,
+      manageOrg: config?.canManageOrg ?? false,
+      setGoals: config?.canSetGoals ?? false,
+      approveGoalUnlock: config?.canApproveGoalUnlock ?? false,
+    },
+  };
 }
-````
+```
 
 ## File: lib/hooks/useServiceWorker.ts
-````typescript
+
+```typescript
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -7440,34 +7480,31 @@ import { useEffect, useRef } from "react";
  * Call once in the root layout / a top-level provider.
  */
 export function useServiceWorker() {
-    const registered = useRef(false);
+  const registered = useRef(false);
 
-    useEffect(() => {
-        if (
-            registered.current ||
-            typeof window === "undefined" ||
-            !("serviceWorker" in navigator)
-        )
-            return;
+  useEffect(() => {
+    if (registered.current || typeof window === "undefined" || !("serviceWorker" in navigator))
+      return;
 
-        registered.current = true;
+    registered.current = true;
 
-        navigator.serviceWorker
-            .register("/sw.js")
-            .then((reg) => {
-                // Check for SW updates every 60 minutes
-                const interval = setInterval(() => reg.update(), 60 * 60 * 1000);
-                return () => clearInterval(interval);
-            })
-            .catch((err) => {
-                console.error("SW registration failed:", err);
-            });
-    }, []);
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then((reg) => {
+        // Check for SW updates every 60 minutes
+        const interval = setInterval(() => reg.update(), 60 * 60 * 1000);
+        return () => clearInterval(interval);
+      })
+      .catch((err) => {
+        console.error("SW registration failed:", err);
+      });
+  }, []);
 }
-````
+```
 
 ## File: lib/utils/formatDate.ts
-````typescript
+
+```typescript
 /**
  * lib/utils/formatDate.ts
  * Central date-formatting utility.
@@ -7482,34 +7519,34 @@ export function useServiceWorker() {
  * Returns "—" if the value is falsy or invalid.
  */
 export function fmtDate(value: string | Date | null | undefined): string {
-    if (!value) return "—";
-    const d = value instanceof Date ? value : new Date(value);
-    if (isNaN(d.getTime())) return "—";
-    return d.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-    }); // → "04 Mar 2026"
+  if (!value) return "—";
+  const d = value instanceof Date ? value : new Date(value);
+  if (isNaN(d.getTime())) return "—";
+  return d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }); // → "04 Mar 2026"
 }
 
 /**
  * Format as "DD MMM YYYY, HH:MM" — for datetime displays (audit log, events).
  */
 export function fmtDateTime(value: string | Date | null | undefined): string {
-    if (!value) return "—";
-    const d = value instanceof Date ? value : new Date(value);
-    if (isNaN(d.getTime())) return "—";
-    const date = d.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-    });
-    const time = d.toLocaleTimeString("en-GB", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-    });
-    return `${date}, ${time}`; // → "04 Mar 2026, 14:30"
+  if (!value) return "—";
+  const d = value instanceof Date ? value : new Date(value);
+  if (isNaN(d.getTime())) return "—";
+  const date = d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+  const time = d.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  return `${date}, ${time}`; // → "04 Mar 2026, 14:30"
 }
 
 /**
@@ -7517,23 +7554,24 @@ export function fmtDateTime(value: string | Date | null | undefined): string {
  * Falls back to fmtDateTime when > 7 days old.
  */
 export function timeAgo(value: string | Date | null | undefined): string {
-    if (!value) return "—";
-    const d = value instanceof Date ? value : new Date(value);
-    if (isNaN(d.getTime())) return "—";
-    const diff = Date.now() - d.getTime();
-    const mins = Math.floor(diff / 60_000);
-    const hrs = Math.floor(diff / 3_600_000);
-    const days = Math.floor(diff / 86_400_000);
-    if (mins < 1) return "Just now";
-    if (mins < 60) return `${mins}m ago`;
-    if (hrs < 24) return `${hrs}h ago`;
-    if (days < 7) return `${days}d ago`;
-    return fmtDate(d);
+  if (!value) return "—";
+  const d = value instanceof Date ? value : new Date(value);
+  if (isNaN(d.getTime())) return "—";
+  const diff = Date.now() - d.getTime();
+  const mins = Math.floor(diff / 60_000);
+  const hrs = Math.floor(diff / 3_600_000);
+  const days = Math.floor(diff / 86_400_000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins}m ago`;
+  if (hrs < 24) return `${hrs}h ago`;
+  if (days < 7) return `${days}d ago`;
+  return fmtDate(d);
 }
-````
+```
 
 ## File: lib/utils/reportUtils.ts
-````typescript
+
+```typescript
 /**
  * lib/utils/reportUtils.ts
  * Utility functions for displaying Report records.
@@ -7547,8 +7585,18 @@ import { ReportPeriodType } from "@/types/global";
 
 /** Short month names for period labelling */
 const MONTH_SHORT = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 /**
@@ -7556,25 +7604,25 @@ const MONTH_SHORT = [
  * Examples: "Jan 2025", "Week 3, 2025", "2025"
  */
 export function formatReportPeriod(report: {
-    periodType: ReportPeriodType;
-    periodYear: number;
-    periodMonth?: number;
-    periodWeek?: number;
+  periodType: ReportPeriodType;
+  periodYear: number;
+  periodMonth?: number;
+  periodWeek?: number;
 }): string {
-    switch (report.periodType) {
-        case ReportPeriodType.MONTHLY:
-            return report.periodMonth
-                ? `${MONTH_SHORT[report.periodMonth - 1]} ${report.periodYear}`
-                : `${report.periodYear}`;
-        case ReportPeriodType.WEEKLY:
-            return report.periodWeek
-                ? `Week ${report.periodWeek}, ${report.periodYear}`
-                : `${report.periodYear}`;
-        case ReportPeriodType.YEARLY:
-            return `${report.periodYear}`;
-        default:
-            return `${report.periodYear}`;
-    }
+  switch (report.periodType) {
+    case ReportPeriodType.MONTHLY:
+      return report.periodMonth
+        ? `${MONTH_SHORT[report.periodMonth - 1]} ${report.periodYear}`
+        : `${report.periodYear}`;
+    case ReportPeriodType.WEEKLY:
+      return report.periodWeek
+        ? `Week ${report.periodWeek}, ${report.periodYear}`
+        : `${report.periodYear}`;
+    case ReportPeriodType.YEARLY:
+      return `${report.periodYear}`;
+    default:
+      return `${report.periodYear}`;
+  }
 }
 
 /**
@@ -7582,32 +7630,34 @@ export function formatReportPeriod(report: {
  * Falls back to period alone when template name is not available.
  */
 export function getReportLabel(
-    report: {
-        templateId: string;
-        periodType: ReportPeriodType;
-        periodYear: number;
-        periodMonth?: number;
-        periodWeek?: number;
-    },
-    templates: ReportTemplate[],
+  report: {
+    templateId: string;
+    periodType: ReportPeriodType;
+    periodYear: number;
+    periodMonth?: number;
+    periodWeek?: number;
+  },
+  templates: ReportTemplate[],
 ): string {
-    const template = templates.find((t) => t.id === report.templateId);
-    const period = formatReportPeriod(report);
-    return template ? `${template.name} — ${period}` : period;
+  const template = templates.find((t) => t.id === report.templateId);
+  const period = formatReportPeriod(report);
+  return template ? `${template.name} — ${period}` : period;
 }
-````
+```
 
 ## File: modules/analytics/index.ts
-````typescript
+
+```typescript
 /**
  * modules/analytics/index.ts
  * Public barrel — export components and services only.
  */
 export { AnalyticsPage } from "./components/AnalyticsPage";
-````
+```
 
 ## File: modules/auth/components/SettingsPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -7826,19 +7876,21 @@ export function SettingsPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/auth/index.ts
-````typescript
+
+```typescript
 /**
  * modules/auth/index.ts
  * Public barrel — export components and services only.
  */
 export { SettingsPage } from "./components/SettingsPage";
-````
+```
 
 ## File: modules/bug-reports/components/BugReportManagePage.tsx
-````typescript
+
+```typescript
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -8064,10 +8116,11 @@ export function BugReportManagePage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/bug-reports/components/BugReportPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 import { useState } from "react";
@@ -8216,56 +8269,62 @@ export function BugReportPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/bug-reports/index.ts
-````typescript
+
+```typescript
 export { BugReportPage } from "./components/BugReportPage";
 export { BugReportManagePage } from "./components/BugReportManagePage";
-````
+```
 
 ## File: modules/dashboard/index.ts
-````typescript
+
+```typescript
 /**
  * modules/dashboard/index.ts
  * Barrel — export only services and components, never re-export types.
  */
 
 export { DashboardPage } from "./components/DashboardPage";
-````
+```
 
 ## File: modules/goals/index.ts
-````typescript
+
+```typescript
 /**
  * modules/goals/index.ts
  * Barrel export for the goals module.
  */
 
 export { GoalsPage } from "./components/GoalsPage";
-````
+```
 
 ## File: modules/notifications/index.ts
-````typescript
+
+```typescript
 /**
  * modules/notifications/index.ts
  * Barrel export for the notifications module.
  */
 
 export { InboxPage } from "./components/InboxPage";
-````
+```
 
 ## File: modules/org/index.ts
-````typescript
+
+```typescript
 /**
  * modules/org/index.ts
  * Barrel export for the org module.
  */
 
 export { OrgPage } from "./components/OrgPage";
-````
+```
 
 ## File: modules/reports/components/ExportDialog.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -8456,10 +8515,11 @@ export function ExportDialog({
         </Modal>
     );
 }
-````
+```
 
 ## File: modules/templates/index.ts
-````typescript
+
+```typescript
 /**
  * modules/templates/index.ts
  * Barrel export for the templates module.
@@ -8468,23 +8528,25 @@ export function ExportDialog({
 export { TemplatesListPage } from "./components/TemplatesListPage";
 export { TemplateNewPage } from "./components/TemplateNewPage";
 export { TemplateDetailPage } from "./components/TemplateDetailPage";
-````
+```
 
 ## File: modules/users/index.ts
-````typescript
+
+```typescript
 /**
  * modules/users/index.ts
  * Barrel export for the users module.
  */
 
-export { UsersListPage }  from "./components/UsersListPage";
+export { UsersListPage } from "./components/UsersListPage";
 export { UserDetailPage } from "./components/UserDetailPage";
-export { ProfilePage }    from "./components/ProfilePage";
-export { InvitesPage }    from "./components/InvitesPage";
-````
+export { ProfilePage } from "./components/ProfilePage";
+export { InvitesPage } from "./components/InvitesPage";
+```
 
 ## File: providers/ThemeProvider.tsx
-````typescript
+
+```typescript
 "use client";
 
 import { ThemeProvider as NextThemesProvider } from "next-themes";
@@ -8493,10 +8555,11 @@ import type { ThemeProviderProps } from "next-themes";
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
-````
+```
 
 ## File: types/global.d.ts
-````typescript
+
+```typescript
 /**
  * types/global.d.ts
  *
@@ -8508,16 +8571,15 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
  * Global interfaces: AuthUser, Report, etc. are available without any import
  *                    in files that import @/types/global transitively.
  */
-````
+```
 
 ## File: .github/abstract/reporting-logic-considerations.md
+
 ````markdown
 ---
-
 # CENTRAL REPORTING SYSTEM
 
 # Reporting Logic & Goal Governance Specification
-
 ---
 
 ## 1. FIELD STRUCTURE ENHANCEMENT
@@ -8533,14 +8595,14 @@ Every reportable metric must support:
 
 This applies to:
 
-* Weekly Entries
-* Monthly Entries
-* Goals
-* Achieved Values
+- Weekly Entries
+- Monthly Entries
+- Goals
+- Achieved Values
 
 Separate from:
 
-* General Report Notes (existing)
+- General Report Notes (existing)
 
 ---
 
@@ -8579,8 +8641,8 @@ Owned by:
 
 Scope:
 
-* Entire Group (default)
-* Specific Campuses (override)
+- Entire Group (default)
+- Specific Campuses (override)
 
 ---
 
@@ -8600,8 +8662,8 @@ Group Admin can set:
 
 Goals are set per:
 
-* Strategic Indicator
-* Key Metric
+- Strategic Indicator
+- Key Metric
 
 Example:
 
@@ -8620,9 +8682,9 @@ Derived from spreadsheet “MATRICS” column.
 
 Examples:
 
-* Church Planting
-* Salvation
-* Partnerships
+- Church Planting
+- Salvation
+- Partnerships
 
 Monthly value = Sum of weekly values
 
@@ -8632,7 +8694,7 @@ Monthly value = Sum of weekly values
 
 Examples:
 
-* Attendance
+- Attendance
 
 Monthly value = Average of weekly values
 
@@ -8642,8 +8704,8 @@ Monthly value = Average of weekly values
 
 Examples:
 
-* Number of Workers
-* Cells
+- Number of Workers
+- Cells
 
 Monthly value = Last reported value
 
@@ -8689,9 +8751,9 @@ System resolves YoY in this order:
 
 Fallback estimate options:
 
-* Previous month growth trend
-* Rolling average
-* Cumulative growth pattern
+- Previous month growth trend
+- Rolling average
+- Cumulative growth pattern
 
 System must choose the most logical based on data availability.
 
@@ -8712,15 +8774,15 @@ Year-on-Year Goal
 
 Group Admin must:
 
-* Submit edit request
-* Provide reason
+- Submit edit request
+- Provide reason
 
 Approval required from:
 
-* Super Admin
-* SPO
-* CEO
-* Church Ministry
+- Super Admin
+- SPO
+- CEO
+- Church Ministry
 
 ---
 
@@ -8728,9 +8790,9 @@ Approval required from:
 
 Executive stakeholders can:
 
-* Edit directly
-* Approve edit requests
-* Reject with note
+- Edit directly
+- Approve edit requests
+- Reject with note
 
 ---
 
@@ -8756,11 +8818,11 @@ Campus Goal → Overrides group goal
 
 Analytics must support:
 
-* Weekly
-* Monthly
-* Quarterly
-* Annual
-* Custom range
+- Weekly
+- Monthly
+- Quarterly
+- Annual
+- Custom range
 
 ---
 
@@ -8873,116 +8935,118 @@ Charts must adapt based on:
 
 This gives your Copilot:
 
-* Data logic
-* Governance rules
-* Calculation logic
-* Permissions
+- Data logic
+- Governance rules
+- Calculation logic
+- Permissions
 
 ---
-						
-		REPORTING TEMPLATE									
-		2026									
-											
-	MONTH										
-	STRATEGIC INDICATOR	KEY MATRICS		GOAL	ACHIEVED	"% 
-DIFFERENCE"	"YEAR ON 
-YEAR"	"REPORTING 
-FREQUENCY"	MATRICS	"OWNER OF REPORT IN 
-CAMPUSES"	
-	CHURCH PLANTING	"No of Churches to be 
-planted"						"Monthly and 
-Quarterly"	"Monthly Report:
-Summation i.e. the total number after adding each of the month achieved figures"		
-		No of Plant Cells and Small Group									
-		No of Church Plant Cells 									
-	ATTENDANCE	Sunday Attendance 	"Male 
-"					Weekly, Monthly, Quarterly, Bi-annual, and Annual	"
-Monthly Report: Average of the 4 Weeks or 5 Weeks depending on the month i.e. (W1+W2+W3+W4)/4"		
-			Female								
-			Children								
-		First Timers									
-		Worker Attendance									
-		Growth Track Attendance									
-		Growth Track Unique Attendance									
-		Midweek Attendance									
-		Workers Attendance: Midweek									
-		Small Group Attendance									
-		Montly Cell Leaders Attendance (Meeting)									
-	NLP	No of NLP Cells						"Weekly and 
-Monthly"	"Monthly Report:
-Summation i.e. the total number after adding each of the week achieved figures"		
-		NLP Leads									
-		Mobilizers									
-	SALVATION	Soul Saved in Service 						"Weekly and 
-Monthly"	"Monthly Report:
-Summation i.e. the total number after adding each of the week achieved figures"		
-		Soul Saved in Cell									
-		Soul Saved in Next Gen									
-		No of People Baptized									
-	SMALL GROUP	No of Small Group 						"Weekly and
-Monthly"	"Monthly Report:
-Cummulation i.e. the last reported data as at the end of the month"		
-		No of Small Group Leaders									
-		No of Assistant Cell Leaders									
-		No of Cells that held									
-	HAEF	Project Reach						"Monthly and 
-Quarterly"			
-		Project Impact									
-	"DISCIPLESHIP
-"	"Foundation Course 
-Attendance "						"Quarterly and
-Bi-Yearly"	"Monthly Report:
-Summation i.e. the total number after adding each of the cohort achieved figures"		
-		"Foundation Course 
-Graduant"									
-		ALC Attendance									
-		BLC Attendance									
-		PLC Attendance									
-		CPC Attendance									
-	PARTNERSHIP	No. of Partners						"Monthly and 
-Quarterly"	"Monthly Report:
-Summation i.e. the total number after adding each of the month achieved figures"		
-	PROJECT	No. of Ongoing Project						"Monthly and 
-Quarterly"	"Monthly Report:
-Cummulation i.e. the last reported data as at the end of the month"		
-		Project phase and closure									
-	TRANSFORMATION	No of Testimonies						"Monthly and 
-Quarterly"	"Monthly Report:
-Cummulation i.e. the last reported data as at the end of the month or quartely"		
-		No of Birth									
-		No of Babies dedicated									
-		No of Wedding									
-	ASSIMILATION	No Assimilated into Small Groups 						"Monthly and 
-Quarterly"	"Monthly Report:
-Cummulation i.e. the last reported data as at the end of the month and quarter"		
-		No Assimilated into Work Force									
-		No of Workers									
-		No of Leaders									
-	NEXT GEN	Next Gen Attendance	"Kidzone
-Stir House"					Weekly and Monthly 	Monthly Report: Average of the 4 Week i.e. (W1+W2+W3+W4)/4		
-		First Timers	"Kidzone
-Stir House"								
-		Workers Attendance	"Kidzone
-Stir House"								
-		No of Baptized (Water)	"Kidzone
-Stir House"					"Monthly and 
-Quarterly"	"Monthly Report:
-Cummulation i.e. the last reported data as at the end of the month and quarter"		
-		No of Baptized (Holy Ghost)	"Kidzone
-Stir House"								
-		Next Gen Return Rate	"Kidzone
-Stir House"								
-		No of PD/PF Participant	"Kidzone
-Stir House"								
-		No of Teen Leaders	Stir House								
-		No that Served 	"Kidzone
-Stir House"								
-		Parental Engaging Rate	"Kidzone
+
+    	REPORTING TEMPLATE
+    	2026
+
+    MONTH
+    STRATEGIC INDICATOR	KEY MATRICS		GOAL	ACHIEVED	"%
+
+DIFFERENCE" "YEAR ON
+YEAR" "REPORTING
+FREQUENCY" MATRICS "OWNER OF REPORT IN
+CAMPUSES"
+CHURCH PLANTING "No of Churches to be
+planted" "Monthly and
+Quarterly" "Monthly Report:
+Summation i.e. the total number after adding each of the month achieved figures"
+No of Plant Cells and Small Group
+No of Church Plant Cells
+ATTENDANCE Sunday Attendance "Male
+" Weekly, Monthly, Quarterly, Bi-annual, and Annual "
+Monthly Report: Average of the 4 Weeks or 5 Weeks depending on the month i.e. (W1+W2+W3+W4)/4"
+Female
+Children
+First Timers
+Worker Attendance
+Growth Track Attendance
+Growth Track Unique Attendance
+Midweek Attendance
+Workers Attendance: Midweek
+Small Group Attendance
+Montly Cell Leaders Attendance (Meeting)
+NLP No of NLP Cells "Weekly and
+Monthly" "Monthly Report:
+Summation i.e. the total number after adding each of the week achieved figures"
+NLP Leads
+Mobilizers
+SALVATION Soul Saved in Service "Weekly and
+Monthly" "Monthly Report:
+Summation i.e. the total number after adding each of the week achieved figures"
+Soul Saved in Cell
+Soul Saved in Next Gen
+No of People Baptized
+SMALL GROUP No of Small Group "Weekly and
+Monthly" "Monthly Report:
+Cummulation i.e. the last reported data as at the end of the month"
+No of Small Group Leaders
+No of Assistant Cell Leaders
+No of Cells that held
+HAEF Project Reach "Monthly and
+Quarterly"
+Project Impact
+"DISCIPLESHIP
+" "Foundation Course
+Attendance " "Quarterly and
+Bi-Yearly" "Monthly Report:
+Summation i.e. the total number after adding each of the cohort achieved figures"
+"Foundation Course
+Graduant"
+ALC Attendance
+BLC Attendance
+PLC Attendance
+CPC Attendance
+PARTNERSHIP No. of Partners "Monthly and
+Quarterly" "Monthly Report:
+Summation i.e. the total number after adding each of the month achieved figures"
+PROJECT No. of Ongoing Project "Monthly and
+Quarterly" "Monthly Report:
+Cummulation i.e. the last reported data as at the end of the month"
+Project phase and closure
+TRANSFORMATION No of Testimonies "Monthly and
+Quarterly" "Monthly Report:
+Cummulation i.e. the last reported data as at the end of the month or quartely"
+No of Birth
+No of Babies dedicated
+No of Wedding
+ASSIMILATION No Assimilated into Small Groups "Monthly and
+Quarterly" "Monthly Report:
+Cummulation i.e. the last reported data as at the end of the month and quarter"
+No Assimilated into Work Force
+No of Workers
+No of Leaders
+NEXT GEN Next Gen Attendance "Kidzone
+Stir House" Weekly and Monthly Monthly Report: Average of the 4 Week i.e. (W1+W2+W3+W4)/4
+First Timers "Kidzone
+Stir House"
+Workers Attendance "Kidzone
+Stir House"
+No of Baptized (Water) "Kidzone
+Stir House" "Monthly and
+Quarterly" "Monthly Report:
+Cummulation i.e. the last reported data as at the end of the month and quarter"
+No of Baptized (Holy Ghost) "Kidzone
+Stir House"
+Next Gen Return Rate "Kidzone
+Stir House"
+No of PD/PF Participant "Kidzone
+Stir House"
+No of Teen Leaders Stir House
+No that Served "Kidzone
+Stir House"
+Parental Engaging Rate "Kidzone
 Stir House"
 ````
 
 ## File: app/(auth)/join/layout.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { CONTENT } from "@/config/content";
@@ -9021,10 +9085,11 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
-````
+```
 
 ## File: app/(auth)/register/page.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -9223,10 +9288,11 @@ function RegisterPageContent() {
     </div>
   );
 }
-````
+```
 
 ## File: app/(dashboard)/bug-reports/manage/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { BugReportManagePage } from "@/modules/bug-reports";
@@ -9247,10 +9313,11 @@ export default async function Page() {
   }
   return <BugReportManagePage />;
 }
-````
+```
 
 ## File: app/(dashboard)/dashboard/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { DashboardPage } from "@/modules/dashboard";
 import { CONTENT } from "@/config/content";
@@ -9263,10 +9330,11 @@ export const metadata: Metadata = {
 export default function Page() {
   return <DashboardPage />;
 }
-````
+```
 
 ## File: app/(dashboard)/org/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { verifyAuth } from "@/lib/utils/auth";
@@ -9286,10 +9354,11 @@ export default async function Page() {
   }
   return <OrgPage />;
 }
-````
+```
 
 ## File: app/(dashboard)/profile/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { ProfilePage } from "@/modules/users";
 import { CONTENT } from "@/config/content";
@@ -9307,10 +9376,11 @@ export default async function Page({ searchParams }: PageProps) {
   const { tab } = await searchParams;
   return <ProfilePage defaultTab={tab} />;
 }
-````
+```
 
 ## File: app/(dashboard)/reports/[id]/edit/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { ReportEditPage } from "@/modules/reports";
 import { CONTENT } from "@/config/content";
@@ -9332,10 +9402,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default function Page({ params }: PageProps) {
   return <ReportEditPage params={params} />;
 }
-````
+```
 
 ## File: app/(dashboard)/reports/[id]/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { ReportDetailPage } from "@/modules/reports";
 import { CONTENT } from "@/config/content";
@@ -9357,10 +9428,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default function Page({ params }: PageProps) {
   return <ReportDetailPage params={params} />;
 }
-````
+```
 
 ## File: app/(dashboard)/reports/new/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { ReportNewPage } from "@/modules/reports";
 import { CONTENT } from "@/config/content";
@@ -9373,10 +9445,11 @@ export const metadata: Metadata = {
 export default function Page() {
   return <ReportNewPage />;
 }
-````
+```
 
 ## File: app/(dashboard)/users/[id]/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { verifyAuth } from "@/lib/utils/auth";
@@ -9408,10 +9481,11 @@ export default async function Page({ params }: PageProps) {
   }
   return <UserDetailPage params={params} />;
 }
-````
+```
 
 ## File: app/(dashboard)/users/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { verifyAuth } from "@/lib/utils/auth";
@@ -9431,10 +9505,11 @@ export default async function Page() {
   }
   return <UsersListPage />;
 }
-````
+```
 
 ## File: app/api/analytics/metrics/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/analytics/metrics/route.ts
  * GET /api/analytics/metrics
@@ -9462,302 +9537,342 @@ import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole, MetricCalculationType } from "@/types/global";
 
 const QuerySchema = z.object({
-    metricId: z.string().optional(),
-    sectionId: z.string().optional(),
-    campusId: z.string().optional(),
-    groupId: z.string().optional(),
-    year: z.coerce.number().int().min(2000).max(2100),
-    compareYear: z.coerce.number().int().min(2000).max(2100).optional(),
-    granularity: z.enum(["weekly", "monthly", "quarterly"]).default("monthly"),
-    startMonth: z.coerce.number().int().min(1).max(12).default(1),
-    endMonth: z.coerce.number().int().min(1).max(12).default(12),
+  metricId: z.string().optional(),
+  sectionId: z.string().optional(),
+  campusId: z.string().optional(),
+  groupId: z.string().optional(),
+  year: z.coerce.number().int().min(2000).max(2100),
+  compareYear: z.coerce.number().int().min(2000).max(2100).optional(),
+  granularity: z.enum(["weekly", "monthly", "quarterly"]).default("monthly"),
+  startMonth: z.coerce.number().int().min(1).max(12).default(1),
+  endMonth: z.coerce.number().int().min(1).max(12).default(12),
 });
 
 /* ── Types ─────────────────────────────────────────────────────────────────── */
 
 interface MetricPoint {
-    period: string;          // "YYYY-MM", "YYYY-WW", or "YYYY-QN"
-    periodLabel: string;     // human-readable: "Jan 2025", "W01", "Q1"
-    goal?: number;
-    achieved?: number;
-    yoy?: number;
-    compareAchieved?: number; // compareYear achieved value for the same period
+  period: string; // "YYYY-MM", "YYYY-WW", or "YYYY-QN"
+  periodLabel: string; // human-readable: "Jan 2025", "W01", "Q1"
+  goal?: number;
+  achieved?: number;
+  yoy?: number;
+  compareAchieved?: number; // compareYear achieved value for the same period
 }
 
 interface CampusMetricSeries {
-    campusId: string;
-    campusName: string;
-    series: MetricPoint[];
-    avgAchievementRate: number; // achieved/goal %, where goal exists
+  campusId: string;
+  campusName: string;
+  series: MetricPoint[];
+  avgAchievementRate: number; // achieved/goal %, where goal exists
 }
 
 interface MetricAnalyticsPayload {
-    metricId: string;
-    metricName: string;
+  metricId: string;
+  metricName: string;
+  sectionName: string;
+  calculationType: MetricCalculationType;
+  aggregate: MetricPoint[]; // cross-campus aggregate
+  byCampus: CampusMetricSeries[]; // per-campus breakdown
+  /** Available metrics in the default template for the selector */
+  availableMetrics: {
+    id: string;
+    name: string;
     sectionName: string;
     calculationType: MetricCalculationType;
-    aggregate: MetricPoint[];         // cross-campus aggregate
-    byCampus: CampusMetricSeries[];   // per-campus breakdown
-    /** Available metrics in the default template for the selector */
-    availableMetrics: { id: string; name: string; sectionName: string; calculationType: MetricCalculationType }[];
+  }[];
 }
 
 /* ── Helpers ───────────────────────────────────────────────────────────────── */
 
-function periodKey(periodType: string, year: number, month?: number, week?: number, granularity: "weekly" | "monthly" | "quarterly" = "monthly"): string | null {
-    if (granularity === "weekly" && week != null) {
-        const wStr = String(week).padStart(2, "0");
-        return `${year}-W${wStr}`;
-    }
-    if (granularity === "monthly" && month != null) {
-        return `${year}-${String(month).padStart(2, "0")}`;
-    }
-    if (granularity === "quarterly" && month != null) {
-        const q = Math.ceil(month / 3);
-        return `${year}-Q${q}`;
-    }
-    return null;
+function periodKey(
+  periodType: string,
+  year: number,
+  month?: number,
+  week?: number,
+  granularity: "weekly" | "monthly" | "quarterly" = "monthly",
+): string | null {
+  if (granularity === "weekly" && week != null) {
+    const wStr = String(week).padStart(2, "0");
+    return `${year}-W${wStr}`;
+  }
+  if (granularity === "monthly" && month != null) {
+    return `${year}-${String(month).padStart(2, "0")}`;
+  }
+  if (granularity === "quarterly" && month != null) {
+    const q = Math.ceil(month / 3);
+    return `${year}-Q${q}`;
+  }
+  return null;
 }
 
 function periodLabel(key: string): string {
-    // YYYY-MM → "Jan 2025"
-    if (/^\d{4}-\d{2}$/.test(key)) {
-        const [y, mo] = key.split("-");
-        const d = new Date(Number(y), Number(mo) - 1);
-        return d.toLocaleString("en-GB", { month: "short", year: "numeric" });
-    }
-    // YYYY-WNN → "W01 2025"
-    if (/^\d{4}-W\d{2}$/.test(key)) {
-        const [y, w] = key.split("-");
-        return `${w} ${y}`;
-    }
-    // YYYY-QN → "Q1 2025"
-    if (/^\d{4}-Q\d/.test(key)) {
-        const [y, q] = key.split("-");
-        return `${q} ${y}`;
-    }
-    return key;
+  // YYYY-MM → "Jan 2025"
+  if (/^\d{4}-\d{2}$/.test(key)) {
+    const [y, mo] = key.split("-");
+    const d = new Date(Number(y), Number(mo) - 1);
+    return d.toLocaleString("en-GB", { month: "short", year: "numeric" });
+  }
+  // YYYY-WNN → "W01 2025"
+  if (/^\d{4}-W\d{2}$/.test(key)) {
+    const [y, w] = key.split("-");
+    return `${w} ${y}`;
+  }
+  // YYYY-QN → "Q1 2025"
+  if (/^\d{4}-Q\d/.test(key)) {
+    const [y, q] = key.split("-");
+    return `${q} ${y}`;
+  }
+  return key;
 }
 
 function aggregateValues(values: number[], calcType: MetricCalculationType): number {
-    if (values.length === 0) return 0;
-    switch (calcType) {
-        case MetricCalculationType.SUM: return values.reduce((a, b) => a + b, 0);
-        case MetricCalculationType.AVERAGE: return Math.round(values.reduce((a, b) => a + b, 0) / values.length);
-        case MetricCalculationType.SNAPSHOT: return values[values.length - 1]; // last value
-        default: return values.reduce((a, b) => a + b, 0);
-    }
+  if (values.length === 0) return 0;
+  switch (calcType) {
+    case MetricCalculationType.SUM:
+      return values.reduce((a, b) => a + b, 0);
+    case MetricCalculationType.AVERAGE:
+      return Math.round(values.reduce((a, b) => a + b, 0) / values.length);
+    case MetricCalculationType.SNAPSHOT:
+      return values[values.length - 1]; // last value
+    default:
+      return values.reduce((a, b) => a + b, 0);
+  }
 }
 
 /* ── Handler ───────────────────────────────────────────────────────────────── */
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  const auth = await verifyAuth(req);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
+
+  const parsed = QuerySchema.safeParse(Object.fromEntries(new URL(req.url).searchParams));
+  if (!parsed.success) {
+    return NextResponse.json(
+      { success: false, error: "Invalid query parameters", details: parsed.error.flatten() },
+      { status: 400 },
+    );
+  }
+  const query = parsed.data;
+
+  const cacheKey = `analytics:metrics:${auth.user.id}:${JSON.stringify(query)}`;
+  const cached = await cache.get(cacheKey);
+  if (cached) return NextResponse.json(cached);
+
+  /* ── Scope: enforce role visibility ──────────────────────────────────── */
+  const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
+  let allowedCampusIds: string[] | null = null;
+  if (roleConfig?.reportVisibilityScope === "campus" && auth.user.campusId) {
+    allowedCampusIds = [auth.user.campusId];
+  }
+  if (query.campusId) {
+    // Further narrow — but only if within allowed scope
+    if (allowedCampusIds && !allowedCampusIds.includes(query.campusId)) {
+      return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
     }
+    allowedCampusIds = [query.campusId];
+  }
 
-    const parsed = QuerySchema.safeParse(Object.fromEntries(new URL(req.url).searchParams));
-    if (!parsed.success) {
-        return NextResponse.json({ success: false, error: "Invalid query parameters", details: parsed.error.flatten() }, { status: 400 });
+  /* ── Load default template to enumerate available metrics ────────────── */
+  const defaultTemplate = await db.reportTemplate.findFirst({
+    where: { isDefault: true },
+    include: { sections: { include: { metrics: true }, orderBy: { order: "asc" } } },
+  });
+  if (!defaultTemplate) {
+    return NextResponse.json(
+      { success: false, error: "No default template found" },
+      { status: 404 },
+    );
+  }
+
+  const availableMetrics: MetricAnalyticsPayload["availableMetrics"] = [];
+  for (const sec of defaultTemplate.sections) {
+    for (const met of sec.metrics) {
+      if (met.capturesAchieved) {
+        availableMetrics.push({
+          id: met.id,
+          name: met.name,
+          sectionName: sec.name,
+          calculationType: met.calculationType as MetricCalculationType,
+        });
+      }
     }
-    const query = parsed.data;
+  }
 
-    const cacheKey = `analytics:metrics:${auth.user.id}:${JSON.stringify(query)}`;
-    const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(cached);
-
-    /* ── Scope: enforce role visibility ──────────────────────────────────── */
-    const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
-    let allowedCampusIds: string[] | null = null;
-    if (roleConfig?.reportVisibilityScope === "campus" && auth.user.campusId) {
-        allowedCampusIds = [auth.user.campusId];
+  /* ── Resolve target metric ───────────────────────────────────────────── */
+  let targetMetric = availableMetrics[0]; // default to first
+  if (query.metricId) {
+    const found = availableMetrics.find((m) => m.id === query.metricId);
+    if (!found) {
+      return NextResponse.json(
+        { success: false, error: "Metric not found in default template" },
+        { status: 404 },
+      );
     }
-    if (query.campusId) {
-        // Further narrow — but only if within allowed scope
-        if (allowedCampusIds && !allowedCampusIds.includes(query.campusId)) {
-            return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
-        }
-        allowedCampusIds = [query.campusId];
-    }
+    targetMetric = found;
+  }
 
-    /* ── Load default template to enumerate available metrics ────────────── */
-    const defaultTemplate = await db.reportTemplate.findFirst({
-        where: { isDefault: true },
-        include: { sections: { include: { metrics: true }, orderBy: { order: "asc" } } },
-    });
-    if (!defaultTemplate) {
-        return NextResponse.json({ success: false, error: "No default template found" }, { status: 404 });
-    }
+  /* ── Load reports in scope ───────────────────────────────────────────── */
+  const years = [query.year, ...(query.compareYear != null ? [query.compareYear] : [])];
 
-    const availableMetrics: MetricAnalyticsPayload["availableMetrics"] = [];
-    for (const sec of defaultTemplate.sections) {
-        for (const met of sec.metrics) {
-            if (met.capturesAchieved) {
-                availableMetrics.push({
-                    id: met.id,
-                    name: met.name,
-                    sectionName: sec.name,
-                    calculationType: met.calculationType as MetricCalculationType,
-                });
-            }
-        }
-    }
-
-    /* ── Resolve target metric ───────────────────────────────────────────── */
-    let targetMetric = availableMetrics[0]; // default to first
-    if (query.metricId) {
-        const found = availableMetrics.find((m) => m.id === query.metricId);
-        if (!found) {
-            return NextResponse.json({ success: false, error: "Metric not found in default template" }, { status: 404 });
-        }
-        targetMetric = found;
-    }
-
-    /* ── Load reports in scope ───────────────────────────────────────────── */
-    const years = [query.year, ...(query.compareYear != null ? [query.compareYear] : [])];
-
-    /* Build Prisma where clause for reports */
-    const reportWhere: Record<string, unknown> = {
-        periodYear: { in: years },
+  /* Build Prisma where clause for reports */
+  const reportWhere: Record<string, unknown> = {
+    periodYear: { in: years },
+  };
+  if (allowedCampusIds) reportWhere.campusId = { in: allowedCampusIds };
+  if (query.groupId) reportWhere.orgGroupId = query.groupId;
+  if (query.startMonth || query.endMonth) {
+    reportWhere.periodMonth = {
+      gte: query.startMonth,
+      lte: query.endMonth,
     };
-    if (allowedCampusIds) reportWhere.campusId = { in: allowedCampusIds };
-    if (query.groupId) reportWhere.orgGroupId = query.groupId;
-    if (query.startMonth || query.endMonth) {
-        reportWhere.periodMonth = {
-            gte: query.startMonth,
-            lte: query.endMonth,
-        };
+  }
+
+  const [scopedReports, allCampuses] = await Promise.all([
+    db.report.findMany({
+      where: reportWhere,
+      include: {
+        sections: {
+          include: { metrics: true },
+        },
+      },
+    }),
+    db.campus.findMany({}),
+  ]);
+
+  const campusMap = new Map(allCampuses.map((c) => [c.id, c]));
+
+  /* ── Accumulator: [campusId][periodKey] → { goal[], achieved[], yoy[] } ─ */
+  type BucketMap = Map<string, Map<string, { goal: number[]; achieved: number[]; yoy: number[] }>>;
+  const buckets: BucketMap = new Map();
+
+  for (const report of scopedReports) {
+    for (const sec of report.sections) {
+      const targetMetricEntry = sec.metrics.find((met) => met.templateMetricId === targetMetric.id);
+      if (!targetMetricEntry) continue;
+
+      const pk = periodKey(
+        report.periodType,
+        report.periodYear,
+        report.periodMonth ?? undefined,
+        report.periodWeek ?? undefined,
+        query.granularity,
+      );
+      if (!pk) continue;
+
+      // Separate primary and comparison year
+      const isCompareYear = query.compareYear != null && report.periodYear === query.compareYear;
+      const bucketKey = report.campusId;
+      if (!buckets.has(bucketKey)) buckets.set(bucketKey, new Map());
+      const campusBucket = buckets.get(bucketKey)!;
+      if (!campusBucket.has(pk)) campusBucket.set(pk, { goal: [], achieved: [], yoy: [] });
+      const slot = campusBucket.get(pk)!;
+
+      if (!isCompareYear) {
+        if (targetMetricEntry.monthlyGoal != null) slot.goal.push(targetMetricEntry.monthlyGoal);
+        if (targetMetricEntry.monthlyAchieved != null)
+          slot.achieved.push(targetMetricEntry.monthlyAchieved);
+        if (targetMetricEntry.yoyGoal != null) slot.yoy.push(targetMetricEntry.yoyGoal);
+      }
     }
+  }
 
-    const [scopedReports, allCampuses] = await Promise.all([
-        db.report.findMany({
-            where: reportWhere,
-            include: {
-                sections: {
-                    include: { metrics: true },
-                },
-            },
-        }),
-        db.campus.findMany({}),
-    ]);
-
-    const campusMap = new Map(allCampuses.map((c) => [c.id, c]));
-
-    /* ── Accumulator: [campusId][periodKey] → { goal[], achieved[], yoy[] } ─ */
-    type BucketMap = Map<string, Map<string, { goal: number[]; achieved: number[]; yoy: number[] }>>;
-    const buckets: BucketMap = new Map();
-
-    for (const report of scopedReports) {
-        for (const sec of report.sections) {
-            const targetMetricEntry = sec.metrics.find((met) => met.templateMetricId === targetMetric.id);
-            if (!targetMetricEntry) continue;
-
-            const pk = periodKey(
-                report.periodType,
-                report.periodYear,
-                report.periodMonth ?? undefined,
-                report.periodWeek ?? undefined,
-                query.granularity,
-            );
-            if (!pk) continue;
-
-            // Separate primary and comparison year
-            const isCompareYear = query.compareYear != null && report.periodYear === query.compareYear;
-            const bucketKey = report.campusId;
-            if (!buckets.has(bucketKey)) buckets.set(bucketKey, new Map());
-            const campusBucket = buckets.get(bucketKey)!;
-            if (!campusBucket.has(pk)) campusBucket.set(pk, { goal: [], achieved: [], yoy: [] });
-            const slot = campusBucket.get(pk)!;
-
-            if (!isCompareYear) {
-                if (targetMetricEntry.monthlyGoal != null) slot.goal.push(targetMetricEntry.monthlyGoal);
-                if (targetMetricEntry.monthlyAchieved != null) slot.achieved.push(targetMetricEntry.monthlyAchieved);
-                if (targetMetricEntry.yoyGoal != null) slot.yoy.push(targetMetricEntry.yoyGoal);
-            }
-        }
+  /* ── Build per-campus series ─────────────────────────────────────────── */
+  // Enumerate all periods in the range
+  const allPeriods: string[] = [];
+  if (query.granularity === "monthly") {
+    for (let mo = query.startMonth; mo <= query.endMonth; mo++) {
+      allPeriods.push(`${query.year}-${String(mo).padStart(2, "0")}`);
     }
-
-    /* ── Build per-campus series ─────────────────────────────────────────── */
-    // Enumerate all periods in the range
-    const allPeriods: string[] = [];
-    if (query.granularity === "monthly") {
-        for (let mo = query.startMonth; mo <= query.endMonth; mo++) {
-            allPeriods.push(`${query.year}-${String(mo).padStart(2, "0")}`);
-        }
-    } else if (query.granularity === "quarterly") {
-        const startQ = Math.ceil(query.startMonth / 3);
-        const endQ = Math.ceil(query.endMonth / 3);
-        for (let q = startQ; q <= endQ; q++) {
-            allPeriods.push(`${query.year}-Q${q}`);
-        }
-    } else {
-        // Weekly: 52 weeks
-        for (let w = 1; w <= 52; w++) {
-            allPeriods.push(`${query.year}-W${String(w).padStart(2, "0")}`);
-        }
+  } else if (query.granularity === "quarterly") {
+    const startQ = Math.ceil(query.startMonth / 3);
+    const endQ = Math.ceil(query.endMonth / 3);
+    for (let q = startQ; q <= endQ; q++) {
+      allPeriods.push(`${query.year}-Q${q}`);
     }
-
-    const byCampus: CampusMetricSeries[] = [];
-    const aggregateBuckets = new Map<string, { goal: number[]; achieved: number[] }>();
-
-    for (const period of allPeriods) {
-        aggregateBuckets.set(period, { goal: [], achieved: [] });
+  } else {
+    // Weekly: 52 weeks
+    for (let w = 1; w <= 52; w++) {
+      allPeriods.push(`${query.year}-W${String(w).padStart(2, "0")}`);
     }
+  }
 
-    for (const [campusId, campusBucket] of buckets) {
-        const campus = campusMap.get(campusId);
-        if (!campus) continue;
+  const byCampus: CampusMetricSeries[] = [];
+  const aggregateBuckets = new Map<string, { goal: number[]; achieved: number[] }>();
 
-        const series: MetricPoint[] = allPeriods.map((pk) => {
-            const slot = campusBucket.get(pk);
-            const goal = slot?.goal.length ? aggregateValues(slot.goal, targetMetric.calculationType) : undefined;
-            const achieved = slot?.achieved.length ? aggregateValues(slot.achieved, targetMetric.calculationType) : undefined;
-            const yoy = slot?.yoy.length ? aggregateValues(slot.yoy, targetMetric.calculationType) : undefined;
+  for (const period of allPeriods) {
+    aggregateBuckets.set(period, { goal: [], achieved: [] });
+  }
 
-            // Feed aggregate
-            if (goal != null) aggregateBuckets.get(pk)!.goal.push(goal);
-            if (achieved != null) aggregateBuckets.get(pk)!.achieved.push(achieved);
+  for (const [campusId, campusBucket] of buckets) {
+    const campus = campusMap.get(campusId);
+    if (!campus) continue;
 
-            return { period: pk, periodLabel: periodLabel(pk), goal, achieved, yoy };
-        }).filter((pt) => pt.achieved != null || pt.goal != null);
+    const series: MetricPoint[] = allPeriods
+      .map((pk) => {
+        const slot = campusBucket.get(pk);
+        const goal = slot?.goal.length
+          ? aggregateValues(slot.goal, targetMetric.calculationType)
+          : undefined;
+        const achieved = slot?.achieved.length
+          ? aggregateValues(slot.achieved, targetMetric.calculationType)
+          : undefined;
+        const yoy = slot?.yoy.length
+          ? aggregateValues(slot.yoy, targetMetric.calculationType)
+          : undefined;
 
-        const achievementRates = series
-            .filter((pt) => pt.goal != null && pt.goal > 0 && pt.achieved != null)
-            .map((pt) => Math.round(((pt.achieved ?? 0) / (pt.goal ?? 1)) * 100));
-        const avgRate = achievementRates.length
-            ? Math.round(achievementRates.reduce((a, b) => a + b, 0) / achievementRates.length)
-            : 0;
+        // Feed aggregate
+        if (goal != null) aggregateBuckets.get(pk)!.goal.push(goal);
+        if (achieved != null) aggregateBuckets.get(pk)!.achieved.push(achieved);
 
-        byCampus.push({ campusId, campusName: campus.name, series, avgAchievementRate: avgRate });
-    }
+        return { period: pk, periodLabel: periodLabel(pk), goal, achieved, yoy };
+      })
+      .filter((pt) => pt.achieved != null || pt.goal != null);
 
-    /* ── Build aggregate series (cross-campus) ───────────────────────────── */
-    const aggregate: MetricPoint[] = allPeriods.map((pk) => {
-        const slot = aggregateBuckets.get(pk)!;
-        const goal = slot.goal.length ? aggregateValues(slot.goal, MetricCalculationType.SUM) : undefined;
-        const achieved = slot.achieved.length ? aggregateValues(slot.achieved, MetricCalculationType.SUM) : undefined;
-        return { period: pk, periodLabel: periodLabel(pk), goal, achieved };
-    }).filter((pt) => pt.achieved != null || pt.goal != null);
+    const achievementRates = series
+      .filter((pt) => pt.goal != null && pt.goal > 0 && pt.achieved != null)
+      .map((pt) => Math.round(((pt.achieved ?? 0) / (pt.goal ?? 1)) * 100));
+    const avgRate = achievementRates.length
+      ? Math.round(achievementRates.reduce((a, b) => a + b, 0) / achievementRates.length)
+      : 0;
 
-    const payload: MetricAnalyticsPayload = {
-        metricId: targetMetric.id,
-        metricName: targetMetric.name,
-        sectionName: targetMetric.sectionName,
-        calculationType: targetMetric.calculationType,
-        aggregate,
-        byCampus,
-        availableMetrics,
-    };
+    byCampus.push({ campusId, campusName: campus.name, series, avgAchievementRate: avgRate });
+  }
 
-    const response = { success: true, data: payload };
-    await cache.set(cacheKey, JSON.stringify(response), 60);
-    return NextResponse.json(response);
+  /* ── Build aggregate series (cross-campus) ───────────────────────────── */
+  const aggregate: MetricPoint[] = allPeriods
+    .map((pk) => {
+      const slot = aggregateBuckets.get(pk)!;
+      const goal = slot.goal.length
+        ? aggregateValues(slot.goal, MetricCalculationType.SUM)
+        : undefined;
+      const achieved = slot.achieved.length
+        ? aggregateValues(slot.achieved, MetricCalculationType.SUM)
+        : undefined;
+      return { period: pk, periodLabel: periodLabel(pk), goal, achieved };
+    })
+    .filter((pt) => pt.achieved != null || pt.goal != null);
+
+  const payload: MetricAnalyticsPayload = {
+    metricId: targetMetric.id,
+    metricName: targetMetric.name,
+    sectionName: targetMetric.sectionName,
+    calculationType: targetMetric.calculationType,
+    aggregate,
+    byCampus,
+    availableMetrics,
+  };
+
+  const response = { success: true, data: payload };
+  await cache.set(cacheKey, JSON.stringify(response), 60);
+  return NextResponse.json(response);
 }
-````
+```
 
 ## File: app/api/auth/change-password/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/auth/change-password/route.ts
  * POST /api/auth/change-password
@@ -9805,10 +9920,11 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ success: true, message: "Password changed successfully." });
 }
-````
+```
 
 ## File: app/api/auth/forgot-password/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/auth/forgot-password/route.ts
  * POST /api/auth/forgot-password
@@ -9833,7 +9949,10 @@ export async function POST(req: NextRequest) {
 
   /* Always return 200 to prevent email enumeration */
   if (!user) {
-    return NextResponse.json({ success: true, message: "If this email exists, a reset link has been sent." });
+    return NextResponse.json({
+      success: true,
+      message: "If this email exists, a reset link has been sent.",
+    });
   }
 
   const token = crypto.randomUUID().replace(/-/g, "");
@@ -9855,45 +9974,48 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json(response);
 }
-````
+```
 
 ## File: app/api/auth/logout/route.ts
-````typescript
+
+```typescript
 import { NextResponse } from "next/server";
 import { clearAuthCookies } from "@/lib/utils/auth";
 import { successResponse, handleApiError } from "@/lib/utils/api";
 
 export async function POST() {
-    try {
-        await clearAuthCookies();
-        return NextResponse.json(successResponse({ message: "Logged out" }));
-    } catch (err) {
-        return handleApiError(err);
-    }
+  try {
+    await clearAuthCookies();
+    return NextResponse.json(successResponse({ message: "Logged out" }));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/auth/me/route.ts
-````typescript
+
+```typescript
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
 import { successResponse, handleApiError } from "@/lib/utils/api";
 
 export async function GET(req: NextRequest) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) {
-            return Response.json({ success: false, error: auth.error }, { status: auth.status });
-        }
-        return NextResponse.json(successResponse(auth.user));
-    } catch (err) {
-        return handleApiError(err);
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) {
+      return Response.json({ success: false, error: auth.error }, { status: auth.status });
     }
+    return NextResponse.json(successResponse(auth.user));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/goals/for-report/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/goals/for-report/route.ts
  * GET /api/goals/for-report?campusId=...&year=...&month=...
@@ -9922,126 +10044,121 @@ import { db } from "@/lib/data/db";
 import { UserRole, GoalMode } from "@/types/global";
 
 const READ_ROLES: UserRole[] = [
-    UserRole.SUPERADMIN,
-    UserRole.SPO,
-    UserRole.CEO,
-    UserRole.CHURCH_MINISTRY,
-    UserRole.GROUP_ADMIN,
-    UserRole.GROUP_PASTOR,
-    UserRole.CAMPUS_PASTOR,
-    UserRole.CAMPUS_ADMIN,
-    UserRole.DATA_ENTRY,
+  UserRole.SUPERADMIN,
+  UserRole.SPO,
+  UserRole.CEO,
+  UserRole.CHURCH_MINISTRY,
+  UserRole.GROUP_ADMIN,
+  UserRole.GROUP_PASTOR,
+  UserRole.CAMPUS_PASTOR,
+  UserRole.CAMPUS_ADMIN,
+  UserRole.DATA_ENTRY,
 ];
 
 const QuerySchema = z.object({
-    campusId: z.string().min(1),
-    year: z.coerce.number().int().min(2020).max(2100),
-    month: z.coerce.number().int().min(1).max(12).optional(),
+  campusId: z.string().min(1),
+  year: z.coerce.number().int().min(2020).max(2100),
+  month: z.coerce.number().int().min(1).max(12).optional(),
 });
 
 export interface GoalForMetric {
-    goalId: string;
-    targetValue: number;
-    isLocked: boolean;
-    source: "campus-monthly" | "campus-annual" | "group-monthly" | "group-annual";
+  goalId: string;
+  targetValue: number;
+  isLocked: boolean;
+  source: "campus-monthly" | "campus-annual" | "group-monthly" | "group-annual";
 }
 
 export type GoalsForReportMap = Record<string, GoalForMetric>;
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req, READ_ROLES);
-    if (!auth.success)
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
+  const auth = await verifyAuth(req, READ_ROLES);
+  if (!auth.success)
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
-    const params = QuerySchema.safeParse(
-        Object.fromEntries(new URL(req.url).searchParams),
+  const params = QuerySchema.safeParse(Object.fromEntries(new URL(req.url).searchParams));
+  if (!params.success) {
+    return NextResponse.json(
+      { success: false, error: "Invalid query parameters." },
+      { status: 400 },
     );
-    if (!params.success) {
-        return NextResponse.json(
-            { success: false, error: "Invalid query parameters." },
-            { status: 400 },
-        );
+  }
+
+  const { campusId, year, month } = params.data;
+
+  // Non-campus-level roles that are scoped to a campus can only query their own campus
+  const isCampusScoped =
+    auth.user.role === UserRole.CAMPUS_ADMIN ||
+    auth.user.role === UserRole.CAMPUS_PASTOR ||
+    auth.user.role === UserRole.DATA_ENTRY;
+
+  if (isCampusScoped && auth.user.campusId && auth.user.campusId !== campusId) {
+    return NextResponse.json(
+      { success: false, error: "Cannot query goals for a different campus." },
+      { status: 403 },
+    );
+  }
+
+  // Resolve the campus to find its orgGroupId for group-level goal inheritance
+  const campus = await db.campus.findUnique({ where: { id: campusId } });
+  if (!campus) {
+    return NextResponse.json({ success: false, error: "Campus not found." }, { status: 404 });
+  }
+
+  const orgGroupId = campus.parentId; // Campus.parentId is the OrgGroup id
+
+  // Fetch all relevant goals in one pass (campus + group for the given year)
+  const allGoals = await db.goal.findMany({
+    where: {
+      year,
+      campusId: { in: [campusId, orgGroupId] },
+    },
+  });
+
+  // Build resolution map: most-specific wins
+  const result: GoalsForReportMap = {};
+
+  // Helper: priority of each source (lower = higher priority)
+  const PRIORITY: Record<GoalForMetric["source"], number> = {
+    "campus-monthly": 1,
+    "campus-annual": 2,
+    "group-monthly": 3,
+    "group-annual": 4,
+  };
+
+  for (const goal of allGoals) {
+    const isCampusGoal = goal.campusId === campusId;
+    const isGroupGoal = goal.campusId === orgGroupId;
+
+    const isMonthly = goal.mode === GoalMode.MONTHLY && month != null && goal.month === month;
+    const isAnnual = goal.mode === GoalMode.ANNUAL || goal.mode === GoalMode.CAMPUS_OVERRIDE;
+
+    if (!isMonthly && !isAnnual) continue;
+
+    let source: GoalForMetric["source"];
+    if (isCampusGoal && isMonthly) source = "campus-monthly";
+    else if (isCampusGoal && isAnnual) source = "campus-annual";
+    else if (isGroupGoal && isMonthly) source = "group-monthly";
+    else if (isGroupGoal && isAnnual) source = "group-annual";
+    else continue;
+
+    const existing = result[goal.templateMetricId];
+    if (!existing || PRIORITY[source] < PRIORITY[existing.source]) {
+      result[goal.templateMetricId] = {
+        goalId: goal.id,
+        targetValue: goal.targetValue,
+        isLocked: goal.isLocked,
+        source,
+      };
     }
+  }
 
-    const { campusId, year, month } = params.data;
-
-    // Non-campus-level roles that are scoped to a campus can only query their own campus
-    const isCampusScoped =
-        auth.user.role === UserRole.CAMPUS_ADMIN ||
-        auth.user.role === UserRole.CAMPUS_PASTOR ||
-        auth.user.role === UserRole.DATA_ENTRY;
-
-    if (isCampusScoped && auth.user.campusId && auth.user.campusId !== campusId) {
-        return NextResponse.json(
-            { success: false, error: "Cannot query goals for a different campus." },
-            { status: 403 },
-        );
-    }
-
-    // Resolve the campus to find its orgGroupId for group-level goal inheritance
-    const campus = await db.campus.findUnique({ where: { id: campusId } });
-    if (!campus) {
-        return NextResponse.json(
-            { success: false, error: "Campus not found." },
-            { status: 404 },
-        );
-    }
-
-    const orgGroupId = campus.parentId; // Campus.parentId is the OrgGroup id
-
-    // Fetch all relevant goals in one pass (campus + group for the given year)
-    const allGoals = await db.goal.findMany({
-        where: {
-            year,
-            campusId: { in: [campusId, orgGroupId] },
-        },
-    });
-
-    // Build resolution map: most-specific wins
-    const result: GoalsForReportMap = {};
-
-    // Helper: priority of each source (lower = higher priority)
-    const PRIORITY: Record<GoalForMetric["source"], number> = {
-        "campus-monthly": 1,
-        "campus-annual": 2,
-        "group-monthly": 3,
-        "group-annual": 4,
-    };
-
-    for (const goal of allGoals) {
-        const isCampusGoal = goal.campusId === campusId;
-        const isGroupGoal = goal.campusId === orgGroupId;
-
-        const isMonthly =
-            goal.mode === GoalMode.MONTHLY && month != null && goal.month === month;
-        const isAnnual = goal.mode === GoalMode.ANNUAL || goal.mode === GoalMode.CAMPUS_OVERRIDE;
-
-        if (!isMonthly && !isAnnual) continue;
-
-        let source: GoalForMetric["source"];
-        if (isCampusGoal && isMonthly) source = "campus-monthly";
-        else if (isCampusGoal && isAnnual) source = "campus-annual";
-        else if (isGroupGoal && isMonthly) source = "group-monthly";
-        else if (isGroupGoal && isAnnual) source = "group-annual";
-        else continue;
-
-        const existing = result[goal.templateMetricId];
-        if (!existing || PRIORITY[source] < PRIORITY[existing.source]) {
-            result[goal.templateMetricId] = {
-                goalId: goal.id,
-                targetValue: goal.targetValue,
-                isLocked: goal.isLocked,
-                source,
-            };
-        }
-    }
-
-    return NextResponse.json({ success: true, data: result });
+  return NextResponse.json({ success: true, data: result });
 }
-````
+```
 
 ## File: app/api/notifications/[id]/read/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/notifications/[id]/read/route.ts
  * POST /api/notifications/:id/read — mark a single notification as read
@@ -10050,12 +10167,15 @@ export async function GET(req: NextRequest) {
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
-import { successResponse, unauthorizedResponse, notFoundResponse, errorResponse, handleApiError } from "@/lib/utils/api";
+import {
+  successResponse,
+  unauthorizedResponse,
+  notFoundResponse,
+  errorResponse,
+  handleApiError,
+} from "@/lib/utils/api";
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const auth = await verifyAuth(req);
     if (!auth.success) return unauthorizedResponse(auth.error);
@@ -10078,10 +10198,11 @@ export async function POST(
     return handleApiError(err);
   }
 }
-````
+```
 
 ## File: app/api/notifications/read-all/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/notifications/read-all/route.ts
  * POST /api/notifications/read-all — mark all notifications as read
@@ -10108,10 +10229,11 @@ export async function POST(req: NextRequest) {
     return handleApiError(err);
   }
 }
-````
+```
 
 ## File: app/api/org/campuses/[id]/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/org/campuses/[id]/route.ts
  * GET /api/org/campuses/:id
@@ -10131,10 +10253,7 @@ const UpdateCampusSchema = z.object({
   adminId: z.string().uuid().nullable().optional(),
 });
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await verifyAuth(req);
   if (!auth.success) {
@@ -10148,10 +10267,7 @@ export async function GET(
   return NextResponse.json({ success: true, data: campus });
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
   if (!auth.success) {
@@ -10177,10 +10293,11 @@ export async function PUT(
   await cache.invalidatePattern("org:campuses:*");
   return NextResponse.json({ success: true, data: updated });
 }
-````
+```
 
 ## File: app/api/org/groups/[id]/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/org/groups/[id]/route.ts
  * GET /api/org/groups/:id
@@ -10194,60 +10311,55 @@ import { db, cache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const UpdateGroupSchema = z.object({
-    name: z.string().min(1).max(80).optional(),
-    country: z.string().max(60).optional(),
-    leaderId: z.string().uuid().nullable().optional(),
+  name: z.string().min(1).max(80).optional(),
+  country: z.string().max(60).optional(),
+  leaderId: z.string().uuid().nullable().optional(),
 });
 
-export async function GET(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    const { id } = await params;
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const auth = await verifyAuth(req);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const group = await db.orgGroup.findUnique({ where: { id } });
-    if (!group) {
-        return NextResponse.json({ success: false, error: "Group not found." }, { status: 404 });
-    }
-    return NextResponse.json({ success: true, data: group });
+  const group = await db.orgGroup.findUnique({ where: { id } });
+  if (!group) {
+    return NextResponse.json({ success: false, error: "Group not found." }, { status: 404 });
+  }
+  return NextResponse.json({ success: true, data: group });
 }
 
-export async function PUT(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    const { id } = await params;
-    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const body = UpdateGroupSchema.parse(await req.json());
-    const group = await db.orgGroup.findUnique({ where: { id } });
-    if (!group) {
-        return NextResponse.json({ success: false, error: "Group not found." }, { status: 404 });
-    }
+  const body = UpdateGroupSchema.parse(await req.json());
+  const group = await db.orgGroup.findUnique({ where: { id } });
+  if (!group) {
+    return NextResponse.json({ success: false, error: "Group not found." }, { status: 404 });
+  }
 
-    const updated = await db.orgGroup.update({
-        where: { id },
-        data: {
-            ...(body.name !== undefined && { name: body.name }),
-            ...(body.country !== undefined && { country: body.country }),
-            ...(body.leaderId !== undefined && { leaderId: body.leaderId }),
-        },
-    });
+  const updated = await db.orgGroup.update({
+    where: { id },
+    data: {
+      ...(body.name !== undefined && { name: body.name }),
+      ...(body.country !== undefined && { country: body.country }),
+      ...(body.leaderId !== undefined && { leaderId: body.leaderId }),
+    },
+  });
 
-    await cache.invalidatePattern("org:groups:*");
-    return NextResponse.json({ success: true, data: updated });
+  await cache.invalidatePattern("org:groups:*");
+  return NextResponse.json({ success: true, data: updated });
 }
-````
+```
 
 ## File: app/api/reports/[id]/approve/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/reports/[id]/approve/route.ts
  * POST /api/reports/:id/approve — SUBMITTED → APPROVED
@@ -10258,88 +10370,86 @@ import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import {
-    successResponse,
-    errorResponse,
-    unauthorizedResponse,
-    notFoundResponse,
-    handleApiError,
+  successResponse,
+  errorResponse,
+  unauthorizedResponse,
+  notFoundResponse,
+  handleApiError,
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
 import { REPORT_STATUS_TRANSITIONS } from "@/config/reports";
 import { UserRole, ReportStatus, ReportEventType } from "@/types/global";
 
 const ApproveSchema = z.object({
-    notes: z.string().optional(),
+  notes: z.string().optional(),
 });
 
-export async function POST(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const { id } = await params;
-        const report = await db.report.findUnique({ where: { id } });
-        if (!report) return notFoundResponse("Report not found.");
+    const { id } = await params;
+    const report = await db.report.findUnique({ where: { id } });
+    if (!report) return notFoundResponse("Report not found.");
 
-        const role = auth.user.role as UserRole;
-        const roleConfig = ROLE_CONFIG[role];
+    const role = auth.user.role as UserRole;
+    const roleConfig = ROLE_CONFIG[role];
 
-        if (!roleConfig.canApproveReports) {
-            return errorResponse("You do not have permission to approve reports.", 403);
-        }
-
-        const allowed = REPORT_STATUS_TRANSITIONS[report.status];
-        const transition = allowed.find(
-            (t) => t.to === ReportStatus.APPROVED && t.requiredRole.includes(role),
-        );
-        if (!transition) {
-            return errorResponse(`Cannot approve a report in status "${report.status}".`, 409);
-        }
-
-        const body = await req.json().catch(() => ({}));
-        const { notes } = ApproveSchema.parse(body);
-        const now = new Date().toISOString();
-
-        const updated = await db.$transaction(async (tx) => {
-            const r = await tx.report.update({
-                where: { id },
-                data: {
-                    status: ReportStatus.APPROVED,
-                    approvedById: auth.user.id,
-                    updatedAt: new Date(),
-                },
-            });
-
-            await tx.reportEvent.create({
-                data: {
-                    reportId: id,
-                    eventType: ReportEventType.APPROVED,
-                    actorId: auth.user.id,
-                    timestamp: new Date(),
-                    previousStatus: report.status,
-                    newStatus: ReportStatus.APPROVED,
-                    details: notes,
-                },
-            });
-
-            return r;
-        });
-
-        await cache.invalidatePattern(`report:${id}*`);
-        await cache.invalidatePattern(`reports:list:*`);
-
-        return NextResponse.json(successResponse(updated));
-    } catch (err) {
-        return handleApiError(err);
+    if (!roleConfig.canApproveReports) {
+      return errorResponse("You do not have permission to approve reports.", 403);
     }
+
+    const allowed = REPORT_STATUS_TRANSITIONS[report.status];
+    const transition = allowed.find(
+      (t) => t.to === ReportStatus.APPROVED && t.requiredRole.includes(role),
+    );
+    if (!transition) {
+      return errorResponse(`Cannot approve a report in status "${report.status}".`, 409);
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const { notes } = ApproveSchema.parse(body);
+    const now = new Date().toISOString();
+
+    const updated = await db.$transaction(async (tx) => {
+      const r = await tx.report.update({
+        where: { id },
+        data: {
+          status: ReportStatus.APPROVED,
+          approvedById: auth.user.id,
+          updatedAt: new Date(),
+        },
+      });
+
+      await tx.reportEvent.create({
+        data: {
+          reportId: id,
+          eventType: ReportEventType.APPROVED,
+          actorId: auth.user.id,
+          timestamp: new Date(),
+          previousStatus: report.status,
+          newStatus: ReportStatus.APPROVED,
+          details: notes,
+        },
+      });
+
+      return r;
+    });
+
+    await cache.invalidatePattern(`report:${id}*`);
+    await cache.invalidatePattern(`reports:list:*`);
+
+    return NextResponse.json(successResponse(updated));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/reports/[id]/lock/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/reports/[id]/lock/route.ts
  * POST /api/reports/:id/lock — REVIEWED → LOCKED (SUPERADMIN only)
@@ -10349,74 +10459,72 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import {
-    successResponse,
-    errorResponse,
-    unauthorizedResponse,
-    notFoundResponse,
-    handleApiError,
+  successResponse,
+  errorResponse,
+  unauthorizedResponse,
+  notFoundResponse,
+  handleApiError,
 } from "@/lib/utils/api";
 import { UserRole, ReportStatus, ReportEventType } from "@/types/global";
 import { REPORT_STATUS_TRANSITIONS } from "@/config/reports";
 
-export async function POST(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    try {
-        const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const { id } = await params;
-        const report = await db.report.findUnique({ where: { id } });
-        if (!report) return notFoundResponse("Report not found.");
+    const { id } = await params;
+    const report = await db.report.findUnique({ where: { id } });
+    if (!report) return notFoundResponse("Report not found.");
 
-        const role = auth.user.role as UserRole;
-        const allowed = REPORT_STATUS_TRANSITIONS[report.status];
-        const transition = allowed.find(
-            (t) => t.to === ReportStatus.LOCKED && t.requiredRole.includes(role),
-        );
-        if (!transition) {
-            return errorResponse(`Cannot lock a report in status "${report.status}".`, 409);
-        }
-
-        const now = new Date().toISOString();
-
-        const updated = await db.$transaction(async (tx) => {
-            const r = await tx.report.update({
-                where: { id },
-                data: {
-                    status: ReportStatus.LOCKED,
-                    lockedAt: new Date(),
-                    updatedAt: new Date(),
-                },
-            });
-
-            await tx.reportEvent.create({
-                data: {
-                    reportId: id,
-                    eventType: ReportEventType.LOCKED,
-                    actorId: auth.user.id,
-                    timestamp: new Date(),
-                    previousStatus: report.status,
-                    newStatus: ReportStatus.LOCKED,
-                },
-            });
-
-            return r;
-        });
-
-        await cache.invalidatePattern(`report:${id}*`);
-        await cache.invalidatePattern(`reports:list:*`);
-
-        return NextResponse.json(successResponse(updated));
-    } catch (err) {
-        return handleApiError(err);
+    const role = auth.user.role as UserRole;
+    const allowed = REPORT_STATUS_TRANSITIONS[report.status];
+    const transition = allowed.find(
+      (t) => t.to === ReportStatus.LOCKED && t.requiredRole.includes(role),
+    );
+    if (!transition) {
+      return errorResponse(`Cannot lock a report in status "${report.status}".`, 409);
     }
+
+    const now = new Date().toISOString();
+
+    const updated = await db.$transaction(async (tx) => {
+      const r = await tx.report.update({
+        where: { id },
+        data: {
+          status: ReportStatus.LOCKED,
+          lockedAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+
+      await tx.reportEvent.create({
+        data: {
+          reportId: id,
+          eventType: ReportEventType.LOCKED,
+          actorId: auth.user.id,
+          timestamp: new Date(),
+          previousStatus: report.status,
+          newStatus: ReportStatus.LOCKED,
+        },
+      });
+
+      return r;
+    });
+
+    await cache.invalidatePattern(`report:${id}*`);
+    await cache.invalidatePattern(`reports:list:*`);
+
+    return NextResponse.json(successResponse(updated));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/reports/[id]/request-edit/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/reports/[id]/request-edit/route.ts
  * POST /api/reports/:id/request-edit — SUBMITTED → REQUIRES_EDITS
@@ -10427,101 +10535,96 @@ import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import {
-    successResponse,
-    errorResponse,
-    unauthorizedResponse,
-    notFoundResponse,
-    handleApiError,
+  successResponse,
+  errorResponse,
+  unauthorizedResponse,
+  notFoundResponse,
+  handleApiError,
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
 import { REPORT_STATUS_TRANSITIONS } from "@/config/reports";
 import { UserRole, ReportStatus, ReportEventType, ReportEditStatus } from "@/types/global";
 
 const RequestEditSchema = z.object({
-    reason: z.string().min(1, "Reason is required.").max(1000),
-    sections: z.array(z.string()).optional(),
+  reason: z.string().min(1, "Reason is required.").max(1000),
+  sections: z.array(z.string()).optional(),
 });
 
-export async function POST(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const { id } = await params;
-        const report = await db.report.findUnique({ where: { id } });
-        if (!report) return notFoundResponse("Report not found.");
+    const { id } = await params;
+    const report = await db.report.findUnique({ where: { id } });
+    if (!report) return notFoundResponse("Report not found.");
 
-        const role = auth.user.role as UserRole;
-        const roleConfig = ROLE_CONFIG[role];
+    const role = auth.user.role as UserRole;
+    const roleConfig = ROLE_CONFIG[role];
 
-        if (!roleConfig.canRequestEdits) {
-            return errorResponse("You do not have permission to request edits.", 403);
-        }
-
-        const allowed = REPORT_STATUS_TRANSITIONS[report.status];
-        const transition = allowed.find(
-            (t) => t.to === ReportStatus.REQUIRES_EDITS && t.requiredRole.includes(role),
-        );
-        if (!transition) {
-            return errorResponse(
-                `Cannot request edits for a report in status "${report.status}".`,
-                409,
-            );
-        }
-
-        const body = RequestEditSchema.parse(await req.json());
-        const now = new Date().toISOString();
-
-        const updated = await db.$transaction(async (tx) => {
-            const r = await tx.report.update({
-                where: { id },
-                data: {
-                    status: ReportStatus.REQUIRES_EDITS,
-                    notes: body.reason,
-                    updatedAt: new Date(),
-                },
-            });
-
-            await tx.reportEdit.create({
-                data: {
-                    reportId: id,
-                    submittedById: auth.user.id,
-                    reason: body.reason,
-                    status: ReportEditStatus.SUBMITTED,
-                    sections: body.sections ?? [],
-                },
-            });
-
-            await tx.reportEvent.create({
-                data: {
-                    reportId: id,
-                    eventType: ReportEventType.EDIT_REQUESTED,
-                    actorId: auth.user.id,
-                    timestamp: new Date(),
-                    previousStatus: report.status,
-                    newStatus: ReportStatus.REQUIRES_EDITS,
-                    details: body.reason,
-                },
-            });
-
-            return r;
-        });
-
-        await cache.invalidatePattern(`report:${id}*`);
-        await cache.invalidatePattern(`reports:list:*`);
-
-        return NextResponse.json(successResponse(updated));
-    } catch (err) {
-        return handleApiError(err);
+    if (!roleConfig.canRequestEdits) {
+      return errorResponse("You do not have permission to request edits.", 403);
     }
+
+    const allowed = REPORT_STATUS_TRANSITIONS[report.status];
+    const transition = allowed.find(
+      (t) => t.to === ReportStatus.REQUIRES_EDITS && t.requiredRole.includes(role),
+    );
+    if (!transition) {
+      return errorResponse(`Cannot request edits for a report in status "${report.status}".`, 409);
+    }
+
+    const body = RequestEditSchema.parse(await req.json());
+    const now = new Date().toISOString();
+
+    const updated = await db.$transaction(async (tx) => {
+      const r = await tx.report.update({
+        where: { id },
+        data: {
+          status: ReportStatus.REQUIRES_EDITS,
+          notes: body.reason,
+          updatedAt: new Date(),
+        },
+      });
+
+      await tx.reportEdit.create({
+        data: {
+          reportId: id,
+          submittedById: auth.user.id,
+          reason: body.reason,
+          status: ReportEditStatus.SUBMITTED,
+          sections: body.sections ?? [],
+        },
+      });
+
+      await tx.reportEvent.create({
+        data: {
+          reportId: id,
+          eventType: ReportEventType.EDIT_REQUESTED,
+          actorId: auth.user.id,
+          timestamp: new Date(),
+          previousStatus: report.status,
+          newStatus: ReportStatus.REQUIRES_EDITS,
+          details: body.reason,
+        },
+      });
+
+      return r;
+    });
+
+    await cache.invalidatePattern(`report:${id}*`);
+    await cache.invalidatePattern(`reports:list:*`);
+
+    return NextResponse.json(successResponse(updated));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/reports/[id]/review/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/reports/[id]/review/route.ts
  * POST /api/reports/:id/review — APPROVED → REVIEWED
@@ -10532,88 +10635,86 @@ import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import {
-    successResponse,
-    errorResponse,
-    unauthorizedResponse,
-    notFoundResponse,
-    handleApiError,
+  successResponse,
+  errorResponse,
+  unauthorizedResponse,
+  notFoundResponse,
+  handleApiError,
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
 import { REPORT_STATUS_TRANSITIONS } from "@/config/reports";
 import { UserRole, ReportStatus, ReportEventType } from "@/types/global";
 
 const ReviewSchema = z.object({
-    notes: z.string().optional(),
+  notes: z.string().optional(),
 });
 
-export async function POST(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const { id } = await params;
-        const report = await db.report.findUnique({ where: { id } });
-        if (!report) return notFoundResponse("Report not found.");
+    const { id } = await params;
+    const report = await db.report.findUnique({ where: { id } });
+    if (!report) return notFoundResponse("Report not found.");
 
-        const role = auth.user.role as UserRole;
-        const roleConfig = ROLE_CONFIG[role];
+    const role = auth.user.role as UserRole;
+    const roleConfig = ROLE_CONFIG[role];
 
-        if (!roleConfig.canMarkReviewed) {
-            return errorResponse("You do not have permission to mark reports as reviewed.", 403);
-        }
-
-        const allowed = REPORT_STATUS_TRANSITIONS[report.status];
-        const transition = allowed.find(
-            (t) => t.to === ReportStatus.REVIEWED && t.requiredRole.includes(role),
-        );
-        if (!transition) {
-            return errorResponse(`Cannot mark reviewed: report status is "${report.status}".`, 409);
-        }
-
-        const body = await req.json().catch(() => ({}));
-        const { notes } = ReviewSchema.parse(body);
-        const now = new Date().toISOString();
-
-        const updated = await db.$transaction(async (tx) => {
-            const r = await tx.report.update({
-                where: { id },
-                data: {
-                    status: ReportStatus.REVIEWED,
-                    reviewedById: auth.user.id,
-                    updatedAt: new Date(),
-                },
-            });
-
-            await tx.reportEvent.create({
-                data: {
-                    reportId: id,
-                    eventType: ReportEventType.REVIEWED,
-                    actorId: auth.user.id,
-                    timestamp: new Date(),
-                    previousStatus: report.status,
-                    newStatus: ReportStatus.REVIEWED,
-                    details: notes,
-                },
-            });
-
-            return r;
-        });
-
-        await cache.invalidatePattern(`report:${id}*`);
-        await cache.invalidatePattern(`reports:list:*`);
-
-        return NextResponse.json(successResponse(updated));
-    } catch (err) {
-        return handleApiError(err);
+    if (!roleConfig.canMarkReviewed) {
+      return errorResponse("You do not have permission to mark reports as reviewed.", 403);
     }
+
+    const allowed = REPORT_STATUS_TRANSITIONS[report.status];
+    const transition = allowed.find(
+      (t) => t.to === ReportStatus.REVIEWED && t.requiredRole.includes(role),
+    );
+    if (!transition) {
+      return errorResponse(`Cannot mark reviewed: report status is "${report.status}".`, 409);
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const { notes } = ReviewSchema.parse(body);
+    const now = new Date().toISOString();
+
+    const updated = await db.$transaction(async (tx) => {
+      const r = await tx.report.update({
+        where: { id },
+        data: {
+          status: ReportStatus.REVIEWED,
+          reviewedById: auth.user.id,
+          updatedAt: new Date(),
+        },
+      });
+
+      await tx.reportEvent.create({
+        data: {
+          reportId: id,
+          eventType: ReportEventType.REVIEWED,
+          actorId: auth.user.id,
+          timestamp: new Date(),
+          previousStatus: report.status,
+          newStatus: ReportStatus.REVIEWED,
+          details: notes,
+        },
+      });
+
+      return r;
+    });
+
+    await cache.invalidatePattern(`report:${id}*`);
+    await cache.invalidatePattern(`reports:list:*`);
+
+    return NextResponse.json(successResponse(updated));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/reports/[id]/submit/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/reports/[id]/submit/route.ts
  * POST /api/reports/:id/submit — DRAFT → SUBMITTED
@@ -10623,85 +10724,80 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import {
-    successResponse,
-    errorResponse,
-    unauthorizedResponse,
-    notFoundResponse,
-    handleApiError,
+  successResponse,
+  errorResponse,
+  unauthorizedResponse,
+  notFoundResponse,
+  handleApiError,
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
 import { REPORT_STATUS_TRANSITIONS } from "@/config/reports";
 import { UserRole, ReportStatus, ReportEventType } from "@/types/global";
 
-export async function POST(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const { id } = await params;
-        const report = await db.report.findUnique({ where: { id } });
-        if (!report) return notFoundResponse("Report not found.");
+    const { id } = await params;
+    const report = await db.report.findUnique({ where: { id } });
+    if (!report) return notFoundResponse("Report not found.");
 
-        const role = auth.user.role as UserRole;
-        const roleConfig = ROLE_CONFIG[role];
+    const role = auth.user.role as UserRole;
+    const roleConfig = ROLE_CONFIG[role];
 
-        if (!roleConfig.canSubmitReports) {
-            return errorResponse("You do not have permission to submit reports.", 403);
-        }
-
-        /* Validate status transition */
-        const allowed = REPORT_STATUS_TRANSITIONS[report.status];
-        const transition = allowed.find(
-            (t) => t.to === ReportStatus.SUBMITTED && t.requiredRole.includes(role),
-        );
-        if (!transition) {
-            return errorResponse(
-                `Cannot submit a report in status "${report.status}".`,
-                409,
-            );
-        }
-
-        const now = new Date().toISOString();
-
-        const updated = await db.$transaction(async (tx) => {
-            const r = await tx.report.update({
-                where: { id },
-                data: {
-                    status: ReportStatus.SUBMITTED,
-                    submittedById: auth.user.id,
-                    updatedAt: new Date(),
-                },
-            });
-
-            await tx.reportEvent.create({
-                data: {
-                    reportId: id,
-                    eventType: ReportEventType.SUBMITTED,
-                    actorId: auth.user.id,
-                    timestamp: new Date(),
-                    previousStatus: report.status,
-                    newStatus: ReportStatus.SUBMITTED,
-                },
-            });
-
-            return r;
-        });
-
-        await cache.invalidatePattern(`report:${id}*`);
-        await cache.invalidatePattern(`reports:list:${auth.user.id}:*`);
-
-        return NextResponse.json(successResponse(updated));
-    } catch (err) {
-        return handleApiError(err);
+    if (!roleConfig.canSubmitReports) {
+      return errorResponse("You do not have permission to submit reports.", 403);
     }
+
+    /* Validate status transition */
+    const allowed = REPORT_STATUS_TRANSITIONS[report.status];
+    const transition = allowed.find(
+      (t) => t.to === ReportStatus.SUBMITTED && t.requiredRole.includes(role),
+    );
+    if (!transition) {
+      return errorResponse(`Cannot submit a report in status "${report.status}".`, 409);
+    }
+
+    const now = new Date().toISOString();
+
+    const updated = await db.$transaction(async (tx) => {
+      const r = await tx.report.update({
+        where: { id },
+        data: {
+          status: ReportStatus.SUBMITTED,
+          submittedById: auth.user.id,
+          updatedAt: new Date(),
+        },
+      });
+
+      await tx.reportEvent.create({
+        data: {
+          reportId: id,
+          eventType: ReportEventType.SUBMITTED,
+          actorId: auth.user.id,
+          timestamp: new Date(),
+          previousStatus: report.status,
+          newStatus: ReportStatus.SUBMITTED,
+        },
+      });
+
+      return r;
+    });
+
+    await cache.invalidatePattern(`report:${id}*`);
+    await cache.invalidatePattern(`reports:list:${auth.user.id}:*`);
+
+    return NextResponse.json(successResponse(updated));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/users/profile/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/users/profile/route.ts
  * GET /api/users/profile  — get own profile
@@ -10716,59 +10812,60 @@ import { db, cache } from "@/lib/data/db";
 /* ── Update schema ────────────────────────────────────────────────────────── */
 
 const UpdateProfileSchema = z.object({
-    firstName: z.string().min(1).max(60).optional(),
-    lastName: z.string().min(1).max(60).optional(),
-    phone: z.string().max(30).optional(),
+  firstName: z.string().min(1).max(60).optional(),
+  lastName: z.string().min(1).max(60).optional(),
+  phone: z.string().max(30).optional(),
 });
 
 /* ── GET /api/users/profile ───────────────────────────────────────────────── */
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+  const auth = await verifyAuth(req);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const user = await db.user.findUnique({
-        where: { id: auth.user.id },
-        omit: { passwordHash: true },
-    });
-    if (!user) {
-        return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
-    }
+  const user = await db.user.findUnique({
+    where: { id: auth.user.id },
+    omit: { passwordHash: true },
+  });
+  if (!user) {
+    return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
+  }
 
-    return NextResponse.json({ success: true, data: user });
+  return NextResponse.json({ success: true, data: user });
 }
 
 /* ── PUT /api/users/profile ───────────────────────────────────────────────── */
 
 export async function PUT(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+  const auth = await verifyAuth(req);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const body = UpdateProfileSchema.parse(await req.json());
+  const body = UpdateProfileSchema.parse(await req.json());
 
-    const user = await db.user.findUnique({ where: { id: auth.user.id } });
-    if (!user) {
-        return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
-    }
+  const user = await db.user.findUnique({ where: { id: auth.user.id } });
+  if (!user) {
+    return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
+  }
 
-    const updated = await db.user.update({
-        where: { id: auth.user.id },
-        data: body,
-        omit: { passwordHash: true },
-    });
+  const updated = await db.user.update({
+    where: { id: auth.user.id },
+    data: body,
+    omit: { passwordHash: true },
+  });
 
-    await cache.invalidatePattern(`users:detail:${auth.user.id}`);
+  await cache.invalidatePattern(`users:detail:${auth.user.id}`);
 
-    return NextResponse.json({ success: true, data: updated });
+  return NextResponse.json({ success: true, data: updated });
 }
-````
+```
 
 ## File: config/hierarchy.ts
-````typescript
+
+```typescript
 /**
  * config/hierarchy.ts
  * Org hierarchy configuration — 2 levels: Group → Campus.
@@ -10778,60 +10875,58 @@ export async function PUT(req: NextRequest) {
 import { UserRole } from "@/types/global";
 
 export const ORG_HIERARCHY_CONFIG: OrgLevelConfig[] = [
-    {
-        level: "GROUP",
-        label: "Group",
-        childLevel: "CAMPUS",
-        leaderRole: UserRole.GROUP_PASTOR,
-        adminRole: UserRole.GROUP_ADMIN,
-    },
-    {
-        level: "CAMPUS",
-        label: "Campus",
-        parentLevel: "GROUP",
-        leaderRole: UserRole.CAMPUS_PASTOR,
-        adminRole: UserRole.CAMPUS_ADMIN,
-    },
+  {
+    level: "GROUP",
+    label: "Group",
+    childLevel: "CAMPUS",
+    leaderRole: UserRole.GROUP_PASTOR,
+    adminRole: UserRole.GROUP_ADMIN,
+  },
+  {
+    level: "CAMPUS",
+    label: "Campus",
+    parentLevel: "GROUP",
+    leaderRole: UserRole.CAMPUS_PASTOR,
+    adminRole: UserRole.CAMPUS_ADMIN,
+  },
 ];
 
 /** Map from org level to its config */
 export const ORG_LEVEL_MAP: Record<"GROUP" | "CAMPUS", OrgLevelConfig> = {
-    GROUP: ORG_HIERARCHY_CONFIG[0],
-    CAMPUS: ORG_HIERARCHY_CONFIG[1],
+  GROUP: ORG_HIERARCHY_CONFIG[0],
+  CAMPUS: ORG_HIERARCHY_CONFIG[1],
 };
 
 /** Which roles are scoped to the CAMPUS level */
 export const CAMPUS_SCOPED_ROLES: UserRole[] = [
-    UserRole.CAMPUS_PASTOR,
-    UserRole.CAMPUS_ADMIN,
-    UserRole.DATA_ENTRY,
+  UserRole.CAMPUS_PASTOR,
+  UserRole.CAMPUS_ADMIN,
+  UserRole.DATA_ENTRY,
 ];
 
 /** Which roles are scoped to the GROUP level */
-export const GROUP_SCOPED_ROLES: UserRole[] = [
-    UserRole.GROUP_PASTOR,
-    UserRole.GROUP_ADMIN,
-];
+export const GROUP_SCOPED_ROLES: UserRole[] = [UserRole.GROUP_PASTOR, UserRole.GROUP_ADMIN];
 
 /** Which roles have no org-scope restriction (see all) */
 export const GLOBAL_SCOPE_ROLES: UserRole[] = [
-    UserRole.SUPERADMIN,
-    UserRole.SPO,
-    UserRole.CEO,
-    UserRole.OFFICE_OF_CEO,
-    UserRole.CHURCH_MINISTRY,
+  UserRole.SUPERADMIN,
+  UserRole.SPO,
+  UserRole.CEO,
+  UserRole.OFFICE_OF_CEO,
+  UserRole.CHURCH_MINISTRY,
 ];
 
 /** Get the org scope type for a role */
 export function getOrgScope(role: UserRole): "campus" | "group" | "global" {
-    if (CAMPUS_SCOPED_ROLES.includes(role)) return "campus";
-    if (GROUP_SCOPED_ROLES.includes(role)) return "group";
-    return "global";
+  if (CAMPUS_SCOPED_ROLES.includes(role)) return "campus";
+  if (GROUP_SCOPED_ROLES.includes(role)) return "group";
+  return "global";
 }
-````
+```
 
 ## File: lib/data/redis.ts
-````typescript
+
+```typescript
 /**
  * lib/data/redis.ts
  * Upstash Redis client singleton with namespaced keys.
@@ -10846,14 +10941,14 @@ import { Ratelimit } from "@upstash/ratelimit";
 // ─────────────────────────────────────────────────────────────────────────────
 
 const globalForRedis = globalThis as typeof globalThis & {
-    __redis?: Redis;
+  __redis?: Redis;
 };
 
 if (!globalForRedis.__redis) {
-    globalForRedis.__redis = new Redis({
-        url: process.env.UPSTASH_REDIS_REST_URL!,
-        token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-    });
+  globalForRedis.__redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL!,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+  });
 }
 
 export const redis = globalForRedis.__redis;
@@ -10865,7 +10960,7 @@ export const redis = globalForRedis.__redis;
 const PREFIX = process.env.REDIS_PREFIX ?? "hrs:";
 
 function key(k: string): string {
-    return `${PREFIX}${k}`;
+  return `${PREFIX}${k}`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -10873,59 +10968,59 @@ function key(k: string): string {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const cache = {
-    /**
-     * The Upstash REST SDK automatically deserialises JSON when reading, so the
-     * returned value is already a parsed object even though we passed a JSON
-     * string to `set()`.  We accept `unknown` here so callers can use the value
-     * directly without calling `JSON.parse()` again.
-     */
-    async get(k: string): Promise<unknown> {
-        const val = await redis.get<unknown>(key(k));
-        return val ?? null;
-    },
+  /**
+   * The Upstash REST SDK automatically deserialises JSON when reading, so the
+   * returned value is already a parsed object even though we passed a JSON
+   * string to `set()`.  We accept `unknown` here so callers can use the value
+   * directly without calling `JSON.parse()` again.
+   */
+  async get(k: string): Promise<unknown> {
+    const val = await redis.get<unknown>(key(k));
+    return val ?? null;
+  },
 
-    async set(k: string, value: string, ttlSeconds?: number): Promise<void> {
-        if (ttlSeconds) {
-            await redis.set(key(k), value, { ex: ttlSeconds });
-        } else {
-            await redis.set(key(k), value);
-        }
-    },
+  async set(k: string, value: string, ttlSeconds?: number): Promise<void> {
+    if (ttlSeconds) {
+      await redis.set(key(k), value, { ex: ttlSeconds });
+    } else {
+      await redis.set(key(k), value);
+    }
+  },
 
-    async del(k: string): Promise<void> {
-        await redis.del(key(k));
-    },
+  async del(k: string): Promise<void> {
+    await redis.del(key(k));
+  },
 
-    async exists(k: string): Promise<boolean> {
-        const result = await redis.exists(key(k));
-        return result === 1;
-    },
+  async exists(k: string): Promise<boolean> {
+    const result = await redis.exists(key(k));
+    return result === 1;
+  },
 
-    /**
-     * Invalidate all keys matching a glob pattern.
-     * Uses SCAN to avoid blocking the server.
-     */
-    async invalidatePattern(pattern: string): Promise<number> {
-        let cursor: string | number = 0;
-        let deleted = 0;
-        do {
-            const result = await redis.scan(cursor, {
-                match: key(pattern),
-                count: 100,
-            });
-            const [nextCur, keys] = result as [number | string, string[]];
-            cursor = nextCur;
-            if (keys.length > 0) {
-                await redis.del(...keys);
-                deleted += keys.length;
-            }
-        } while (cursor !== 0);
-        return deleted;
-    },
+  /**
+   * Invalidate all keys matching a glob pattern.
+   * Uses SCAN to avoid blocking the server.
+   */
+  async invalidatePattern(pattern: string): Promise<number> {
+    let cursor: string | number = 0;
+    let deleted = 0;
+    do {
+      const result = await redis.scan(cursor, {
+        match: key(pattern),
+        count: 100,
+      });
+      const [nextCur, keys] = result as [number | string, string[]];
+      cursor = nextCur;
+      if (keys.length > 0) {
+        await redis.del(...keys);
+        deleted += keys.length;
+      }
+    } while (cursor !== 0);
+    return deleted;
+  },
 
-    async flush(): Promise<void> {
-        await cache.invalidatePattern("*");
-    },
+  async flush(): Promise<void> {
+    await cache.invalidatePattern("*");
+  },
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -10936,10 +11031,10 @@ export const cache = {
  * General API rate limiter: 60 requests per 60 seconds per identifier.
  */
 export const apiRateLimiter = new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(60, "60 s"),
-    prefix: `${PREFIX}rl:api`,
-    analytics: true,
+  redis,
+  limiter: Ratelimit.slidingWindow(60, "60 s"),
+  prefix: `${PREFIX}rl:api`,
+  analytics: true,
 });
 
 /**
@@ -10947,27 +11042,28 @@ export const apiRateLimiter = new Ratelimit({
  * Prevents brute-force login attempts.
  */
 export const authRateLimiter = new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(10, "60 s"),
-    prefix: `${PREFIX}rl:auth`,
-    analytics: true,
+  redis,
+  limiter: Ratelimit.slidingWindow(10, "60 s"),
+  prefix: `${PREFIX}rl:auth`,
+  analytics: true,
 });
 
 /**
  * Strict rate limiter for sensitive operations: 5 per 300 seconds.
  */
 export const strictRateLimiter = new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(5, "300 s"),
-    prefix: `${PREFIX}rl:strict`,
-    analytics: true,
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "300 s"),
+  prefix: `${PREFIX}rl:strict`,
+  analytics: true,
 });
 
 export default redis;
-````
+```
 
 ## File: lib/design-system/antd-theme.ts
-````typescript
+
+```typescript
 /**
  * Ant Design Theme — CSS Variable Bridge
  *
@@ -10984,134 +11080,135 @@ import type { ThemeConfig } from "antd";
 import { palette } from "./tokens";
 
 export function getAntdTheme(isDark: boolean): ThemeConfig {
-    return {
-        token: {
-            /* ── Brand ─────────────────────────────────────────── */
-            colorPrimary: palette.emerald[500],         // #10b981
-            colorSuccess: isDark ? "#4ade80" : "#15803d",
-            colorWarning: isDark ? "#fbbf24" : "#b45309",
-            colorError: isDark ? "#f87171" : "#dc2626",
-            colorInfo: isDark ? palette.emerald[400] : palette.emerald[700],
+  return {
+    token: {
+      /* ── Brand ─────────────────────────────────────────── */
+      colorPrimary: palette.emerald[500], // #10b981
+      colorSuccess: isDark ? "#4ade80" : "#15803d",
+      colorWarning: isDark ? "#fbbf24" : "#b45309",
+      colorError: isDark ? "#f87171" : "#dc2626",
+      colorInfo: isDark ? palette.emerald[400] : palette.emerald[700],
 
-            /* ── Surfaces / Backgrounds ─────────────────────────── */
-            colorBgContainer: isDark ? palette.black.soft : palette.neutral[0],
-            colorBgElevated: isDark ? palette.black.elevated : palette.neutral[0],
-            colorBgLayout: isDark ? palette.black.base : palette.neutral[50],
-            colorBgSpotlight: isDark ? palette.black.elevated : palette.neutral[100],
+      /* ── Surfaces / Backgrounds ─────────────────────────── */
+      colorBgContainer: isDark ? palette.black.soft : palette.neutral[0],
+      colorBgElevated: isDark ? palette.black.elevated : palette.neutral[0],
+      colorBgLayout: isDark ? palette.black.base : palette.neutral[50],
+      colorBgSpotlight: isDark ? palette.black.elevated : palette.neutral[100],
 
-            /* ── Text ──────────────────────────────────────────── */
-            colorText: isDark ? "#F8FAFC" : palette.neutral[900],
-            colorTextSecondary: isDark ? palette.neutral[400] : palette.neutral[500],
-            colorTextTertiary: isDark ? "#475569" : palette.neutral[400],
-            colorTextQuaternary: isDark ? "#334155" : palette.neutral[300],
+      /* ── Text ──────────────────────────────────────────── */
+      colorText: isDark ? "#F8FAFC" : palette.neutral[900],
+      colorTextSecondary: isDark ? palette.neutral[400] : palette.neutral[500],
+      colorTextTertiary: isDark ? "#475569" : palette.neutral[400],
+      colorTextQuaternary: isDark ? "#334155" : palette.neutral[300],
 
-            /* ── Borders ───────────────────────────────────────── */
-            colorBorder: isDark ? "rgba(255,255,255,0.08)" : palette.neutral[200],
-            colorBorderSecondary: isDark ? "rgba(255,255,255,0.04)" : palette.neutral[100],
+      /* ── Borders ───────────────────────────────────────── */
+      colorBorder: isDark ? "rgba(255,255,255,0.08)" : palette.neutral[200],
+      colorBorderSecondary: isDark ? "rgba(255,255,255,0.04)" : palette.neutral[100],
 
-            /* ── Shape ─────────────────────────────────────────── */
-            borderRadius: 8,
-            borderRadiusLG: 12,
-            borderRadiusSM: 4,
-            borderRadiusXS: 2,
+      /* ── Shape ─────────────────────────────────────────── */
+      borderRadius: 8,
+      borderRadiusLG: 12,
+      borderRadiusSM: 4,
+      borderRadiusXS: 2,
 
-            /* ── Typography ─────────────────────────────────────── */
-            fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-            fontSize: 14,
-            fontSizeHeading1: 30,
-            fontSizeHeading2: 24,
-            fontSizeHeading3: 20,
-            fontSizeHeading4: 16,
-            fontSizeHeading5: 14,
+      /* ── Typography ─────────────────────────────────────── */
+      fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      fontSize: 14,
+      fontSizeHeading1: 30,
+      fontSizeHeading2: 24,
+      fontSizeHeading3: 20,
+      fontSizeHeading4: 16,
+      fontSizeHeading5: 14,
 
-            /* ── Motion ─────────────────────────────────────────── */
-            motionDurationSlow: "0.3s",
-            motionDurationMid: "0.2s",
-            motionDurationFast: "0.1s",
+      /* ── Motion ─────────────────────────────────────────── */
+      motionDurationSlow: "0.3s",
+      motionDurationMid: "0.2s",
+      motionDurationFast: "0.1s",
 
-            /* ── Shadows ────────────────────────────────────────── */
-            boxShadow: isDark
-                ? "0 4px 8px -2px rgb(0 0 0 / 0.50), 0 2px 4px -2px rgb(0 0 0 / 0.35)"
-                : "0 4px 8px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05)",
-            boxShadowSecondary: isDark
-                ? "0 12px 20px -4px rgb(0 0 0 / 0.60), 0 4px 8px -4px rgb(0 0 0 / 0.40)"
-                : "0 12px 20px -4px rgb(0 0 0 / 0.10), 0 4px 8px -4px rgb(0 0 0 / 0.06)",
-        },
-        components: {
-            Button: {
-                borderRadius: 12,
-                borderRadiusLG: 12,
-                borderRadiusSM: 8,
-                controlHeight: 40,
-                controlHeightLG: 48,
-                controlHeightSM: 32,
-                fontWeight: 600,
-            },
-            Card: {
-                borderRadiusLG: 20,
-                paddingLG: 24,
-            },
-            Modal: {
-                borderRadiusLG: 24,
-            },
-            Input: {
-                borderRadius: 12,
-                borderRadiusLG: 12,
-                controlHeight: 40,
-                controlHeightLG: 48,
-                controlHeightSM: 32,
-            },
-            Select: {
-                borderRadius: 12,
-            },
-            Table: {
-                borderRadius: 12,
-                borderRadiusLG: 12,
-            },
-            Menu: {
-                borderRadius: 8,
-                itemBorderRadius: 8,
-                subMenuItemBorderRadius: 8,
-                itemMarginInline: 8,
-                itemPaddingInline: 12,
-            },
-            Tabs: {
-                borderRadius: 8,
-            },
-            Tag: {
-                borderRadiusSM: 6,
-            },
-            Switch: {
-                trackMinWidth: 44,
-                trackHeight: 22,
-                handleSize: 18,
-                trackPadding: 2,
-                innerMinMargin: 4,
-                innerMaxMargin: 24,
-            },
-            DatePicker: {
-                borderRadius: 12,
-            },
-            Notification: {
-                borderRadiusLG: 16,
-            },
-            Message: {
-                borderRadiusLG: 12,
-            },
-            Tooltip: {
-                colorBgSpotlight: isDark ? palette.black.elevated : palette.neutral[900],
-                colorTextLightSolid: isDark ? "#F8FAFC" : "#FFFFFF",
-                borderRadius: 8,
-            },
-        },
-    };
+      /* ── Shadows ────────────────────────────────────────── */
+      boxShadow: isDark
+        ? "0 4px 8px -2px rgb(0 0 0 / 0.50), 0 2px 4px -2px rgb(0 0 0 / 0.35)"
+        : "0 4px 8px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.05)",
+      boxShadowSecondary: isDark
+        ? "0 12px 20px -4px rgb(0 0 0 / 0.60), 0 4px 8px -4px rgb(0 0 0 / 0.40)"
+        : "0 12px 20px -4px rgb(0 0 0 / 0.10), 0 4px 8px -4px rgb(0 0 0 / 0.06)",
+    },
+    components: {
+      Button: {
+        borderRadius: 12,
+        borderRadiusLG: 12,
+        borderRadiusSM: 8,
+        controlHeight: 40,
+        controlHeightLG: 48,
+        controlHeightSM: 32,
+        fontWeight: 600,
+      },
+      Card: {
+        borderRadiusLG: 20,
+        paddingLG: 24,
+      },
+      Modal: {
+        borderRadiusLG: 24,
+      },
+      Input: {
+        borderRadius: 12,
+        borderRadiusLG: 12,
+        controlHeight: 40,
+        controlHeightLG: 48,
+        controlHeightSM: 32,
+      },
+      Select: {
+        borderRadius: 12,
+      },
+      Table: {
+        borderRadius: 12,
+        borderRadiusLG: 12,
+      },
+      Menu: {
+        borderRadius: 8,
+        itemBorderRadius: 8,
+        subMenuItemBorderRadius: 8,
+        itemMarginInline: 8,
+        itemPaddingInline: 12,
+      },
+      Tabs: {
+        borderRadius: 8,
+      },
+      Tag: {
+        borderRadiusSM: 6,
+      },
+      Switch: {
+        trackMinWidth: 44,
+        trackHeight: 22,
+        handleSize: 18,
+        trackPadding: 2,
+        innerMinMargin: 4,
+        innerMaxMargin: 24,
+      },
+      DatePicker: {
+        borderRadius: 12,
+      },
+      Notification: {
+        borderRadiusLG: 16,
+      },
+      Message: {
+        borderRadiusLG: 12,
+      },
+      Tooltip: {
+        colorBgSpotlight: isDark ? palette.black.elevated : palette.neutral[900],
+        colorTextLightSolid: isDark ? "#F8FAFC" : "#FFFFFF",
+        borderRadius: 8,
+      },
+    },
+  };
 }
 
 export default getAntdTheme;
-````
+```
 
 ## File: lib/hooks/useApiData.ts
-````typescript
+
+```typescript
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -11151,7 +11248,11 @@ export function useApiData<T>(
         if (!res.ok) {
           const text = await res.text().catch(() => "");
           let body: { error?: string } = {};
-          try { body = text ? JSON.parse(text) : {}; } catch { /* ignore */ }
+          try {
+            body = text ? JSON.parse(text) : {};
+          } catch {
+            /* ignore */
+          }
           throw new Error(body.error || `Request failed (${res.status})`);
         }
         // Guard against empty / non-JSON responses (e.g., 204 No Content)
@@ -11180,10 +11281,11 @@ export function useApiData<T>(
 
   return { data, loading, error, refetch };
 }
-````
+```
 
 ## File: lib/utils/api.ts
-````typescript
+
+```typescript
 /**
  * lib/utils/api.ts
  * Standard API response helpers — used in every route handler.
@@ -11193,41 +11295,41 @@ import { NextResponse } from "next/server";
 
 /** Returns a plain { success: true, data } object — wrap in NextResponse.json() at the call site. */
 export function successResponse<T>(data: T): { success: true; data: T } {
-    return { success: true, data };
+  return { success: true, data };
 }
 
 export function errorResponse(error: string, status: number) {
-    return NextResponse.json({ success: false, error, code: status } satisfies ApiResponse<never>, {
-        status,
-    });
+  return NextResponse.json({ success: false, error, code: status } satisfies ApiResponse<never>, {
+    status,
+  });
 }
 
 export function unauthorizedResponse(message = "Unauthorised") {
-    return errorResponse(message, 401);
+  return errorResponse(message, 401);
 }
 
 export function forbiddenResponse(message = "Insufficient permissions") {
-    return errorResponse(message, 403);
+  return errorResponse(message, 403);
 }
 
 export function notFoundResponse(message = "Not found") {
-    return errorResponse(message, 404);
+  return errorResponse(message, 404);
 }
 
 export function badRequestResponse(message = "Bad request") {
-    return errorResponse(message, 400);
+  return errorResponse(message, 400);
 }
 
 export function handleApiError(err: unknown) {
-    console.error("[API Error]", err);
-    const message =
-        err instanceof Error ? err.message : "An unexpected error occurred";
-    return errorResponse(message, 500);
+  console.error("[API Error]", err);
+  const message = err instanceof Error ? err.message : "An unexpected error occurred";
+  return errorResponse(message, 500);
 }
-````
+```
 
 ## File: lib/utils/exportReports.ts
-````typescript
+
+```typescript
 /**
  * lib/utils/exportReports.ts
  *
@@ -11249,12 +11351,12 @@ const ec = (CONTENT.reports as Record<string, unknown>).export as Record<string,
 /* ── helpers ────────────────────────────────────────────────────────────── */
 
 function pct(achieved?: number, goal?: number): string {
-    if (achieved == null || goal == null || goal === 0) return "";
-    return `${Math.round((achieved / goal) * 100)}%`;
+  if (achieved == null || goal == null || goal === 0) return "";
+  return `${Math.round((achieved / goal) * 100)}%`;
 }
 
 function safeStr(v: unknown): string {
-    return v == null ? "" : String(v);
+  return v == null ? "" : String(v);
 }
 
 /* ── ExportDialogOptions ────────────────────────────────────────────────── */
@@ -11263,18 +11365,18 @@ export type ExportGrouping = "none" | "campus" | "month" | "quarter";
 export type ExportFormat = "single" | "per-campus";
 
 export interface ExportDialogOptions {
-    /** Which reports to export — already filtered by caller */
-    reports: Report[];
-    templates: ReportTemplate[];
-    campuses: Campus[];
-    grouping: ExportGrouping;
-    includeMetrics: boolean;
-    includeGoals: boolean;
-    includeComments: boolean;
-    format: ExportFormat;
-    /** Optional per-report sections/metrics for metric export */
-    sections?: ReportSection[];
-    metrics?: ReportMetric[];
+  /** Which reports to export — already filtered by caller */
+  reports: Report[];
+  templates: ReportTemplate[];
+  campuses: Campus[];
+  grouping: ExportGrouping;
+  includeMetrics: boolean;
+  includeGoals: boolean;
+  includeComments: boolean;
+  format: ExportFormat;
+  /** Optional per-report sections/metrics for metric export */
+  sections?: ReportSection[];
+  metrics?: ReportMetric[];
 }
 
 /* ── exportReportsList ──────────────────────────────────────────────────── */
@@ -11284,53 +11386,53 @@ export interface ExportDialogOptions {
  * Columns: Title · Campus · Period · Status · Template · Deadline · Created
  */
 export function exportReportsList(
-    reports: Report[],
-    templates: ReportTemplate[],
-    campuses: Campus[],
+  reports: Report[],
+  templates: ReportTemplate[],
+  campuses: Campus[],
 ): void {
-    const campusMap = Object.fromEntries(campuses.map((c) => [c.id, c.name]));
+  const campusMap = Object.fromEntries(campuses.map((c) => [c.id, c.name]));
 
-    const header = [
-        ec.colTitle,
-        ec.colCampus,
-        ec.colPeriod,
-        ec.colStatus,
-        ec.colTemplate,
-        ec.colDeadline,
-        ec.colCreatedAt,
+  const header = [
+    ec.colTitle,
+    ec.colCampus,
+    ec.colPeriod,
+    ec.colStatus,
+    ec.colTemplate,
+    ec.colDeadline,
+    ec.colCreatedAt,
+  ];
+
+  const rows = reports.map((r) => {
+    const template = templates.find((t) => t.id === r.templateId);
+    return [
+      getReportLabel(r, templates),
+      campusMap[r.campusId] ?? r.campusId,
+      formatReportPeriod(r),
+      (CONTENT.reports.status as Record<string, string>)?.[r.status] ?? r.status,
+      template?.name ?? "",
+      fmtDate(r.deadline),
+      fmtDate(r.createdAt),
     ];
+  });
 
-    const rows = reports.map((r) => {
-        const template = templates.find((t) => t.id === r.templateId);
-        return [
-            getReportLabel(r, templates),
-            campusMap[r.campusId] ?? r.campusId,
-            formatReportPeriod(r),
-            (CONTENT.reports.status as Record<string, string>)?.[r.status] ?? r.status,
-            template?.name ?? "",
-            fmtDate(r.deadline),
-            fmtDate(r.createdAt),
-        ];
-    });
+  const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
 
-    const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+  /* column widths */
+  ws["!cols"] = [
+    { wch: 40 }, // title
+    { wch: 24 }, // campus
+    { wch: 18 }, // period
+    { wch: 16 }, // status
+    { wch: 28 }, // template
+    { wch: 14 }, // deadline
+    { wch: 14 }, // created
+  ];
 
-    /* column widths */
-    ws["!cols"] = [
-        { wch: 40 }, // title
-        { wch: 24 }, // campus
-        { wch: 18 }, // period
-        { wch: 16 }, // status
-        { wch: 28 }, // template
-        { wch: 14 }, // deadline
-        { wch: 14 }, // created
-    ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, ec.sheetList);
 
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, ec.sheetList);
-
-    const timestamp = new Date().toISOString().slice(0, 10);
-    XLSX.writeFile(wb, `${ec.listFilename}-${timestamp}.xlsx`);
+  const timestamp = new Date().toISOString().slice(0, 10);
+  XLSX.writeFile(wb, `${ec.listFilename}-${timestamp}.xlsx`);
 }
 
 /* ── exportReportDetail ─────────────────────────────────────────────────── */
@@ -11341,96 +11443,95 @@ export function exportReportsList(
  *  Sheet 2 "Metrics"   — section → metric → achieved / goal / % / comment
  */
 export function exportReportDetail(
-    report: Report,
-    sections: ReportSection[],
-    metrics: ReportMetric[],
-    templates: ReportTemplate[],
-    campuses: Campus[],
-    users: UserProfile[],
+  report: Report,
+  sections: ReportSection[],
+  metrics: ReportMetric[],
+  templates: ReportTemplate[],
+  campuses: Campus[],
+  users: UserProfile[],
 ): void {
-    const campusName = campuses.find((c) => c.id === report.campusId)?.name ?? report.campusId;
-    const template = templates.find((t) => t.id === report.templateId);
-    const submitter = users.find((u) => u.id === report.submittedById);
-    const submitterName = submitter ? `${submitter.firstName} ${submitter.lastName}` : "";
+  const campusName = campuses.find((c) => c.id === report.campusId)?.name ?? report.campusId;
+  const template = templates.find((t) => t.id === report.templateId);
+  const submitter = users.find((u) => u.id === report.submittedById);
+  const submitterName = submitter ? `${submitter.firstName} ${submitter.lastName}` : "";
 
-    const statusLabel =
-        (CONTENT.reports.status as Record<string, string>)?.[report.status] ??
-        report.status;
+  const statusLabel =
+    (CONTENT.reports.status as Record<string, string>)?.[report.status] ?? report.status;
 
-    /* ── Sheet 1: Overview ─────────────────────────────────────────────── */
+  /* ── Sheet 1: Overview ─────────────────────────────────────────────── */
 
-    const overviewData: [string, string][] = [
-        [ec.colTitle, getReportLabel(report, templates)],
-        [ec.colCampus, campusName],
-        [ec.colPeriod, formatReportPeriod(report)],
-        [ec.colStatus, statusLabel],
-        [ec.colTemplate, template?.name ?? ""],
-        [ec.colDeadline, fmtDate(report.deadline)],
-        [ec.colCreatedAt, fmtDate(report.createdAt)],
-        [ec.colSubmittedBy, submitterName],
-        ...(report.notes ? [[ec.colNotes, safeStr(report.notes)]] as [string, string][] : []),
-    ];
+  const overviewData: [string, string][] = [
+    [ec.colTitle, getReportLabel(report, templates)],
+    [ec.colCampus, campusName],
+    [ec.colPeriod, formatReportPeriod(report)],
+    [ec.colStatus, statusLabel],
+    [ec.colTemplate, template?.name ?? ""],
+    [ec.colDeadline, fmtDate(report.deadline)],
+    [ec.colCreatedAt, fmtDate(report.createdAt)],
+    [ec.colSubmittedBy, submitterName],
+    ...(report.notes ? ([[ec.colNotes, safeStr(report.notes)]] as [string, string][]) : []),
+  ];
 
-    const wsOverview = XLSX.utils.aoa_to_sheet(overviewData);
-    wsOverview["!cols"] = [{ wch: 18 }, { wch: 48 }];
+  const wsOverview = XLSX.utils.aoa_to_sheet(overviewData);
+  wsOverview["!cols"] = [{ wch: 18 }, { wch: 48 }];
 
-    /* ── Sheet 2: Metrics ──────────────────────────────────────────────── */
+  /* ── Sheet 2: Metrics ──────────────────────────────────────────────── */
 
-    const metricsHeader = [
-        ec.colSection,
-        ec.colMetric,
-        ec.colAchieved,
-        ec.colGoal,
-        ec.colPercentage,
-        ec.colComment,
-    ];
+  const metricsHeader = [
+    ec.colSection,
+    ec.colMetric,
+    ec.colAchieved,
+    ec.colGoal,
+    ec.colPercentage,
+    ec.colComment,
+  ];
 
-    const metricRows: (string | number)[][] = [];
+  const metricRows: (string | number)[][] = [];
 
-    // If saved report sections exist, use them
-    if (sections.length > 0) {
-        for (const section of sections) {
-            const sectionMetrics = metrics.filter((m) => m.reportSectionId === section.id);
-            for (const m of sectionMetrics) {
-                metricRows.push([
-                    section.sectionName,
-                    m.metricName,
-                    m.monthlyAchieved ?? "",
-                    m.monthlyGoal ?? "",
-                    pct(m.monthlyAchieved, m.monthlyGoal),
-                    safeStr(m.comment),
-                ]);
-            }
-        }
-    } else if (template) {
-        // Fall back to template structure (no values — report was never filled)
-        for (const section of [...template.sections].sort((a, b) => a.order - b.order)) {
-            for (const m of [...section.metrics].sort((a, b) => a.order - b.order)) {
-                metricRows.push([section.name, m.name, "", "", "", ""]);
-            }
-        }
+  // If saved report sections exist, use them
+  if (sections.length > 0) {
+    for (const section of sections) {
+      const sectionMetrics = metrics.filter((m) => m.reportSectionId === section.id);
+      for (const m of sectionMetrics) {
+        metricRows.push([
+          section.sectionName,
+          m.metricName,
+          m.monthlyAchieved ?? "",
+          m.monthlyGoal ?? "",
+          pct(m.monthlyAchieved, m.monthlyGoal),
+          safeStr(m.comment),
+        ]);
+      }
     }
+  } else if (template) {
+    // Fall back to template structure (no values — report was never filled)
+    for (const section of [...template.sections].sort((a, b) => a.order - b.order)) {
+      for (const m of [...section.metrics].sort((a, b) => a.order - b.order)) {
+        metricRows.push([section.name, m.name, "", "", "", ""]);
+      }
+    }
+  }
 
-    const wsMetrics = XLSX.utils.aoa_to_sheet([metricsHeader, ...metricRows]);
-    wsMetrics["!cols"] = [
-        { wch: 26 }, // section
-        { wch: 32 }, // metric
-        { wch: 12 }, // achieved
-        { wch: 12 }, // goal
-        { wch: 12 }, // %
-        { wch: 40 }, // comment
-    ];
+  const wsMetrics = XLSX.utils.aoa_to_sheet([metricsHeader, ...metricRows]);
+  wsMetrics["!cols"] = [
+    { wch: 26 }, // section
+    { wch: 32 }, // metric
+    { wch: 12 }, // achieved
+    { wch: 12 }, // goal
+    { wch: 12 }, // %
+    { wch: 40 }, // comment
+  ];
 
-    /* ── Assemble workbook ─────────────────────────────────────────────── */
+  /* ── Assemble workbook ─────────────────────────────────────────────── */
 
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, wsOverview, ec.sheetMeta);
-    XLSX.utils.book_append_sheet(wb, wsMetrics, ec.sheetMetrics);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, wsOverview, ec.sheetMeta);
+  XLSX.utils.book_append_sheet(wb, wsMetrics, ec.sheetMetrics);
 
-    const safeName = getReportLabel(report, templates)
-        .replace(/[/\\?*[\]]/g, "-")
-        .slice(0, 50);
-    XLSX.writeFile(wb, `${safeName}.xlsx`);
+  const safeName = getReportLabel(report, templates)
+    .replace(/[/\\?*[\]]/g, "-")
+    .slice(0, 50);
+  XLSX.writeFile(wb, `${safeName}.xlsx`);
 }
 
 /* ── exportReportsWithOptions ───────────────────────────────────────────── */
@@ -11441,133 +11542,145 @@ export function exportReportDetail(
  * and optional metric / goal / comment columns.
  */
 export function exportReportsWithOptions(opts: ExportDialogOptions): void {
-    const {
-        reports,
-        templates,
-        campuses,
-        grouping,
-        includeMetrics,
-        includeGoals,
-        includeComments,
-        format,
-        sections = [],
-        metrics = [],
-    } = opts;
+  const {
+    reports,
+    templates,
+    campuses,
+    grouping,
+    includeMetrics,
+    includeGoals,
+    includeComments,
+    format,
+    sections = [],
+    metrics = [],
+  } = opts;
 
-    const campusMap = Object.fromEntries(campuses.map((c) => [c.id, c.name]));
-    const timestamp = new Date().toISOString().slice(0, 10);
-    const wb = XLSX.utils.book_new();
+  const campusMap = Object.fromEntries(campuses.map((c) => [c.id, c.name]));
+  const timestamp = new Date().toISOString().slice(0, 10);
+  const wb = XLSX.utils.book_new();
 
-    /* ── Build base columns (always included) ─────────────────────────── */
+  /* ── Build base columns (always included) ─────────────────────────── */
 
-    type ColDef = { header: string; wch: number; value: (r: Report) => string | number };
+  type ColDef = { header: string; wch: number; value: (r: Report) => string | number };
 
-    const baseCols: ColDef[] = [
-        { header: ec.colTitle, wch: 40, value: (r) => getReportLabel(r, templates) },
-        { header: ec.colCampus, wch: 24, value: (r) => campusMap[r.campusId] ?? r.campusId },
-        { header: ec.colPeriod, wch: 18, value: (r) => formatReportPeriod(r) },
-        { header: ec.colStatus, wch: 16, value: (r) => (CONTENT.reports.status as Record<string, string>)?.[r.status] ?? r.status },
-        { header: ec.colTemplate, wch: 28, value: (r) => templates.find((t) => t.id === r.templateId)?.name ?? "" },
-        { header: ec.colDeadline, wch: 14, value: (r) => fmtDate(r.deadline) },
-        { header: ec.colCreatedAt, wch: 14, value: (r) => fmtDate(r.createdAt) },
-    ];
+  const baseCols: ColDef[] = [
+    { header: ec.colTitle, wch: 40, value: (r) => getReportLabel(r, templates) },
+    { header: ec.colCampus, wch: 24, value: (r) => campusMap[r.campusId] ?? r.campusId },
+    { header: ec.colPeriod, wch: 18, value: (r) => formatReportPeriod(r) },
+    {
+      header: ec.colStatus,
+      wch: 16,
+      value: (r) => (CONTENT.reports.status as Record<string, string>)?.[r.status] ?? r.status,
+    },
+    {
+      header: ec.colTemplate,
+      wch: 28,
+      value: (r) => templates.find((t) => t.id === r.templateId)?.name ?? "",
+    },
+    { header: ec.colDeadline, wch: 14, value: (r) => fmtDate(r.deadline) },
+    { header: ec.colCreatedAt, wch: 14, value: (r) => fmtDate(r.createdAt) },
+  ];
 
-    /* ── Determine grouping key ───────────────────────────────────────── */
+  /* ── Determine grouping key ───────────────────────────────────────── */
 
-    function groupKey(r: Report): string {
-        if (grouping === "campus") return campusMap[r.campusId] ?? r.campusId;
-        if (grouping === "month") return r.periodMonth != null ? `${r.periodYear}-${String(r.periodMonth).padStart(2, "0")}` : String(r.periodYear);
-        if (grouping === "quarter" && r.periodMonth != null) return `${r.periodYear} Q${Math.ceil(r.periodMonth / 3)}`;
-        return "all";
-    }
+  function groupKey(r: Report): string {
+    if (grouping === "campus") return campusMap[r.campusId] ?? r.campusId;
+    if (grouping === "month")
+      return r.periodMonth != null
+        ? `${r.periodYear}-${String(r.periodMonth).padStart(2, "0")}`
+        : String(r.periodYear);
+    if (grouping === "quarter" && r.periodMonth != null)
+      return `${r.periodYear} Q${Math.ceil(r.periodMonth / 3)}`;
+    return "all";
+  }
 
-    /* ── Build grouped buckets ────────────────────────────────────────── */
+  /* ── Build grouped buckets ────────────────────────────────────────── */
 
-    const buckets: Map<string, Report[]> = new Map();
-    for (const r of reports) {
-        const k = groupKey(r);
-        if (!buckets.has(k)) buckets.set(k, []);
-        buckets.get(k)!.push(r);
-    }
+  const buckets: Map<string, Report[]> = new Map();
+  for (const r of reports) {
+    const k = groupKey(r);
+    if (!buckets.has(k)) buckets.set(k, []);
+    buckets.get(k)!.push(r);
+  }
 
-    /* ── Build worksheet for a group of reports ─────────────────────── */
+  /* ── Build worksheet for a group of reports ─────────────────────── */
 
-    function buildSheet(groupReports: Report[]): XLSX.WorkSheet {
-        const header = baseCols.map((c) => c.header);
-        const rows: (string | number)[][] = groupReports.map((r) => baseCols.map((c) => c.value(r)));
+  function buildSheet(groupReports: Report[]): XLSX.WorkSheet {
+    const header = baseCols.map((c) => c.header);
+    const rows: (string | number)[][] = groupReports.map((r) => baseCols.map((c) => c.value(r)));
 
-        // Optional: append per-report metric summary rows
-        if (includeMetrics || includeGoals || includeComments) {
-            const metricDataRows: (string | number)[][] = [];
-            for (const r of groupReports) {
-                const rSections = sections.filter((s) => s.reportId === r.id);
-                for (const sec of rSections) {
-                    const secMetrics = metrics.filter((m) => m.reportSectionId === sec.id);
-                    for (const m of secMetrics) {
-                        metricDataRows.push([
-                            getReportLabel(r, templates),
-                            campusMap[r.campusId] ?? r.campusId,
-                            sec.sectionName,
-                            m.metricName,
-                            ...(includeMetrics ? [m.monthlyAchieved ?? ""] : []),
-                            ...(includeGoals ? [m.monthlyGoal ?? ""] : []),
-                            ...(includeMetrics && includeGoals ? [pct(m.monthlyAchieved, m.monthlyGoal)] : []),
-                            ...(includeComments ? [safeStr(m.comment)] : []),
-                        ]);
-                    }
-                }
-            }
-            if (metricDataRows.length > 0) {
-                const metricHeader = [
-                    ec.colTitle, ec.colCampus, ec.colSection, ec.colMetric,
-                    ...(includeMetrics ? [ec.colAchieved] : []),
-                    ...(includeGoals ? [ec.colGoal] : []),
-                    ...(includeMetrics && includeGoals ? [ec.colPercentage] : []),
-                    ...(includeComments ? [ec.colComment] : []),
-                ];
-                // Append metric data below a blank row separator
-                const ws = XLSX.utils.aoa_to_sheet([
-                    header, ...rows,
-                    [],
-                    metricHeader, ...metricDataRows,
-                ]);
-                ws["!cols"] = baseCols.map((c) => ({ wch: c.wch }));
-                return ws;
-            }
+    // Optional: append per-report metric summary rows
+    if (includeMetrics || includeGoals || includeComments) {
+      const metricDataRows: (string | number)[][] = [];
+      for (const r of groupReports) {
+        const rSections = sections.filter((s) => s.reportId === r.id);
+        for (const sec of rSections) {
+          const secMetrics = metrics.filter((m) => m.reportSectionId === sec.id);
+          for (const m of secMetrics) {
+            metricDataRows.push([
+              getReportLabel(r, templates),
+              campusMap[r.campusId] ?? r.campusId,
+              sec.sectionName,
+              m.metricName,
+              ...(includeMetrics ? [m.monthlyAchieved ?? ""] : []),
+              ...(includeGoals ? [m.monthlyGoal ?? ""] : []),
+              ...(includeMetrics && includeGoals ? [pct(m.monthlyAchieved, m.monthlyGoal)] : []),
+              ...(includeComments ? [safeStr(m.comment)] : []),
+            ]);
+          }
         }
-
-        const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+      }
+      if (metricDataRows.length > 0) {
+        const metricHeader = [
+          ec.colTitle,
+          ec.colCampus,
+          ec.colSection,
+          ec.colMetric,
+          ...(includeMetrics ? [ec.colAchieved] : []),
+          ...(includeGoals ? [ec.colGoal] : []),
+          ...(includeMetrics && includeGoals ? [ec.colPercentage] : []),
+          ...(includeComments ? [ec.colComment] : []),
+        ];
+        // Append metric data below a blank row separator
+        const ws = XLSX.utils.aoa_to_sheet([header, ...rows, [], metricHeader, ...metricDataRows]);
         ws["!cols"] = baseCols.map((c) => ({ wch: c.wch }));
         return ws;
+      }
     }
 
-    /* ── Single-sheet vs per-campus format ───────────────────────────── */
+    const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+    ws["!cols"] = baseCols.map((c) => ({ wch: c.wch }));
+    return ws;
+  }
 
-    if (format === "per-campus") {
-        // One sheet per bucket, sheet name = campus name (truncated to 31 chars)
-        for (const [key, groupReports] of buckets) {
-            const sheetName = key.slice(0, 31);
-            XLSX.utils.book_append_sheet(wb, buildSheet(groupReports), sheetName);
-        }
+  /* ── Single-sheet vs per-campus format ───────────────────────────── */
+
+  if (format === "per-campus") {
+    // One sheet per bucket, sheet name = campus name (truncated to 31 chars)
+    for (const [key, groupReports] of buckets) {
+      const sheetName = key.slice(0, 31);
+      XLSX.utils.book_append_sheet(wb, buildSheet(groupReports), sheetName);
+    }
+  } else {
+    if (grouping === "none" || buckets.size === 1) {
+      // Single flat sheet
+      XLSX.utils.book_append_sheet(wb, buildSheet(reports), ec.sheetList);
     } else {
-        if (grouping === "none" || buckets.size === 1) {
-            // Single flat sheet
-            XLSX.utils.book_append_sheet(wb, buildSheet(reports), ec.sheetList);
-        } else {
-            // All groups on separate sheets within single workbook
-            for (const [key, groupReports] of buckets) {
-                const sheetName = key.slice(0, 31);
-                XLSX.utils.book_append_sheet(wb, buildSheet(groupReports), sheetName);
-            }
-        }
+      // All groups on separate sheets within single workbook
+      for (const [key, groupReports] of buckets) {
+        const sheetName = key.slice(0, 31);
+        XLSX.utils.book_append_sheet(wb, buildSheet(groupReports), sheetName);
+      }
     }
+  }
 
-    XLSX.writeFile(wb, `${ec.listFilename}-${timestamp}.xlsx`);
+  XLSX.writeFile(wb, `${ec.listFilename}-${timestamp}.xlsx`);
 }
-````
+```
 
 ## File: modules/notifications/components/InboxPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -11723,10 +11836,11 @@ export function InboxPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/org/components/OrgPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -12096,10 +12210,11 @@ export function OrgPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/templates/components/TemplateNewPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -12606,10 +12721,11 @@ export function TemplateNewPage() {
     </>
   );
 }
-````
+```
 
 ## File: modules/users/components/ProfilePage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -13228,10 +13344,11 @@ export function ProfilePage({ defaultTab }: { defaultTab?: string }) {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/users/components/UsersListPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -13430,10 +13547,11 @@ export function UsersListPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: prisma/schema.prisma
-````prisma
+
+```prisma
 // ─────────────────────────────────────────────────────────────────────────────
 // Harvesters Reporting System — Prisma Schema
 // Maps 1:1 to types/global.ts domain interfaces
@@ -14090,10 +14208,11 @@ model BugReport {
   @@index([createdById])
   @@map("bug_reports")
 }
-````
+```
 
 ## File: providers/AntdProvider.tsx
-````typescript
+
+```typescript
 "use client";
 
 import { App, ConfigProvider, theme } from "antd";
@@ -14127,10 +14246,11 @@ export function AntdProvider({ children }: AntdProviderProps) {
     </ConfigProvider>
   );
 }
-````
+```
 
 ## File: app/(auth)/join/page.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -14504,10 +14624,11 @@ export default function JoinPage() {
     </div>
   );
 }
-````
+```
 
 ## File: app/(dashboard)/analytics/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AnalyticsPage } from "@/modules/analytics";
@@ -14538,10 +14659,11 @@ export default async function Page() {
   }
   return <AnalyticsPage />;
 }
-````
+```
 
 ## File: app/(dashboard)/goals/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { GoalsPage } from "@/modules/goals";
@@ -14574,10 +14696,11 @@ export default async function Page() {
   }
   return <GoalsPage />;
 }
-````
+```
 
 ## File: app/(dashboard)/inbox/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { InboxPage } from "@/modules/notifications";
@@ -14611,10 +14734,11 @@ export default async function Page() {
   }
   return <InboxPage />;
 }
-````
+```
 
 ## File: app/(dashboard)/invites/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { InvitesPage } from "@/modules/users";
@@ -14643,10 +14767,11 @@ export default async function Page() {
   }
   return <InvitesPage />;
 }
-````
+```
 
 ## File: app/(dashboard)/reports/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ReportsListPage } from "@/modules/reports";
@@ -14680,10 +14805,11 @@ export default async function Page() {
   }
   return <ReportsListPage />;
 }
-````
+```
 
 ## File: app/(dashboard)/templates/[id]/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { verifyAuth } from "@/lib/utils/auth";
@@ -14723,10 +14849,11 @@ export default async function Page({ params }: PageProps) {
   }
   return <TemplateDetailPage params={params} />;
 }
-````
+```
 
 ## File: app/(dashboard)/templates/new/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { verifyAuth } from "@/lib/utils/auth";
@@ -14757,10 +14884,11 @@ export default async function Page() {
   }
   return <TemplateNewPage />;
 }
-````
+```
 
 ## File: app/(dashboard)/templates/page.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { verifyAuth } from "@/lib/utils/auth";
@@ -14791,10 +14919,11 @@ export default async function Page() {
   }
   return <TemplatesListPage />;
 }
-````
+```
 
 ## File: app/api/analytics/overview/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/analytics/overview/route.ts
  * GET /api/analytics/overview
@@ -14817,133 +14946,143 @@ import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole, ReportStatus } from "@/types/global";
 
 const QuerySchema = z.object({
-    campusId: z.string().optional(),
-    groupId: z.string().optional(),
-    periodType: z.string().optional(),
-    year: z.coerce.number().optional(),
+  campusId: z.string().optional(),
+  groupId: z.string().optional(),
+  periodType: z.string().optional(),
+  year: z.coerce.number().optional(),
 });
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  const auth = await verifyAuth(req);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
+
+  const query = QuerySchema.parse(Object.fromEntries(new URL(req.url).searchParams));
+
+  const cacheKey = `analytics:overview:${auth.user.id}:${JSON.stringify(query)}`;
+  const cached = await cache.get(cacheKey);
+  if (cached) return NextResponse.json(cached);
+
+  const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
+
+  /* ── Build Prisma where clause ─────────────────────────────────────── */
+  const where: Record<string, unknown> = {};
+  if (roleConfig?.reportVisibilityScope === "campus" && auth.user.campusId) {
+    where.campusId = auth.user.campusId;
+  }
+  if (query.campusId) where.campusId = query.campusId;
+  if (query.groupId) where.orgGroupId = query.groupId;
+  if (query.periodType) where.periodType = query.periodType;
+  if (query.year) where.periodYear = query.year;
+
+  const reports = await db.report.findMany({ where });
+
+  /* ── Status totals ─────────────────────────────────────────────────────── */
+  const total = reports.length;
+  const submitted = reports.filter((r) => r.status === ReportStatus.SUBMITTED).length;
+  const approved = reports.filter((r) => r.status === ReportStatus.APPROVED).length;
+  const reviewed = reports.filter((r) => r.status === ReportStatus.REVIEWED).length;
+  const locked = reports.filter((r) => r.status === ReportStatus.LOCKED).length;
+  const draft = reports.filter((r) => r.status === ReportStatus.DRAFT).length;
+  const requiresEdits = reports.filter((r) => r.status === ReportStatus.REQUIRES_EDITS).length;
+
+  const eligible = total - draft;
+  const compliant = approved + reviewed + locked;
+  const compliance = eligible > 0 ? Math.round((compliant / eligible) * 100) : 0;
+
+  /* ── Submission trend — group by month (last 12) ───────────────────────── */
+  const submissionsByMonth: Record<string, number> = {};
+  for (const r of reports) {
+    if (r.status !== ReportStatus.DRAFT && r.periodMonth != null) {
+      const key = `${r.periodYear}-${String(r.periodMonth).padStart(2, "0")}`;
+      submissionsByMonth[key] = (submissionsByMonth[key] ?? 0) + 1;
     }
+  }
+  const submissionTrend = Object.entries(submissionsByMonth)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .slice(-12)
+    .map(([month, count]) => ({ month, count }));
 
-    const query = QuerySchema.parse(Object.fromEntries(new URL(req.url).searchParams));
-
-    const cacheKey = `analytics:overview:${auth.user.id}:${JSON.stringify(query)}`;
-    const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(cached);
-
-    const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
-
-    /* ── Build Prisma where clause ─────────────────────────────────────── */
-    const where: Record<string, unknown> = {};
-    if (roleConfig?.reportVisibilityScope === "campus" && auth.user.campusId) {
-        where.campusId = auth.user.campusId;
+  /* ── Quarterly compliance trend ─────────────────────────────────────────── */
+  const quarterlyMap: Record<string, { submitted: number; approved: number }> = {};
+  for (const r of reports) {
+    if (r.periodMonth == null) continue;
+    const q = Math.ceil(r.periodMonth / 3);
+    const key = `${r.periodYear}-Q${q}`;
+    if (!quarterlyMap[key]) quarterlyMap[key] = { submitted: 0, approved: 0 };
+    if (r.status !== ReportStatus.DRAFT) quarterlyMap[key].submitted++;
+    if (
+      [ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.LOCKED].includes(
+        r.status as ReportStatus,
+      )
+    ) {
+      quarterlyMap[key].approved++;
     }
-    if (query.campusId) where.campusId = query.campusId;
-    if (query.groupId) where.orgGroupId = query.groupId;
-    if (query.periodType) where.periodType = query.periodType;
-    if (query.year) where.periodYear = query.year;
-
-    const reports = await db.report.findMany({ where });
-
-    /* ── Status totals ─────────────────────────────────────────────────────── */
-    const total = reports.length;
-    const submitted = reports.filter((r) => r.status === ReportStatus.SUBMITTED).length;
-    const approved = reports.filter((r) => r.status === ReportStatus.APPROVED).length;
-    const reviewed = reports.filter((r) => r.status === ReportStatus.REVIEWED).length;
-    const locked = reports.filter((r) => r.status === ReportStatus.LOCKED).length;
-    const draft = reports.filter((r) => r.status === ReportStatus.DRAFT).length;
-    const requiresEdits = reports.filter((r) => r.status === ReportStatus.REQUIRES_EDITS).length;
-
-    const eligible = total - draft;
-    const compliant = approved + reviewed + locked;
-    const compliance = eligible > 0 ? Math.round((compliant / eligible) * 100) : 0;
-
-    /* ── Submission trend — group by month (last 12) ───────────────────────── */
-    const submissionsByMonth: Record<string, number> = {};
-    for (const r of reports) {
-        if (r.status !== ReportStatus.DRAFT && r.periodMonth != null) {
-            const key = `${r.periodYear}-${String(r.periodMonth).padStart(2, "0")}`;
-            submissionsByMonth[key] = (submissionsByMonth[key] ?? 0) + 1;
-        }
-    }
-    const submissionTrend = Object.entries(submissionsByMonth)
-        .sort(([a], [b]) => a.localeCompare(b))
-        .slice(-12)
-        .map(([month, count]) => ({ month, count }));
-
-    /* ── Quarterly compliance trend ─────────────────────────────────────────── */
-    const quarterlyMap: Record<string, { submitted: number; approved: number }> = {};
-    for (const r of reports) {
-        if (r.periodMonth == null) continue;
-        const q = Math.ceil(r.periodMonth / 3);
-        const key = `${r.periodYear}-Q${q}`;
-        if (!quarterlyMap[key]) quarterlyMap[key] = { submitted: 0, approved: 0 };
-        if (r.status !== ReportStatus.DRAFT) quarterlyMap[key].submitted++;
-        if ([ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.LOCKED].includes(r.status as ReportStatus)) {
-            quarterlyMap[key].approved++;
-        }
-    }
-    const quarterlyTrend = Object.entries(quarterlyMap)
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([quarter, stats]) => ({
-            quarter,
-            submitted: stats.submitted,
-            approved: stats.approved,
-            complianceRate: stats.submitted > 0 ? Math.round((stats.approved / stats.submitted) * 100) : 0,
-        }));
-
-    /* ── Status over months (for stacked bar) ──────────────────────────────── */
-    const statusByMonth: Record<string, Record<string, number>> = {};
-    for (const r of reports) {
-        if (r.periodMonth == null) continue;
-        const key = `${r.periodYear}-${String(r.periodMonth).padStart(2, "0")}`;
-        if (!statusByMonth[key]) statusByMonth[key] = {};
-        statusByMonth[key][r.status] = (statusByMonth[key][r.status] ?? 0) + 1;
-    }
-    const statusTrend = Object.entries(statusByMonth)
-        .sort(([a], [b]) => a.localeCompare(b))
-        .slice(-12)
-        .map(([month, statuses]) => ({ month, ...statuses }));
-
-    /* ── Campus breakdown ──────────────────────────────────────────────────── */
-    const campusMap: Record<string, { submitted: number; approved: number; total: number }> = {};
-    for (const r of reports) {
-        if (!campusMap[r.campusId]) campusMap[r.campusId] = { submitted: 0, approved: 0, total: 0 };
-        campusMap[r.campusId].total++;
-        if (r.status !== ReportStatus.DRAFT) campusMap[r.campusId].submitted++;
-        if ([ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.LOCKED].includes(r.status as ReportStatus)) {
-            campusMap[r.campusId].approved++;
-        }
-    }
-    const campusBreakdown = Object.entries(campusMap).map(([campusId, stats]) => ({
-        campusId,
-        total: stats.total,
-        submitted: stats.submitted,
-        approved: stats.approved,
-        complianceRate: stats.submitted > 0 ? Math.round((stats.approved / stats.submitted) * 100) : 0,
+  }
+  const quarterlyTrend = Object.entries(quarterlyMap)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([quarter, stats]) => ({
+      quarter,
+      submitted: stats.submitted,
+      approved: stats.approved,
+      complianceRate:
+        stats.submitted > 0 ? Math.round((stats.approved / stats.submitted) * 100) : 0,
     }));
 
-    const data = {
-        totals: { total, submitted, approved, reviewed, locked, draft, requiresEdits },
-        compliance,
-        submissionTrend,
-        quarterlyTrend,
-        statusTrend,
-        campusBreakdown,
-    };
+  /* ── Status over months (for stacked bar) ──────────────────────────────── */
+  const statusByMonth: Record<string, Record<string, number>> = {};
+  for (const r of reports) {
+    if (r.periodMonth == null) continue;
+    const key = `${r.periodYear}-${String(r.periodMonth).padStart(2, "0")}`;
+    if (!statusByMonth[key]) statusByMonth[key] = {};
+    statusByMonth[key][r.status] = (statusByMonth[key][r.status] ?? 0) + 1;
+  }
+  const statusTrend = Object.entries(statusByMonth)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .slice(-12)
+    .map(([month, statuses]) => ({ month, ...statuses }));
 
-    const response = { success: true, data };
-    await cache.set(cacheKey, JSON.stringify(response), 60);
-    return NextResponse.json(response);
+  /* ── Campus breakdown ──────────────────────────────────────────────────── */
+  const campusMap: Record<string, { submitted: number; approved: number; total: number }> = {};
+  for (const r of reports) {
+    if (!campusMap[r.campusId]) campusMap[r.campusId] = { submitted: 0, approved: 0, total: 0 };
+    campusMap[r.campusId].total++;
+    if (r.status !== ReportStatus.DRAFT) campusMap[r.campusId].submitted++;
+    if (
+      [ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.LOCKED].includes(
+        r.status as ReportStatus,
+      )
+    ) {
+      campusMap[r.campusId].approved++;
+    }
+  }
+  const campusBreakdown = Object.entries(campusMap).map(([campusId, stats]) => ({
+    campusId,
+    total: stats.total,
+    submitted: stats.submitted,
+    approved: stats.approved,
+    complianceRate: stats.submitted > 0 ? Math.round((stats.approved / stats.submitted) * 100) : 0,
+  }));
+
+  const data = {
+    totals: { total, submitted, approved, reviewed, locked, draft, requiresEdits },
+    compliance,
+    submissionTrend,
+    quarterlyTrend,
+    statusTrend,
+    campusBreakdown,
+  };
+
+  const response = { success: true, data };
+  await cache.set(cacheKey, JSON.stringify(response), 60);
+  return NextResponse.json(response);
 }
-````
+```
 
 ## File: app/api/auth/register/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/auth/register/route.ts
  * POST /api/auth/register — public registration (creates MEMBER by default)
@@ -14952,121 +15091,118 @@ export async function GET(req: NextRequest) {
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { db } from "@/lib/data/db";
-import {
-    hashPassword,
-    generateTokens,
-    setAuthCookies,
-} from "@/lib/utils/auth";
+import { hashPassword, generateTokens, setAuthCookies } from "@/lib/utils/auth";
 import { successResponse, errorResponse, handleApiError } from "@/lib/utils/api";
 import { UserRole } from "@/types/global";
 
 const RegisterSchema = z.object({
-    firstName: z.string().min(1).max(100),
-    lastName: z.string().min(1).max(100),
-    email: z.email("Invalid email address."),
-    password: z.string().min(8, "Password must be at least 8 characters."),
-    phone: z.string().optional(),
-    inviteToken: z.string().optional(),
+  firstName: z.string().min(1).max(100),
+  lastName: z.string().min(1).max(100),
+  email: z.email("Invalid email address."),
+  password: z.string().min(8, "Password must be at least 8 characters."),
+  phone: z.string().optional(),
+  inviteToken: z.string().optional(),
 });
 
 export async function POST(req: NextRequest) {
-    try {
-        const body = RegisterSchema.parse(await req.json());
+  try {
+    const body = RegisterSchema.parse(await req.json());
 
-        /* Check for existing email */
-        const existing = await db.user.findFirst({
-            where: { email: { equals: body.email, mode: "insensitive" } },
-        });
-        if (existing) {
-            return errorResponse("An account with this email already exists.", 409);
-        }
-
-        let role: UserRole = UserRole.MEMBER;
-        let campusId: string | null = null;
-        let orgGroupId: string | null = null;
-
-        /* Process invite token if provided */
-        if (body.inviteToken) {
-            const invite = await db.inviteLink.findFirst({
-                where: {
-                    token: body.inviteToken,
-                    usedAt: null,
-                    expiresAt: { gt: new Date() },
-                },
-            });
-            if (!invite) {
-                return errorResponse("This invite link is invalid or has expired.", 400);
-            }
-            role = invite.targetRole as UserRole ?? UserRole.MEMBER;
-            campusId = invite.campusId ?? null;
-            orgGroupId = invite.groupId ?? null;
-
-            /* Mark invite as used */
-            await db.inviteLink.update({
-                where: { id: invite.id },
-                data: { usedAt: new Date() },
-            });
-        }
-
-        const now = new Date();
-        const userId = crypto.randomUUID();
-        const hashed = await hashPassword(body.password);
-
-        const user = await db.user.create({
-            data: {
-                id: userId,
-                organisationId: process.env.NEXT_PUBLIC_ORG_ID ?? "harvesters",
-                firstName: body.firstName,
-                lastName: body.lastName,
-                email: body.email.toLowerCase(),
-                phone: body.phone ?? null,
-                role,
-                campusId,
-                orgGroupId,
-                isActive: true,
-                passwordHash: hashed,
-                createdAt: now,
-                updatedAt: now,
-            },
-        });
-
-        if (!user) return errorResponse("Registration failed. Please try again.", 500);
-
-        const tokens = generateTokens({
-            id: user.id,
-            role: user.role as UserRole,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            campusId: user.campusId ?? undefined,
-            orgGroupId: user.orgGroupId ?? undefined,
-        });
-
-        const response = NextResponse.json(
-            successResponse({
-                user: {
-                    id: user.id,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    role: user.role as UserRole,
-                    campusId: user.campusId ?? undefined,
-                    orgGroupId: user.orgGroupId ?? undefined,
-                } satisfies AuthUser,
-            }),
-            { status: 201 },
-        );
-
-        await setAuthCookies(tokens);
-        return response;
-    } catch (err) {
-        return handleApiError(err);
+    /* Check for existing email */
+    const existing = await db.user.findFirst({
+      where: { email: { equals: body.email, mode: "insensitive" } },
+    });
+    if (existing) {
+      return errorResponse("An account with this email already exists.", 409);
     }
+
+    let role: UserRole = UserRole.MEMBER;
+    let campusId: string | null = null;
+    let orgGroupId: string | null = null;
+
+    /* Process invite token if provided */
+    if (body.inviteToken) {
+      const invite = await db.inviteLink.findFirst({
+        where: {
+          token: body.inviteToken,
+          usedAt: null,
+          expiresAt: { gt: new Date() },
+        },
+      });
+      if (!invite) {
+        return errorResponse("This invite link is invalid or has expired.", 400);
+      }
+      role = (invite.targetRole as UserRole) ?? UserRole.MEMBER;
+      campusId = invite.campusId ?? null;
+      orgGroupId = invite.groupId ?? null;
+
+      /* Mark invite as used */
+      await db.inviteLink.update({
+        where: { id: invite.id },
+        data: { usedAt: new Date() },
+      });
+    }
+
+    const now = new Date();
+    const userId = crypto.randomUUID();
+    const hashed = await hashPassword(body.password);
+
+    const user = await db.user.create({
+      data: {
+        id: userId,
+        organisationId: process.env.NEXT_PUBLIC_ORG_ID ?? "harvesters",
+        firstName: body.firstName,
+        lastName: body.lastName,
+        email: body.email.toLowerCase(),
+        phone: body.phone ?? null,
+        role,
+        campusId,
+        orgGroupId,
+        isActive: true,
+        passwordHash: hashed,
+        createdAt: now,
+        updatedAt: now,
+      },
+    });
+
+    if (!user) return errorResponse("Registration failed. Please try again.", 500);
+
+    const tokens = generateTokens({
+      id: user.id,
+      role: user.role as UserRole,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      campusId: user.campusId ?? undefined,
+      orgGroupId: user.orgGroupId ?? undefined,
+    });
+
+    const response = NextResponse.json(
+      successResponse({
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          role: user.role as UserRole,
+          campusId: user.campusId ?? undefined,
+          orgGroupId: user.orgGroupId ?? undefined,
+        } satisfies AuthUser,
+      }),
+      { status: 201 },
+    );
+
+    await setAuthCookies(tokens);
+    return response;
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/auth/reset-password/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/auth/reset-password/route.ts
  * POST /api/auth/reset-password
@@ -15079,53 +15215,60 @@ import { db, cache } from "@/lib/data/db";
 import { hashPassword } from "@/lib/utils/auth";
 
 const Schema = z.object({
-    token: z.string().min(1),
-    password: z.string().min(8),
+  token: z.string().min(1),
+  password: z.string().min(8),
 });
 
 export async function POST(req: NextRequest) {
-    const body = Schema.parse(await req.json());
+  const body = Schema.parse(await req.json());
 
-    /* Retrieve cached token */
-    const raw = await cache.get(`pwd-reset:${body.token}`);
-    if (!raw) {
-        return NextResponse.json(
-            { success: false, error: "This reset link is invalid or has expired." },
-            { status: 400 },
-        );
-    }
+  /* Retrieve cached token */
+  const raw = await cache.get(`pwd-reset:${body.token}`);
+  if (!raw) {
+    return NextResponse.json(
+      { success: false, error: "This reset link is invalid or has expired." },
+      { status: 400 },
+    );
+  }
 
-    const { userId, expiresAt } = (typeof raw === 'string' ? JSON.parse(raw) : raw) as { userId: string; expiresAt: string };
+  const { userId, expiresAt } = (typeof raw === "string" ? JSON.parse(raw) : raw) as {
+    userId: string;
+    expiresAt: string;
+  };
 
-    if (new Date(expiresAt) < new Date()) {
-        await cache.del(`pwd-reset:${body.token}`);
-        return NextResponse.json(
-            { success: false, error: "This reset link has expired." },
-            { status: 400 },
-        );
-    }
-
-    const user = await db.user.findUnique({ where: { id: userId } });
-    if (!user) {
-        return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
-    }
-
-    const hashed = await hashPassword(body.password);
-
-    await db.user.update({
-        where: { id: userId },
-        data: { passwordHash: hashed, updatedAt: new Date() },
-    });
-
-    /* Invalidate the token so it cannot be reused */
+  if (new Date(expiresAt) < new Date()) {
     await cache.del(`pwd-reset:${body.token}`);
+    return NextResponse.json(
+      { success: false, error: "This reset link has expired." },
+      { status: 400 },
+    );
+  }
 
-    return NextResponse.json({ success: true, message: "Password reset successfully. You can now log in." });
+  const user = await db.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
+  }
+
+  const hashed = await hashPassword(body.password);
+
+  await db.user.update({
+    where: { id: userId },
+    data: { passwordHash: hashed, updatedAt: new Date() },
+  });
+
+  /* Invalidate the token so it cannot be reused */
+  await cache.del(`pwd-reset:${body.token}`);
+
+  return NextResponse.json({
+    success: true,
+    message: "Password reset successfully. You can now log in.",
+  });
 }
-````
+```
 
 ## File: app/api/goals/[id]/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/goals/[id]/route.ts
  * GET    /api/goals/:id
@@ -15140,85 +15283,88 @@ import { db } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const READ_ROLES: UserRole[] = [
-    UserRole.GROUP_ADMIN,
-    UserRole.GROUP_PASTOR,
-    UserRole.CAMPUS_ADMIN,
-    UserRole.CAMPUS_PASTOR,
-    UserRole.SPO,
-    UserRole.CEO,
-    UserRole.CHURCH_MINISTRY,
-    UserRole.SUPERADMIN,
+  UserRole.GROUP_ADMIN,
+  UserRole.GROUP_PASTOR,
+  UserRole.CAMPUS_ADMIN,
+  UserRole.CAMPUS_PASTOR,
+  UserRole.SPO,
+  UserRole.CEO,
+  UserRole.CHURCH_MINISTRY,
+  UserRole.SUPERADMIN,
 ];
 
 const WRITE_ROLES: UserRole[] = [
-    UserRole.GROUP_ADMIN,
-    UserRole.GROUP_PASTOR,
-    UserRole.SPO,
-    UserRole.CEO,
-    UserRole.CHURCH_MINISTRY,
-    UserRole.SUPERADMIN,
+  UserRole.GROUP_ADMIN,
+  UserRole.GROUP_PASTOR,
+  UserRole.SPO,
+  UserRole.CEO,
+  UserRole.CHURCH_MINISTRY,
+  UserRole.SUPERADMIN,
 ];
 
 const UpdateGoalSchema = z.object({
-    targetValue: z.number().min(0).optional(),
-    isLocked: z.boolean().optional(),
+  targetValue: z.number().min(0).optional(),
+  isLocked: z.boolean().optional(),
 });
 
-interface RouteCtx { params: Promise<{ id: string }> }
+interface RouteCtx {
+  params: Promise<{ id: string }>;
+}
 
 export async function GET(req: NextRequest, { params }: RouteCtx) {
-    const auth = await verifyAuth(req, READ_ROLES);
-    if (!auth.success)
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
+  const auth = await verifyAuth(req, READ_ROLES);
+  if (!auth.success)
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
-    const { id } = await params;
-    const goal = await db.goal.findUnique({ where: { id } });
-    if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
+  const { id } = await params;
+  const goal = await db.goal.findUnique({ where: { id } });
+  if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
 
-    return NextResponse.json({ success: true, data: goal });
+  return NextResponse.json({ success: true, data: goal });
 }
 
 export async function PUT(req: NextRequest, { params }: RouteCtx) {
-    const auth = await verifyAuth(req, WRITE_ROLES);
-    if (!auth.success)
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
+  const auth = await verifyAuth(req, WRITE_ROLES);
+  if (!auth.success)
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
-    const { id } = await params;
-    const goal = await db.goal.findUnique({ where: { id } });
-    if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
+  const { id } = await params;
+  const goal = await db.goal.findUnique({ where: { id } });
+  if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
 
-    if (goal.isLocked && auth.user.role !== UserRole.SUPERADMIN) {
-        return NextResponse.json(
-            { success: false, error: "Goal is locked. Submit an unlock request." },
-            { status: 403 },
-        );
-    }
+  if (goal.isLocked && auth.user.role !== UserRole.SUPERADMIN) {
+    return NextResponse.json(
+      { success: false, error: "Goal is locked. Submit an unlock request." },
+      { status: 403 },
+    );
+  }
 
-    const body = UpdateGoalSchema.parse(await req.json());
-    const updated = await db.goal.update({
-        where: { id },
-        data: body,
-    });
+  const body = UpdateGoalSchema.parse(await req.json());
+  const updated = await db.goal.update({
+    where: { id },
+    data: body,
+  });
 
-    return NextResponse.json({ success: true, data: updated });
+  return NextResponse.json({ success: true, data: updated });
 }
 
 export async function DELETE(req: NextRequest, { params }: RouteCtx) {
-    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
-    if (!auth.success)
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
+  const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+  if (!auth.success)
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
-    const { id } = await params;
-    const goal = await db.goal.findUnique({ where: { id } });
-    if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
+  const { id } = await params;
+  const goal = await db.goal.findUnique({ where: { id } });
+  if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
 
-    await db.goal.delete({ where: { id } });
-    return NextResponse.json({ success: true, data: null });
+  await db.goal.delete({ where: { id } });
+  return NextResponse.json({ success: true, data: null });
 }
-````
+```
 
 ## File: app/api/goals/[id]/unlock-request/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/goals/[id]/unlock-request/route.ts
  * POST /api/goals/:id/unlock-request  — request permission to edit a locked goal
@@ -15231,53 +15377,56 @@ import { db } from "@/lib/data/db";
 import { UserRole, GoalEditRequestStatus } from "@/types/global";
 
 const UnlockRequestSchema = z.object({
-    reason: z.string().min(10),
-    proposedValue: z.number().min(0),
+  reason: z.string().min(10),
+  proposedValue: z.number().min(0),
 });
 
-interface RouteCtx { params: Promise<{ id: string }> }
+interface RouteCtx {
+  params: Promise<{ id: string }>;
+}
 
 export async function POST(req: NextRequest, { params }: RouteCtx) {
-    const auth = await verifyAuth(req, [
-        UserRole.GROUP_ADMIN,
-        UserRole.GROUP_PASTOR,
-        UserRole.SPO,
-        UserRole.CEO,
-        UserRole.CHURCH_MINISTRY,
-        UserRole.SUPERADMIN,
-    ]);
-    if (!auth.success)
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
+  const auth = await verifyAuth(req, [
+    UserRole.GROUP_ADMIN,
+    UserRole.GROUP_PASTOR,
+    UserRole.SPO,
+    UserRole.CEO,
+    UserRole.CHURCH_MINISTRY,
+    UserRole.SUPERADMIN,
+  ]);
+  if (!auth.success)
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
-    const { id } = await params;
-    const goal = await db.goal.findUnique({ where: { id } });
-    if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
+  const { id } = await params;
+  const goal = await db.goal.findUnique({ where: { id } });
+  if (!goal) return NextResponse.json({ success: false, error: "Not found." }, { status: 404 });
 
-    if (!goal.isLocked) {
-        return NextResponse.json(
-            { success: false, error: "Goal is not locked — edit it directly." },
-            { status: 400 },
-        );
-    }
+  if (!goal.isLocked) {
+    return NextResponse.json(
+      { success: false, error: "Goal is not locked — edit it directly." },
+      { status: 400 },
+    );
+  }
 
-    const body = UnlockRequestSchema.parse(await req.json());
+  const body = UnlockRequestSchema.parse(await req.json());
 
-    const editRequest = await db.goalEditRequest.create({
-        data: {
-            goalId: id,
-            requestedById: auth.user.id,
-            reason: body.reason,
-            proposedValue: body.proposedValue,
-            status: GoalEditRequestStatus.PENDING,
-        },
-    });
+  const editRequest = await db.goalEditRequest.create({
+    data: {
+      goalId: id,
+      requestedById: auth.user.id,
+      reason: body.reason,
+      proposedValue: body.proposedValue,
+      status: GoalEditRequestStatus.PENDING,
+    },
+  });
 
-    return NextResponse.json({ success: true, data: editRequest }, { status: 201 });
+  return NextResponse.json({ success: true, data: editRequest }, { status: 201 });
 }
-````
+```
 
 ## File: app/api/invite-links/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/invite-links/route.ts
  * POST /api/invite-links  — create invite link (SUPERADMIN + leaders)
@@ -15358,10 +15507,11 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ success: true, data: link }, { status: 201 });
 }
-````
+```
 
 ## File: app/api/notifications/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/notifications/route.ts
  * GET  /api/notifications      — list notifications for current user
@@ -15399,10 +15549,11 @@ export async function GET(req: NextRequest) {
     return handleApiError(err);
   }
 }
-````
+```
 
 ## File: app/api/org/campuses/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/org/campuses/route.ts
  * GET  /api/org/campuses  — list campuses (all authenticated users)
@@ -15416,55 +15567,56 @@ import { db, cache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const CreateCampusSchema = z.object({
-    name: z.string().min(1).max(80),
-    country: z.string().min(1).max(60).optional(),
-    location: z.string().max(120).optional(),
-    groupId: z.string().uuid().optional(),
-    organisationId: z.string().min(1),
-    adminId: z.string().uuid().optional(),
+  name: z.string().min(1).max(80),
+  country: z.string().min(1).max(60).optional(),
+  location: z.string().max(120).optional(),
+  groupId: z.string().uuid().optional(),
+  organisationId: z.string().min(1),
+  adminId: z.string().uuid().optional(),
 });
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+  const auth = await verifyAuth(req);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const cached = await cache.get("org:campuses:list");
-    if (cached) return NextResponse.json(cached);
+  const cached = await cache.get("org:campuses:list");
+  if (cached) return NextResponse.json(cached);
 
-    const campuses = await db.campus.findMany({ orderBy: { name: "asc" } });
-    const response = { success: true, data: campuses };
-    await cache.set("org:campuses:list", JSON.stringify(response), 120);
-    return NextResponse.json(response);
+  const campuses = await db.campus.findMany({ orderBy: { name: "asc" } });
+  const response = { success: true, data: campuses };
+  await cache.set("org:campuses:list", JSON.stringify(response), 120);
+  return NextResponse.json(response);
 }
 
 export async function POST(req: NextRequest) {
-    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+  const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const body = CreateCampusSchema.parse(await req.json());
+  const body = CreateCampusSchema.parse(await req.json());
 
-    const campus = await db.campus.create({
-        data: {
-            name: body.name,
-            parentId: body.groupId ?? "",
-            country: body.country ?? "",
-            location: body.location ?? "",
-            adminId: body.adminId,
-            isActive: true,
-        },
-    });
+  const campus = await db.campus.create({
+    data: {
+      name: body.name,
+      parentId: body.groupId ?? "",
+      country: body.country ?? "",
+      location: body.location ?? "",
+      adminId: body.adminId,
+      isActive: true,
+    },
+  });
 
-    await cache.invalidatePattern("org:campuses:*");
-    return NextResponse.json({ success: true, data: campus }, { status: 201 });
+  await cache.invalidatePattern("org:campuses:*");
+  return NextResponse.json({ success: true, data: campus }, { status: 201 });
 }
-````
+```
 
 ## File: app/api/org/groups/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/org/groups/route.ts
  * GET  /api/org/groups  — list org groups
@@ -15478,50 +15630,51 @@ import { db, cache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const CreateGroupSchema = z.object({
-    name: z.string().min(1).max(80),
-    country: z.string().max(60).optional(),
-    organisationId: z.string().min(1),
-    leaderId: z.string().uuid().optional(),
+  name: z.string().min(1).max(80),
+  country: z.string().max(60).optional(),
+  organisationId: z.string().min(1),
+  leaderId: z.string().uuid().optional(),
 });
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+  const auth = await verifyAuth(req);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const cached = await cache.get("org:groups:list");
-    if (cached) return NextResponse.json(cached);
+  const cached = await cache.get("org:groups:list");
+  if (cached) return NextResponse.json(cached);
 
-    const groups = await db.orgGroup.findMany({ orderBy: { name: "asc" } });
-    const response = { success: true, data: groups };
-    await cache.set("org:groups:list", JSON.stringify(response), 120);
-    return NextResponse.json(response);
+  const groups = await db.orgGroup.findMany({ orderBy: { name: "asc" } });
+  const response = { success: true, data: groups };
+  await cache.set("org:groups:list", JSON.stringify(response), 120);
+  return NextResponse.json(response);
 }
 
 export async function POST(req: NextRequest) {
-    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+  const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const body = CreateGroupSchema.parse(await req.json());
+  const body = CreateGroupSchema.parse(await req.json());
 
-    const group = await db.orgGroup.create({
-        data: {
-            name: body.name,
-            country: body.country ?? "",
-            leaderId: body.leaderId,
-        },
-    });
+  const group = await db.orgGroup.create({
+    data: {
+      name: body.name,
+      country: body.country ?? "",
+      leaderId: body.leaderId,
+    },
+  });
 
-    await cache.invalidatePattern("org:groups:*");
-    return NextResponse.json({ success: true, data: group }, { status: 201 });
+  await cache.invalidatePattern("org:groups:*");
+  return NextResponse.json({ success: true, data: group }, { status: 201 });
 }
-````
+```
 
 ## File: app/api/report-templates/[id]/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/report-templates/[id]/route.ts
  * GET /api/report-templates/:id  — get single template with sections + metrics
@@ -15537,171 +15690,173 @@ import { UserRole, MetricFieldType, MetricCalculationType } from "@/types/global
 /* ── Schemas ──────────────────────────────────────────────────────────────── */
 
 const MetricSchema = z.object({
-    id: z.string().optional(),
-    name: z.string().min(1),
-    description: z.string().optional(),
-    fieldType: z.nativeEnum(MetricFieldType).default(MetricFieldType.NUMBER),
-    calculationType: z.nativeEnum(MetricCalculationType).default(MetricCalculationType.SUM),
-    isRequired: z.boolean().default(true),
-    capturesGoal: z.boolean().default(false),
-    capturesAchieved: z.boolean().default(false),
-    capturesYoY: z.boolean().default(false),
-    order: z.number().int().min(1),
+  id: z.string().optional(),
+  name: z.string().min(1),
+  description: z.string().optional(),
+  fieldType: z.nativeEnum(MetricFieldType).default(MetricFieldType.NUMBER),
+  calculationType: z.nativeEnum(MetricCalculationType).default(MetricCalculationType.SUM),
+  isRequired: z.boolean().default(true),
+  capturesGoal: z.boolean().default(false),
+  capturesAchieved: z.boolean().default(false),
+  capturesYoY: z.boolean().default(false),
+  order: z.number().int().min(1),
 });
 
 const SectionSchema = z.object({
-    id: z.string().optional(),
-    templateId: z.string().optional(),
-    name: z.string().min(1),
-    description: z.string().optional(),
-    order: z.number().int().min(1),
-    isRequired: z.boolean().default(true),
-    metrics: z.array(MetricSchema).min(1),
+  id: z.string().optional(),
+  templateId: z.string().optional(),
+  name: z.string().min(1),
+  description: z.string().optional(),
+  order: z.number().int().min(1),
+  isRequired: z.boolean().default(true),
+  metrics: z.array(MetricSchema).min(1),
 });
 
 const UpdateTemplateSchema = z.object({
-    name: z.string().min(1).max(200).optional(),
-    description: z.string().max(1000).optional(),
-    isDefault: z.boolean().optional(),
-    isArchived: z.boolean().optional(),
-    sections: z.array(SectionSchema).optional(),
+  name: z.string().min(1).max(200).optional(),
+  description: z.string().max(1000).optional(),
+  isDefault: z.boolean().optional(),
+  isArchived: z.boolean().optional(),
+  sections: z.array(SectionSchema).optional(),
 });
 
 const TEMPLATE_MANAGE_ROLES: UserRole[] = [
-    UserRole.SUPERADMIN,
-    UserRole.CEO,
-    UserRole.SPO,
-    UserRole.CHURCH_MINISTRY,
-    UserRole.GROUP_PASTOR,
-    UserRole.GROUP_ADMIN,
+  UserRole.SUPERADMIN,
+  UserRole.CEO,
+  UserRole.SPO,
+  UserRole.CHURCH_MINISTRY,
+  UserRole.GROUP_PASTOR,
+  UserRole.GROUP_ADMIN,
 ];
 
 /* ── GET /api/report-templates/:id ───────────────────────────────────────── */
 
-export async function GET(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    const { id } = await params;
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const auth = await verifyAuth(req);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const cacheKey = `templates:detail:${id}`;
-    const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(cached);
+  const cacheKey = `templates:detail:${id}`;
+  const cached = await cache.get(cacheKey);
+  if (cached) return NextResponse.json(cached);
 
-    const template = await db.reportTemplate.findUnique({
-        where: { id },
-        include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
-    });
-    if (!template) {
-        return NextResponse.json({ success: false, error: "Template not found." }, { status: 404 });
-    }
+  const template = await db.reportTemplate.findUnique({
+    where: { id },
+    include: {
+      sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } },
+    },
+  });
+  if (!template) {
+    return NextResponse.json({ success: false, error: "Template not found." }, { status: 404 });
+  }
 
-    const response = { success: true, data: template };
-    await cache.set(cacheKey, JSON.stringify(response), 120);
-    return NextResponse.json(response);
+  const response = { success: true, data: template };
+  await cache.set(cacheKey, JSON.stringify(response), 120);
+  return NextResponse.json(response);
 }
 
 /* ── PUT /api/report-templates/:id ───────────────────────────────────────── */
 
-export async function PUT(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    const { id } = await params;
-    const auth = await verifyAuth(req, TEMPLATE_MANAGE_ROLES);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const auth = await verifyAuth(req, TEMPLATE_MANAGE_ROLES);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
+
+  const body = UpdateTemplateSchema.parse(await req.json());
+
+  const existing = await db.reportTemplate.findUnique({ where: { id } });
+  if (!existing) {
+    return NextResponse.json({ success: false, error: "Template not found." }, { status: 404 });
+  }
+
+  const updated = await db.$transaction(async (tx) => {
+    if (body.isDefault) {
+      await tx.reportTemplate.updateMany({
+        where: { id: { not: id }, isDefault: true },
+        data: { isDefault: false },
+      });
     }
 
-    const body = UpdateTemplateSchema.parse(await req.json());
-
-    const existing = await db.reportTemplate.findUnique({ where: { id } });
-    if (!existing) {
-        return NextResponse.json({ success: false, error: "Template not found." }, { status: 404 });
-    }
-
-    const updated = await db.$transaction(async (tx) => {
-        if (body.isDefault) {
-            await tx.reportTemplate.updateMany({
-                where: { id: { not: id }, isDefault: true },
-                data: { isDefault: false },
-            });
-        }
-
-        await tx.reportTemplate.update({
-            where: { id },
-            data: {
-                ...(body.name !== undefined && { name: body.name }),
-                ...(body.description !== undefined && { description: body.description }),
-                ...(body.isDefault !== undefined && { isDefault: body.isDefault }),
-                ...(body.isArchived !== undefined && { isActive: !body.isArchived }),
-                version: { increment: 1 },
-            },
-        });
-
-        /* Replace sections + metrics if provided */
-        if (body.sections) {
-            /* Delete old metrics then sections (cascade handles this via onDelete: Cascade) */
-            await tx.reportTemplateSection.deleteMany({ where: { templateId: id } });
-
-            for (const section of body.sections) {
-                const sec = await tx.reportTemplateSection.create({
-                    data: {
-                        templateId: id,
-                        name: section.name,
-                        description: section.description,
-                        order: section.order,
-                        isRequired: section.isRequired,
-                    },
-                });
-                for (const metric of section.metrics) {
-                    await tx.reportTemplateMetric.create({
-                        data: {
-                            sectionId: sec.id,
-                            name: metric.name,
-                            description: metric.description,
-                            fieldType: metric.fieldType,
-                            calculationType: metric.calculationType,
-                            isRequired: metric.isRequired,
-                            capturesGoal: metric.capturesGoal,
-                            capturesAchieved: metric.capturesAchieved,
-                            capturesYoY: metric.capturesYoY,
-                            order: metric.order,
-                        },
-                    });
-                }
-            }
-        }
-
-        /* Create a version snapshot */
-        const full = await tx.reportTemplate.findUnique({
-            where: { id },
-            include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
-        });
-        await tx.reportTemplateVersion.create({
-            data: {
-                templateId: id,
-                versionNumber: full!.version,
-                snapshot: JSON.parse(JSON.stringify(full)),
-                createdById: auth.user.id,
-            },
-        });
-
-        return full;
+    await tx.reportTemplate.update({
+      where: { id },
+      data: {
+        ...(body.name !== undefined && { name: body.name }),
+        ...(body.description !== undefined && { description: body.description }),
+        ...(body.isDefault !== undefined && { isDefault: body.isDefault }),
+        ...(body.isArchived !== undefined && { isActive: !body.isArchived }),
+        version: { increment: 1 },
+      },
     });
 
-    await cache.invalidatePattern(`templates:detail:${id}`);
-    await cache.invalidatePattern("templates:*");
-    return NextResponse.json({ success: true, data: updated });
+    /* Replace sections + metrics if provided */
+    if (body.sections) {
+      /* Delete old metrics then sections (cascade handles this via onDelete: Cascade) */
+      await tx.reportTemplateSection.deleteMany({ where: { templateId: id } });
+
+      for (const section of body.sections) {
+        const sec = await tx.reportTemplateSection.create({
+          data: {
+            templateId: id,
+            name: section.name,
+            description: section.description,
+            order: section.order,
+            isRequired: section.isRequired,
+          },
+        });
+        for (const metric of section.metrics) {
+          await tx.reportTemplateMetric.create({
+            data: {
+              sectionId: sec.id,
+              name: metric.name,
+              description: metric.description,
+              fieldType: metric.fieldType,
+              calculationType: metric.calculationType,
+              isRequired: metric.isRequired,
+              capturesGoal: metric.capturesGoal,
+              capturesAchieved: metric.capturesAchieved,
+              capturesYoY: metric.capturesYoY,
+              order: metric.order,
+            },
+          });
+        }
+      }
+    }
+
+    /* Create a version snapshot */
+    const full = await tx.reportTemplate.findUnique({
+      where: { id },
+      include: {
+        sections: {
+          include: { metrics: { orderBy: { order: "asc" } } },
+          orderBy: { order: "asc" },
+        },
+      },
+    });
+    await tx.reportTemplateVersion.create({
+      data: {
+        templateId: id,
+        versionNumber: full!.version,
+        snapshot: JSON.parse(JSON.stringify(full)),
+        createdById: auth.user.id,
+      },
+    });
+
+    return full;
+  });
+
+  await cache.invalidatePattern(`templates:detail:${id}`);
+  await cache.invalidatePattern("templates:*");
+  return NextResponse.json({ success: true, data: updated });
 }
-````
+```
 
 ## File: app/api/report-templates/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/report-templates/route.ts
  * GET  /api/report-templates  — list templates
@@ -15717,136 +15872,144 @@ import { UserRole, MetricFieldType, MetricCalculationType } from "@/types/global
 /* ── Schemas ──────────────────────────────────────────────────────────────── */
 
 const MetricSchema = z.object({
-    id: z.string().optional(),
-    name: z.string().min(1),
-    description: z.string().optional(),
-    fieldType: z.nativeEnum(MetricFieldType).default(MetricFieldType.NUMBER),
-    calculationType: z.nativeEnum(MetricCalculationType).default(MetricCalculationType.SUM),
-    isRequired: z.boolean().default(true),
-    capturesGoal: z.boolean().default(false),
-    capturesAchieved: z.boolean().default(false),
-    capturesYoY: z.boolean().default(false),
-    order: z.number().int().min(1),
+  id: z.string().optional(),
+  name: z.string().min(1),
+  description: z.string().optional(),
+  fieldType: z.nativeEnum(MetricFieldType).default(MetricFieldType.NUMBER),
+  calculationType: z.nativeEnum(MetricCalculationType).default(MetricCalculationType.SUM),
+  isRequired: z.boolean().default(true),
+  capturesGoal: z.boolean().default(false),
+  capturesAchieved: z.boolean().default(false),
+  capturesYoY: z.boolean().default(false),
+  order: z.number().int().min(1),
 });
 
 const SectionSchema = z.object({
-    id: z.string().optional(),
-    name: z.string().min(1),
-    description: z.string().optional(),
-    order: z.number().int().min(1),
-    isRequired: z.boolean().default(true),
-    metrics: z.array(MetricSchema).min(1),
+  id: z.string().optional(),
+  name: z.string().min(1),
+  description: z.string().optional(),
+  order: z.number().int().min(1),
+  isRequired: z.boolean().default(true),
+  metrics: z.array(MetricSchema).min(1),
 });
 
 const CreateTemplateSchema = z.object({
-    name: z.string().min(1).max(200),
-    description: z.string().max(1000).optional(),
-    organisationId: z.string().min(1),
-    sections: z.array(SectionSchema).min(1),
-    isDefault: z.boolean().optional().default(false),
+  name: z.string().min(1).max(200),
+  description: z.string().max(1000).optional(),
+  organisationId: z.string().min(1),
+  sections: z.array(SectionSchema).min(1),
+  isDefault: z.boolean().optional().default(false),
 });
 
 const TEMPLATE_MANAGE_ROLES: UserRole[] = [
-    UserRole.SUPERADMIN,
-    UserRole.CEO,
-    UserRole.SPO,
-    UserRole.CHURCH_MINISTRY,
-    UserRole.GROUP_PASTOR,
-    UserRole.GROUP_ADMIN,
+  UserRole.SUPERADMIN,
+  UserRole.CEO,
+  UserRole.SPO,
+  UserRole.CHURCH_MINISTRY,
+  UserRole.GROUP_PASTOR,
+  UserRole.GROUP_ADMIN,
 ];
 
 /* ── GET /api/report-templates ────────────────────────────────────────────── */
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+  const auth = await verifyAuth(req);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const cacheKey = "templates:list";
-    const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(cached);
+  const cacheKey = "templates:list";
+  const cached = await cache.get(cacheKey);
+  if (cached) return NextResponse.json(cached);
 
-    const templates = await db.reportTemplate.findMany({
-        orderBy: { createdAt: "desc" },
-        include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
-    });
+  const templates = await db.reportTemplate.findMany({
+    orderBy: { createdAt: "desc" },
+    include: {
+      sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } },
+    },
+  });
 
-    const response = { success: true, data: templates };
-    await cache.set(cacheKey, JSON.stringify(response), 60);
-    return NextResponse.json(response);
+  const response = { success: true, data: templates };
+  await cache.set(cacheKey, JSON.stringify(response), 60);
+  return NextResponse.json(response);
 }
 
 /* ── POST /api/report-templates ──────────────────────────────────────────── */
 
 export async function POST(req: NextRequest) {
-    const auth = await verifyAuth(req, TEMPLATE_MANAGE_ROLES);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  const auth = await verifyAuth(req, TEMPLATE_MANAGE_ROLES);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
+
+  const body = CreateTemplateSchema.parse(await req.json());
+
+  const template = await db.$transaction(async (tx) => {
+    if (body.isDefault) {
+      await tx.reportTemplate.updateMany({
+        where: { isDefault: true },
+        data: { isDefault: false },
+      });
     }
 
-    const body = CreateTemplateSchema.parse(await req.json());
-
-    const template = await db.$transaction(async (tx) => {
-        if (body.isDefault) {
-            await tx.reportTemplate.updateMany({
-                where: { isDefault: true },
-                data: { isDefault: false },
-            });
-        }
-
-        const tpl = await tx.reportTemplate.create({
-            data: {
-                name: body.name,
-                description: body.description,
-                organisationId: body.organisationId,
-                createdById: auth.user.id,
-                isActive: true,
-                isDefault: body.isDefault ?? false,
-            },
-        });
-
-        for (const section of body.sections) {
-            const sec = await tx.reportTemplateSection.create({
-                data: {
-                    templateId: tpl.id,
-                    name: section.name,
-                    description: section.description,
-                    order: section.order,
-                    isRequired: section.isRequired,
-                },
-            });
-            for (const metric of section.metrics) {
-                await tx.reportTemplateMetric.create({
-                    data: {
-                        sectionId: sec.id,
-                        name: metric.name,
-                        description: metric.description,
-                        fieldType: metric.fieldType,
-                        calculationType: metric.calculationType,
-                        isRequired: metric.isRequired,
-                        capturesGoal: metric.capturesGoal,
-                        capturesAchieved: metric.capturesAchieved,
-                        capturesYoY: metric.capturesYoY,
-                        order: metric.order,
-                    },
-                });
-            }
-        }
-
-        return tx.reportTemplate.findUnique({
-            where: { id: tpl.id },
-            include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
-        });
+    const tpl = await tx.reportTemplate.create({
+      data: {
+        name: body.name,
+        description: body.description,
+        organisationId: body.organisationId,
+        createdById: auth.user.id,
+        isActive: true,
+        isDefault: body.isDefault ?? false,
+      },
     });
 
-    await cache.invalidatePattern("templates:*");
-    return NextResponse.json({ success: true, data: template }, { status: 201 });
+    for (const section of body.sections) {
+      const sec = await tx.reportTemplateSection.create({
+        data: {
+          templateId: tpl.id,
+          name: section.name,
+          description: section.description,
+          order: section.order,
+          isRequired: section.isRequired,
+        },
+      });
+      for (const metric of section.metrics) {
+        await tx.reportTemplateMetric.create({
+          data: {
+            sectionId: sec.id,
+            name: metric.name,
+            description: metric.description,
+            fieldType: metric.fieldType,
+            calculationType: metric.calculationType,
+            isRequired: metric.isRequired,
+            capturesGoal: metric.capturesGoal,
+            capturesAchieved: metric.capturesAchieved,
+            capturesYoY: metric.capturesYoY,
+            order: metric.order,
+          },
+        });
+      }
+    }
+
+    return tx.reportTemplate.findUnique({
+      where: { id: tpl.id },
+      include: {
+        sections: {
+          include: { metrics: { orderBy: { order: "asc" } } },
+          orderBy: { order: "asc" },
+        },
+      },
+    });
+  });
+
+  await cache.invalidatePattern("templates:*");
+  return NextResponse.json({ success: true, data: template }, { status: 201 });
 }
-````
+```
 
 ## File: app/api/reports/[id]/history/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/reports/[id]/history/route.ts
  * GET /api/reports/:id/history — get all events for a report
@@ -15856,52 +16019,50 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import {
-    successResponse,
-    unauthorizedResponse,
-    notFoundResponse,
-    handleApiError,
-    errorResponse,
+  successResponse,
+  unauthorizedResponse,
+  notFoundResponse,
+  handleApiError,
+  errorResponse,
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole } from "@/types/global";
 
-export async function GET(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const { id } = await params;
-        const report = await db.report.findUnique({ where: { id } });
-        if (!report) return notFoundResponse("Report not found.");
+    const { id } = await params;
+    const report = await db.report.findUnique({ where: { id } });
+    if (!report) return notFoundResponse("Report not found.");
 
-        /* Scope check */
-        const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
-        if (roleConfig.reportVisibilityScope === "campus" && report.campusId !== auth.user.campusId) {
-            return errorResponse("You do not have access to this report.", 403);
-        }
-
-        const cacheKey = `report:${id}:history`;
-        const cached = await cache.get(cacheKey);
-        if (cached) return NextResponse.json(successResponse(cached));
-
-        const events = await db.reportEvent.findMany({
-            where: { reportId: id },
-            orderBy: { timestamp: "desc" },
-        });
-
-        await cache.set(cacheKey, JSON.stringify(events), 60);
-        return NextResponse.json(successResponse(events));
-    } catch (err) {
-        return handleApiError(err);
+    /* Scope check */
+    const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
+    if (roleConfig.reportVisibilityScope === "campus" && report.campusId !== auth.user.campusId) {
+      return errorResponse("You do not have access to this report.", 403);
     }
+
+    const cacheKey = `report:${id}:history`;
+    const cached = await cache.get(cacheKey);
+    if (cached) return NextResponse.json(successResponse(cached));
+
+    const events = await db.reportEvent.findMany({
+      where: { reportId: id },
+      orderBy: { timestamp: "desc" },
+    });
+
+    await cache.set(cacheKey, JSON.stringify(events), 60);
+    return NextResponse.json(successResponse(events));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/reports/[id]/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/reports/[id]/route.ts
  * GET /api/reports/:id  — get single report
@@ -15913,11 +16074,11 @@ import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import {
-    successResponse,
-    errorResponse,
-    unauthorizedResponse,
-    notFoundResponse,
-    handleApiError,
+  successResponse,
+  errorResponse,
+  unauthorizedResponse,
+  notFoundResponse,
+  handleApiError,
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole, ReportStatus, ReportEventType } from "@/types/global";
@@ -15925,105 +16086,100 @@ import { UserRole, ReportStatus, ReportEventType } from "@/types/global";
 /* ── Update schema ─────────────────────────────────────────────────────────── */
 
 const UpdateReportSchema = z.object({
-    title: z.string().min(1).max(200).optional(),
-    notes: z.string().optional(),
-    sections: z.array(z.unknown()).optional(),
+  title: z.string().min(1).max(200).optional(),
+  notes: z.string().optional(),
+  sections: z.array(z.unknown()).optional(),
 });
 
 /* ── GET ───────────────────────────────────────────────────────────────────── */
 
-export async function GET(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const { id } = await params;
+    const { id } = await params;
 
-        const cacheKey = `report:${id}`;
-        const cached = await cache.get(cacheKey);
-        if (cached) return NextResponse.json(successResponse(cached));
+    const cacheKey = `report:${id}`;
+    const cached = await cache.get(cacheKey);
+    if (cached) return NextResponse.json(successResponse(cached));
 
-        const report = await db.report.findUnique({
-            where: { id },
-            include: { sections: { include: { metrics: true } } },
-        });
-        if (!report) return notFoundResponse("Report not found.");
+    const report = await db.report.findUnique({
+      where: { id },
+      include: { sections: { include: { metrics: true } } },
+    });
+    if (!report) return notFoundResponse("Report not found.");
 
-        /* Scope check */
-        const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
-        if (roleConfig.reportVisibilityScope === "campus" && report.campusId !== auth.user.campusId) {
-            return errorResponse("You do not have access to this report.", 403);
-        }
-
-        await cache.set(cacheKey, JSON.stringify(report), 60);
-        return NextResponse.json(successResponse(report));
-    } catch (err) {
-        return handleApiError(err);
+    /* Scope check */
+    const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
+    if (roleConfig.reportVisibilityScope === "campus" && report.campusId !== auth.user.campusId) {
+      return errorResponse("You do not have access to this report.", 403);
     }
+
+    await cache.set(cacheKey, JSON.stringify(report), 60);
+    return NextResponse.json(successResponse(report));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
 
 /* ── PUT ───────────────────────────────────────────────────────────────────── */
 
-export async function PUT(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const { id } = await params;
+    const { id } = await params;
 
-        const report = await db.report.findUnique({ where: { id } });
-        if (!report) return notFoundResponse("Report not found.");
+    const report = await db.report.findUnique({ where: { id } });
+    if (!report) return notFoundResponse("Report not found.");
 
-        /* Only DRAFT reports can be freely edited */
-        const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
-        if (!roleConfig.canFillReports) {
-            return errorResponse("You do not have permission to edit reports.", 403);
-        }
-        if (report.status !== ReportStatus.DRAFT && report.status !== ReportStatus.REQUIRES_EDITS) {
-            return errorResponse("Only draft or requires-edit reports can be updated.", 409);
-        }
-
-        const body = UpdateReportSchema.parse(await req.json());
-
-        const updated = await db.$transaction(async (tx) => {
-            const r = await tx.report.update({
-                where: { id },
-                data: {
-                    ...(body.title !== undefined && { title: body.title }),
-                    ...(body.notes !== undefined && { notes: body.notes }),
-                },
-            });
-
-            await tx.reportEvent.create({
-                data: {
-                    reportId: id,
-                    eventType: ReportEventType.EDIT_APPLIED,
-                    actorId: auth.user.id,
-                    timestamp: new Date(),
-                },
-            });
-
-            return r;
-        });
-
-        await cache.invalidatePattern(`report:${id}*`);
-        await cache.invalidatePattern(`reports:list:${auth.user.id}:*`);
-
-        return NextResponse.json(successResponse(updated));
-    } catch (err) {
-        return handleApiError(err);
+    /* Only DRAFT reports can be freely edited */
+    const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
+    if (!roleConfig.canFillReports) {
+      return errorResponse("You do not have permission to edit reports.", 403);
     }
+    if (report.status !== ReportStatus.DRAFT && report.status !== ReportStatus.REQUIRES_EDITS) {
+      return errorResponse("Only draft or requires-edit reports can be updated.", 409);
+    }
+
+    const body = UpdateReportSchema.parse(await req.json());
+
+    const updated = await db.$transaction(async (tx) => {
+      const r = await tx.report.update({
+        where: { id },
+        data: {
+          ...(body.title !== undefined && { title: body.title }),
+          ...(body.notes !== undefined && { notes: body.notes }),
+        },
+      });
+
+      await tx.reportEvent.create({
+        data: {
+          reportId: id,
+          eventType: ReportEventType.EDIT_APPLIED,
+          actorId: auth.user.id,
+          timestamp: new Date(),
+        },
+      });
+
+      return r;
+    });
+
+    await cache.invalidatePattern(`report:${id}*`);
+    await cache.invalidatePattern(`reports:list:${auth.user.id}:*`);
+
+    return NextResponse.json(successResponse(updated));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/users/[id]/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/users/[id]/route.ts
  * GET  /api/users/:id  — get user detail (SUPERADMIN)
@@ -16039,90 +16195,88 @@ import { UserRole } from "@/types/global";
 /* ── Update schema ────────────────────────────────────────────────────────── */
 
 const UpdateUserSchema = z.object({
-    role: z.nativeEnum(UserRole).optional(),
-    isActive: z.boolean().optional(),
-    campusId: z.string().uuid().nullable().optional(),
-    groupId: z.string().uuid().nullable().optional(),
-    phone: z.string().optional(),
+  role: z.nativeEnum(UserRole).optional(),
+  isActive: z.boolean().optional(),
+  campusId: z.string().uuid().nullable().optional(),
+  groupId: z.string().uuid().nullable().optional(),
+  phone: z.string().optional(),
 });
 
 /* ── GET /api/users/:id ───────────────────────────────────────────────────── */
 
-export async function GET(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    const { id } = await params;
-    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const cacheKey = `users:detail:${id}`;
-    const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(cached);
+  const cacheKey = `users:detail:${id}`;
+  const cached = await cache.get(cacheKey);
+  if (cached) return NextResponse.json(cached);
 
-    const user = await db.user.findUnique({
-        where: { id },
-        omit: { passwordHash: true },
-    });
-    if (!user) {
-        return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
-    }
+  const user = await db.user.findUnique({
+    where: { id },
+    omit: { passwordHash: true },
+  });
+  if (!user) {
+    return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
+  }
 
-    const response = { success: true, data: user };
-    await cache.set(cacheKey, JSON.stringify(response), 60);
-    return NextResponse.json(response);
+  const response = { success: true, data: user };
+  await cache.set(cacheKey, JSON.stringify(response), 60);
+  return NextResponse.json(response);
 }
 
 /* ── PUT /api/users/:id ───────────────────────────────────────────────────── */
 
-export async function PUT(
-    req: NextRequest,
-    { params }: { params: Promise<{ id: string }> },
-) {
-    const { id } = await params;
-    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const body = UpdateUserSchema.parse(await req.json());
+  const body = UpdateUserSchema.parse(await req.json());
 
-    const user = await db.user.findUnique({ where: { id } });
-    if (!user) {
-        return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
-    }
+  const user = await db.user.findUnique({ where: { id } });
+  if (!user) {
+    return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
+  }
 
-    /* Protect the only SUPERADMIN — cannot deactivate or demote self */
-    if (id === auth.user.id && (body.isActive === false || (body.role && body.role !== UserRole.SUPERADMIN))) {
-        return NextResponse.json(
-            { success: false, error: "Cannot demote or deactivate your own superadmin account." },
-            { status: 403 },
-        );
-    }
+  /* Protect the only SUPERADMIN — cannot deactivate or demote self */
+  if (
+    id === auth.user.id &&
+    (body.isActive === false || (body.role && body.role !== UserRole.SUPERADMIN))
+  ) {
+    return NextResponse.json(
+      { success: false, error: "Cannot demote or deactivate your own superadmin account." },
+      { status: 403 },
+    );
+  }
 
-    const updated = await db.user.update({
-        where: { id },
-        data: {
-            ...(body.role !== undefined && { role: body.role }),
-            ...(body.isActive !== undefined && { isActive: body.isActive }),
-            ...(body.campusId !== undefined && { campusId: body.campusId }),
-            ...(body.groupId !== undefined && { orgGroupId: body.groupId }),
-            ...(body.phone !== undefined && { phone: body.phone }),
-        },
-        omit: { passwordHash: true },
-    });
+  const updated = await db.user.update({
+    where: { id },
+    data: {
+      ...(body.role !== undefined && { role: body.role }),
+      ...(body.isActive !== undefined && { isActive: body.isActive }),
+      ...(body.campusId !== undefined && { campusId: body.campusId }),
+      ...(body.groupId !== undefined && { orgGroupId: body.groupId }),
+      ...(body.phone !== undefined && { phone: body.phone }),
+    },
+    omit: { passwordHash: true },
+  });
 
-    await cache.invalidatePattern(`users:detail:${id}`);
-    await cache.invalidatePattern("users:list:*");
+  await cache.invalidatePattern(`users:detail:${id}`);
+  await cache.invalidatePattern("users:list:*");
 
-    return NextResponse.json({ success: true, data: updated });
+  return NextResponse.json({ success: true, data: updated });
 }
-````
+```
 
 ## File: app/api/users/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/users/route.ts
  * GET  /api/users   — list all users (SUPERADMIN only)
@@ -16138,98 +16292,102 @@ import { UserRole } from "@/types/global";
 /* ── Query schema ─────────────────────────────────────────────────────────── */
 
 const ListUsersSchema = z.object({
-    page: z.coerce.number().min(1).default(1),
-    pageSize: z.coerce.number().min(1).max(100).default(25),
-    search: z.string().optional(),
-    role: z.nativeEnum(UserRole).optional(),
-    campusId: z.string().uuid().optional(),
-    active: z.enum(["true", "false"]).optional(),
+  page: z.coerce.number().min(1).default(1),
+  pageSize: z.coerce.number().min(1).max(100).default(25),
+  search: z.string().optional(),
+  role: z.nativeEnum(UserRole).optional(),
+  campusId: z.string().uuid().optional(),
+  active: z.enum(["true", "false"]).optional(),
 });
 
 /* ── GET /api/users ───────────────────────────────────────────────────────── */
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+  const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+  if (!auth.success) {
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  }
 
-    const cacheKey = `users:list:${req.url}`;
-    const cached = await cache.get(cacheKey);
-    if (cached) {
-        return NextResponse.json(cached);
-    }
+  const cacheKey = `users:list:${req.url}`;
+  const cached = await cache.get(cacheKey);
+  if (cached) {
+    return NextResponse.json(cached);
+  }
 
-    const query = ListUsersSchema.parse(
-        Object.fromEntries(new URL(req.url).searchParams),
-    );
+  const query = ListUsersSchema.parse(Object.fromEntries(new URL(req.url).searchParams));
 
-    /* Build Prisma where clause */
-    const where: Record<string, unknown> = {};
-    if (query.search) {
-        where.OR = [
-            { firstName: { contains: query.search, mode: "insensitive" } },
-            { lastName: { contains: query.search, mode: "insensitive" } },
-            { email: { contains: query.search, mode: "insensitive" } },
-        ];
-    }
-    if (query.role) where.role = query.role;
-    if (query.campusId) where.campusId = query.campusId;
-    if (query.active !== undefined) where.isActive = query.active === "true";
+  /* Build Prisma where clause */
+  const where: Record<string, unknown> = {};
+  if (query.search) {
+    where.OR = [
+      { firstName: { contains: query.search, mode: "insensitive" } },
+      { lastName: { contains: query.search, mode: "insensitive" } },
+      { email: { contains: query.search, mode: "insensitive" } },
+    ];
+  }
+  if (query.role) where.role = query.role;
+  if (query.campusId) where.campusId = query.campusId;
+  if (query.active !== undefined) where.isActive = query.active === "true";
 
-    const [users, total] = await Promise.all([
-        db.user.findMany({
-            where,
-            orderBy: { createdAt: "desc" },
-            skip: (query.page - 1) * query.pageSize,
-            take: query.pageSize,
-            omit: { passwordHash: true },
-        }),
-        db.user.count({ where }),
-    ]);
+  const [users, total] = await Promise.all([
+    db.user.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: (query.page - 1) * query.pageSize,
+      take: query.pageSize,
+      omit: { passwordHash: true },
+    }),
+    db.user.count({ where }),
+  ]);
 
-    const response = { success: true, data: users, meta: { total, page: query.page, pageSize: query.pageSize } };
-    await cache.set(cacheKey, JSON.stringify(response), 30);
-    return NextResponse.json(response);
+  const response = {
+    success: true,
+    data: users,
+    meta: { total, page: query.page, pageSize: query.pageSize },
+  };
+  await cache.set(cacheKey, JSON.stringify(response), 30);
+  return NextResponse.json(response);
 }
-````
+```
 
 ## File: app/manifest.ts
-````typescript
+
+```typescript
 import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
-    return {
-        name: "Harvesters Reporting System",
-        short_name: "HRS",
-        description: "Central reporting system for Harvesters International Christian Centre",
-        start_url: "/",
-        display: "standalone",
-        background_color: "#0A0A0B",
-        theme_color: "#10b981",
-        icons: [
-            {
-                src: "/logo/icon-192.svg",
-                sizes: "192x192",
-                type: "image/svg+xml",
-            },
-            {
-                src: "/logo/icon-512.svg",
-                sizes: "512x512",
-                type: "image/svg+xml",
-            },
-            {
-                src: "/logo/dark-bg-harvesters-Logo.ico",
-                sizes: "any",
-                type: "image/x-icon",
-            },
-        ],
-    };
+  return {
+    name: "Harvesters Reporting System",
+    short_name: "HRS",
+    description: "Central reporting system for Harvesters International Christian Centre",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#0A0A0B",
+    theme_color: "#10b981",
+    icons: [
+      {
+        src: "/logo/icon-192.svg",
+        sizes: "192x192",
+        type: "image/svg+xml",
+      },
+      {
+        src: "/logo/icon-512.svg",
+        sizes: "512x512",
+        type: "image/svg+xml",
+      },
+      {
+        src: "/logo/dark-bg-harvesters-Logo.ico",
+        sizes: "any",
+        type: "image/x-icon",
+      },
+    ],
+  };
 }
-````
+```
 
 ## File: config/nav.ts
-````typescript
+
+```typescript
 /**
  * config/nav.ts
  * Single unified navigation item array with allowedRoles[] on every item.
@@ -16238,17 +16396,17 @@ export default function manifest(): MetadataRoute.Manifest {
  */
 
 import {
-    AppstoreOutlined,
-    BarChartOutlined,
-    BellOutlined,
-    BugOutlined,
-    FileTextOutlined,
-    LayoutOutlined,
-    LinkOutlined,
-    SettingOutlined as _SettingOutlined,
-    TeamOutlined,
-    ApartmentOutlined,
-    TrophyOutlined,
+  AppstoreOutlined,
+  BarChartOutlined,
+  BellOutlined,
+  BugOutlined,
+  FileTextOutlined,
+  LayoutOutlined,
+  LinkOutlined,
+  SettingOutlined as _SettingOutlined,
+  TeamOutlined,
+  ApartmentOutlined,
+  TrophyOutlined,
 } from "@ant-design/icons";
 import { UserRole } from "@/types/global";
 import { APP_ROUTES } from "./routes";
@@ -16257,162 +16415,162 @@ import { CONTENT } from "./content";
 /* ── All dashboard nav items — filtered by role at render time ──────────── */
 
 export const DASHBOARD_NAV_ITEMS: NavItem[] = [
-    {
-        key: "dashboard",
-        label: CONTENT.nav.dashboard,
-        href: APP_ROUTES.dashboard,
-        icon: AppstoreOutlined,
-        allowedRoles: [
-            UserRole.SUPERADMIN,
-            UserRole.CAMPUS_ADMIN,
-            UserRole.CAMPUS_PASTOR,
-            UserRole.GROUP_ADMIN,
-            UserRole.GROUP_PASTOR,
-            UserRole.CHURCH_MINISTRY,
-            UserRole.CEO,
-            UserRole.OFFICE_OF_CEO,
-            UserRole.SPO,
-            UserRole.DATA_ENTRY,
-            UserRole.MEMBER,
-        ],
-    },
-    {
-        key: "reports",
-        label: CONTENT.nav.reports,
-        href: APP_ROUTES.reports,
-        icon: FileTextOutlined,
-        allowedRoles: [
-            UserRole.SUPERADMIN,
-            UserRole.CAMPUS_ADMIN,
-            UserRole.CAMPUS_PASTOR,
-            UserRole.GROUP_ADMIN,
-            UserRole.GROUP_PASTOR,
-            UserRole.CHURCH_MINISTRY,
-            UserRole.CEO,
-            UserRole.OFFICE_OF_CEO,
-            UserRole.SPO,
-            UserRole.DATA_ENTRY,
-        ],
-    },
-    {
-        key: "analytics",
-        label: CONTENT.nav.analytics,
-        href: APP_ROUTES.analytics,
-        icon: BarChartOutlined,
-        allowedRoles: [
-            UserRole.SUPERADMIN,
-            UserRole.GROUP_ADMIN,
-            UserRole.GROUP_PASTOR,
-            UserRole.CHURCH_MINISTRY,
-            UserRole.CEO,
-            UserRole.OFFICE_OF_CEO,
-            UserRole.SPO,
-        ],
-    },
-    {
-        key: "inbox",
-        label: CONTENT.nav.inbox,
-        href: APP_ROUTES.inbox,
-        icon: BellOutlined,
-        allowedRoles: [
-            UserRole.SUPERADMIN,
-            UserRole.CAMPUS_ADMIN,
-            UserRole.CAMPUS_PASTOR,
-            UserRole.GROUP_ADMIN,
-            UserRole.GROUP_PASTOR,
-            UserRole.CHURCH_MINISTRY,
-            UserRole.CEO,
-            UserRole.OFFICE_OF_CEO,
-            UserRole.SPO,
-            UserRole.DATA_ENTRY,
-        ],
-    },
-    /* — Superadmin-only — */
-    {
-        key: "templates",
-        label: CONTENT.nav.templates,
-        href: APP_ROUTES.templates,
-        icon: LayoutOutlined,
-        allowedRoles: [
-            UserRole.SUPERADMIN,
-            UserRole.GROUP_ADMIN,
-            UserRole.GROUP_PASTOR,
-            UserRole.SPO,
-            UserRole.CEO,
-            UserRole.OFFICE_OF_CEO,
-            UserRole.CHURCH_MINISTRY,
-        ],
-    },
-    {
-        key: "users",
-        label: CONTENT.nav.users,
-        href: APP_ROUTES.users,
-        icon: TeamOutlined,
-        allowedRoles: [UserRole.SUPERADMIN],
-    },
-    {
-        key: "org",
-        label: CONTENT.nav.org,
-        href: APP_ROUTES.org,
-        icon: ApartmentOutlined,
-        allowedRoles: [UserRole.SUPERADMIN],
-    },
-    {
-        key: "goals",
-        label: CONTENT.nav.goals,
-        href: APP_ROUTES.goals,
-        icon: TrophyOutlined,
-        allowedRoles: [
-            UserRole.SUPERADMIN,
-            UserRole.GROUP_ADMIN,
-            UserRole.GROUP_PASTOR,
-            UserRole.CAMPUS_ADMIN,
-            UserRole.CAMPUS_PASTOR,
-            UserRole.SPO,
-            UserRole.CEO,
-            UserRole.OFFICE_OF_CEO,
-            UserRole.CHURCH_MINISTRY,
-        ],
-    },
-    {
-        key: "invites",
-        label: CONTENT.nav.invites,
-        href: APP_ROUTES.invites,
-        icon: LinkOutlined,
-        allowedRoles: [
-            UserRole.SUPERADMIN,
-            UserRole.CAMPUS_ADMIN,
-            UserRole.CAMPUS_PASTOR,
-            UserRole.GROUP_ADMIN,
-            UserRole.GROUP_PASTOR,
-        ],
-    },
-    {
-        key: "bug-reports",
-        label: CONTENT.nav.bugReports,
-        href: APP_ROUTES.bugReports,
-        icon: BugOutlined,
-        allowedRoles: [
-            UserRole.SUPERADMIN,
-            UserRole.CAMPUS_ADMIN,
-            UserRole.CAMPUS_PASTOR,
-            UserRole.GROUP_ADMIN,
-            UserRole.GROUP_PASTOR,
-            UserRole.CHURCH_MINISTRY,
-            UserRole.CEO,
-            UserRole.OFFICE_OF_CEO,
-            UserRole.SPO,
-            UserRole.DATA_ENTRY,
-            UserRole.MEMBER,
-        ],
-    },
-    {
-        key: "bug-reports-manage",
-        label: CONTENT.nav.bugReportsManage,
-        href: APP_ROUTES.bugReportsManage,
-        icon: BugOutlined,
-        allowedRoles: [UserRole.SUPERADMIN],
-    },
+  {
+    key: "dashboard",
+    label: CONTENT.nav.dashboard,
+    href: APP_ROUTES.dashboard,
+    icon: AppstoreOutlined,
+    allowedRoles: [
+      UserRole.SUPERADMIN,
+      UserRole.CAMPUS_ADMIN,
+      UserRole.CAMPUS_PASTOR,
+      UserRole.GROUP_ADMIN,
+      UserRole.GROUP_PASTOR,
+      UserRole.CHURCH_MINISTRY,
+      UserRole.CEO,
+      UserRole.OFFICE_OF_CEO,
+      UserRole.SPO,
+      UserRole.DATA_ENTRY,
+      UserRole.MEMBER,
+    ],
+  },
+  {
+    key: "reports",
+    label: CONTENT.nav.reports,
+    href: APP_ROUTES.reports,
+    icon: FileTextOutlined,
+    allowedRoles: [
+      UserRole.SUPERADMIN,
+      UserRole.CAMPUS_ADMIN,
+      UserRole.CAMPUS_PASTOR,
+      UserRole.GROUP_ADMIN,
+      UserRole.GROUP_PASTOR,
+      UserRole.CHURCH_MINISTRY,
+      UserRole.CEO,
+      UserRole.OFFICE_OF_CEO,
+      UserRole.SPO,
+      UserRole.DATA_ENTRY,
+    ],
+  },
+  {
+    key: "analytics",
+    label: CONTENT.nav.analytics,
+    href: APP_ROUTES.analytics,
+    icon: BarChartOutlined,
+    allowedRoles: [
+      UserRole.SUPERADMIN,
+      UserRole.GROUP_ADMIN,
+      UserRole.GROUP_PASTOR,
+      UserRole.CHURCH_MINISTRY,
+      UserRole.CEO,
+      UserRole.OFFICE_OF_CEO,
+      UserRole.SPO,
+    ],
+  },
+  {
+    key: "inbox",
+    label: CONTENT.nav.inbox,
+    href: APP_ROUTES.inbox,
+    icon: BellOutlined,
+    allowedRoles: [
+      UserRole.SUPERADMIN,
+      UserRole.CAMPUS_ADMIN,
+      UserRole.CAMPUS_PASTOR,
+      UserRole.GROUP_ADMIN,
+      UserRole.GROUP_PASTOR,
+      UserRole.CHURCH_MINISTRY,
+      UserRole.CEO,
+      UserRole.OFFICE_OF_CEO,
+      UserRole.SPO,
+      UserRole.DATA_ENTRY,
+    ],
+  },
+  /* — Superadmin-only — */
+  {
+    key: "templates",
+    label: CONTENT.nav.templates,
+    href: APP_ROUTES.templates,
+    icon: LayoutOutlined,
+    allowedRoles: [
+      UserRole.SUPERADMIN,
+      UserRole.GROUP_ADMIN,
+      UserRole.GROUP_PASTOR,
+      UserRole.SPO,
+      UserRole.CEO,
+      UserRole.OFFICE_OF_CEO,
+      UserRole.CHURCH_MINISTRY,
+    ],
+  },
+  {
+    key: "users",
+    label: CONTENT.nav.users,
+    href: APP_ROUTES.users,
+    icon: TeamOutlined,
+    allowedRoles: [UserRole.SUPERADMIN],
+  },
+  {
+    key: "org",
+    label: CONTENT.nav.org,
+    href: APP_ROUTES.org,
+    icon: ApartmentOutlined,
+    allowedRoles: [UserRole.SUPERADMIN],
+  },
+  {
+    key: "goals",
+    label: CONTENT.nav.goals,
+    href: APP_ROUTES.goals,
+    icon: TrophyOutlined,
+    allowedRoles: [
+      UserRole.SUPERADMIN,
+      UserRole.GROUP_ADMIN,
+      UserRole.GROUP_PASTOR,
+      UserRole.CAMPUS_ADMIN,
+      UserRole.CAMPUS_PASTOR,
+      UserRole.SPO,
+      UserRole.CEO,
+      UserRole.OFFICE_OF_CEO,
+      UserRole.CHURCH_MINISTRY,
+    ],
+  },
+  {
+    key: "invites",
+    label: CONTENT.nav.invites,
+    href: APP_ROUTES.invites,
+    icon: LinkOutlined,
+    allowedRoles: [
+      UserRole.SUPERADMIN,
+      UserRole.CAMPUS_ADMIN,
+      UserRole.CAMPUS_PASTOR,
+      UserRole.GROUP_ADMIN,
+      UserRole.GROUP_PASTOR,
+    ],
+  },
+  {
+    key: "bug-reports",
+    label: CONTENT.nav.bugReports,
+    href: APP_ROUTES.bugReports,
+    icon: BugOutlined,
+    allowedRoles: [
+      UserRole.SUPERADMIN,
+      UserRole.CAMPUS_ADMIN,
+      UserRole.CAMPUS_PASTOR,
+      UserRole.GROUP_ADMIN,
+      UserRole.GROUP_PASTOR,
+      UserRole.CHURCH_MINISTRY,
+      UserRole.CEO,
+      UserRole.OFFICE_OF_CEO,
+      UserRole.SPO,
+      UserRole.DATA_ENTRY,
+      UserRole.MEMBER,
+    ],
+  },
+  {
+    key: "bug-reports-manage",
+    label: CONTENT.nav.bugReportsManage,
+    href: APP_ROUTES.bugReportsManage,
+    icon: BugOutlined,
+    allowedRoles: [UserRole.SUPERADMIN],
+  },
 ];
 
 /* ── Backwards-compat exports (consumed by layouts during migration) ──────── */
@@ -16424,12 +16582,13 @@ export const SUPERADMIN_NAV_ITEMS = DASHBOARD_NAV_ITEMS;
 /* ── Helper: filter nav items by role ───────────────────────────────────── */
 
 export function getNavItems(role: UserRole): NavItem[] {
-    return DASHBOARD_NAV_ITEMS.filter((item) => item.allowedRoles.includes(role));
+  return DASHBOARD_NAV_ITEMS.filter((item) => item.allowedRoles.includes(role));
 }
-````
+```
 
 ## File: modules/reports/components/ReportSectionsForm.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -17120,25 +17279,31 @@ export function parseSectionsToMetricValues(sections: unknown[]): Record<string,
 }
 
 export type { GoalsForReportMap, GoalForMetric };
-````
+```
 
 ## File: modules/reports/index.ts
-````typescript
+
+```typescript
 /**
  * modules/reports/index.ts
  * Public barrel — export components and services only.
  * Domain types live exclusively in types/global.d.ts.
  */
 export { ReportDetailPage } from "./components/ReportDetailPage";
-export { ReportsListPage }  from "./components/ReportsListPage";
-export { ReportNewPage }    from "./components/ReportNewPage";
-export { ReportEditPage }   from "./components/ReportEditPage";
-export { ReportSectionsForm, buildSectionsPayload, parseSectionsToMetricValues } from "./components/ReportSectionsForm";
-export { ExportDialog }     from "./components/ExportDialog";
-````
+export { ReportsListPage } from "./components/ReportsListPage";
+export { ReportNewPage } from "./components/ReportNewPage";
+export { ReportEditPage } from "./components/ReportEditPage";
+export {
+  ReportSectionsForm,
+  buildSectionsPayload,
+  parseSectionsToMetricValues,
+} from "./components/ReportSectionsForm";
+export { ExportDialog } from "./components/ExportDialog";
+```
 
 ## File: modules/templates/components/TemplateDetailPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -17700,10 +17865,11 @@ export function TemplateDetailPage({ params }: PageProps) {
     </>
   );
 }
-````
+```
 
 ## File: app/(dashboard)/layout.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -18044,67 +18210,65 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     </div>
   );
 }
-````
+```
 
 ## File: app/api/auth/refresh/route.ts
-````typescript
+
+```typescript
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 import {
-    verifyRefreshToken,
-    generateTokens,
-    setAuthCookies,
-    getRefreshTokenFromCookies,
+  verifyRefreshToken,
+  generateTokens,
+  setAuthCookies,
+  getRefreshTokenFromCookies,
 } from "@/lib/utils/auth";
-import {
-    successResponse,
-    unauthorizedResponse,
-    handleApiError,
-} from "@/lib/utils/api";
+import { successResponse, unauthorizedResponse, handleApiError } from "@/lib/utils/api";
 
 const RefreshSchema = z.object({}).optional();
 
 export async function POST(req: NextRequest) {
-    try {
-        void req;
-        void RefreshSchema;
+  try {
+    void req;
+    void RefreshSchema;
 
-        const refreshToken = await getRefreshTokenFromCookies();
-        if (!refreshToken) return unauthorizedResponse("No refresh token");
+    const refreshToken = await getRefreshTokenFromCookies();
+    if (!refreshToken) return unauthorizedResponse("No refresh token");
 
-        const payload = verifyRefreshToken(refreshToken);
-        if (!payload) return unauthorizedResponse("Invalid or expired refresh token");
+    const payload = verifyRefreshToken(refreshToken);
+    if (!payload) return unauthorizedResponse("Invalid or expired refresh token");
 
-        const userProfile = await db.user.findUnique({ where: { id: payload.userId } });
-        if (!userProfile || !userProfile.isActive) {
-            return unauthorizedResponse("User not found or inactive");
-        }
-
-        const authUser: AuthUser = {
-            id: userProfile.id,
-            email: userProfile.email,
-            firstName: userProfile.firstName,
-            lastName: userProfile.lastName,
-            role: userProfile.role as UserRole,
-            campusId: userProfile.campusId ?? undefined,
-            orgGroupId: userProfile.orgGroupId ?? undefined,
-            avatar: userProfile.avatar ?? undefined,
-        };
-
-        const tokens = generateTokens(authUser);
-        await setAuthCookies(tokens);
-
-        return NextResponse.json(successResponse({ user: authUser }));
-    } catch (err) {
-        return handleApiError(err);
+    const userProfile = await db.user.findUnique({ where: { id: payload.userId } });
+    if (!userProfile || !userProfile.isActive) {
+      return unauthorizedResponse("User not found or inactive");
     }
+
+    const authUser: AuthUser = {
+      id: userProfile.id,
+      email: userProfile.email,
+      firstName: userProfile.firstName,
+      lastName: userProfile.lastName,
+      role: userProfile.role as UserRole,
+      campusId: userProfile.campusId ?? undefined,
+      orgGroupId: userProfile.orgGroupId ?? undefined,
+      avatar: userProfile.avatar ?? undefined,
+    };
+
+    const tokens = generateTokens(authUser);
+    await setAuthCookies(tokens);
+
+    return NextResponse.json(successResponse({ user: authUser }));
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/goals/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/goals/route.ts
  * GET  /api/goals  — list goals (filtered by role/campus)
@@ -18118,132 +18282,133 @@ import { db } from "@/lib/data/db";
 import { UserRole, GoalMode } from "@/types/global";
 
 const READ_ROLES: UserRole[] = [
-    UserRole.GROUP_ADMIN,
-    UserRole.GROUP_PASTOR,
-    UserRole.CAMPUS_ADMIN,
-    UserRole.CAMPUS_PASTOR,
-    UserRole.SPO,
-    UserRole.CEO,
-    UserRole.CHURCH_MINISTRY,
-    UserRole.SUPERADMIN,
+  UserRole.GROUP_ADMIN,
+  UserRole.GROUP_PASTOR,
+  UserRole.CAMPUS_ADMIN,
+  UserRole.CAMPUS_PASTOR,
+  UserRole.SPO,
+  UserRole.CEO,
+  UserRole.CHURCH_MINISTRY,
+  UserRole.SUPERADMIN,
 ];
 
 const WRITE_ROLES: UserRole[] = [
-    UserRole.GROUP_ADMIN,
-    UserRole.GROUP_PASTOR,
-    UserRole.SPO,
-    UserRole.CEO,
-    UserRole.CHURCH_MINISTRY,
-    UserRole.SUPERADMIN,
+  UserRole.GROUP_ADMIN,
+  UserRole.GROUP_PASTOR,
+  UserRole.SPO,
+  UserRole.CEO,
+  UserRole.CHURCH_MINISTRY,
+  UserRole.SUPERADMIN,
 ];
 
 const CreateGoalSchema = z.object({
-    campusId: z.string().min(1),
-    templateMetricId: z.string().min(1),
-    metricName: z.string().min(1),
-    mode: z.enum(["ANNUAL", "MONTHLY"]),
-    year: z.number().int().min(2020).max(2100),
-    month: z.number().int().min(1).max(12).optional(),
-    targetValue: z.number().min(0),
+  campusId: z.string().min(1),
+  templateMetricId: z.string().min(1),
+  metricName: z.string().min(1),
+  mode: z.enum(["ANNUAL", "MONTHLY"]),
+  year: z.number().int().min(2020).max(2100),
+  month: z.number().int().min(1).max(12).optional(),
+  targetValue: z.number().min(0),
 });
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req, READ_ROLES);
-    if (!auth.success)
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
+  const auth = await verifyAuth(req, READ_ROLES);
+  if (!auth.success)
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
-    const { searchParams } = new URL(req.url);
-    const campusId = searchParams.get("campusId");
-    const year = searchParams.get("year") ? Number(searchParams.get("year")) : undefined;
+  const { searchParams } = new URL(req.url);
+  const campusId = searchParams.get("campusId");
+  const year = searchParams.get("year") ? Number(searchParams.get("year")) : undefined;
 
-    /* Build Prisma where clause */
-    const where: Record<string, unknown> = {};
-    if (campusId) where.campusId = campusId;
-    if (year != null) where.year = year;
-    // Non-superadmin: restrict to their own campus
-    if (
-        auth.user.role !== UserRole.SUPERADMIN &&
-        auth.user.role !== UserRole.SPO &&
-        auth.user.role !== UserRole.CEO &&
-        auth.user.role !== UserRole.CHURCH_MINISTRY
-    ) {
-        if (auth.user.campusId) where.campusId = auth.user.campusId;
-    }
+  /* Build Prisma where clause */
+  const where: Record<string, unknown> = {};
+  if (campusId) where.campusId = campusId;
+  if (year != null) where.year = year;
+  // Non-superadmin: restrict to their own campus
+  if (
+    auth.user.role !== UserRole.SUPERADMIN &&
+    auth.user.role !== UserRole.SPO &&
+    auth.user.role !== UserRole.CEO &&
+    auth.user.role !== UserRole.CHURCH_MINISTRY
+  ) {
+    if (auth.user.campusId) where.campusId = auth.user.campusId;
+  }
 
-    const goals = await db.goal.findMany({ where });
+  const goals = await db.goal.findMany({ where });
 
-    return NextResponse.json({ success: true, data: goals });
+  return NextResponse.json({ success: true, data: goals });
 }
 
 export async function POST(req: NextRequest) {
-    const auth = await verifyAuth(req, WRITE_ROLES);
-    if (!auth.success)
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
+  const auth = await verifyAuth(req, WRITE_ROLES);
+  if (!auth.success)
+    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
 
-    const body = CreateGoalSchema.parse(await req.json());
+  const body = CreateGoalSchema.parse(await req.json());
 
-    // Non-superadmin / non-SPO can only set goals for their own campus
-    if (
-        auth.user.role !== UserRole.SUPERADMIN &&
-        auth.user.role !== UserRole.SPO &&
-        auth.user.role !== UserRole.CEO &&
-        auth.user.role !== UserRole.CHURCH_MINISTRY
-    ) {
-        if (auth.user.campusId && body.campusId !== auth.user.campusId) {
-            return NextResponse.json(
-                { success: false, error: "Cannot set goals for a different campus." },
-                { status: 403 },
-            );
-        }
+  // Non-superadmin / non-SPO can only set goals for their own campus
+  if (
+    auth.user.role !== UserRole.SUPERADMIN &&
+    auth.user.role !== UserRole.SPO &&
+    auth.user.role !== UserRole.CEO &&
+    auth.user.role !== UserRole.CHURCH_MINISTRY
+  ) {
+    if (auth.user.campusId && body.campusId !== auth.user.campusId) {
+      return NextResponse.json(
+        { success: false, error: "Cannot set goals for a different campus." },
+        { status: 403 },
+      );
     }
+  }
 
-    const now = new Date();
+  const now = new Date();
 
-    // Upsert: find existing for same campus/metric/year/mode
-    const existingWhere: Record<string, unknown> = {
-        campusId: body.campusId,
-        templateMetricId: body.templateMetricId,
-        year: body.year,
-        mode: body.mode,
-    };
-    if (body.month != null) existingWhere.month = body.month;
+  // Upsert: find existing for same campus/metric/year/mode
+  const existingWhere: Record<string, unknown> = {
+    campusId: body.campusId,
+    templateMetricId: body.templateMetricId,
+    year: body.year,
+    mode: body.mode,
+  };
+  if (body.month != null) existingWhere.month = body.month;
 
-    const existing = await db.goal.findFirst({ where: existingWhere });
+  const existing = await db.goal.findFirst({ where: existingWhere });
 
-    if (existing) {
-        if (existing.isLocked && auth.user.role !== UserRole.SUPERADMIN) {
-            return NextResponse.json(
-                { success: false, error: "This goal is locked. Submit an unlock request to edit it." },
-                { status: 403 },
-            );
-        }
-        const updated = await db.goal.update({
-            where: { id: existing.id },
-            data: { targetValue: body.targetValue, mode: body.mode as GoalMode },
-        });
-        return NextResponse.json({ success: true, data: updated });
+  if (existing) {
+    if (existing.isLocked && auth.user.role !== UserRole.SUPERADMIN) {
+      return NextResponse.json(
+        { success: false, error: "This goal is locked. Submit an unlock request to edit it." },
+        { status: 403 },
+      );
     }
-
-    const goal = await db.goal.create({
-        data: {
-            campusId: body.campusId,
-            templateMetricId: body.templateMetricId,
-            metricName: body.metricName,
-            mode: body.mode as GoalMode,
-            year: body.year,
-            month: body.month,
-            targetValue: body.targetValue,
-            isLocked: false,
-            createdById: auth.user.id,
-        },
+    const updated = await db.goal.update({
+      where: { id: existing.id },
+      data: { targetValue: body.targetValue, mode: body.mode as GoalMode },
     });
+    return NextResponse.json({ success: true, data: updated });
+  }
 
-    return NextResponse.json({ success: true, data: goal }, { status: 201 });
+  const goal = await db.goal.create({
+    data: {
+      campusId: body.campusId,
+      templateMetricId: body.templateMetricId,
+      metricName: body.metricName,
+      mode: body.mode as GoalMode,
+      year: body.year,
+      month: body.month,
+      targetValue: body.targetValue,
+      isLocked: false,
+      createdById: auth.user.id,
+    },
+  });
+
+  return NextResponse.json({ success: true, data: goal }, { status: 201 });
 }
-````
+```
 
 ## File: app/layout.tsx
-````typescript
+
+```typescript
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -18347,10 +18512,11 @@ export default function RootLayout({
     </html>
   );
 }
-````
+```
 
 ## File: config/roles.ts
-````typescript
+
+```typescript
 /**
  * config/roles.ts
  * ROLE_CONFIG: authoritative capability map for every role.
@@ -18362,296 +18528,297 @@ import { APP_ROUTES } from "./routes";
 import { CONTENT } from "./content";
 
 export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
-    [UserRole.SUPERADMIN]: {
-        role: UserRole.SUPERADMIN,
-        label: CONTENT.users.roles.SUPERADMIN,
-        hierarchyOrder: 0,
-        dashboardRoute: APP_ROUTES.dashboard,
-        dashboardMode: "system",
-        canCreateReports: true,
-        canFillReports: false,
-        canSubmitReports: false,
-        canRequestEdits: false,
-        canApproveReports: false,
-        canMarkReviewed: false,
-        canLockReports: true,
-        canManageTemplates: true,
-        canDataEntry: false,
-        canManageUsers: true,
-        canManageOrg: true,
-        canSetGoals: true,
-        canApproveGoalUnlock: true,
-        reportVisibilityScope: "all",
-    },
-    [UserRole.SPO]: {
-        role: UserRole.SPO,
-        label: CONTENT.users.roles.SPO,
-        hierarchyOrder: 1,
-        dashboardRoute: APP_ROUTES.dashboard,
-        dashboardMode: "analytics",
-        canCreateReports: false,
-        canFillReports: false,
-        canSubmitReports: false,
-        canRequestEdits: true,
-        canApproveReports: false,
-        canMarkReviewed: true,
-        canLockReports: false,
-        canManageTemplates: true,
-        canDataEntry: false,
-        canManageUsers: false,
-        canManageOrg: false,
-        canSetGoals: true,
-        canApproveGoalUnlock: true,
-        reportVisibilityScope: "all",
-    },
-    [UserRole.CEO]: {
-        role: UserRole.CEO,
-        label: CONTENT.users.roles.CEO,
-        hierarchyOrder: 2,
-        dashboardRoute: APP_ROUTES.dashboard,
-        dashboardMode: "analytics",
-        canCreateReports: false,
-        canFillReports: false,
-        canSubmitReports: false,
-        canRequestEdits: true,
-        canApproveReports: false,
-        canMarkReviewed: true,
-        canLockReports: false,
-        canManageTemplates: true,
-        canDataEntry: false,
-        canManageUsers: false,
-        canManageOrg: false,
-        canSetGoals: true,
-        canApproveGoalUnlock: true,
-        reportVisibilityScope: "all",
-    },
-    [UserRole.OFFICE_OF_CEO]: {
-        role: UserRole.OFFICE_OF_CEO,
-        label: CONTENT.users.roles.OFFICE_OF_CEO,
-        hierarchyOrder: 3,
-        dashboardRoute: APP_ROUTES.dashboard,
-        dashboardMode: "analytics",
-        canCreateReports: false,
-        canFillReports: false,
-        canSubmitReports: false,
-        canRequestEdits: true,
-        canApproveReports: false,
-        canMarkReviewed: true,
-        canLockReports: false,
-        canManageTemplates: true,
-        canDataEntry: false,
-        canManageUsers: false,
-        canManageOrg: false,
-        canSetGoals: true,
-        canApproveGoalUnlock: true,
-        reportVisibilityScope: "all",
-    },
-    [UserRole.CHURCH_MINISTRY]: {
-        role: UserRole.CHURCH_MINISTRY,
-        label: CONTENT.users.roles.CHURCH_MINISTRY,
-        hierarchyOrder: 4,
-        dashboardRoute: APP_ROUTES.dashboard,
-        dashboardMode: "analytics",
-        canCreateReports: false,
-        canFillReports: false,
-        canSubmitReports: false,
-        canRequestEdits: true,
-        canApproveReports: false,
-        canMarkReviewed: true,
-        canLockReports: false,
-        canManageTemplates: true,
-        canDataEntry: false,
-        canManageUsers: false,
-        canManageOrg: false,
-        canSetGoals: false,
-        canApproveGoalUnlock: false,
-        reportVisibilityScope: "all",
-    },
-    [UserRole.GROUP_PASTOR]: {
-        role: UserRole.GROUP_PASTOR,
-        label: CONTENT.users.roles.GROUP_PASTOR,
-        hierarchyOrder: 5,
-        dashboardRoute: APP_ROUTES.dashboard,
-        dashboardMode: "report-reviewed",
-        canCreateReports: false,
-        canFillReports: false,
-        canSubmitReports: false,
-        canRequestEdits: true,
-        canApproveReports: false,
-        canMarkReviewed: true,
-        canLockReports: false,
-        canManageTemplates: true,
-        canDataEntry: false,
-        canManageUsers: false,
-        canManageOrg: false,
-        canSetGoals: true,
-        canApproveGoalUnlock: true,
-        reportVisibilityScope: "all",
-    },
-    [UserRole.GROUP_ADMIN]: {
-        role: UserRole.GROUP_ADMIN,
-        label: CONTENT.users.roles.GROUP_ADMIN,
-        hierarchyOrder: 6,
-        dashboardRoute: APP_ROUTES.dashboard,
-        dashboardMode: "report-review",
-        canCreateReports: false,
-        canFillReports: false,
-        canSubmitReports: false,
-        canRequestEdits: true,
-        canApproveReports: false,
-        canMarkReviewed: true,
-        canLockReports: false,
-        canManageTemplates: true,
-        canDataEntry: true,
-        canManageUsers: false,
-        canManageOrg: false,
-        canSetGoals: true,
-        canApproveGoalUnlock: false,
-        reportVisibilityScope: "all",
-    },
-    [UserRole.CAMPUS_PASTOR]: {
-        role: UserRole.CAMPUS_PASTOR,
-        label: CONTENT.users.roles.CAMPUS_PASTOR,
-        hierarchyOrder: 7,
-        dashboardRoute: APP_ROUTES.dashboard,
-        dashboardMode: "report-review",
-        canCreateReports: true,
-        canFillReports: false,
-        canSubmitReports: false,
-        canRequestEdits: false,
-        canApproveReports: true,
-        canMarkReviewed: false,
-        canLockReports: false,
-        canManageTemplates: false,
-        canDataEntry: false,
-        canManageUsers: false,
-        canManageOrg: false,
-        canSetGoals: false,
-        canApproveGoalUnlock: false,
-        reportVisibilityScope: "campus",
-    },
-    [UserRole.CAMPUS_ADMIN]: {
-        role: UserRole.CAMPUS_ADMIN,
-        label: CONTENT.users.roles.CAMPUS_ADMIN,
-        hierarchyOrder: 8,
-        dashboardRoute: APP_ROUTES.dashboard,
-        dashboardMode: "report-fill",
-        canCreateReports: true,
-        canFillReports: true,
-        canSubmitReports: true,
-        canRequestEdits: false,
-        canApproveReports: false,
-        canMarkReviewed: false,
-        canLockReports: false,
-        canManageTemplates: false,
-        canDataEntry: false,
-        canManageUsers: false,
-        canManageOrg: false,
-        canSetGoals: false,
-        canApproveGoalUnlock: false,
-        reportVisibilityScope: "campus",
-    },
-    [UserRole.DATA_ENTRY]: {
-        role: UserRole.DATA_ENTRY,
-        label: CONTENT.users.roles.DATA_ENTRY,
-        hierarchyOrder: 9,
-        dashboardRoute: APP_ROUTES.reports,
-        dashboardMode: "report-fill",
-        canCreateReports: true,
-        canFillReports: true,
-        canSubmitReports: true,
-        canRequestEdits: false,
-        canApproveReports: false,
-        canMarkReviewed: false,
-        canLockReports: false,
-        canManageTemplates: false,
-        canDataEntry: true,
-        canManageUsers: false,
-        canManageOrg: false,
-        canSetGoals: false,
-        canApproveGoalUnlock: false,
-        reportVisibilityScope: "campus",
-    },
-    [UserRole.MEMBER]: {
-        role: UserRole.MEMBER,
-        label: CONTENT.users.roles.MEMBER,
-        hierarchyOrder: 10,
-        dashboardRoute: APP_ROUTES.member.dashboard,
-        dashboardMode: "report-fill",
-        canCreateReports: false,
-        canFillReports: false,
-        canSubmitReports: false,
-        canRequestEdits: false,
-        canApproveReports: false,
-        canMarkReviewed: false,
-        canLockReports: false,
-        canManageTemplates: false,
-        canDataEntry: false,
-        canManageUsers: false,
-        canManageOrg: false,
-        canSetGoals: false,
-        canApproveGoalUnlock: false,
-        reportVisibilityScope: "own",
-    },
+  [UserRole.SUPERADMIN]: {
+    role: UserRole.SUPERADMIN,
+    label: CONTENT.users.roles.SUPERADMIN,
+    hierarchyOrder: 0,
+    dashboardRoute: APP_ROUTES.dashboard,
+    dashboardMode: "system",
+    canCreateReports: true,
+    canFillReports: false,
+    canSubmitReports: false,
+    canRequestEdits: false,
+    canApproveReports: false,
+    canMarkReviewed: false,
+    canLockReports: true,
+    canManageTemplates: true,
+    canDataEntry: false,
+    canManageUsers: true,
+    canManageOrg: true,
+    canSetGoals: true,
+    canApproveGoalUnlock: true,
+    reportVisibilityScope: "all",
+  },
+  [UserRole.SPO]: {
+    role: UserRole.SPO,
+    label: CONTENT.users.roles.SPO,
+    hierarchyOrder: 1,
+    dashboardRoute: APP_ROUTES.dashboard,
+    dashboardMode: "analytics",
+    canCreateReports: false,
+    canFillReports: false,
+    canSubmitReports: false,
+    canRequestEdits: true,
+    canApproveReports: false,
+    canMarkReviewed: true,
+    canLockReports: false,
+    canManageTemplates: true,
+    canDataEntry: false,
+    canManageUsers: false,
+    canManageOrg: false,
+    canSetGoals: true,
+    canApproveGoalUnlock: true,
+    reportVisibilityScope: "all",
+  },
+  [UserRole.CEO]: {
+    role: UserRole.CEO,
+    label: CONTENT.users.roles.CEO,
+    hierarchyOrder: 2,
+    dashboardRoute: APP_ROUTES.dashboard,
+    dashboardMode: "analytics",
+    canCreateReports: false,
+    canFillReports: false,
+    canSubmitReports: false,
+    canRequestEdits: true,
+    canApproveReports: false,
+    canMarkReviewed: true,
+    canLockReports: false,
+    canManageTemplates: true,
+    canDataEntry: false,
+    canManageUsers: false,
+    canManageOrg: false,
+    canSetGoals: true,
+    canApproveGoalUnlock: true,
+    reportVisibilityScope: "all",
+  },
+  [UserRole.OFFICE_OF_CEO]: {
+    role: UserRole.OFFICE_OF_CEO,
+    label: CONTENT.users.roles.OFFICE_OF_CEO,
+    hierarchyOrder: 3,
+    dashboardRoute: APP_ROUTES.dashboard,
+    dashboardMode: "analytics",
+    canCreateReports: false,
+    canFillReports: false,
+    canSubmitReports: false,
+    canRequestEdits: true,
+    canApproveReports: false,
+    canMarkReviewed: true,
+    canLockReports: false,
+    canManageTemplates: true,
+    canDataEntry: false,
+    canManageUsers: false,
+    canManageOrg: false,
+    canSetGoals: true,
+    canApproveGoalUnlock: true,
+    reportVisibilityScope: "all",
+  },
+  [UserRole.CHURCH_MINISTRY]: {
+    role: UserRole.CHURCH_MINISTRY,
+    label: CONTENT.users.roles.CHURCH_MINISTRY,
+    hierarchyOrder: 4,
+    dashboardRoute: APP_ROUTES.dashboard,
+    dashboardMode: "analytics",
+    canCreateReports: false,
+    canFillReports: false,
+    canSubmitReports: false,
+    canRequestEdits: true,
+    canApproveReports: false,
+    canMarkReviewed: true,
+    canLockReports: false,
+    canManageTemplates: true,
+    canDataEntry: false,
+    canManageUsers: false,
+    canManageOrg: false,
+    canSetGoals: false,
+    canApproveGoalUnlock: false,
+    reportVisibilityScope: "all",
+  },
+  [UserRole.GROUP_PASTOR]: {
+    role: UserRole.GROUP_PASTOR,
+    label: CONTENT.users.roles.GROUP_PASTOR,
+    hierarchyOrder: 5,
+    dashboardRoute: APP_ROUTES.dashboard,
+    dashboardMode: "report-reviewed",
+    canCreateReports: false,
+    canFillReports: false,
+    canSubmitReports: false,
+    canRequestEdits: true,
+    canApproveReports: false,
+    canMarkReviewed: true,
+    canLockReports: false,
+    canManageTemplates: true,
+    canDataEntry: false,
+    canManageUsers: false,
+    canManageOrg: false,
+    canSetGoals: true,
+    canApproveGoalUnlock: true,
+    reportVisibilityScope: "all",
+  },
+  [UserRole.GROUP_ADMIN]: {
+    role: UserRole.GROUP_ADMIN,
+    label: CONTENT.users.roles.GROUP_ADMIN,
+    hierarchyOrder: 6,
+    dashboardRoute: APP_ROUTES.dashboard,
+    dashboardMode: "report-review",
+    canCreateReports: false,
+    canFillReports: false,
+    canSubmitReports: false,
+    canRequestEdits: true,
+    canApproveReports: false,
+    canMarkReviewed: true,
+    canLockReports: false,
+    canManageTemplates: true,
+    canDataEntry: true,
+    canManageUsers: false,
+    canManageOrg: false,
+    canSetGoals: true,
+    canApproveGoalUnlock: false,
+    reportVisibilityScope: "all",
+  },
+  [UserRole.CAMPUS_PASTOR]: {
+    role: UserRole.CAMPUS_PASTOR,
+    label: CONTENT.users.roles.CAMPUS_PASTOR,
+    hierarchyOrder: 7,
+    dashboardRoute: APP_ROUTES.dashboard,
+    dashboardMode: "report-review",
+    canCreateReports: true,
+    canFillReports: false,
+    canSubmitReports: false,
+    canRequestEdits: false,
+    canApproveReports: true,
+    canMarkReviewed: false,
+    canLockReports: false,
+    canManageTemplates: false,
+    canDataEntry: false,
+    canManageUsers: false,
+    canManageOrg: false,
+    canSetGoals: false,
+    canApproveGoalUnlock: false,
+    reportVisibilityScope: "campus",
+  },
+  [UserRole.CAMPUS_ADMIN]: {
+    role: UserRole.CAMPUS_ADMIN,
+    label: CONTENT.users.roles.CAMPUS_ADMIN,
+    hierarchyOrder: 8,
+    dashboardRoute: APP_ROUTES.dashboard,
+    dashboardMode: "report-fill",
+    canCreateReports: true,
+    canFillReports: true,
+    canSubmitReports: true,
+    canRequestEdits: false,
+    canApproveReports: false,
+    canMarkReviewed: false,
+    canLockReports: false,
+    canManageTemplates: false,
+    canDataEntry: false,
+    canManageUsers: false,
+    canManageOrg: false,
+    canSetGoals: false,
+    canApproveGoalUnlock: false,
+    reportVisibilityScope: "campus",
+  },
+  [UserRole.DATA_ENTRY]: {
+    role: UserRole.DATA_ENTRY,
+    label: CONTENT.users.roles.DATA_ENTRY,
+    hierarchyOrder: 9,
+    dashboardRoute: APP_ROUTES.reports,
+    dashboardMode: "report-fill",
+    canCreateReports: true,
+    canFillReports: true,
+    canSubmitReports: true,
+    canRequestEdits: false,
+    canApproveReports: false,
+    canMarkReviewed: false,
+    canLockReports: false,
+    canManageTemplates: false,
+    canDataEntry: true,
+    canManageUsers: false,
+    canManageOrg: false,
+    canSetGoals: false,
+    canApproveGoalUnlock: false,
+    reportVisibilityScope: "campus",
+  },
+  [UserRole.MEMBER]: {
+    role: UserRole.MEMBER,
+    label: CONTENT.users.roles.MEMBER,
+    hierarchyOrder: 10,
+    dashboardRoute: APP_ROUTES.member.dashboard,
+    dashboardMode: "report-fill",
+    canCreateReports: false,
+    canFillReports: false,
+    canSubmitReports: false,
+    canRequestEdits: false,
+    canApproveReports: false,
+    canMarkReviewed: false,
+    canLockReports: false,
+    canManageTemplates: false,
+    canDataEntry: false,
+    canManageUsers: false,
+    canManageOrg: false,
+    canSetGoals: false,
+    canApproveGoalUnlock: false,
+    reportVisibilityScope: "own",
+  },
 };
 
 /* ── Helper utilities ─────────────────────────────────────────────────────── */
 
 /** Roles allowed to submit reports on behalf of campuses */
 export const REPORT_SUBMITTER_ROLES: UserRole[] = [
-    UserRole.CAMPUS_PASTOR,
-    UserRole.CAMPUS_ADMIN,
-    UserRole.DATA_ENTRY,
-    UserRole.GROUP_ADMIN,
+  UserRole.CAMPUS_PASTOR,
+  UserRole.CAMPUS_ADMIN,
+  UserRole.DATA_ENTRY,
+  UserRole.GROUP_ADMIN,
 ];
 
 /** Roles that approve / review reports (above campus level) */
 export const REPORT_REVIEWER_ROLES: UserRole[] = [
-    UserRole.GROUP_ADMIN,
-    UserRole.GROUP_PASTOR,
-    UserRole.CHURCH_MINISTRY,
-    UserRole.CEO,
-    UserRole.OFFICE_OF_CEO,
-    UserRole.SPO,
-    UserRole.SUPERADMIN,
+  UserRole.GROUP_ADMIN,
+  UserRole.GROUP_PASTOR,
+  UserRole.CHURCH_MINISTRY,
+  UserRole.CEO,
+  UserRole.OFFICE_OF_CEO,
+  UserRole.SPO,
+  UserRole.SUPERADMIN,
 ];
 
 /** All roles that have access to /leader/* routes */
 export const LEADER_ROLES: UserRole[] = [
-    UserRole.CAMPUS_ADMIN,
-    UserRole.CAMPUS_PASTOR,
-    UserRole.DATA_ENTRY,
-    UserRole.GROUP_ADMIN,
-    UserRole.GROUP_PASTOR,
-    UserRole.CHURCH_MINISTRY,
-    UserRole.CEO,
-    UserRole.OFFICE_OF_CEO,
-    UserRole.SPO,
+  UserRole.CAMPUS_ADMIN,
+  UserRole.CAMPUS_PASTOR,
+  UserRole.DATA_ENTRY,
+  UserRole.GROUP_ADMIN,
+  UserRole.GROUP_PASTOR,
+  UserRole.CHURCH_MINISTRY,
+  UserRole.CEO,
+  UserRole.OFFICE_OF_CEO,
+  UserRole.SPO,
 ];
 
 /** Check if a role can perform an action on a report at a given status */
 export function canTransitionReport(
-    role: UserRole,
-    currentStatus: string,
-    action: keyof RoleConfig,
+  role: UserRole,
+  currentStatus: string,
+  action: keyof RoleConfig,
 ): boolean {
-    const config = ROLE_CONFIG[role];
-    return !!config[action];
+  const config = ROLE_CONFIG[role];
+  return !!config[action];
 }
 
 /** Get the display label for any role */
 export function getRoleLabel(role: UserRole): string {
-    return ROLE_CONFIG[role]?.label ?? role;
+  return ROLE_CONFIG[role]?.label ?? role;
 }
 
 /** Get dashboard route for a role */
 export function getDashboardRoute(role: UserRole): string {
-    return ROLE_CONFIG[role]?.dashboardRoute ?? APP_ROUTES.dashboard;
+  return ROLE_CONFIG[role]?.dashboardRoute ?? APP_ROUTES.dashboard;
 }
-````
+```
 
 ## File: lib/utils/auth.ts
-````typescript
+
+```typescript
 /**
  * lib/utils/auth.ts
  * Server-side auth helpers: password hashing, JWT generation/verification,
@@ -18677,14 +18844,14 @@ const COOKIE_NAME = process.env.COOKIE_NAME ?? "hrs_token";
 const REFRESH_COOKIE_NAME = process.env.REFRESH_COOKIE_NAME ?? "hrs_refresh";
 
 interface JWTPayload {
-    userId: string;
-    email: string;
-    role: UserRole;
+  userId: string;
+  email: string;
+  role: UserRole;
 }
 
 interface AuthTokens {
-    accessToken: string;
-    refreshToken: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18692,12 +18859,12 @@ interface AuthTokens {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export async function hashPassword(password: string): Promise<string> {
-    const rounds = Number(process.env.BCRYPT_SALT_ROUNDS ?? 12);
-    return bcrypt.hash(password, rounds);
+  const rounds = Number(process.env.BCRYPT_SALT_ROUNDS ?? 12);
+  return bcrypt.hash(password, rounds);
 }
 
 export async function verifyPassword(plain: string, hashed: string): Promise<boolean> {
-    return bcrypt.compare(plain, hashed);
+  return bcrypt.compare(plain, hashed);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18705,40 +18872,40 @@ export async function verifyPassword(plain: string, hashed: string): Promise<boo
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function generateAccessToken(user: AuthUser): string {
-    return jwt.sign(
-        { userId: user.id, email: user.email, role: user.role } satisfies JWTPayload,
-        ACCESS_SECRET,
-        { expiresIn: ACCESS_EXPIRY } as jwt.SignOptions,
-    );
+  return jwt.sign(
+    { userId: user.id, email: user.email, role: user.role } satisfies JWTPayload,
+    ACCESS_SECRET,
+    { expiresIn: ACCESS_EXPIRY } as jwt.SignOptions,
+  );
 }
 
 export function generateRefreshToken(userId: string): string {
-    return jwt.sign({ userId }, REFRESH_SECRET, {
-        expiresIn: REFRESH_EXPIRY,
-    } as jwt.SignOptions);
+  return jwt.sign({ userId }, REFRESH_SECRET, {
+    expiresIn: REFRESH_EXPIRY,
+  } as jwt.SignOptions);
 }
 
 export function generateTokens(user: AuthUser): AuthTokens {
-    return {
-        accessToken: generateAccessToken(user),
-        refreshToken: generateRefreshToken(user.id),
-    };
+  return {
+    accessToken: generateAccessToken(user),
+    refreshToken: generateRefreshToken(user.id),
+  };
 }
 
 export function verifyAccessToken(token: string): JWTPayload | null {
-    try {
-        return jwt.verify(token, ACCESS_SECRET) as JWTPayload;
-    } catch {
-        return null;
-    }
+  try {
+    return jwt.verify(token, ACCESS_SECRET) as JWTPayload;
+  } catch {
+    return null;
+  }
 }
 
 export function verifyRefreshToken(token: string): { userId: string } | null {
-    try {
-        return jwt.verify(token, REFRESH_SECRET) as { userId: string };
-    } catch {
-        return null;
-    }
+  try {
+    return jwt.verify(token, REFRESH_SECRET) as { userId: string };
+  } catch {
+    return null;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18746,44 +18913,44 @@ export function verifyRefreshToken(token: string): { userId: string } | null {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export async function setAuthCookies(tokens: AuthTokens, rememberMe?: boolean): Promise<void> {
-    const cookieStore = await cookies();
-    const isProd = process.env.NODE_ENV === "production";
+  const cookieStore = await cookies();
+  const isProd = process.env.NODE_ENV === "production";
 
-    // Standard: 15min access, 7d refresh. Remember me: 30d access, 90d refresh.
-    const accessMaxAge = rememberMe ? 60 * 60 * 24 * 30 : 60 * 15;
-    const refreshMaxAge = rememberMe ? 60 * 60 * 24 * 90 : 60 * 60 * 24 * 7;
+  // Standard: 15min access, 7d refresh. Remember me: 30d access, 90d refresh.
+  const accessMaxAge = rememberMe ? 60 * 60 * 24 * 30 : 60 * 15;
+  const refreshMaxAge = rememberMe ? 60 * 60 * 24 * 90 : 60 * 60 * 24 * 7;
 
-    cookieStore.set(COOKIE_NAME, tokens.accessToken, {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: "lax",
-        maxAge: accessMaxAge,
-        path: "/",
-    });
+  cookieStore.set(COOKIE_NAME, tokens.accessToken, {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: "lax",
+    maxAge: accessMaxAge,
+    path: "/",
+  });
 
-    cookieStore.set(REFRESH_COOKIE_NAME, tokens.refreshToken, {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: "lax",
-        maxAge: refreshMaxAge,
-        path: "/",
-    });
+  cookieStore.set(REFRESH_COOKIE_NAME, tokens.refreshToken, {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: "lax",
+    maxAge: refreshMaxAge,
+    path: "/",
+  });
 }
 
 export async function clearAuthCookies(): Promise<void> {
-    const cookieStore = await cookies();
-    cookieStore.delete(COOKIE_NAME);
-    cookieStore.delete(REFRESH_COOKIE_NAME);
+  const cookieStore = await cookies();
+  cookieStore.delete(COOKIE_NAME);
+  cookieStore.delete(REFRESH_COOKIE_NAME);
 }
 
 export async function getAccessTokenFromCookies(): Promise<string | null> {
-    const cookieStore = await cookies();
-    return cookieStore.get(COOKIE_NAME)?.value ?? null;
+  const cookieStore = await cookies();
+  return cookieStore.get(COOKIE_NAME)?.value ?? null;
 }
 
 export async function getRefreshTokenFromCookies(): Promise<string | null> {
-    const cookieStore = await cookies();
-    return cookieStore.get(REFRESH_COOKIE_NAME)?.value ?? null;
+  const cookieStore = await cookies();
+  return cookieStore.get(REFRESH_COOKIE_NAME)?.value ?? null;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18791,8 +18958,8 @@ export async function getRefreshTokenFromCookies(): Promise<string | null> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 type VerifyAuthResult =
-    | { success: true; user: AuthUser }
-    | { success: false; error: string; status: 401 | 403 };
+  | { success: true; user: AuthUser }
+  | { success: false; error: string; status: 401 | 403 };
 
 /**
  * Call at the top of every API route or Server Component:
@@ -18802,52 +18969,53 @@ type VerifyAuthResult =
  * Optionally pass `allowedRoles` to enforce role-level access.
  */
 export async function verifyAuth(
-    req?: NextRequest | null,
-    allowedRoles?: UserRole[],
+  req?: NextRequest | null,
+  allowedRoles?: UserRole[],
 ): Promise<VerifyAuthResult> {
-    // Try cookie first, then Authorization header (header only available in API routes)
-    const cookieStore = await cookies();
-    const token =
-        cookieStore.get(COOKIE_NAME)?.value ??
-        req?.headers?.get("Authorization")?.replace("Bearer ", "") ??
-        null;
+  // Try cookie first, then Authorization header (header only available in API routes)
+  const cookieStore = await cookies();
+  const token =
+    cookieStore.get(COOKIE_NAME)?.value ??
+    req?.headers?.get("Authorization")?.replace("Bearer ", "") ??
+    null;
 
-    if (!token) {
-        return { success: false, error: "Unauthorised", status: 401 };
-    }
+  if (!token) {
+    return { success: false, error: "Unauthorised", status: 401 };
+  }
 
-    const payload = verifyAccessToken(token);
-    if (!payload) {
-        return { success: false, error: "Invalid or expired token", status: 401 };
-    }
+  const payload = verifyAccessToken(token);
+  if (!payload) {
+    return { success: false, error: "Invalid or expired token", status: 401 };
+  }
 
-    // Look up user in database
-    const userProfile = await db.user.findUnique({ where: { id: payload.userId } });
-    if (!userProfile || !userProfile.isActive) {
-        return { success: false, error: "User not found or inactive", status: 401 };
-    }
+  // Look up user in database
+  const userProfile = await db.user.findUnique({ where: { id: payload.userId } });
+  if (!userProfile || !userProfile.isActive) {
+    return { success: false, error: "User not found or inactive", status: 401 };
+  }
 
-    const user: AuthUser = {
-        id: userProfile.id,
-        email: userProfile.email,
-        firstName: userProfile.firstName,
-        lastName: userProfile.lastName,
-        role: userProfile.role as UserRole,
-        campusId: userProfile.campusId ?? undefined,
-        orgGroupId: userProfile.orgGroupId ?? undefined,
-        avatar: userProfile.avatar ?? undefined,
-    };
+  const user: AuthUser = {
+    id: userProfile.id,
+    email: userProfile.email,
+    firstName: userProfile.firstName,
+    lastName: userProfile.lastName,
+    role: userProfile.role as UserRole,
+    campusId: userProfile.campusId ?? undefined,
+    orgGroupId: userProfile.orgGroupId ?? undefined,
+    avatar: userProfile.avatar ?? undefined,
+  };
 
-    if (allowedRoles && !allowedRoles.includes(user.role)) {
-        return { success: false, error: "Insufficient permissions", status: 403 };
-    }
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return { success: false, error: "Insufficient permissions", status: 403 };
+  }
 
-    return { success: true, user };
+  return { success: true, user };
 }
-````
+```
 
 ## File: modules/analytics/components/AnalyticsPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -19836,10 +20004,11 @@ export function AnalyticsPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/reports/components/ReportDetailPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -20426,10 +20595,11 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/reports/components/ReportNewPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -20776,10 +20946,11 @@ export function ReportNewPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/users/components/InvitesPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -21127,10 +21298,11 @@ export function InvitesPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/users/components/UserDetailPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -21433,10 +21605,11 @@ function RecentUserReports({ userId }: { userId: string }) {
     </div>
   );
 }
-````
+```
 
 ## File: providers/AuthProvider.tsx
-````typescript
+
+```typescript
 "use client";
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
@@ -21589,71 +21762,71 @@ export function useHasRole(roles: UserRole | UserRole[]): boolean {
   const allowed = Array.isArray(roles) ? roles : [roles];
   return allowed.includes(user.role);
 }
-````
+```
 
 ## File: app/api/auth/login/route.ts
-````typescript
+
+```typescript
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/data/db";
+import { verifyPassword, generateTokens, setAuthCookies } from "@/lib/utils/auth";
 import {
-    verifyPassword,
-    generateTokens,
-    setAuthCookies,
-} from "@/lib/utils/auth";
-import {
-    successResponse,
-    unauthorizedResponse,
-    badRequestResponse,
-    handleApiError,
+  successResponse,
+  unauthorizedResponse,
+  badRequestResponse,
+  handleApiError,
 } from "@/lib/utils/api";
 
 const LoginSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(1),
-    rememberMe: z.boolean().optional().default(false),
+  email: z.string().email(),
+  password: z.string().min(1),
+  rememberMe: z.boolean().optional().default(false),
 });
 
 export async function POST(req: NextRequest) {
-    try {
-        const body = LoginSchema.safeParse(await req.json());
-        if (!body.success) return badRequestResponse("Invalid input");
+  try {
+    const body = LoginSchema.safeParse(await req.json());
+    if (!body.success) return badRequestResponse("Invalid input");
 
-        const { email, password, rememberMe } = body.data;
+    const { email, password, rememberMe } = body.data;
 
-        const userProfile = await db.user.findFirst({ where: { email: { equals: email, mode: "insensitive" } } });
-        if (!userProfile) return unauthorizedResponse("Invalid email or password");
+    const userProfile = await db.user.findFirst({
+      where: { email: { equals: email, mode: "insensitive" } },
+    });
+    if (!userProfile) return unauthorizedResponse("Invalid email or password");
 
-        if (!userProfile.isActive) return unauthorizedResponse("Account is deactivated");
+    if (!userProfile.isActive) return unauthorizedResponse("Account is deactivated");
 
-        if (!userProfile.passwordHash) return unauthorizedResponse("Invalid email or password");
+    if (!userProfile.passwordHash) return unauthorizedResponse("Invalid email or password");
 
-        const valid = await verifyPassword(password, userProfile.passwordHash);
-        if (!valid) return unauthorizedResponse("Invalid email or password");
+    const valid = await verifyPassword(password, userProfile.passwordHash);
+    if (!valid) return unauthorizedResponse("Invalid email or password");
 
-        const authUser: AuthUser = {
-            id: userProfile.id,
-            email: userProfile.email,
-            firstName: userProfile.firstName,
-            lastName: userProfile.lastName,
-            role: userProfile.role as AuthUser["role"],
-            campusId: userProfile.campusId ?? undefined,
-            orgGroupId: userProfile.orgGroupId ?? undefined,
-            avatar: userProfile.avatar ?? undefined,
-        };
+    const authUser: AuthUser = {
+      id: userProfile.id,
+      email: userProfile.email,
+      firstName: userProfile.firstName,
+      lastName: userProfile.lastName,
+      role: userProfile.role as AuthUser["role"],
+      campusId: userProfile.campusId ?? undefined,
+      orgGroupId: userProfile.orgGroupId ?? undefined,
+      avatar: userProfile.avatar ?? undefined,
+    };
 
-        const tokens = generateTokens(authUser);
-        await setAuthCookies(tokens, rememberMe);
+    const tokens = generateTokens(authUser);
+    await setAuthCookies(tokens, rememberMe);
 
-        return NextResponse.json(successResponse({ user: authUser }), { status: 200 });
-    } catch (err) {
-        return handleApiError(err);
-    }
+    return NextResponse.json(successResponse({ user: authUser }), { status: 200 });
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: app/api/reports/route.ts
-````typescript
+
+```typescript
 /**
  * app/api/reports/route.ts
  * GET  /api/reports  — list reports (role-scoped)
@@ -21665,39 +21838,48 @@ import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import {
-    successResponse,
-    errorResponse,
-    unauthorizedResponse,
-    handleApiError,
+  successResponse,
+  errorResponse,
+  unauthorizedResponse,
+  handleApiError,
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
-import { UserRole, ReportStatus, ReportPeriodType, ReportEventType, MetricCalculationType } from "@/types/global";
+import {
+  UserRole,
+  ReportStatus,
+  ReportPeriodType,
+  ReportEventType,
+  MetricCalculationType,
+} from "@/types/global";
 
 /* ── Query schema ──────────────────────────────────────────────────────────── */
 
 const ListQuerySchema = z.object({
-    page: z.coerce.number().int().min(1).default(1),
-    pageSize: z.coerce.number().int().min(1).max(100).default(20),
-    status: z.nativeEnum(ReportStatus).optional(),
-    campusId: z.string().optional(),
-    periodType: z.nativeEnum(ReportPeriodType).optional(),
-    search: z.string().optional(),
-    templateId: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  pageSize: z.coerce.number().int().min(1).max(100).default(20),
+  status: z.nativeEnum(ReportStatus).optional(),
+  campusId: z.string().optional(),
+  periodType: z.nativeEnum(ReportPeriodType).optional(),
+  search: z.string().optional(),
+  templateId: z.string().optional(),
 });
 
 /* ── Create schema ─────────────────────────────────────────────────────────── */
 
 const CreateReportSchema = z.object({
-    title: z.string().min(1).max(200),
-    templateId: z.string().uuid(),
-    campusId: z.string().uuid(),
-    period: z.string().min(1),
-    periodType: z.nativeEnum(ReportPeriodType),
-    notes: z.string().optional(),
-    sections: z.array(z.object({
+  title: z.string().min(1).max(200),
+  templateId: z.string().uuid(),
+  campusId: z.string().uuid(),
+  period: z.string().min(1),
+  periodType: z.nativeEnum(ReportPeriodType),
+  notes: z.string().optional(),
+  sections: z
+    .array(
+      z.object({
         templateSectionId: z.string(),
         sectionName: z.string(),
-        metrics: z.array(z.object({
+        metrics: z.array(
+          z.object({
             templateMetricId: z.string(),
             metricName: z.string(),
             calculationType: z.string().optional(),
@@ -21705,140 +21887,147 @@ const CreateReportSchema = z.object({
             monthlyGoal: z.number().optional(),
             monthlyAchieved: z.number().optional(),
             yoyGoal: z.number().optional(),
-        })),
-    })).optional(),
+          }),
+        ),
+      }),
+    )
+    .optional(),
 });
 
 /* ── GET ───────────────────────────────────────────────────────────────────── */
 
 export async function GET(req: NextRequest) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const params = Object.fromEntries(new URL(req.url).searchParams);
-        const query = ListQuerySchema.parse(params);
+    const params = Object.fromEntries(new URL(req.url).searchParams);
+    const query = ListQuerySchema.parse(params);
 
-        const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
-        const { page, pageSize, status, campusId, periodType, search, templateId } = query;
+    const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
+    const { page, pageSize, status, campusId, periodType, search, templateId } = query;
 
-        const cacheKey = `reports:list:${auth.user.id}:${JSON.stringify(query)}`;
-        const cached = await cache.get(cacheKey);
-        if (cached) {
-            return NextResponse.json(cached);
-        }
-
-        /* Build Prisma where clause */
-        const where: Record<string, unknown> = {};
-        if (roleConfig.reportVisibilityScope === "campus" && auth.user.campusId) {
-            where.campusId = auth.user.campusId;
-        }
-        if (status) where.status = status;
-        if (campusId) where.campusId = campusId;
-        if (periodType) where.periodType = periodType;
-        if (templateId) where.templateId = templateId;
-        if (search) {
-            where.OR = [
-                { title: { contains: search, mode: "insensitive" } },
-                { period: { contains: search, mode: "insensitive" } },
-            ];
-        }
-
-        const [reports, total] = await Promise.all([
-            db.report.findMany({
-                where,
-                orderBy: { updatedAt: "desc" },
-                skip: (page - 1) * pageSize,
-                take: pageSize,
-            }),
-            db.report.count({ where }),
-        ]);
-
-        const payload = { success: true, data: { reports, total, page, pageSize } };
-        await cache.set(cacheKey, JSON.stringify(payload), 30);
-        return NextResponse.json(payload);
-    } catch (err) {
-        return handleApiError(err);
+    const cacheKey = `reports:list:${auth.user.id}:${JSON.stringify(query)}`;
+    const cached = await cache.get(cacheKey);
+    if (cached) {
+      return NextResponse.json(cached);
     }
+
+    /* Build Prisma where clause */
+    const where: Record<string, unknown> = {};
+    if (roleConfig.reportVisibilityScope === "campus" && auth.user.campusId) {
+      where.campusId = auth.user.campusId;
+    }
+    if (status) where.status = status;
+    if (campusId) where.campusId = campusId;
+    if (periodType) where.periodType = periodType;
+    if (templateId) where.templateId = templateId;
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: "insensitive" } },
+        { period: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const [reports, total] = await Promise.all([
+      db.report.findMany({
+        where,
+        orderBy: { updatedAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+      db.report.count({ where }),
+    ]);
+
+    const payload = { success: true, data: { reports, total, page, pageSize } };
+    await cache.set(cacheKey, JSON.stringify(payload), 30);
+    return NextResponse.json(payload);
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
 
 /* ── POST ──────────────────────────────────────────────────────────────────── */
 
 export async function POST(req: NextRequest) {
-    try {
-        const auth = await verifyAuth(req);
-        if (!auth.success) return unauthorizedResponse(auth.error);
+  try {
+    const auth = await verifyAuth(req);
+    if (!auth.success) return unauthorizedResponse(auth.error);
 
-        const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
-        if (!roleConfig.canCreateReports) {
-            return errorResponse("You do not have permission to create reports.", 403);
-        }
-
-        const body = CreateReportSchema.parse(await req.json());
-
-        /* Verify template exists */
-        const template = await db.reportTemplate.findUnique({ where: { id: body.templateId } });
-        if (!template) {
-            return errorResponse("Report template not found.", 404);
-        }
-
-        const report = await db.$transaction(async (tx) => {
-            const newReport = await tx.report.create({
-                data: {
-                    organisationId: process.env.NEXT_PUBLIC_ORG_ID ?? "harvesters",
-                    title: body.title,
-                    templateId: body.templateId,
-                    campusId: body.campusId,
-                    orgGroupId: template.orgGroupId ?? "",
-                    period: body.period,
-                    periodType: body.periodType,
-                    periodYear: new Date().getFullYear(),
-                    status: ReportStatus.DRAFT,
-                    createdById: auth.user.id,
-                    notes: body.notes ?? null,
-                    sections: body.sections ? {
-                        create: body.sections.map((sec) => ({
-                            templateSectionId: sec.templateSectionId,
-                            sectionName: sec.sectionName,
-                            metrics: {
-                                create: sec.metrics.map((met) => ({
-                                    templateMetricId: met.templateMetricId,
-                                    metricName: met.metricName,
-                                    calculationType: met.calculationType as MetricCalculationType ?? MetricCalculationType.SUM,
-                                    monthlyGoal: met.monthlyGoal,
-                                    monthlyAchieved: met.monthlyAchieved,
-                                    yoyGoal: met.yoyGoal,
-                                    isLocked: met.isLocked ?? false,
-                                })),
-                            },
-                        })),
-                    } : undefined,
-                },
-            });
-
-            await tx.reportEvent.create({
-                data: {
-                    reportId: newReport.id,
-                    eventType: ReportEventType.CREATED,
-                    actorId: auth.user.id,
-                    timestamp: new Date(),
-                },
-            });
-
-            return newReport;
-        });
-
-        await cache.invalidatePattern(`reports:list:${auth.user.id}:*`);
-
-        return NextResponse.json(successResponse(report), { status: 201 });
-    } catch (err) {
-        return handleApiError(err);
+    const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
+    if (!roleConfig.canCreateReports) {
+      return errorResponse("You do not have permission to create reports.", 403);
     }
+
+    const body = CreateReportSchema.parse(await req.json());
+
+    /* Verify template exists */
+    const template = await db.reportTemplate.findUnique({ where: { id: body.templateId } });
+    if (!template) {
+      return errorResponse("Report template not found.", 404);
+    }
+
+    const report = await db.$transaction(async (tx) => {
+      const newReport = await tx.report.create({
+        data: {
+          organisationId: process.env.NEXT_PUBLIC_ORG_ID ?? "harvesters",
+          title: body.title,
+          templateId: body.templateId,
+          campusId: body.campusId,
+          orgGroupId: template.orgGroupId ?? "",
+          period: body.period,
+          periodType: body.periodType,
+          periodYear: new Date().getFullYear(),
+          status: ReportStatus.DRAFT,
+          createdById: auth.user.id,
+          notes: body.notes ?? null,
+          sections: body.sections
+            ? {
+                create: body.sections.map((sec) => ({
+                  templateSectionId: sec.templateSectionId,
+                  sectionName: sec.sectionName,
+                  metrics: {
+                    create: sec.metrics.map((met) => ({
+                      templateMetricId: met.templateMetricId,
+                      metricName: met.metricName,
+                      calculationType:
+                        (met.calculationType as MetricCalculationType) ?? MetricCalculationType.SUM,
+                      monthlyGoal: met.monthlyGoal,
+                      monthlyAchieved: met.monthlyAchieved,
+                      yoyGoal: met.yoyGoal,
+                      isLocked: met.isLocked ?? false,
+                    })),
+                  },
+                })),
+              }
+            : undefined,
+        },
+      });
+
+      await tx.reportEvent.create({
+        data: {
+          reportId: newReport.id,
+          eventType: ReportEventType.CREATED,
+          actorId: auth.user.id,
+          timestamp: new Date(),
+        },
+      });
+
+      return newReport;
+    });
+
+    await cache.invalidatePattern(`reports:list:${auth.user.id}:*`);
+
+    return NextResponse.json(successResponse(report), { status: 201 });
+  } catch (err) {
+    return handleApiError(err);
+  }
 }
-````
+```
 
 ## File: config/reports.ts
-````typescript
+
+```typescript
 /**
  * config/reports.ts
  *
@@ -21859,53 +22048,86 @@ import { MetricCalculationType, MetricFieldType, ReportStatus, UserRole } from "
 /* ── Status Transition Map ─────────────────────────────────────────────────── */
 
 export const REPORT_STATUS_TRANSITIONS: Record<
-    ReportStatus,
-    { to: ReportStatus; requiredRole: UserRole[] }[]
+  ReportStatus,
+  { to: ReportStatus; requiredRole: UserRole[] }[]
 > = {
-    [ReportStatus.DRAFT]: [
-        {
-            to: ReportStatus.SUBMITTED,
-            requiredRole: [UserRole.CAMPUS_ADMIN, UserRole.CAMPUS_PASTOR, UserRole.DATA_ENTRY, UserRole.GROUP_ADMIN],
-        },
-    ],
-    [ReportStatus.SUBMITTED]: [
-        {
-            to: ReportStatus.REQUIRES_EDITS,
-            requiredRole: [UserRole.CAMPUS_PASTOR, UserRole.GROUP_ADMIN, UserRole.GROUP_PASTOR, UserRole.CHURCH_MINISTRY, UserRole.CEO, UserRole.OFFICE_OF_CEO, UserRole.SPO, UserRole.SUPERADMIN],
-        },
-        {
-            to: ReportStatus.APPROVED,
-            requiredRole: [UserRole.CAMPUS_PASTOR, UserRole.GROUP_ADMIN, UserRole.CHURCH_MINISTRY, UserRole.CEO, UserRole.OFFICE_OF_CEO, UserRole.SPO, UserRole.SUPERADMIN],
-        },
-    ],
-    [ReportStatus.REQUIRES_EDITS]: [
-        {
-            to: ReportStatus.SUBMITTED,
-            requiredRole: [UserRole.CAMPUS_ADMIN, UserRole.CAMPUS_PASTOR, UserRole.DATA_ENTRY, UserRole.GROUP_ADMIN],
-        },
-    ],
-    [ReportStatus.APPROVED]: [
-        {
-            to: ReportStatus.REVIEWED,
-            requiredRole: [UserRole.GROUP_PASTOR, UserRole.CEO, UserRole.OFFICE_OF_CEO, UserRole.SPO, UserRole.SUPERADMIN],
-        },
-    ],
-    [ReportStatus.REVIEWED]: [
-        {
-            to: ReportStatus.LOCKED,
-            requiredRole: [UserRole.SUPERADMIN],
-        },
-    ],
-    [ReportStatus.LOCKED]: [],
+  [ReportStatus.DRAFT]: [
+    {
+      to: ReportStatus.SUBMITTED,
+      requiredRole: [
+        UserRole.CAMPUS_ADMIN,
+        UserRole.CAMPUS_PASTOR,
+        UserRole.DATA_ENTRY,
+        UserRole.GROUP_ADMIN,
+      ],
+    },
+  ],
+  [ReportStatus.SUBMITTED]: [
+    {
+      to: ReportStatus.REQUIRES_EDITS,
+      requiredRole: [
+        UserRole.CAMPUS_PASTOR,
+        UserRole.GROUP_ADMIN,
+        UserRole.GROUP_PASTOR,
+        UserRole.CHURCH_MINISTRY,
+        UserRole.CEO,
+        UserRole.OFFICE_OF_CEO,
+        UserRole.SPO,
+        UserRole.SUPERADMIN,
+      ],
+    },
+    {
+      to: ReportStatus.APPROVED,
+      requiredRole: [
+        UserRole.CAMPUS_PASTOR,
+        UserRole.GROUP_ADMIN,
+        UserRole.CHURCH_MINISTRY,
+        UserRole.CEO,
+        UserRole.OFFICE_OF_CEO,
+        UserRole.SPO,
+        UserRole.SUPERADMIN,
+      ],
+    },
+  ],
+  [ReportStatus.REQUIRES_EDITS]: [
+    {
+      to: ReportStatus.SUBMITTED,
+      requiredRole: [
+        UserRole.CAMPUS_ADMIN,
+        UserRole.CAMPUS_PASTOR,
+        UserRole.DATA_ENTRY,
+        UserRole.GROUP_ADMIN,
+      ],
+    },
+  ],
+  [ReportStatus.APPROVED]: [
+    {
+      to: ReportStatus.REVIEWED,
+      requiredRole: [
+        UserRole.GROUP_PASTOR,
+        UserRole.CEO,
+        UserRole.OFFICE_OF_CEO,
+        UserRole.SPO,
+        UserRole.SUPERADMIN,
+      ],
+    },
+  ],
+  [ReportStatus.REVIEWED]: [
+    {
+      to: ReportStatus.LOCKED,
+      requiredRole: [UserRole.SUPERADMIN],
+    },
+  ],
+  [ReportStatus.LOCKED]: [],
 };
 
 /* ── Deadline Config ──────────────────────────────────────────────────────── */
 
 export const DEADLINE_CONFIG = {
-    /** Hours after period close before the report is considered late */
-    reportDeadlineHours: Number(process.env.REPORT_DEADLINE_HOURS ?? 48),
-    /** Hours before the deadline to send a reminder notification */
-    reminderLeadHours: Number(process.env.REPORT_REMINDER_HOURS ?? 24),
+  /** Hours after period close before the report is considered late */
+  reportDeadlineHours: Number(process.env.REPORT_DEADLINE_HOURS ?? 48),
+  /** Hours before the deadline to send a reminder notification */
+  reminderLeadHours: Number(process.env.REPORT_REMINDER_HOURS ?? 24),
 } as const;
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -21914,55 +22136,66 @@ export const DEADLINE_CONFIG = {
 
 type MetricDef = Omit<ReportTemplateMetric, "sectionId">;
 type SectionDef = {
-    id: string;
-    name: string;
-    description?: string;
-    order: number;
-    isRequired: boolean;
-    metrics: MetricDef[];
+  id: string;
+  name: string;
+  description?: string;
+  order: number;
+  isRequired: boolean;
+  metrics: MetricDef[];
 };
 interface TemplateDef {
-    name: string;
-    description?: string;
-    version: number;
-    isActive: boolean;
-    isDefault: boolean;
-    campusId?: string;
-    orgGroupId?: string;
-    sections: SectionDef[];
+  name: string;
+  description?: string;
+  version: number;
+  isActive: boolean;
+  isDefault: boolean;
+  campusId?: string;
+  orgGroupId?: string;
+  sections: SectionDef[];
 }
 
 function m(
-    id: string,
-    name: string,
-    fieldType: MetricFieldType,
-    calc: MetricCalculationType,
-    required: boolean,
-    order: number,
-    capturesGoal: boolean,
-    capturesAchieved: boolean,
-    capturesYoY: boolean,
-    description?: string,
+  id: string,
+  name: string,
+  fieldType: MetricFieldType,
+  calc: MetricCalculationType,
+  required: boolean,
+  order: number,
+  capturesGoal: boolean,
+  capturesAchieved: boolean,
+  capturesYoY: boolean,
+  description?: string,
 ): MetricDef {
-    return { id, name, fieldType, calculationType: calc, isRequired: required, order, capturesGoal: true, capturesAchieved, capturesYoY: true, description };
+  return {
+    id,
+    name,
+    fieldType,
+    calculationType: calc,
+    isRequired: required,
+    order,
+    capturesGoal: true,
+    capturesAchieved,
+    capturesYoY: true,
+    description,
+  };
 }
 
 function s(
-    id: string,
-    name: string,
-    order: number,
-    required: boolean,
-    metrics: MetricDef[],
-    description?: string,
+  id: string,
+  name: string,
+  order: number,
+  required: boolean,
+  metrics: MetricDef[],
+  description?: string,
 ): SectionDef {
-    return {
-        id,
-        name,
-        description,
-        order,
-        isRequired: required,
-        metrics: metrics.map((met) => ({ ...met, sectionId: id })),
-    };
+  return {
+    id,
+    name,
+    description,
+    order,
+    isRequired: required,
+    metrics: metrics.map((met) => ({ ...met, sectionId: id })),
+  };
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -21974,11 +22207,49 @@ function s(
  * CHURCH PLANTING — Monthly & Quarterly  |  calculationType: SUM
  */
 const SECTION_CHURCH_PLANTING = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}cp`, "Church Planting", order, false, [
-        m(`${idPrefix}cp-churches`, "No. of Churches to be Planted", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 1, true, true, true, "Monthly Report: Summation of monthly achieved figures"),
-        m(`${idPrefix}cp-plant-cells`, "No. of Plant Cells and Small Groups", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 2, true, true, false),
-        m(`${idPrefix}cp-cell-plants`, "No. of Church Plant Cells", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 3, false, true, false),
-    ], "Church planting activities — Monthly & Quarterly reporting.");
+  s(
+    `${idPrefix}cp`,
+    "Church Planting",
+    order,
+    false,
+    [
+      m(
+        `${idPrefix}cp-churches`,
+        "No. of Churches to be Planted",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        1,
+        true,
+        true,
+        true,
+        "Monthly Report: Summation of monthly achieved figures",
+      ),
+      m(
+        `${idPrefix}cp-plant-cells`,
+        "No. of Plant Cells and Small Groups",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        2,
+        true,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}cp-cell-plants`,
+        "No. of Church Plant Cells",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        3,
+        false,
+        true,
+        false,
+      ),
+    ],
+    "Church planting activities — Monthly & Quarterly reporting.",
+  );
 
 /**
  * ATTENDANCE — Weekly, Monthly, Quarterly, Bi-annual, Annual
@@ -21986,112 +22257,612 @@ const SECTION_CHURCH_PLANTING = (idPrefix: string, order: number): SectionDef =>
  * Unique / cumulative fields → SNAPSHOT
  */
 const SECTION_ATTENDANCE = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}att`, "Attendance", order, true, [
-        m(`${idPrefix}att-sun-male`, "Sunday Attendance — Male", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, true, 1, true, true, true, "Monthly Report: Average of 4/5 weekly Sunday service attendance (Male)"),
-        m(`${idPrefix}att-sun-female`, "Sunday Attendance — Female", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, true, 2, true, true, true, "Monthly Report: Average of 4/5 weekly Sunday service attendance (Female)"),
-        m(`${idPrefix}att-sun-children`, "Sunday Attendance — Children", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, true, 3, true, true, true, "Monthly Report: Average of 4/5 weekly Sunday service attendance (Children)"),
-        m(`${idPrefix}att-first-timers`, "First Timers", MetricFieldType.NUMBER, MetricCalculationType.SUM, true, 4, true, true, true, "Monthly Report: Summation of weekly first timers"),
-        m(`${idPrefix}att-worker`, "Worker Attendance", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, false, 5, true, true, false, "Monthly Report: Average of weekly worker attendance"),
-        m(`${idPrefix}att-growth-track`, "Growth Track Attendance", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, false, 6, true, true, false),
-        m(`${idPrefix}att-growth-track-uniq`, "Growth Track Unique Attendance", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, false, 7, false, true, false, "Cumulative unique count — last reported value"),
-        m(`${idPrefix}att-midweek`, "Midweek Attendance", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, false, 8, false, true, false),
-        m(`${idPrefix}att-worker-midweek`, "Workers Attendance: Midweek", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, false, 9, false, true, false),
-        m(`${idPrefix}att-sg`, "Small Group Attendance", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, false, 10, false, true, false),
-        m(`${idPrefix}att-cell-leaders`, "Monthly Cell Leaders Attendance (Meeting)", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, false, 11, false, true, false, "Monthly cell leaders meeting attendance — snapshot"),
-    ], "Service and group attendance — Weekly, Monthly, Quarterly, Bi-annual, and Annual reporting.");
+  s(
+    `${idPrefix}att`,
+    "Attendance",
+    order,
+    true,
+    [
+      m(
+        `${idPrefix}att-sun-male`,
+        "Sunday Attendance — Male",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        true,
+        1,
+        true,
+        true,
+        true,
+        "Monthly Report: Average of 4/5 weekly Sunday service attendance (Male)",
+      ),
+      m(
+        `${idPrefix}att-sun-female`,
+        "Sunday Attendance — Female",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        true,
+        2,
+        true,
+        true,
+        true,
+        "Monthly Report: Average of 4/5 weekly Sunday service attendance (Female)",
+      ),
+      m(
+        `${idPrefix}att-sun-children`,
+        "Sunday Attendance — Children",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        true,
+        3,
+        true,
+        true,
+        true,
+        "Monthly Report: Average of 4/5 weekly Sunday service attendance (Children)",
+      ),
+      m(
+        `${idPrefix}att-first-timers`,
+        "First Timers",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        true,
+        4,
+        true,
+        true,
+        true,
+        "Monthly Report: Summation of weekly first timers",
+      ),
+      m(
+        `${idPrefix}att-worker`,
+        "Worker Attendance",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        false,
+        5,
+        true,
+        true,
+        false,
+        "Monthly Report: Average of weekly worker attendance",
+      ),
+      m(
+        `${idPrefix}att-growth-track`,
+        "Growth Track Attendance",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        false,
+        6,
+        true,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}att-growth-track-uniq`,
+        "Growth Track Unique Attendance",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        7,
+        false,
+        true,
+        false,
+        "Cumulative unique count — last reported value",
+      ),
+      m(
+        `${idPrefix}att-midweek`,
+        "Midweek Attendance",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        false,
+        8,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}att-worker-midweek`,
+        "Workers Attendance: Midweek",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        false,
+        9,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}att-sg`,
+        "Small Group Attendance",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        false,
+        10,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}att-cell-leaders`,
+        "Monthly Cell Leaders Attendance (Meeting)",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        11,
+        false,
+        true,
+        false,
+        "Monthly cell leaders meeting attendance — snapshot",
+      ),
+    ],
+    "Service and group attendance — Weekly, Monthly, Quarterly, Bi-annual, and Annual reporting.",
+  );
 
 /**
  * NLP — Weekly & Monthly  |  calculationType: SUM (leads/mobilizers), SNAPSHOT (cells)
  */
 const SECTION_NLP = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}nlp`, "NLP", order, false, [
-        m(`${idPrefix}nlp-cells`, "No. of NLP Cells", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, false, 1, true, true, false),
-        m(`${idPrefix}nlp-leads`, "NLP Leads", MetricFieldType.NUMBER, MetricCalculationType.SUM, true, 2, true, true, false, "Monthly Report: Summation of weekly NLP leads"),
-        m(`${idPrefix}nlp-mobilizers`, "Mobilizers", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 3, true, true, false),
-    ], "Next Level Prayers — Weekly & Monthly reporting.");
+  s(
+    `${idPrefix}nlp`,
+    "NLP",
+    order,
+    false,
+    [
+      m(
+        `${idPrefix}nlp-cells`,
+        "No. of NLP Cells",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        1,
+        true,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}nlp-leads`,
+        "NLP Leads",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        true,
+        2,
+        true,
+        true,
+        false,
+        "Monthly Report: Summation of weekly NLP leads",
+      ),
+      m(
+        `${idPrefix}nlp-mobilizers`,
+        "Mobilizers",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        3,
+        true,
+        true,
+        false,
+      ),
+    ],
+    "Next Level Prayers — Weekly & Monthly reporting.",
+  );
 
 /**
  * SALVATION — Weekly & Monthly  |  calculationType: SUM
  */
 const SECTION_SALVATION = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}sal`, "Salvation", order, true, [
-        m(`${idPrefix}sal-service`, "Soul Saved in Service", MetricFieldType.NUMBER, MetricCalculationType.SUM, true, 1, true, true, true, "Monthly Report: Summation of weekly souls saved in service"),
-        m(`${idPrefix}sal-cell`, "Soul Saved in Cell", MetricFieldType.NUMBER, MetricCalculationType.SUM, true, 2, true, true, false, "Monthly Report: Summation of weekly souls saved in cell"),
-        m(`${idPrefix}sal-nextgen`, "Soul Saved in Next Gen", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 3, false, true, false),
-        m(`${idPrefix}sal-baptized`, "No. of People Baptized", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 4, true, true, false),
-    ], "Salvation and baptism records — Weekly & Monthly reporting.");
+  s(
+    `${idPrefix}sal`,
+    "Salvation",
+    order,
+    true,
+    [
+      m(
+        `${idPrefix}sal-service`,
+        "Soul Saved in Service",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        true,
+        1,
+        true,
+        true,
+        true,
+        "Monthly Report: Summation of weekly souls saved in service",
+      ),
+      m(
+        `${idPrefix}sal-cell`,
+        "Soul Saved in Cell",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        true,
+        2,
+        true,
+        true,
+        false,
+        "Monthly Report: Summation of weekly souls saved in cell",
+      ),
+      m(
+        `${idPrefix}sal-nextgen`,
+        "Soul Saved in Next Gen",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        3,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}sal-baptized`,
+        "No. of People Baptized",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        4,
+        true,
+        true,
+        false,
+      ),
+    ],
+    "Salvation and baptism records — Weekly & Monthly reporting.",
+  );
 
 /**
  * SMALL GROUP — Weekly & Monthly  |  calculationType: SNAPSHOT (groups, leaders), SUM (cells held)
  */
 const SECTION_SMALL_GROUP = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}sg`, "Small Group", order, false, [
-        m(`${idPrefix}sg-groups`, "No. of Small Groups", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, true, 1, true, true, true, "Monthly Report: Cumulation — last reported value"),
-        m(`${idPrefix}sg-leaders`, "No. of Small Group Leaders", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, false, 2, true, true, false, "Monthly Report: Cumulation — last reported value"),
-        m(`${idPrefix}sg-asst-leaders`, "No. of Assistant Cell Leaders", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, false, 3, false, true, false, "Monthly Report: Cumulation — last reported value"),
-        m(`${idPrefix}sg-cells-held`, "No. of Cells that Held", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 4, false, true, false),
-    ], "Small group and cell activity — Weekly & Monthly reporting.");
+  s(
+    `${idPrefix}sg`,
+    "Small Group",
+    order,
+    false,
+    [
+      m(
+        `${idPrefix}sg-groups`,
+        "No. of Small Groups",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        true,
+        1,
+        true,
+        true,
+        true,
+        "Monthly Report: Cumulation — last reported value",
+      ),
+      m(
+        `${idPrefix}sg-leaders`,
+        "No. of Small Group Leaders",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        2,
+        true,
+        true,
+        false,
+        "Monthly Report: Cumulation — last reported value",
+      ),
+      m(
+        `${idPrefix}sg-asst-leaders`,
+        "No. of Assistant Cell Leaders",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        3,
+        false,
+        true,
+        false,
+        "Monthly Report: Cumulation — last reported value",
+      ),
+      m(
+        `${idPrefix}sg-cells-held`,
+        "No. of Cells that Held",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        4,
+        false,
+        true,
+        false,
+      ),
+    ],
+    "Small group and cell activity — Weekly & Monthly reporting.",
+  );
 
 /**
  * HAEF — Monthly & Quarterly  |  calculationType: SUM
  */
 const SECTION_HAEF = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}haef`, "HAEF", order, false, [
-        m(`${idPrefix}haef-reach`, "Project Reach", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 1, true, true, false),
-        m(`${idPrefix}haef-impact`, "Project Impact", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 2, false, true, false),
-    ], "Harvesters Arrest Extreme Failure — Monthly & Quarterly reporting.");
+  s(
+    `${idPrefix}haef`,
+    "HAEF",
+    order,
+    false,
+    [
+      m(
+        `${idPrefix}haef-reach`,
+        "Project Reach",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        1,
+        true,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}haef-impact`,
+        "Project Impact",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        2,
+        false,
+        true,
+        false,
+      ),
+    ],
+    "Harvesters Arrest Extreme Failure — Monthly & Quarterly reporting.",
+  );
 
 /**
  * DISCIPLESHIP — Quarterly & Bi-Yearly  |  calculationType: SUM
  */
 const SECTION_DISCIPLESHIP = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}disc`, "Discipleship", order, false, [
-        m(`${idPrefix}disc-fc-att`, "Foundation Course Attendance", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 1, true, true, false, "Monthly Report: Summation of cohort achieved figures"),
-        m(`${idPrefix}disc-fc-grad`, "Foundation Course Graduants", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 2, false, true, false),
-        m(`${idPrefix}disc-alc`, "ALC Attendance", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 3, false, true, false),
-        m(`${idPrefix}disc-blc`, "BLC Attendance", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 4, false, true, false),
-        m(`${idPrefix}disc-plc`, "PLC Attendance", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 5, false, true, false),
-        m(`${idPrefix}disc-cpc`, "CPC Attendance", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 6, false, true, false),
-    ], "Discipleship school attendance and graduants — Quarterly & Bi-annual reporting.");
+  s(
+    `${idPrefix}disc`,
+    "Discipleship",
+    order,
+    false,
+    [
+      m(
+        `${idPrefix}disc-fc-att`,
+        "Foundation Course Attendance",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        1,
+        true,
+        true,
+        false,
+        "Monthly Report: Summation of cohort achieved figures",
+      ),
+      m(
+        `${idPrefix}disc-fc-grad`,
+        "Foundation Course Graduants",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        2,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}disc-alc`,
+        "ALC Attendance",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        3,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}disc-blc`,
+        "BLC Attendance",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        4,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}disc-plc`,
+        "PLC Attendance",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        5,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}disc-cpc`,
+        "CPC Attendance",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        6,
+        false,
+        true,
+        false,
+      ),
+    ],
+    "Discipleship school attendance and graduants — Quarterly & Bi-annual reporting.",
+  );
 
 /**
  * PARTNERSHIP — Monthly & Quarterly  |  calculationType: SUM
  */
 const SECTION_PARTNERSHIP = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}part`, "Partnership", order, false, [
-        m(`${idPrefix}part-partners`, "No. of Partners", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 1, true, true, true, "Monthly Report: Summation of monthly achieved figures"),
-    ], "Partnership and giving — Monthly & Quarterly reporting.");
+  s(
+    `${idPrefix}part`,
+    "Partnership",
+    order,
+    false,
+    [
+      m(
+        `${idPrefix}part-partners`,
+        "No. of Partners",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        1,
+        true,
+        true,
+        true,
+        "Monthly Report: Summation of monthly achieved figures",
+      ),
+    ],
+    "Partnership and giving — Monthly & Quarterly reporting.",
+  );
 
 /**
  * PROJECT — Monthly & Quarterly  |  calculationType: SNAPSHOT
  */
 const SECTION_PROJECT = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}proj`, "Project", order, false, [
-        m(`${idPrefix}proj-ongoing`, "No. of Ongoing Projects", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, false, 1, false, true, false, "Monthly Report: Cumulation — last reported value"),
-        m(`${idPrefix}proj-phase-closure`, "Project Phase and Closure", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, false, 2, false, true, false, "Monthly Report: Cumulation — last reported value"),
-    ], "Project management tracking — Monthly & Quarterly reporting.");
+  s(
+    `${idPrefix}proj`,
+    "Project",
+    order,
+    false,
+    [
+      m(
+        `${idPrefix}proj-ongoing`,
+        "No. of Ongoing Projects",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        1,
+        false,
+        true,
+        false,
+        "Monthly Report: Cumulation — last reported value",
+      ),
+      m(
+        `${idPrefix}proj-phase-closure`,
+        "Project Phase and Closure",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        2,
+        false,
+        true,
+        false,
+        "Monthly Report: Cumulation — last reported value",
+      ),
+    ],
+    "Project management tracking — Monthly & Quarterly reporting.",
+  );
 
 /**
  * TRANSFORMATION — Monthly & Quarterly  |  calculationType: SUM
  */
 const SECTION_TRANSFORMATION = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}trans`, "Transformation", order, false, [
-        m(`${idPrefix}trans-testimonies`, "No. of Testimonies", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 1, true, true, false, "Monthly Report: Cumulation — last or quarterly figure"),
-        m(`${idPrefix}trans-births`, "No. of Births", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 2, false, true, false),
-        m(`${idPrefix}trans-dedications`, "No. of Babies Dedicated", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 3, false, true, false),
-        m(`${idPrefix}trans-weddings`, "No. of Weddings", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 4, false, true, false),
-    ], "Community transformation and life milestones — Monthly & Quarterly reporting.");
+  s(
+    `${idPrefix}trans`,
+    "Transformation",
+    order,
+    false,
+    [
+      m(
+        `${idPrefix}trans-testimonies`,
+        "No. of Testimonies",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        1,
+        true,
+        true,
+        false,
+        "Monthly Report: Cumulation — last or quarterly figure",
+      ),
+      m(
+        `${idPrefix}trans-births`,
+        "No. of Births",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        2,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}trans-dedications`,
+        "No. of Babies Dedicated",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        3,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}trans-weddings`,
+        "No. of Weddings",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        4,
+        false,
+        true,
+        false,
+      ),
+    ],
+    "Community transformation and life milestones — Monthly & Quarterly reporting.",
+  );
 
 /**
  * ASSIMILATION — Monthly & Quarterly  |  calculationType: SNAPSHOT (workers, leaders), SUM (assimilated)
  */
 const SECTION_ASSIMILATION = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}assim`, "Assimilation", order, false, [
-        m(`${idPrefix}assim-sg`, "No. Assimilated into Small Groups", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 1, true, true, false, "Monthly Report: Cumulation — last reported value"),
-        m(`${idPrefix}assim-workforce`, "No. Assimilated into Work Force", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 2, false, true, false),
-        m(`${idPrefix}assim-workers`, "No. of Workers", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, true, 3, true, true, true, "Monthly Report: Cumulation — last reported value"),
-        m(`${idPrefix}assim-leaders`, "No. of Leaders", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, false, 4, false, true, false),
-    ], "Assimilation into small groups and workforce — Monthly & Quarterly reporting.");
+  s(
+    `${idPrefix}assim`,
+    "Assimilation",
+    order,
+    false,
+    [
+      m(
+        `${idPrefix}assim-sg`,
+        "No. Assimilated into Small Groups",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        1,
+        true,
+        true,
+        false,
+        "Monthly Report: Cumulation — last reported value",
+      ),
+      m(
+        `${idPrefix}assim-workforce`,
+        "No. Assimilated into Work Force",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        2,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}assim-workers`,
+        "No. of Workers",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        true,
+        3,
+        true,
+        true,
+        true,
+        "Monthly Report: Cumulation — last reported value",
+      ),
+      m(
+        `${idPrefix}assim-leaders`,
+        "No. of Leaders",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        4,
+        false,
+        true,
+        false,
+      ),
+    ],
+    "Assimilation into small groups and workforce — Monthly & Quarterly reporting.",
+  );
 
 /**
  * NEXT GEN — Weekly & Monthly
@@ -22099,27 +22870,227 @@ const SECTION_ASSIMILATION = (idPrefix: string, order: number): SectionDef =>
  * Sub-ministries: Kidzone (children) and Stir House (youth)
  */
 const SECTION_NEXT_GEN = (idPrefix: string, order: number): SectionDef =>
-    s(`${idPrefix}ng`, "Next Gen", order, false, [
-        m(`${idPrefix}ng-att-kidzone`, "Next Gen Attendance — Kidzone", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, true, 1, true, true, false, "Monthly Report: Average of 4 weeks"),
-        m(`${idPrefix}ng-att-stir`, "Next Gen Attendance — Stir House", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, true, 2, true, true, false, "Monthly Report: Average of 4 weeks"),
-        m(`${idPrefix}ng-ft-kidzone`, "First Timers — Kidzone", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 3, false, true, false),
-        m(`${idPrefix}ng-ft-stir`, "First Timers — Stir House", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 4, false, true, false),
-        m(`${idPrefix}ng-wrkr-kidzone`, "Workers Attendance — Kidzone", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, false, 5, false, true, false),
-        m(`${idPrefix}ng-wrkr-stir`, "Workers Attendance — Stir House", MetricFieldType.NUMBER, MetricCalculationType.AVERAGE, false, 6, false, true, false),
-        m(`${idPrefix}ng-bap-water-kz`, "No. of Baptized (Water) — Kidzone", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 7, false, true, false, "Monthly Report: Cumulation — last reported value"),
-        m(`${idPrefix}ng-bap-water-sh`, "No. of Baptized (Water) — Stir House", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 8, false, true, false),
-        m(`${idPrefix}ng-bap-hg-kz`, "No. of Baptized (Holy Ghost) — Kidzone", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 9, false, true, false),
-        m(`${idPrefix}ng-bap-hg-sh`, "No. of Baptized (Holy Ghost) — Stir House", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 10, false, true, false),
-        m(`${idPrefix}ng-return-kidzone`, "Next Gen Return Rate — Kidzone", MetricFieldType.PERCENTAGE, MetricCalculationType.SNAPSHOT, false, 11, false, true, false),
-        m(`${idPrefix}ng-return-stir`, "Next Gen Return Rate — Stir House", MetricFieldType.PERCENTAGE, MetricCalculationType.SNAPSHOT, false, 12, false, true, false),
-        m(`${idPrefix}ng-pdpf-kidzone`, "No. of PD/PF Participants — Kidzone", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 13, false, true, false),
-        m(`${idPrefix}ng-pdpf-stir`, "No. of PD/PF Participants — Stir House", MetricFieldType.NUMBER, MetricCalculationType.SUM, false, 14, false, true, false),
-        m(`${idPrefix}ng-teen-leaders`, "No. of Teen Leaders — Stir House", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, false, 15, false, true, false),
-        m(`${idPrefix}ng-served-kidzone`, "No. that Served — Kidzone", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, false, 16, false, true, false),
-        m(`${idPrefix}ng-served-stir`, "No. that Served — Stir House", MetricFieldType.NUMBER, MetricCalculationType.SNAPSHOT, false, 17, false, true, false),
-        m(`${idPrefix}ng-parental-kidzone`, "Parental Engagement Rate — Kidzone", MetricFieldType.PERCENTAGE, MetricCalculationType.SNAPSHOT, false, 18, false, true, false),
-        m(`${idPrefix}ng-parental-stir`, "Parental Engagement Rate — Stir House", MetricFieldType.PERCENTAGE, MetricCalculationType.SNAPSHOT, false, 19, false, true, false),
-    ], "Next generation ministry (Kidzone & Stir House) — Weekly & Monthly reporting.");
+  s(
+    `${idPrefix}ng`,
+    "Next Gen",
+    order,
+    false,
+    [
+      m(
+        `${idPrefix}ng-att-kidzone`,
+        "Next Gen Attendance — Kidzone",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        true,
+        1,
+        true,
+        true,
+        false,
+        "Monthly Report: Average of 4 weeks",
+      ),
+      m(
+        `${idPrefix}ng-att-stir`,
+        "Next Gen Attendance — Stir House",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        true,
+        2,
+        true,
+        true,
+        false,
+        "Monthly Report: Average of 4 weeks",
+      ),
+      m(
+        `${idPrefix}ng-ft-kidzone`,
+        "First Timers — Kidzone",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        3,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-ft-stir`,
+        "First Timers — Stir House",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        4,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-wrkr-kidzone`,
+        "Workers Attendance — Kidzone",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        false,
+        5,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-wrkr-stir`,
+        "Workers Attendance — Stir House",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.AVERAGE,
+        false,
+        6,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-bap-water-kz`,
+        "No. of Baptized (Water) — Kidzone",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        7,
+        false,
+        true,
+        false,
+        "Monthly Report: Cumulation — last reported value",
+      ),
+      m(
+        `${idPrefix}ng-bap-water-sh`,
+        "No. of Baptized (Water) — Stir House",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        8,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-bap-hg-kz`,
+        "No. of Baptized (Holy Ghost) — Kidzone",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        9,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-bap-hg-sh`,
+        "No. of Baptized (Holy Ghost) — Stir House",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        10,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-return-kidzone`,
+        "Next Gen Return Rate — Kidzone",
+        MetricFieldType.PERCENTAGE,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        11,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-return-stir`,
+        "Next Gen Return Rate — Stir House",
+        MetricFieldType.PERCENTAGE,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        12,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-pdpf-kidzone`,
+        "No. of PD/PF Participants — Kidzone",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        13,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-pdpf-stir`,
+        "No. of PD/PF Participants — Stir House",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SUM,
+        false,
+        14,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-teen-leaders`,
+        "No. of Teen Leaders — Stir House",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        15,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-served-kidzone`,
+        "No. that Served — Kidzone",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        16,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-served-stir`,
+        "No. that Served — Stir House",
+        MetricFieldType.NUMBER,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        17,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-parental-kidzone`,
+        "Parental Engagement Rate — Kidzone",
+        MetricFieldType.PERCENTAGE,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        18,
+        false,
+        true,
+        false,
+      ),
+      m(
+        `${idPrefix}ng-parental-stir`,
+        "Parental Engagement Rate — Stir House",
+        MetricFieldType.PERCENTAGE,
+        MetricCalculationType.SNAPSHOT,
+        false,
+        19,
+        false,
+        true,
+        false,
+      ),
+    ],
+    "Next generation ministry (Kidzone & Stir House) — Weekly & Monthly reporting.",
+  );
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * TEMPLATE 1: DEFAULT FULL STANDARD MONTHLY REPORT
@@ -22127,25 +23098,26 @@ const SECTION_NEXT_GEN = (idPrefix: string, order: number): SectionDef =>
  * ───────────────────────────────────────────────────────────────────────────── */
 
 export const DEFAULT_REPORT_TEMPLATE: TemplateDef = {
-    name: "Standard Campus Monthly Report",
-    description: "The primary Harvesters monthly report template covering all 12 strategic indicators. Monthly Report aggregation rules: Attendance → Average of 4/5 weeks; Salvation/NLP/Partnership/HAEF/Discipleship/Transformation/Assimilation → Summation; Small Group/Project/Workers → Cumulation (last reported value).",
-    version: 1,
-    isActive: true,
-    isDefault: true,
-    sections: [
-        SECTION_CHURCH_PLANTING("std-", 1),
-        SECTION_ATTENDANCE("std-", 2),
-        SECTION_NLP("std-", 3),
-        SECTION_SALVATION("std-", 4),
-        SECTION_SMALL_GROUP("std-", 5),
-        SECTION_HAEF("std-", 6),
-        SECTION_DISCIPLESHIP("std-", 7),
-        SECTION_PARTNERSHIP("std-", 8),
-        SECTION_PROJECT("std-", 9),
-        SECTION_TRANSFORMATION("std-", 10),
-        SECTION_ASSIMILATION("std-", 11),
-        SECTION_NEXT_GEN("std-", 12),
-    ],
+  name: "Standard Campus Monthly Report",
+  description:
+    "The primary Harvesters monthly report template covering all 12 strategic indicators. Monthly Report aggregation rules: Attendance → Average of 4/5 weeks; Salvation/NLP/Partnership/HAEF/Discipleship/Transformation/Assimilation → Summation; Small Group/Project/Workers → Cumulation (last reported value).",
+  version: 1,
+  isActive: true,
+  isDefault: true,
+  sections: [
+    SECTION_CHURCH_PLANTING("std-", 1),
+    SECTION_ATTENDANCE("std-", 2),
+    SECTION_NLP("std-", 3),
+    SECTION_SALVATION("std-", 4),
+    SECTION_SMALL_GROUP("std-", 5),
+    SECTION_HAEF("std-", 6),
+    SECTION_DISCIPLESHIP("std-", 7),
+    SECTION_PARTNERSHIP("std-", 8),
+    SECTION_PROJECT("std-", 9),
+    SECTION_TRANSFORMATION("std-", 10),
+    SECTION_ASSIMILATION("std-", 11),
+    SECTION_NEXT_GEN("std-", 12),
+  ],
 };
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -22155,18 +23127,19 @@ export const DEFAULT_REPORT_TEMPLATE: TemplateDef = {
  * ───────────────────────────────────────────────────────────────────────────── */
 
 export const WEEKLY_REPORT_TEMPLATE: TemplateDef = {
-    name: "Weekly Campus Report",
-    description: "Weekly report template covering only the sections tracked on a weekly basis: Attendance, NLP, Salvation, Small Group, and Next Gen. Used for week-by-week submissions.",
-    version: 1,
-    isActive: true,
-    isDefault: false,
-    sections: [
-        SECTION_ATTENDANCE("wkly-", 1),
-        SECTION_NLP("wkly-", 2),
-        SECTION_SALVATION("wkly-", 3),
-        SECTION_SMALL_GROUP("wkly-", 4),
-        SECTION_NEXT_GEN("wkly-", 5),
-    ],
+  name: "Weekly Campus Report",
+  description:
+    "Weekly report template covering only the sections tracked on a weekly basis: Attendance, NLP, Salvation, Small Group, and Next Gen. Used for week-by-week submissions.",
+  version: 1,
+  isActive: true,
+  isDefault: false,
+  sections: [
+    SECTION_ATTENDANCE("wkly-", 1),
+    SECTION_NLP("wkly-", 2),
+    SECTION_SALVATION("wkly-", 3),
+    SECTION_SMALL_GROUP("wkly-", 4),
+    SECTION_NEXT_GEN("wkly-", 5),
+  ],
 };
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -22176,25 +23149,27 @@ export const WEEKLY_REPORT_TEMPLATE: TemplateDef = {
  * ───────────────────────────────────────────────────────────────────────────── */
 
 export const MONTHLY_ONLY_REPORT_TEMPLATE: TemplateDef = {
-    name: "Monthly-Only Campus Report",
-    description: "Monthly report template covering the sections that are tracked exclusively on a monthly or quarterly basis (no weekly cadence): Church Planting, HAEF, Discipleship, Partnership, Project, Transformation, and Assimilation.",
-    version: 1,
-    isActive: true,
-    isDefault: false,
-    sections: [
-        SECTION_CHURCH_PLANTING("mo-", 1),
-        SECTION_HAEF("mo-", 2),
-        SECTION_DISCIPLESHIP("mo-", 3),
-        SECTION_PARTNERSHIP("mo-", 4),
-        SECTION_PROJECT("mo-", 5),
-        SECTION_TRANSFORMATION("mo-", 6),
-        SECTION_ASSIMILATION("mo-", 7),
-    ],
+  name: "Monthly-Only Campus Report",
+  description:
+    "Monthly report template covering the sections that are tracked exclusively on a monthly or quarterly basis (no weekly cadence): Church Planting, HAEF, Discipleship, Partnership, Project, Transformation, and Assimilation.",
+  version: 1,
+  isActive: true,
+  isDefault: false,
+  sections: [
+    SECTION_CHURCH_PLANTING("mo-", 1),
+    SECTION_HAEF("mo-", 2),
+    SECTION_DISCIPLESHIP("mo-", 3),
+    SECTION_PARTNERSHIP("mo-", 4),
+    SECTION_PROJECT("mo-", 5),
+    SECTION_TRANSFORMATION("mo-", 6),
+    SECTION_ASSIMILATION("mo-", 7),
+  ],
 };
-````
+```
 
 ## File: config/routes.ts
-````typescript
+
+```typescript
 /**
  * config/routes.ts
  * Typed route constants — single source of truth for all app + API paths.
@@ -22210,148 +23185,149 @@ import { UserRole } from "@/types/global";
 /* ── Application Routes ─────────────────────────────────────────────────────── */
 
 export const APP_ROUTES = {
-    /* — Public / Auth — */
-    home: "/",
-    login: "/login",
-    register: "/register",
-    forgotPassword: "/forgot-password",
-    resetPassword: "/reset-password",
-    join: "/join",
-    about: "/about",
-    privacy: "/privacy",
-    terms: "/terms",
-    offline: "/offline",
-    profile: "/profile",
-    profileEdit: "/profile/edit",
-    profileChangePassword: "/profile/change-password",
+  /* — Public / Auth — */
+  home: "/",
+  login: "/login",
+  register: "/register",
+  forgotPassword: "/forgot-password",
+  resetPassword: "/reset-password",
+  join: "/join",
+  about: "/about",
+  privacy: "/privacy",
+  terms: "/terms",
+  offline: "/offline",
+  profile: "/profile",
+  profileEdit: "/profile/edit",
+  profileChangePassword: "/profile/change-password",
 
-    /* — Dashboard (all authenticated roles — flat, no role prefix) — */
-    dashboard: "/dashboard",
-    reports: "/reports",
-    reportDetail: (id: string) => `/reports/${id}`,
-    reportNew: "/reports/new",
-    reportEdit: (id: string) => `/reports/${id}/edit`,
-    analytics: "/analytics",
-    inbox: "/inbox",
-    settings: "/settings",
+  /* — Dashboard (all authenticated roles — flat, no role prefix) — */
+  dashboard: "/dashboard",
+  reports: "/reports",
+  reportDetail: (id: string) => `/reports/${id}`,
+  reportNew: "/reports/new",
+  reportEdit: (id: string) => `/reports/${id}/edit`,
+  analytics: "/analytics",
+  inbox: "/inbox",
+  settings: "/settings",
 
-    /* — Superadmin-only features (same flat namespace, access controlled in page/layout) — */
-    templates: "/templates",
-    templateNew: "/templates/new",
-    templateDetail: (id: string) => `/templates/${id}`,
-    users: "/users",
-    userDetail: (id: string) => `/users/${id}`,
-    org: "/org",
-    invites: "/invites",
-    goals: "/goals",
+  /* — Superadmin-only features (same flat namespace, access controlled in page/layout) — */
+  templates: "/templates",
+  templateNew: "/templates/new",
+  templateDetail: (id: string) => `/templates/${id}`,
+  users: "/users",
+  userDetail: (id: string) => `/users/${id}`,
+  org: "/org",
+  invites: "/invites",
+  goals: "/goals",
 
-    /* — Bug Reports — */
-    bugReports: "/bug-reports",
-    bugReportsManage: "/bug-reports/manage",
+  /* — Bug Reports — */
+  bugReports: "/bug-reports",
+  bugReportsManage: "/bug-reports/manage",
 
-    /* — Member (scaffolded, no routes built yet) — */
-    member: {
-        dashboard: "/member/dashboard",
-    },
+  /* — Member (scaffolded, no routes built yet) — */
+  member: {
+    dashboard: "/member/dashboard",
+  },
 } as const;
 
 /* ── Dashboard Routes by Role (used by AuthProvider redirect) ──────────────── */
 
 export const ROLE_DASHBOARD_ROUTES: Record<UserRole, string> = {
-    [UserRole.SUPERADMIN]: APP_ROUTES.dashboard,
-    [UserRole.SPO]: APP_ROUTES.dashboard,
-    [UserRole.CEO]: APP_ROUTES.dashboard,
-    [UserRole.OFFICE_OF_CEO]: APP_ROUTES.dashboard,
-    [UserRole.CHURCH_MINISTRY]: APP_ROUTES.dashboard,
-    [UserRole.GROUP_PASTOR]: APP_ROUTES.dashboard,
-    [UserRole.GROUP_ADMIN]: APP_ROUTES.dashboard,
-    [UserRole.CAMPUS_PASTOR]: APP_ROUTES.dashboard,
-    [UserRole.CAMPUS_ADMIN]: APP_ROUTES.dashboard,
-    [UserRole.DATA_ENTRY]: APP_ROUTES.reports,
-    [UserRole.MEMBER]: APP_ROUTES.dashboard,
+  [UserRole.SUPERADMIN]: APP_ROUTES.dashboard,
+  [UserRole.SPO]: APP_ROUTES.dashboard,
+  [UserRole.CEO]: APP_ROUTES.dashboard,
+  [UserRole.OFFICE_OF_CEO]: APP_ROUTES.dashboard,
+  [UserRole.CHURCH_MINISTRY]: APP_ROUTES.dashboard,
+  [UserRole.GROUP_PASTOR]: APP_ROUTES.dashboard,
+  [UserRole.GROUP_ADMIN]: APP_ROUTES.dashboard,
+  [UserRole.CAMPUS_PASTOR]: APP_ROUTES.dashboard,
+  [UserRole.CAMPUS_ADMIN]: APP_ROUTES.dashboard,
+  [UserRole.DATA_ENTRY]: APP_ROUTES.reports,
+  [UserRole.MEMBER]: APP_ROUTES.dashboard,
 };
 
 /* ── API Routes ─────────────────────────────────────────────────────────────── */
 
 export const API_ROUTES = {
-    auth: {
-        login: "/api/auth/login",
-        logout: "/api/auth/logout",
-        me: "/api/auth/me",
-        register: "/api/auth/register",
-        refreshToken: "/api/auth/refresh",
-        forgotPassword: "/api/auth/forgot-password",
-        resetPassword: "/api/auth/reset-password",
-        changePassword: "/api/auth/change-password",
-    },
-    reports: {
-        list: "/api/reports",
-        detail: (id: string) => `/api/reports/${id}`,
-        submit: (id: string) => `/api/reports/${id}/submit`,
-        approve: (id: string) => `/api/reports/${id}/approve`,
-        review: (id: string) => `/api/reports/${id}/review`,
-        lock: (id: string) => `/api/reports/${id}/lock`,
-        requestEdit: (id: string) => `/api/reports/${id}/request-edit`,
-        history: (id: string) => `/api/reports/${id}/history`,
-    },
-    reportTemplates: {
-        list: "/api/report-templates",
-        detail: (id: string) => `/api/report-templates/${id}`,
-        versions: (id: string) => `/api/report-templates/${id}/versions`,
-    },
-    reportUpdateRequests: {
-        list: "/api/report-update-requests",
-        detail: (id: string) => `/api/report-update-requests/${id}`,
-        approve: (id: string) => `/api/report-update-requests/${id}/approve`,
-        reject: (id: string) => `/api/report-update-requests/${id}/reject`,
-    },
-    users: {
-        list: "/api/users",
-        detail: (id: string) => `/api/users/${id}`,
-        profile: "/api/users/profile",
-    },
-    org: {
-        groups: "/api/org/groups",
-        group: (id: string) => `/api/org/groups/${id}`,
-        campuses: "/api/org/campuses",
-        campus: (id: string) => `/api/org/campuses/${id}`,
-    },
-    analytics: {
-        overview: "/api/analytics/overview",
-        metrics: "/api/analytics/metrics",
-        reports: "/api/analytics/reports",
-        compliance: "/api/analytics/compliance",
-        goals: "/api/analytics/goals",
-        quarterly: "/api/analytics/quarterly",
-    },
-    goals: {
-        list: "/api/goals",
-        forReport: "/api/goals/for-report",
-        detail: (id: string) => `/api/goals/${id}`,
-        unlockRequest: (id: string) => `/api/goals/${id}/unlock-request`,
-        approveUnlock: (id: string) => `/api/goals/${id}/unlock-request/approve`,
-        rejectUnlock: (id: string) => `/api/goals/${id}/unlock-request/reject`,
-    },
-    notifications: {
-        list: "/api/notifications",
-        markRead: (id: string) => `/api/notifications/${id}/read`,
-        markAllRead: "/api/notifications/read-all",
-    },
-    inviteLinks: {
-        list: "/api/invite-links",
-        create: "/api/invite-links",
-        validate: (token: string) => `/api/invite-links/validate/${token}`,
-        revoke: (id: string) => `/api/invite-links/${id}`,
-    },
-    bugReports: {
-        list: "/api/bug-reports",
-        detail: (id: string) => `/api/bug-reports/${id}`,
-    },
+  auth: {
+    login: "/api/auth/login",
+    logout: "/api/auth/logout",
+    me: "/api/auth/me",
+    register: "/api/auth/register",
+    refreshToken: "/api/auth/refresh",
+    forgotPassword: "/api/auth/forgot-password",
+    resetPassword: "/api/auth/reset-password",
+    changePassword: "/api/auth/change-password",
+  },
+  reports: {
+    list: "/api/reports",
+    detail: (id: string) => `/api/reports/${id}`,
+    submit: (id: string) => `/api/reports/${id}/submit`,
+    approve: (id: string) => `/api/reports/${id}/approve`,
+    review: (id: string) => `/api/reports/${id}/review`,
+    lock: (id: string) => `/api/reports/${id}/lock`,
+    requestEdit: (id: string) => `/api/reports/${id}/request-edit`,
+    history: (id: string) => `/api/reports/${id}/history`,
+  },
+  reportTemplates: {
+    list: "/api/report-templates",
+    detail: (id: string) => `/api/report-templates/${id}`,
+    versions: (id: string) => `/api/report-templates/${id}/versions`,
+  },
+  reportUpdateRequests: {
+    list: "/api/report-update-requests",
+    detail: (id: string) => `/api/report-update-requests/${id}`,
+    approve: (id: string) => `/api/report-update-requests/${id}/approve`,
+    reject: (id: string) => `/api/report-update-requests/${id}/reject`,
+  },
+  users: {
+    list: "/api/users",
+    detail: (id: string) => `/api/users/${id}`,
+    profile: "/api/users/profile",
+  },
+  org: {
+    groups: "/api/org/groups",
+    group: (id: string) => `/api/org/groups/${id}`,
+    campuses: "/api/org/campuses",
+    campus: (id: string) => `/api/org/campuses/${id}`,
+  },
+  analytics: {
+    overview: "/api/analytics/overview",
+    metrics: "/api/analytics/metrics",
+    reports: "/api/analytics/reports",
+    compliance: "/api/analytics/compliance",
+    goals: "/api/analytics/goals",
+    quarterly: "/api/analytics/quarterly",
+  },
+  goals: {
+    list: "/api/goals",
+    forReport: "/api/goals/for-report",
+    detail: (id: string) => `/api/goals/${id}`,
+    unlockRequest: (id: string) => `/api/goals/${id}/unlock-request`,
+    approveUnlock: (id: string) => `/api/goals/${id}/unlock-request/approve`,
+    rejectUnlock: (id: string) => `/api/goals/${id}/unlock-request/reject`,
+  },
+  notifications: {
+    list: "/api/notifications",
+    markRead: (id: string) => `/api/notifications/${id}/read`,
+    markAllRead: "/api/notifications/read-all",
+  },
+  inviteLinks: {
+    list: "/api/invite-links",
+    create: "/api/invite-links",
+    validate: (token: string) => `/api/invite-links/validate/${token}`,
+    revoke: (id: string) => `/api/invite-links/${id}`,
+  },
+  bugReports: {
+    list: "/api/bug-reports",
+    detail: (id: string) => `/api/bug-reports/${id}`,
+  },
 } as const;
-````
+```
 
 ## File: modules/reports/components/ReportEditPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -22585,10 +23561,11 @@ export function ReportEditPage({ params }: PageProps) {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/templates/components/TemplatesListPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -22793,10 +23770,11 @@ export function TemplatesListPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: types/global.ts
-````typescript
+
+```typescript
 /**
  * types/global.ts
  *
@@ -22811,138 +23789,138 @@ export function TemplatesListPage() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export enum UserRole {
-    SUPERADMIN = "SUPERADMIN",
-    SPO = "SPO",
-    CEO = "CEO",
-    OFFICE_OF_CEO = "OFFICE_OF_CEO",
-    CHURCH_MINISTRY = "CHURCH_MINISTRY",
-    GROUP_PASTOR = "GROUP_PASTOR",
-    GROUP_ADMIN = "GROUP_ADMIN",
-    CAMPUS_PASTOR = "CAMPUS_PASTOR",
-    CAMPUS_ADMIN = "CAMPUS_ADMIN",
-    DATA_ENTRY = "DATA_ENTRY",
-    MEMBER = "MEMBER",
+  SUPERADMIN = "SUPERADMIN",
+  SPO = "SPO",
+  CEO = "CEO",
+  OFFICE_OF_CEO = "OFFICE_OF_CEO",
+  CHURCH_MINISTRY = "CHURCH_MINISTRY",
+  GROUP_PASTOR = "GROUP_PASTOR",
+  GROUP_ADMIN = "GROUP_ADMIN",
+  CAMPUS_PASTOR = "CAMPUS_PASTOR",
+  CAMPUS_ADMIN = "CAMPUS_ADMIN",
+  DATA_ENTRY = "DATA_ENTRY",
+  MEMBER = "MEMBER",
 }
 
 export enum ReportStatus {
-    DRAFT = "DRAFT",
-    SUBMITTED = "SUBMITTED",
-    REQUIRES_EDITS = "REQUIRES_EDITS",
-    APPROVED = "APPROVED",
-    REVIEWED = "REVIEWED",
-    LOCKED = "LOCKED",
+  DRAFT = "DRAFT",
+  SUBMITTED = "SUBMITTED",
+  REQUIRES_EDITS = "REQUIRES_EDITS",
+  APPROVED = "APPROVED",
+  REVIEWED = "REVIEWED",
+  LOCKED = "LOCKED",
 }
 
 export enum ReportEventType {
-    CREATED = "CREATED",
-    SUBMITTED = "SUBMITTED",
-    EDIT_REQUESTED = "EDIT_REQUESTED",
-    EDIT_SUBMITTED = "EDIT_SUBMITTED",
-    EDIT_APPROVED = "EDIT_APPROVED",
-    EDIT_REJECTED = "EDIT_REJECTED",
-    EDIT_APPLIED = "EDIT_APPLIED",
-    APPROVED = "APPROVED",
-    REVIEWED = "REVIEWED",
-    LOCKED = "LOCKED",
-    DEADLINE_PASSED = "DEADLINE_PASSED",
-    UPDATE_REQUESTED = "UPDATE_REQUESTED",
-    UPDATE_APPROVED = "UPDATE_APPROVED",
-    UPDATE_REJECTED = "UPDATE_REJECTED",
-    DATA_ENTRY_CREATED = "DATA_ENTRY_CREATED",
-    TEMPLATE_VERSION_NOTE = "TEMPLATE_VERSION_NOTE",
-    AUTO_APPROVED = "AUTO_APPROVED",
+  CREATED = "CREATED",
+  SUBMITTED = "SUBMITTED",
+  EDIT_REQUESTED = "EDIT_REQUESTED",
+  EDIT_SUBMITTED = "EDIT_SUBMITTED",
+  EDIT_APPROVED = "EDIT_APPROVED",
+  EDIT_REJECTED = "EDIT_REJECTED",
+  EDIT_APPLIED = "EDIT_APPLIED",
+  APPROVED = "APPROVED",
+  REVIEWED = "REVIEWED",
+  LOCKED = "LOCKED",
+  DEADLINE_PASSED = "DEADLINE_PASSED",
+  UPDATE_REQUESTED = "UPDATE_REQUESTED",
+  UPDATE_APPROVED = "UPDATE_APPROVED",
+  UPDATE_REJECTED = "UPDATE_REJECTED",
+  DATA_ENTRY_CREATED = "DATA_ENTRY_CREATED",
+  TEMPLATE_VERSION_NOTE = "TEMPLATE_VERSION_NOTE",
+  AUTO_APPROVED = "AUTO_APPROVED",
 }
 
 export enum ReportPeriodType {
-    WEEKLY = "WEEKLY",
-    MONTHLY = "MONTHLY",
-    YEARLY = "YEARLY",
+  WEEKLY = "WEEKLY",
+  MONTHLY = "MONTHLY",
+  YEARLY = "YEARLY",
 }
 
 export enum MetricFieldType {
-    NUMBER = "NUMBER",
-    PERCENTAGE = "PERCENTAGE",
-    TEXT = "TEXT",
-    CURRENCY = "CURRENCY",
+  NUMBER = "NUMBER",
+  PERCENTAGE = "PERCENTAGE",
+  TEXT = "TEXT",
+  CURRENCY = "CURRENCY",
 }
 
 export enum ReportEditStatus {
-    DRAFT = "DRAFT",
-    SUBMITTED = "SUBMITTED",
-    APPROVED = "APPROVED",
-    REJECTED = "REJECTED",
+  DRAFT = "DRAFT",
+  SUBMITTED = "SUBMITTED",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
 }
 
 export enum ReportUpdateRequestStatus {
-    PENDING = "PENDING",
-    APPROVED = "APPROVED",
-    REJECTED = "REJECTED",
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
 }
 
 export enum NotificationType {
-    REPORT_SUBMITTED = "REPORT_SUBMITTED",
-    REPORT_EDIT_REQUESTED = "REPORT_EDIT_REQUESTED",
-    REPORT_APPROVED = "REPORT_APPROVED",
-    REPORT_REVIEWED = "REPORT_REVIEWED",
-    REPORT_LOCKED = "REPORT_LOCKED",
-    REPORT_EDIT_SUBMITTED = "REPORT_EDIT_SUBMITTED",
-    REPORT_EDIT_APPROVED = "REPORT_EDIT_APPROVED",
-    REPORT_EDIT_REJECTED = "REPORT_EDIT_REJECTED",
-    REPORT_UPDATE_REQUESTED = "REPORT_UPDATE_REQUESTED",
-    REPORT_UPDATE_APPROVED = "REPORT_UPDATE_APPROVED",
-    REPORT_UPDATE_REJECTED = "REPORT_UPDATE_REJECTED",
-    REPORT_DEADLINE_REMINDER = "REPORT_DEADLINE_REMINDER",
-    GOAL_UNLOCK_REQUESTED = "GOAL_UNLOCK_REQUESTED",
-    GOAL_UNLOCK_APPROVED = "GOAL_UNLOCK_APPROVED",
-    GOAL_UNLOCK_REJECTED = "GOAL_UNLOCK_REJECTED",
+  REPORT_SUBMITTED = "REPORT_SUBMITTED",
+  REPORT_EDIT_REQUESTED = "REPORT_EDIT_REQUESTED",
+  REPORT_APPROVED = "REPORT_APPROVED",
+  REPORT_REVIEWED = "REPORT_REVIEWED",
+  REPORT_LOCKED = "REPORT_LOCKED",
+  REPORT_EDIT_SUBMITTED = "REPORT_EDIT_SUBMITTED",
+  REPORT_EDIT_APPROVED = "REPORT_EDIT_APPROVED",
+  REPORT_EDIT_REJECTED = "REPORT_EDIT_REJECTED",
+  REPORT_UPDATE_REQUESTED = "REPORT_UPDATE_REQUESTED",
+  REPORT_UPDATE_APPROVED = "REPORT_UPDATE_APPROVED",
+  REPORT_UPDATE_REJECTED = "REPORT_UPDATE_REJECTED",
+  REPORT_DEADLINE_REMINDER = "REPORT_DEADLINE_REMINDER",
+  GOAL_UNLOCK_REQUESTED = "GOAL_UNLOCK_REQUESTED",
+  GOAL_UNLOCK_APPROVED = "GOAL_UNLOCK_APPROVED",
+  GOAL_UNLOCK_REJECTED = "GOAL_UNLOCK_REJECTED",
 }
 
 export enum MetricCalculationType {
-    SUM = "SUM",
-    AVERAGE = "AVERAGE",
-    SNAPSHOT = "SNAPSHOT",
+  SUM = "SUM",
+  AVERAGE = "AVERAGE",
+  SNAPSHOT = "SNAPSHOT",
 }
 
 export enum GoalMode {
-    ANNUAL = "ANNUAL",
-    MONTHLY = "MONTHLY",
-    CAMPUS_OVERRIDE = "CAMPUS_OVERRIDE",
+  ANNUAL = "ANNUAL",
+  MONTHLY = "MONTHLY",
+  CAMPUS_OVERRIDE = "CAMPUS_OVERRIDE",
 }
 
 export enum GoalEditRequestStatus {
-    PENDING = "PENDING",
-    APPROVED = "APPROVED",
-    REJECTED = "REJECTED",
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
 }
 
 export enum Gender {
-    MALE = "MALE",
-    FEMALE = "FEMALE",
-    PREFER_NOT_TO_SAY = "PREFER_NOT_TO_SAY",
+  MALE = "MALE",
+  FEMALE = "FEMALE",
+  PREFER_NOT_TO_SAY = "PREFER_NOT_TO_SAY",
 }
 
 export enum InviteLinkType {
-    CAMPUS = "CAMPUS",
-    GROUP = "GROUP",
-    DIRECT = "DIRECT",
+  CAMPUS = "CAMPUS",
+  GROUP = "GROUP",
+  DIRECT = "DIRECT",
 }
 
 export enum BugReportStatus {
-    OPEN = "OPEN",
-    IN_PROGRESS = "IN_PROGRESS",
-    RESOLVED = "RESOLVED",
-    CLOSED = "CLOSED",
+  OPEN = "OPEN",
+  IN_PROGRESS = "IN_PROGRESS",
+  RESOLVED = "RESOLVED",
+  CLOSED = "CLOSED",
 }
 
 export enum BugReportCategory {
-    UI_DISPLAY = "UI_DISPLAY",
-    NAVIGATION = "NAVIGATION",
-    DATA_ISSUE = "DATA_ISSUE",
-    PERFORMANCE = "PERFORMANCE",
-    AUTHENTICATION = "AUTHENTICATION",
-    REPORT_SUBMISSION = "REPORT_SUBMISSION",
-    NOTIFICATION = "NOTIFICATION",
-    OTHER = "OTHER",
+  UI_DISPLAY = "UI_DISPLAY",
+  NAVIGATION = "NAVIGATION",
+  DATA_ISSUE = "DATA_ISSUE",
+  PERFORMANCE = "PERFORMANCE",
+  AUTHENTICATION = "AUTHENTICATION",
+  REPORT_SUBMISSION = "REPORT_SUBMISSION",
+  NOTIFICATION = "NOTIFICATION",
+  OTHER = "OTHER",
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -22950,17 +23928,17 @@ export enum BugReportCategory {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const HIERARCHY_ORDER: Record<UserRole, number> = {
-    [UserRole.SUPERADMIN]: 0,
-    [UserRole.SPO]: 1,
-    [UserRole.CEO]: 2,
-    [UserRole.OFFICE_OF_CEO]: 3,
-    [UserRole.CHURCH_MINISTRY]: 4,
-    [UserRole.GROUP_PASTOR]: 5,
-    [UserRole.GROUP_ADMIN]: 6,
-    [UserRole.CAMPUS_PASTOR]: 7,
-    [UserRole.CAMPUS_ADMIN]: 8,
-    [UserRole.DATA_ENTRY]: 9,
-    [UserRole.MEMBER]: 10,
+  [UserRole.SUPERADMIN]: 0,
+  [UserRole.SPO]: 1,
+  [UserRole.CEO]: 2,
+  [UserRole.OFFICE_OF_CEO]: 3,
+  [UserRole.CHURCH_MINISTRY]: 4,
+  [UserRole.GROUP_PASTOR]: 5,
+  [UserRole.GROUP_ADMIN]: 6,
+  [UserRole.CAMPUS_PASTOR]: 7,
+  [UserRole.CAMPUS_ADMIN]: 8,
+  [UserRole.DATA_ENTRY]: 9,
+  [UserRole.MEMBER]: 10,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -22971,570 +23949,576 @@ export const HIERARCHY_ORDER: Record<UserRole, number> = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 declare global {
-    interface AuthUser {
-        id: string;
-        email: string;
-        role: UserRole;
-        campusId?: string;
-        orgGroupId?: string;
-        firstName: string;
-        lastName: string;
-        avatar?: string;
-    }
+  interface AuthUser {
+    id: string;
+    email: string;
+    role: UserRole;
+    campusId?: string;
+    orgGroupId?: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+  }
 
-    interface AuthContextValue {
-        user: AuthUser | null;
-        isLoading: boolean;
-        login: (email: string, password: string, rememberMe?: boolean, redirectTo?: string) => Promise<void>;
-        logout: () => Promise<void>;
-        refreshToken: () => Promise<void>;
-    }
+  interface AuthContextValue {
+    user: AuthUser | null;
+    isLoading: boolean;
+    login: (
+      email: string,
+      password: string,
+      rememberMe?: boolean,
+      redirectTo?: string,
+    ) => Promise<void>;
+    logout: () => Promise<void>;
+    refreshToken: () => Promise<void>;
+  }
 
-    interface UserProfile {
-        id: string;
-        organisationId?: string;
-        email: string;
-        firstName: string;
-        lastName: string;
-        phone?: string;
-        gender?: Gender;
-        role: UserRole;
-        campusId?: string;
-        groupId?: string;
-        orgGroupId?: string;
-        avatar?: string;
-        avatarUrl?: string;
-        passwordHash?: string;
-        isActive: boolean;
-        createdAt: string;
-        updatedAt: string;
-    }
+  interface UserProfile {
+    id: string;
+    organisationId?: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone?: string;
+    gender?: Gender;
+    role: UserRole;
+    campusId?: string;
+    groupId?: string;
+    orgGroupId?: string;
+    avatar?: string;
+    avatarUrl?: string;
+    passwordHash?: string;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+  }
 
-    interface CreateUserInput {
-        email: string;
-        password: string;
-        firstName: string;
-        lastName: string;
-        role: UserRole;
-        campusId?: string;
-        orgGroupId?: string;
-        phone?: string;
-        gender?: Gender;
-    }
+  interface CreateUserInput {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    role: UserRole;
+    campusId?: string;
+    orgGroupId?: string;
+    phone?: string;
+    gender?: Gender;
+  }
 
-    interface UpdateUserInput {
-        firstName?: string;
-        lastName?: string;
-        phone?: string;
-        gender?: Gender;
-        avatar?: string;
-        campusId?: string;
-        orgGroupId?: string;
-    }
+  interface UpdateUserInput {
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    gender?: Gender;
+    avatar?: string;
+    campusId?: string;
+    orgGroupId?: string;
+  }
 
-    interface ChangePasswordInput {
-        currentPassword: string;
-        newPassword: string;
-    }
+  interface ChangePasswordInput {
+    currentPassword: string;
+    newPassword: string;
+  }
 
-    interface OrgUnitBase {
-        id: string;
-        name: string;
-        description?: string;
-        orgLevel: "GROUP" | "CAMPUS";
-        isActive: boolean;
-        createdAt: string;
-        updatedAt: string;
-        leaderId?: string;
-        adminId?: string;
-        country?: string;
-        location?: string;
-        address?: string;
-        phone?: string;
-        memberCount?: number;
-        inviteCode?: string;
-    }
+  interface OrgUnitBase {
+    id: string;
+    name: string;
+    description?: string;
+    orgLevel: "GROUP" | "CAMPUS";
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+    leaderId?: string;
+    adminId?: string;
+    country?: string;
+    location?: string;
+    address?: string;
+    phone?: string;
+    memberCount?: number;
+    inviteCode?: string;
+  }
 
-    interface OrgGroup extends OrgUnitBase {
-        orgLevel: "GROUP";
-        country: string;
-        leaderId: string;
-    }
+  interface OrgGroup extends OrgUnitBase {
+    orgLevel: "GROUP";
+    country: string;
+    leaderId: string;
+  }
 
-    interface Campus extends OrgUnitBase {
-        orgLevel: "CAMPUS";
-        parentId: string;
-        adminId?: string;
-        country: string;
-        location: string;
-    }
+  interface Campus extends OrgUnitBase {
+    orgLevel: "CAMPUS";
+    parentId: string;
+    adminId?: string;
+    country: string;
+    location: string;
+  }
 
-    interface OrgGroupWithDetails extends OrgGroup {
-        campuses: Campus[];
-        leader?: UserProfile;
-    }
+  interface OrgGroupWithDetails extends OrgGroup {
+    campuses: Campus[];
+    leader?: UserProfile;
+  }
 
-    interface CampusWithDetails extends Campus {
-        orgGroup?: OrgGroup;
-        admin?: UserProfile;
-    }
+  interface CampusWithDetails extends Campus {
+    orgGroup?: OrgGroup;
+    admin?: UserProfile;
+  }
 
-    interface CreateOrgGroupInput {
-        name: string;
-        description?: string;
-        country: string;
-        leaderId?: string;
-    }
+  interface CreateOrgGroupInput {
+    name: string;
+    description?: string;
+    country: string;
+    leaderId?: string;
+  }
 
-    interface CreateCampusInput {
-        name: string;
-        description?: string;
-        parentId: string;
-        country: string;
-        location: string;
-        adminId?: string;
-        phone?: string;
-        address?: string;
-    }
+  interface CreateCampusInput {
+    name: string;
+    description?: string;
+    parentId: string;
+    country: string;
+    location: string;
+    adminId?: string;
+    phone?: string;
+    address?: string;
+  }
 
-    interface ReportTemplate {
-        id: string;
-        organisationId: string;
-        name: string;
-        description?: string;
-        version: number;
-        sections: ReportTemplateSection[];
-        isActive: boolean;
-        isDefault: boolean;
-        createdById: string;
-        campusId?: string;
-        orgGroupId?: string;
-        createdAt: string;
-        updatedAt: string;
-    }
+  interface ReportTemplate {
+    id: string;
+    organisationId: string;
+    name: string;
+    description?: string;
+    version: number;
+    sections: ReportTemplateSection[];
+    isActive: boolean;
+    isDefault: boolean;
+    createdById: string;
+    campusId?: string;
+    orgGroupId?: string;
+    createdAt: string;
+    updatedAt: string;
+  }
 
-    interface ReportTemplateSection {
-        id: string;
-        templateId: string;
-        name: string;
-        description?: string;
-        order: number;
-        isRequired: boolean;
-        metrics: ReportTemplateMetric[];
-    }
+  interface ReportTemplateSection {
+    id: string;
+    templateId: string;
+    name: string;
+    description?: string;
+    order: number;
+    isRequired: boolean;
+    metrics: ReportTemplateMetric[];
+  }
 
-    interface ReportTemplateMetric {
-        id: string;
-        sectionId: string;
-        name: string;
-        description?: string;
-        fieldType: MetricFieldType;
-        calculationType: MetricCalculationType;
-        isRequired: boolean;
-        minValue?: number;
-        maxValue?: number;
-        order: number;
-        capturesGoal: boolean;
-        capturesAchieved: boolean;
-        capturesYoY: boolean;
-    }
+  interface ReportTemplateMetric {
+    id: string;
+    sectionId: string;
+    name: string;
+    description?: string;
+    fieldType: MetricFieldType;
+    calculationType: MetricCalculationType;
+    isRequired: boolean;
+    minValue?: number;
+    maxValue?: number;
+    order: number;
+    capturesGoal: boolean;
+    capturesAchieved: boolean;
+    capturesYoY: boolean;
+  }
 
-    interface ReportTemplateVersion {
-        id: string;
-        templateId: string;
-        versionNumber: number;
-        snapshot: ReportTemplate;
-        createdAt: string;
-        createdById: string;
-    }
+  interface ReportTemplateVersion {
+    id: string;
+    templateId: string;
+    versionNumber: number;
+    snapshot: ReportTemplate;
+    createdAt: string;
+    createdById: string;
+  }
 
-    interface CreateReportTemplateInput {
-        name: string;
-        description?: string;
-        sections: CreateTemplateSectionInput[];
-        campusId?: string;
-        orgGroupId?: string;
-    }
+  interface CreateReportTemplateInput {
+    name: string;
+    description?: string;
+    sections: CreateTemplateSectionInput[];
+    campusId?: string;
+    orgGroupId?: string;
+  }
 
-    interface CreateTemplateSectionInput {
-        name: string;
-        description?: string;
-        order: number;
-        isRequired: boolean;
-        metrics: CreateTemplateMetricInput[];
-    }
+  interface CreateTemplateSectionInput {
+    name: string;
+    description?: string;
+    order: number;
+    isRequired: boolean;
+    metrics: CreateTemplateMetricInput[];
+  }
 
-    interface CreateTemplateMetricInput {
-        name: string;
-        description?: string;
-        fieldType: MetricFieldType;
-        calculationType: MetricCalculationType;
-        isRequired: boolean;
-        minValue?: number;
-        maxValue?: number;
-        order: number;
-        capturesGoal: boolean;
-        capturesAchieved: boolean;
-        capturesYoY: boolean;
-    }
+  interface CreateTemplateMetricInput {
+    name: string;
+    description?: string;
+    fieldType: MetricFieldType;
+    calculationType: MetricCalculationType;
+    isRequired: boolean;
+    minValue?: number;
+    maxValue?: number;
+    order: number;
+    capturesGoal: boolean;
+    capturesAchieved: boolean;
+    capturesYoY: boolean;
+  }
 
-    interface Report {
-        id: string;
-        organisationId?: string;
-        title?: string;
-        templateId: string;
-        templateVersionId: string;
-        campusId: string;
-        orgGroupId: string;
-        period?: string;
-        periodType: ReportPeriodType;
-        periodYear: number;
-        periodMonth?: number;
-        periodWeek?: number;
-        status: ReportStatus;
-        createdById?: string;
-        submittedById?: string;
-        reviewedById?: string;
-        approvedById?: string;
-        deadline?: string | null;
-        lockedAt?: string;
-        isDataEntry: boolean;
-        dataEntryById?: string;
-        dataEntryDate?: string;
-        notes?: string;
-        sections?: unknown[];
-        createdAt: string;
-        updatedAt: string;
-    }
+  interface Report {
+    id: string;
+    organisationId?: string;
+    title?: string;
+    templateId: string;
+    templateVersionId: string;
+    campusId: string;
+    orgGroupId: string;
+    period?: string;
+    periodType: ReportPeriodType;
+    periodYear: number;
+    periodMonth?: number;
+    periodWeek?: number;
+    status: ReportStatus;
+    createdById?: string;
+    submittedById?: string;
+    reviewedById?: string;
+    approvedById?: string;
+    deadline?: string | null;
+    lockedAt?: string;
+    isDataEntry: boolean;
+    dataEntryById?: string;
+    dataEntryDate?: string;
+    notes?: string;
+    sections?: unknown[];
+    createdAt: string;
+    updatedAt: string;
+  }
 
-    interface ReportSection {
-        id: string;
-        reportId: string;
-        templateSectionId: string;
-        sectionName: string;
-        metrics: ReportMetric[];
-    }
+  interface ReportSection {
+    id: string;
+    reportId: string;
+    templateSectionId: string;
+    sectionName: string;
+    metrics: ReportMetric[];
+  }
 
-    interface ReportMetric {
-        id: string;
-        reportSectionId: string;
-        templateMetricId: string;
-        metricName: string;
-        calculationType: MetricCalculationType;
-        monthlyGoal?: number;
-        monthlyAchieved?: number;
-        yoyGoal?: number;
-        computedPercentage?: number;
-        isLocked: boolean;
-        lockedAt?: string;
-        lockedById?: string;
-        comment?: string;
-    }
+  interface ReportMetric {
+    id: string;
+    reportSectionId: string;
+    templateMetricId: string;
+    metricName: string;
+    calculationType: MetricCalculationType;
+    monthlyGoal?: number;
+    monthlyAchieved?: number;
+    yoyGoal?: number;
+    computedPercentage?: number;
+    isLocked: boolean;
+    lockedAt?: string;
+    lockedById?: string;
+    comment?: string;
+  }
 
-    interface ReportWithDetails extends Report {
-        template?: ReportTemplate;
-        sections: ReportSectionWithMetrics[];
-        campus?: Campus;
-        orgGroup?: OrgGroup;
-        submittedBy?: UserProfile;
-        reviewedBy?: UserProfile;
-        approvedBy?: UserProfile;
-    }
+  interface ReportWithDetails extends Report {
+    template?: ReportTemplate;
+    sections: ReportSectionWithMetrics[];
+    campus?: Campus;
+    orgGroup?: OrgGroup;
+    submittedBy?: UserProfile;
+    reviewedBy?: UserProfile;
+    approvedBy?: UserProfile;
+  }
 
-    interface ReportSectionWithMetrics extends ReportSection {
-        metrics: ReportMetric[];
-    }
+  interface ReportSectionWithMetrics extends ReportSection {
+    metrics: ReportMetric[];
+  }
 
-    interface ReportFilters {
-        campusId?: string;
-        orgGroupId?: string;
-        periodType?: ReportPeriodType;
-        periodYear?: number;
-        periodMonth?: number;
-        status?: ReportStatus;
-        templateId?: string;
-        isDataEntry?: boolean;
-        search?: string;
-        page?: number;
-        pageSize?: number;
-    }
+  interface ReportFilters {
+    campusId?: string;
+    orgGroupId?: string;
+    periodType?: ReportPeriodType;
+    periodYear?: number;
+    periodMonth?: number;
+    status?: ReportStatus;
+    templateId?: string;
+    isDataEntry?: boolean;
+    search?: string;
+    page?: number;
+    pageSize?: number;
+  }
 
-    interface ReportFormValues {
-        sections: ReportSectionFormValues[];
-        notes?: string;
-    }
+  interface ReportFormValues {
+    sections: ReportSectionFormValues[];
+    notes?: string;
+  }
 
-    interface ReportSectionFormValues {
-        templateSectionId: string;
-        metrics: ReportMetricFormValues[];
-    }
+  interface ReportSectionFormValues {
+    templateSectionId: string;
+    metrics: ReportMetricFormValues[];
+  }
 
-    interface ReportMetricFormValues {
-        templateMetricId: string;
-        monthlyGoal?: number;
-        monthlyAchieved?: number;
-        yoyGoal?: number;
-        comment?: string;
-    }
+  interface ReportMetricFormValues {
+    templateMetricId: string;
+    monthlyGoal?: number;
+    monthlyAchieved?: number;
+    yoyGoal?: number;
+    comment?: string;
+  }
 
-    interface ReportEdit {
-        id: string;
-        reportId: string;
-        submittedById: string;
-        status: ReportEditStatus;
-        reason: string;
-        sections: ReportEditSection[];
-        reviewedById?: string;
-        reviewNotes?: string;
-        createdAt: string;
-        updatedAt: string;
-    }
+  interface ReportEdit {
+    id: string;
+    reportId: string;
+    submittedById: string;
+    status: ReportEditStatus;
+    reason: string;
+    sections: ReportEditSection[];
+    reviewedById?: string;
+    reviewNotes?: string;
+    createdAt: string;
+    updatedAt: string;
+  }
 
-    interface ReportEditSection {
-        id: string;
-        editId: string;
-        templateSectionId: string;
-        metrics: ReportEditMetric[];
-    }
+  interface ReportEditSection {
+    id: string;
+    editId: string;
+    templateSectionId: string;
+    metrics: ReportEditMetric[];
+  }
 
-    interface ReportEditMetric {
-        id: string;
-        editSectionId: string;
-        templateMetricId: string;
-        monthlyGoal?: number;
-        monthlyAchieved?: number;
-        yoyGoal?: number;
-        comment?: string;
-    }
+  interface ReportEditMetric {
+    id: string;
+    editSectionId: string;
+    templateMetricId: string;
+    monthlyGoal?: number;
+    monthlyAchieved?: number;
+    yoyGoal?: number;
+    comment?: string;
+  }
 
-    interface ReportUpdateRequest {
-        id: string;
-        reportId: string;
-        requestedById: string;
-        reason: string;
-        sections: ReportUpdateSection[];
-        status: ReportUpdateRequestStatus;
-        reviewedById?: string;
-        reviewNotes?: string;
-        createdAt: string;
-        updatedAt: string;
-    }
+  interface ReportUpdateRequest {
+    id: string;
+    reportId: string;
+    requestedById: string;
+    reason: string;
+    sections: ReportUpdateSection[];
+    status: ReportUpdateRequestStatus;
+    reviewedById?: string;
+    reviewNotes?: string;
+    createdAt: string;
+    updatedAt: string;
+  }
 
-    interface ReportUpdateSection {
-        templateSectionId: string;
-        metrics: ReportEditMetric[];
-    }
+  interface ReportUpdateSection {
+    templateSectionId: string;
+    metrics: ReportEditMetric[];
+  }
 
-    interface ReportEvent {
-        id: string;
-        reportId: string;
-        eventType: ReportEventType;
-        actorId: string;
-        timestamp: string;
-        details?: string;
-        previousStatus?: ReportStatus;
-        newStatus?: ReportStatus;
-        snapshotId?: string;
-    }
+  interface ReportEvent {
+    id: string;
+    reportId: string;
+    eventType: ReportEventType;
+    actorId: string;
+    timestamp: string;
+    details?: string;
+    previousStatus?: ReportStatus;
+    newStatus?: ReportStatus;
+    snapshotId?: string;
+  }
 
-    interface ReportVersion {
-        id: string;
-        reportId: string;
-        versionNumber: number;
-        snapshot: ReportWithDetails;
-        createdAt: string;
-        createdById: string;
-        reason?: string;
-    }
+  interface ReportVersion {
+    id: string;
+    reportId: string;
+    versionNumber: number;
+    snapshot: ReportWithDetails;
+    createdAt: string;
+    createdById: string;
+    reason?: string;
+  }
 
-    interface Goal {
-        id: string;
-        campusId: string;
-        templateMetricId: string;
-        metricName: string;
-        mode: GoalMode;
-        year: number;
-        month?: number;
-        targetValue: number;
-        isLocked: boolean;
-        lockedAt?: string;
-        lockedById?: string;
-        createdById: string;
-        createdAt: string;
-        updatedAt: string;
-    }
+  interface Goal {
+    id: string;
+    campusId: string;
+    templateMetricId: string;
+    metricName: string;
+    mode: GoalMode;
+    year: number;
+    month?: number;
+    targetValue: number;
+    isLocked: boolean;
+    lockedAt?: string;
+    lockedById?: string;
+    createdById: string;
+    createdAt: string;
+    updatedAt: string;
+  }
 
-    interface GoalEditRequest {
-        id: string;
-        goalId: string;
-        requestedById: string;
-        reason: string;
-        proposedValue: number;
-        status: GoalEditRequestStatus;
-        reviewedById?: string;
-        reviewNotes?: string;
-        createdAt: string;
-        updatedAt: string;
-    }
+  interface GoalEditRequest {
+    id: string;
+    goalId: string;
+    requestedById: string;
+    reason: string;
+    proposedValue: number;
+    status: GoalEditRequestStatus;
+    reviewedById?: string;
+    reviewNotes?: string;
+    createdAt: string;
+    updatedAt: string;
+  }
 
-    interface MetricEntry {
-        id: string;
-        reportMetricId: string;
-        templateMetricId: string;
-        campusId: string;
-        year: number;
-        month: number;
-        goalValue?: number;
-        achievedValue?: number;
-        comment?: string;
-        computedPercentage?: number;
-        createdAt: string;
-    }
+  interface MetricEntry {
+    id: string;
+    reportMetricId: string;
+    templateMetricId: string;
+    campusId: string;
+    year: number;
+    month: number;
+    goalValue?: number;
+    achievedValue?: number;
+    comment?: string;
+    computedPercentage?: number;
+    createdAt: string;
+  }
 
-    interface ReportAnalytics {
-        campusId?: string;
-        orgGroupId?: string;
-        period: string;
-        totalReports: number;
-        submittedOnTime: number;
-        submittedLate: number;
-        pendingReview: number;
-        approved: number;
-        complianceRate: number;
-    }
+  interface ReportAnalytics {
+    campusId?: string;
+    orgGroupId?: string;
+    period: string;
+    totalReports: number;
+    submittedOnTime: number;
+    submittedLate: number;
+    pendingReview: number;
+    approved: number;
+    complianceRate: number;
+  }
 
-    interface KpiCardConfig {
-        id: string;
-        title: string;
-        value: string | number;
-        trend?: string;
-        trendDirection?: "up" | "down" | "neutral";
-        icon?: string;
-        colorClass?: string;
-        allowedRoles: UserRole[];
-    }
+  interface KpiCardConfig {
+    id: string;
+    title: string;
+    value: string | number;
+    trend?: string;
+    trendDirection?: "up" | "down" | "neutral";
+    icon?: string;
+    colorClass?: string;
+    allowedRoles: UserRole[];
+  }
 
-    interface AppNotification {
-        id: string;
-        userId: string;
-        type: NotificationType;
-        title: string;
-        message: string;
-        relatedId?: string;
-        reportId?: string;
-        read: boolean;
-        isRead?: boolean;
-        readAt?: string;
-        createdAt: string;
-    }
+  interface AppNotification {
+    id: string;
+    userId: string;
+    type: NotificationType;
+    title: string;
+    message: string;
+    relatedId?: string;
+    reportId?: string;
+    read: boolean;
+    isRead?: boolean;
+    readAt?: string;
+    createdAt: string;
+  }
 
-    interface RoleConfig {
-        role: UserRole;
-        label: string;
-        hierarchyOrder: number;
-        dashboardRoute: string;
-        dashboardMode: "report-fill" | "report-review" | "report-reviewed" | "analytics" | "system";
-        canCreateReports: boolean;
-        canFillReports: boolean;
-        canSubmitReports: boolean;
-        canRequestEdits: boolean;
-        canApproveReports: boolean;
-        canMarkReviewed: boolean;
-        canLockReports: boolean;
-        canManageTemplates: boolean;
-        canDataEntry: boolean;
-        canManageUsers: boolean;
-        canManageOrg: boolean;
-        canSetGoals: boolean;
-        canApproveGoalUnlock: boolean;
-        reportVisibilityScope: "own" | "campus" | "all";
-    }
+  interface RoleConfig {
+    role: UserRole;
+    label: string;
+    hierarchyOrder: number;
+    dashboardRoute: string;
+    dashboardMode: "report-fill" | "report-review" | "report-reviewed" | "analytics" | "system";
+    canCreateReports: boolean;
+    canFillReports: boolean;
+    canSubmitReports: boolean;
+    canRequestEdits: boolean;
+    canApproveReports: boolean;
+    canMarkReviewed: boolean;
+    canLockReports: boolean;
+    canManageTemplates: boolean;
+    canDataEntry: boolean;
+    canManageUsers: boolean;
+    canManageOrg: boolean;
+    canSetGoals: boolean;
+    canApproveGoalUnlock: boolean;
+    reportVisibilityScope: "own" | "campus" | "all";
+  }
 
-    interface OrgLevelConfig {
-        level: "GROUP" | "CAMPUS";
-        label: string;
-        parentLevel?: "GROUP";
-        childLevel?: "CAMPUS";
-        leaderRole: UserRole;
-        adminRole?: UserRole;
-    }
+  interface OrgLevelConfig {
+    level: "GROUP" | "CAMPUS";
+    label: string;
+    parentLevel?: "GROUP";
+    childLevel?: "CAMPUS";
+    leaderRole: UserRole;
+    adminRole?: UserRole;
+  }
 
-    interface NavItem {
-        key: string;
-        label: string;
-        href: string;
-        icon?: React.ComponentType;
-        allowedRoles: UserRole[];
-        badge?: number;
-    }
+  interface NavItem {
+    key: string;
+    label: string;
+    href: string;
+    icon?: React.ComponentType;
+    allowedRoles: UserRole[];
+    badge?: number;
+  }
 
-    interface InviteLink {
-        id: string;
-        token: string;
-        type: InviteLinkType;
-        targetId?: string;
-        role?: UserRole;
-        targetRole?: UserRole;
-        campusId?: string;
-        groupId?: string;
-        note?: string;
-        createdById: string;
-        usedAt?: string;
-        expiresAt?: string;
-        isActive: boolean;
-        createdAt: string;
-    }
+  interface InviteLink {
+    id: string;
+    token: string;
+    type: InviteLinkType;
+    targetId?: string;
+    role?: UserRole;
+    targetRole?: UserRole;
+    campusId?: string;
+    groupId?: string;
+    note?: string;
+    createdById: string;
+    usedAt?: string;
+    expiresAt?: string;
+    isActive: boolean;
+    createdAt: string;
+  }
 
-    interface BugReport {
-        id: string;
-        category: BugReportCategory;
-        description: string;
-        screenshotUrl?: string;
-        contactEmail: string;
-        status: BugReportStatus;
-        adminNotes?: string;
-        createdById: string;
-        createdBy?: UserProfile;
-        createdAt: string;
-        updatedAt: string;
-    }
+  interface BugReport {
+    id: string;
+    category: BugReportCategory;
+    description: string;
+    screenshotUrl?: string;
+    contactEmail: string;
+    status: BugReportStatus;
+    adminNotes?: string;
+    createdById: string;
+    createdBy?: UserProfile;
+    createdAt: string;
+    updatedAt: string;
+  }
 
-    type ApiResponse<T> =
-        | { success: true; data: T }
-        | { success: false; error: string; code: number };
+  type ApiResponse<T> =
+    | { success: true; data: T }
+    | { success: false; error: string; code: number };
 
-    interface PaginatedResponse<T> {
-        data: T[];
-        total: number;
-        page: number;
-        pageSize: number;
-    }
+  interface PaginatedResponse<T> {
+    data: T[];
+    total: number;
+    page: number;
+    pageSize: number;
+  }
 
-    interface AppContent {
-        nav: Record<string, string>;
-        auth: Record<string, unknown>;
-        reports: Record<string, unknown>;
-        templates: Record<string, unknown>;
-        goals: Record<string, unknown>;
-        dashboard: Record<string, unknown>;
-        users: Record<string, unknown>;
-        org: Record<string, unknown>;
-        analytics: Record<string, unknown>;
-        notifications: Record<string, unknown>;
-        profile: Record<string, unknown>;
-        invites: Record<string, unknown>;
-        settings: Record<string, unknown>;
-        bugReports: Record<string, unknown>;
-        errors: Record<string, unknown>;
-        common: Record<string, unknown>;
-        offline: Record<string, unknown>;
-        seo: Record<string, string>;
-    }
+  interface AppContent {
+    nav: Record<string, string>;
+    auth: Record<string, unknown>;
+    reports: Record<string, unknown>;
+    templates: Record<string, unknown>;
+    goals: Record<string, unknown>;
+    dashboard: Record<string, unknown>;
+    users: Record<string, unknown>;
+    org: Record<string, unknown>;
+    analytics: Record<string, unknown>;
+    notifications: Record<string, unknown>;
+    profile: Record<string, unknown>;
+    invites: Record<string, unknown>;
+    settings: Record<string, unknown>;
+    bugReports: Record<string, unknown>;
+    errors: Record<string, unknown>;
+    common: Record<string, unknown>;
+    offline: Record<string, unknown>;
+    seo: Record<string, string>;
+  }
 }
-````
+```
 
 ## File: app/(auth)/login/page.tsx
-````typescript
+
+```typescript
 "use client";
 
 import { useState, Suspense } from "react";
@@ -23683,7 +24667,7 @@ function LoginForm() {
         </Link>
       </p>
 
-      {/* Demo credentials panel — always visible 
+      {/* Demo credentials panel — always visible
       <div className="mt-4 border border-ds-border-subtle rounded-ds-xl overflow-hidden">
         <button
           type="button"
@@ -23736,10 +24720,11 @@ export default function LoginPage() {
     </Suspense>
   );
 }
-````
+```
 
 ## File: modules/dashboard/components/DashboardPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -24358,10 +25343,11 @@ export function DashboardPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/goals/components/GoalsPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -25139,10 +26125,11 @@ export function GoalsPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: modules/reports/components/ReportsListPage.tsx
-````typescript
+
+```typescript
 "use client";
 
 /**
@@ -25528,10 +26515,11 @@ export function ReportsListPage() {
     </PageLayout>
   );
 }
-````
+```
 
 ## File: config/content.ts
-````typescript
+
+```typescript
 /**
  * config/content.ts
  * Every user-visible string lives here.
@@ -25541,815 +26529,830 @@ export function ReportsListPage() {
 // AppContent is declared in types/global.d.ts inside `declare global` — no import needed.
 
 export const CONTENT = {
-    /* ── Navigation ──────────────────────────────────────────────────────── */
-    nav: {
-        dashboard: "Dashboard",
-        reports: "Reports",
-        templates: "Templates",
-        analytics: "Analytics",
-        users: "Users",
-        org: "Organisation",
-        inbox: "Inbox",
-        invites: "Invite Links",
-        settings: "Settings",
-        goals: "Goals",
-        bugReports: "Report a Bug",
-        bugReportsManage: "Bug Reports",
-        profile: "Profile",
-        logout: "Logout",
-        backToDashboard: "Back to Dashboard",
-    },
+  /* ── Navigation ──────────────────────────────────────────────────────── */
+  nav: {
+    dashboard: "Dashboard",
+    reports: "Reports",
+    templates: "Templates",
+    analytics: "Analytics",
+    users: "Users",
+    org: "Organisation",
+    inbox: "Inbox",
+    invites: "Invite Links",
+    settings: "Settings",
+    goals: "Goals",
+    bugReports: "Report a Bug",
+    bugReportsManage: "Bug Reports",
+    profile: "Profile",
+    logout: "Logout",
+    backToDashboard: "Back to Dashboard",
+  },
 
-    /* ── Auth ─────────────────────────────────────────────────────────────── */
-    auth: {
-        loginTitle: "Sign In",
-        loginSubtitle: "Welcome back to the Harvesters Reporting System",
-        emailLabel: "Email Address",
-        emailPlaceholder: "you@harvesters.org",
-        passwordLabel: "Password",
-        passwordPlaceholder: "Enter your password",
-        loginButton: "Sign In",
-        loggingIn: "Signing in…",
-        forgotPassword: "Forgot password?",
-        noAccount: "Don't have an account?",
-        registerLink: "Create an account",
-        registerTitle: "Create Account",
-        registerSubtitle: "Set up your Harvesters Reporting System account",
-        firstNameLabel: "First Name",
-        lastNameLabel: "Last Name",
-        firstNamePlaceholder: "Your first name",
-        lastNamePlaceholder: "Your last name",
-        phoneLabel: "Phone Number",
-        phonePlaceholder: "+234 800 000 0000",
-        registerButton: "Create Account",
-        alreadyHaveAccount: "Already have an account?",
-        loginLink: "Sign in",
-        forgotTitle: "Reset Password",
-        forgotSubtitle: "Enter your email and we'll send reset instructions",
-        sendResetLink: "Send Reset Link",
-        resetTitle: "Set New Password",
-        resetSubtitle: "Choose a strong new password",
-        newPasswordLabel: "New Password",
-        confirmPasswordLabel: "Confirm Password",
-        resetButton: "Reset Password",
-        joinTitle: "Join via Invite",
-        joinSubtitle: "Complete your registration using an invite link",
-        errors: {
-            invalidCredentials: "Invalid email or password.",
-            serverError: "Something went wrong. Please try again.",
-            emailRequired: "Email is required.",
-            emailInvalid: "Please enter a valid email address.",
-            passwordRequired: "Password is required.",
-            passwordsDoNotMatch: "Passwords do not match.",
-            passwordTooShort: "Password must be at least 8 characters.",
-            invalidToken: "This invite link is invalid or has expired.",
-        },
-        accountInfoLabel: "Account Information",
-        passwordChangedSuccess: "Password changed successfully.",
-        currentPasswordLabel: "Current Password",
-        changePasswordAction: "Change Password",
-        profileTabLabel: "Profile",
-        passwordTabLabel: "Password",
-        inviteInvalidTitle: "Invalid Invite Link",
-        inviteExpiredTitle: "Invite Link Expired",
-        inviteUsedTitle: "Invite Already Used",
-        goToLogin: "Go to Login",
-        registrationSuccessTitle: "Registration Successful",
-        registrationSuccessMessage: "Your account has been created. You can now sign in.",
-        redirectingIn: "Redirecting to login in",
-        inviteRoleLabel: "You have been invited as",
-        rememberMe: "Remember me",
-        haveInvite: "Have an invite link?",
-        joinWithInvite: "Join with invite",
-        noInvite: "No invite link?",
-        registerWithoutInvite: "Create a free account",
-    },
-
-    /* ── Reports ────────────────────────────────────────────────────────── */
-    reports: {
-        pageTitle: "Reports",
-        newReport: "New Report",
-        submitReport: "Submit Report",
-        saveDraft: "Save Draft",
-        requestEdit: "Request Edit",
-        approveReport: "Approve",
-        markReviewed: "Mark Reviewed",
-        lockReport: "Lock Report",
-        viewReport: "View Report",
-        editReport: "Edit Report",
-        viewHistory: "View History",
-        requestUpdate: "Request Update",
-        filterByStatus: "Filter by status",
-        filterByCampus: "Filter by campus",
-        filterByPeriod: "Filter by period",
-        filterByTemplate: "Filter by template",
-        searchPlaceholder: "Search reports…",
-        periodLabel: "Period",
-        statusLabel: "Status",
-        campusLabel: "Campus",
-        groupLabel: "Group",
-        deadlineLabel: "Deadline",
-        submittedByLabel: "Submitted By",
-        submittedAtLabel: "Submitted At",
-        reviewedByLabel: "Reviewed By",
-        approvedByLabel: "Approved By",
-        lockedAtLabel: "Locked At",
-        notesLabel: "Notes",
-        notesPlaceholder: "Add any notes or context…",
-        dataEntryBadge: "Data Entry",
-        fieldGoal: "Goal",
-        fieldAchieved: "Achieved",
-        fieldYoY: "YoY Goal",
-        fieldGoalComment: "Add goal comment",
-        fieldAchievedComment: "Add context",
-        fieldYoYComment: "Add YoY comment",
-        metricComment: "Add comment",
-        commentPlaceholder: "Optional context or note…",
-        goalPrefilledTooltip: "Pre-filled from set goals — not editable while filling a report",
-        goalFromSource: "Goal source",
-        goalNotSet: "No goal set",
-        goalLocked: "Goal locked",
-        goalsLoading: "Loading goals…",
-        goalsPrefilledBadge: "goals pre-filled",
-        noGoalsSet: "No goals set for this period — enter values manually",
-        statVsGoal: "vs Goal",
-        statVsYoY: "vs Last Year",
-        requiredFilled: "required filled",
-        liveStats: "Live Statistics",
-        statOverallGoal: "Overall Goal Progress",
-        statYoYGrowth: "Year-on-Year Growth",
-        statMetricsWithGoal: "Metrics with Goals",
-        metricsFormTitle: "Report Data",
-        sectionRequired: "Required",
-        sectionOptional: "Optional",
-        emptyState: {
-            title: "No Reports Found",
-            description: "No reports match your current filters.",
-            newReportCta: "Submit your first report",
-        },
-        deleteConfirm: "Are you sure you want to delete this report?",
-        submitConfirm: "Submit this report for review?",
-        approveConfirm: "Approve this report?",
-        lockConfirm: "Lock this report? This cannot be undone.",
-        editRequestTitle: "Request Edit",
-        editRequestReasonLabel: "Reason for Edit",
-        editRequestReasonPlaceholder: "Describe what needs to be corrected…",
-        editRequestSubmit: "Submit Edit Request",
-        updateRequestTitle: "Request Update",
-        updateReasonLabel: "Reason for Update",
-        updateReasonPlaceholder: "Explain why this update is needed…",
-        updateRequestSubmit: "Submit Update Request",
-        historyTitle: "Report History",
-        auditTrailTitle: "Audit Trail",
-        eventLabels: {
-            CREATED: "Report Created",
-            SUBMITTED: "Report Submitted",
-            EDIT_REQUESTED: "Edits Requested",
-            EDIT_SUBMITTED: "Edit Submitted",
-            EDIT_APPROVED: "Edit Approved",
-            EDIT_REJECTED: "Edit Rejected",
-            EDIT_APPLIED: "Edit Applied",
-            APPROVED: "Report Approved",
-            REVIEWED: "Report Reviewed",
-            LOCKED: "Report Locked",
-            DEADLINE_PASSED: "Deadline Passed",
-            UPDATE_REQUESTED: "Update Requested",
-            UPDATE_APPROVED: "Update Approved",
-            UPDATE_REJECTED: "Update Rejected",
-            DATA_ENTRY_CREATED: "Data Entry Submitted",
-            TEMPLATE_VERSION_NOTE: "Template Version Updated",
-            AUTO_APPROVED: "Auto-Approved",
-        },
-        sections: {
-            attendanceTitle: "Weekly Attendance",
-            salvationsTitle: "Salvations & First Timers",
-            discipleshipTitle: "Discipleship",
-            tithesTitle: "Tithes & Offerings",
-            workersTitle: "Workers",
-            outreachTitle: "Outreach",
-            youthTitle: "Youth",
-            childrenTitle: "Children",
-            mediaTitle: "Media & Digital",
-            prayerTitle: "Prayer",
-            infrastructureTitle: "Infrastructure & Facilities",
-        },
-        status: {
-            DRAFT: "Draft",
-            SUBMITTED: "Submitted",
-            REQUIRES_EDITS: "Requires Edits",
-            APPROVED: "Approved",
-            REVIEWED: "Reviewed",
-            LOCKED: "Locked",
-        },
-        actions: {
-            submit: "Submit",
-            approve: "Approve",
-            review: "Mark Reviewed",
-            lock: "Lock",
-            requestEdit: "Request Edit",
-        },
-        columnLabels: {
-            report: "Report",
-            title: "Title",
-            campus: "Campus",
-            period: "Period",
-            status: "Status",
-            submittedBy: "Submitted By",
-            submittedAt: "Submitted At",
-            deadline: "Deadline",
-            createdAt: "Created",
-            lockedAt: "Locked At",
-            actions: "",
-        },
-        filterLabels: {
-            status: "Status",
-            campus: "Campus",
-            period: "Period",
-            template: "Template",
-            all: "All",
-        },
-        metadata: {
-            title: "Details",
-            templateLabel: "Template",
-            periodTypeLabel: "Period Type",
-            yearLabel: "Year",
-            weekLabel: "Week",
-            monthLabel: "Month",
-            createdByLabel: "Created By",
-            deadlineLabel: "Deadline",
-            lockedAtLabel: "Locked At",
-        },
-        export: {
-            button: "Export (.xlsx)",
-            dialogTitle: "Export Reports",
-            scopeLabel: "Export Scope",
-            scopeAll: "All filtered reports",
-            scopeSelected: "Selected reports only",
-            groupingLabel: "Group by",
-            groupingNone: "None",
-            groupingCampus: "Campus",
-            groupingMonth: "Month",
-            groupingQuarter: "Quarter",
-            contentLabel: "Include",
-            contentMetrics: "Metric values",
-            contentGoals: "Goal values",
-            contentComments: "Comments",
-            contentStatus: "Status history",
-            formatLabel: "Format",
-            formatSingleSheet: "Single sheet",
-            formatMultiSheet: "One sheet per campus",
-            exportButtonLabel: "Export",
-            cancelButtonLabel: "Cancel",
-            listFilename: "harvesters-reports",
-            sheetList: "Reports",
-            sheetMeta: "Overview",
-            sheetMetrics: "Metrics",
-            colTitle: "Title",
-            colCampus: "Campus",
-            colPeriod: "Period",
-            colStatus: "Status",
-            colTemplate: "Template",
-            colDeadline: "Deadline",
-            colCreatedAt: "Created",
-            colSubmittedBy: "Submitted By",
-            colNotes: "Notes",
-            colSection: "Section",
-            colMetric: "Metric",
-            colAchieved: "Achieved",
-            colGoal: "Goal",
-            colPercentage: "% of Goal",
-            colComment: "Comment",
-        },
-    },
-
-    /* ── Templates ────────────────────────────────────────────────────────── */
-    templates: {
-        pageTitle: "Report Templates",
-        newTemplate: "New Template",
-        editTemplate: "Edit Template",
-        previewTemplate: "Preview",
-        publishTemplate: "Publish",
-        archiveTemplate: "Archive",
-        setDefault: "Set as Default",
-        versionsLabel: "Version History",
-        goalPromptTitle: "Set Goals for This Template?",
-        goalPromptDescription: "This template captures goals for some metrics. Setting goals now lets fillers see progress against targets in the report form.",
-        goalPromptConfirm: "Set Goals Now",
-        goalPromptSkip: "Set Goals Later",
-        templateSaved: "Template saved.",
-        templateCreated: "Template created.",
-        nameLabel: "Template Name",
-        namePlaceholder: "e.g. Standard Campus Weekly Report",
-        descriptionLabel: "Description",
-        descriptionPlaceholder: "Brief description of this template's purpose",
-        addSection: "Add Section",
-        addMetric: "Add Metric",
-        removeSection: "Remove Section",
-        sectionLabel: "Section",
-        sectionsLabel: "Sections",
-        sectionNameLabel: "Section Name",
-        metricNameLabel: "Metric Name",
-        fieldTypeLabel: "Field Type",
-        calculationTypeLabel: "Calculation Method",
-        isRequiredLabel: "Required",
-        capturesGoalLabel: "Captures Goal",
-        capturesAchievedLabel: "Captures Achieved",
-        capturesYoYLabel: "Captures YoY Goal",
-        defaultBadge: "Default",
-        createTemplate: "Create Template",
-        emptySections: "No sections yet. Click Add Section to start building this template.",
-        emptyMetrics: "No metrics yet. Add a metric below.",
-        emptyState: {
-            title: "No Templates",
-            description: "Create a report template to start collecting data.",
-        },
-    },
-
-    /* ── Goals ─────────────────────────────────────────────────────────────── */
-    goals: {
-        pageTitle: "Goals",
-        setGoal: "Set Goal",
-        editGoal: "Edit Goal",
-        requestUnlock: "Request Edit",
-        approveUnlock: "Approve",
-        rejectUnlock: "Reject",
-        targetValueLabel: "Target Value",
-        yearLabel: "Year",
-        monthLabel: "Month",
-        modeLabel: "Goal Mode",
-        lockedBadge: "Locked",
-        pendingUnlockBadge: "Unlock Pending",
-        unlockReasonLabel: "Reason for Unlock",
-        unlockReasonPlaceholder: "Explain why this goal needs to be changed\u2026",
-        cancelEdit: "Cancel",
-        modeAnnual: "Annual \u2014 same target each month",
-        modeMonthly: "Monthly \u2014 set per month individually",
-        campusLabel: "Campus",
-        allCampuses: "All Campuses",
-        annualTargetLabel: "Annual Target (applies to all 12 months)",
-        saveGoals: "Save Goals",
-        savedGoals: "Goals saved successfully.",
-        templateLabel: "Template",
-        months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        lockedNote: "Locked \u2014 submit an unlock request to change this goal",
-        noTemplate: "No active template found. Create a template first.",
-        saveAll: "Save All Goals",
-        metricColumn: "Metric",
-        annualTargetShort: "Target",
-        bulkNote: "Set annual targets for all campuses in a single view.",
-        noGoalSet: "—",
-        emptyState: {
-            title: "No Goals Set",
-            description: "Goals help track expected performance against actuals.",
-        },
-    },
-
-    /* ── Dashboard ────────────────────────────────────────────────────────── */
-    dashboard: {
-        pageTitle: "Dashboard",
-        kpi: {
-            totalReports: "Total Reports",
-            pendingReview: "Pending Review",
-            approvedReports: "Approved",
-            complianceRate: "Compliance Rate",
-            submittedOnTime: "On-Time Submissions",
-            overdueReports: "Overdue",
-            activeTemplates: "Active Templates",
-            totalCampuses: "Total Campuses",
-            totalUsers: "Total Users",
-            drafts: "Drafts",
-            requiresEdits: "Requires Edits",
-            quarterlyCompliance: "Quarter Compliance",
-        },
-        welcomeBack: "Welcome back",
-        recentActivity: "Recent Activity",
-        noActivity: "No recent activity.",
-        upcomingDeadlines: "Upcoming Deadlines",
-        noDeadlines: "No upcoming deadlines.",
-        cta: {
-            pendingApproval: (n: number) => `${n} report${n === 1 ? "" : "s"} pending your approval`,
-            pendingReview: (n: number) => `${n} approved report${n === 1 ? "" : "s"} awaiting your review sign-off`,
-            draftReports: (n: number) => `You have ${n} draft report${n === 1 ? "" : "s"} in progress`,
-            requiresEdits: (n: number) => `${n} of your report${n === 1 ? "" : "s"} require${n === 1 ? "s" : ""} edits`,
-            weeklyReportDue: (period: string) => `You have a weekly report due for ${period}`,
-            viewReports: "View Reports",
-        },
-        memberLobby: {
-            title: "Welcome to Harvesters Reporting",
-            subtitle: "Your account has been created successfully. An administrator will assign you a role to get started.",
-            waitingLabel: "Awaiting role assignment",
-            currentRole: "Current role",
-            contactAdmin: "If you believe this is an error, please contact your campus administrator.",
-        },
-    },
-
-    /* ── Users ───────────────────────────────────────────────────────────── */
-    users: {
-        pageTitle: "Users",
-        inviteUser: "Invite User",
-        editUser: "Edit User",
-        deactivateUser: "Deactivate",
-        activateUser: "Activate",
-        resetPassword: "Reset Password",
-        nameLabel: "Name",
-        emailLabel: "Email",
-        roleLabel: "Role",
-        campusLabel: "Campus",
-        groupLabel: "Group",
-        statusLabel: "Status",
-        activeStatus: "Active",
-        inactiveStatus: "Inactive",
-        searchPlaceholder: "Search users…",
-        emptyState: {
-            title: "No Users Found",
-            description: "No users match your current filters.",
-        },
-        confirmDeactivate: "Deactivate this user? They will no longer be able to log in.",
-        confirmActivate: "Reactivate this user?",
-        roles: {
-            SUPERADMIN: "Superadmin",
-            SPO: "SPO",
-            CEO: "CEO",
-            OFFICE_OF_CEO: "Office of CEO",
-            CHURCH_MINISTRY: "Church Ministry",
-            GROUP_PASTOR: "Group Pastor",
-            GROUP_ADMIN: "Group Admin",
-            CAMPUS_PASTOR: "Campus Pastor",
-            CAMPUS_ADMIN: "Campus Admin",
-            DATA_ENTRY: "Data Entry",
-            MEMBER: "Member",
-        },
-        recentReports: "Recent Reports",
-        noReports: "No reports submitted yet.",
-    },
-
-    /* ── Organisation ────────────────────────────────────────────────────── */
-    org: {
-        pageTitle: "Organisation",
-        newGroup: "New Group",
-        newCampus: "New Campus",
-        editGroup: "Edit Group",
-        editCampus: "Edit Campus",
-        groupNameLabel: "Group Name",
-        campusNameLabel: "Campus Name",
-        countryLabel: "Country",
-        locationLabel: "Location",
-        leaderLabel: "Group Leader",
-        adminLabel: "Campus Admin",
-        campusesLabel: "Campuses",
-        membersLabel: "Members",
-        emptyStateGroups: {
-            title: "No Groups",
-            description: "Add an org group to begin building the hierarchy.",
-        },
-        emptyStateCampuses: {
-            title: "No Campuses",
-            description: "Add campuses to organise your reporting structure.",
-        },
-    },
-
-    /* ── Analytics ────────────────────────────────────────────────────────── */
-    analytics: {
-        pageTitle: "Analytics",
-        // Tabs
-        tab: {
-            overview: "Overview",
-            metrics: "Metrics Analysis",
-            trends: "Trends",
-            compliance: "Compliance",
-            quarterly: "Quarterly Summary",
-        },
-        // Section headings
-        complianceTitle: "Report Compliance by Campus",
-        trendsTitle: "Submission Trends",
-        campusBreakdownTitle: "Campus Breakdown",
-        statusBreakdownTitle: "Status Breakdown",
-        metricTrendsTitle: "Key Metrics Over Time",
-        goalVsAchievedTitle: "Goal vs. Achieved",
-        yoyComparisonTitle: "Year-on-Year Comparison",
-        campusMetricCompTitle: "Campus Metric Comparison",
-        cumulativeTrendTitle: "Cumulative Trend",
-        // Controls
-        periodSelectorLabel: "Period",
-        periodGranularityLabel: "Granularity",
-        campusSelectorLabel: "Campus",
-        groupSelectorLabel: "Group",
-        metricSelectorLabel: "Metric",
-        sectionSelectorLabel: "Section",
-        exportButton: "Export",
-        yearLabel: "Year",
-        monthRangeLabel: "Month Range",
-        // Granularity options
-        granularity: {
-            weekly: "Weekly",
-            monthly: "Monthly",
-            quarterly: "Quarterly",
-            annual: "Annual",
-        },
-        // Chart labels
-        chartLabels: {
-            goal: "Goal",
-            achieved: "Achieved",
-            yoy: "Year on Year",
-            submitted: "Submitted",
-            approved: "Approved",
-            count: "Count",
-            value: "Value",
-            percentage: "% Achieved",
-        },
-        // KPI labels
-        kpi: {
-            avgAchievementRate: "Avg. Achievement Rate",
-            metricsTracked: "Metrics Tracked",
-            campusesReporting: "Campuses Reporting",
-            goalsSet: "Goals Set",
-        },
-        // State
-        noData: "No data available for the selected period.",
-        noMetricSelected: "Select a metric above to view the analysis.",
-        loadingMetrics: "Loading metrics…",
-        drafts: "Drafts",
-        requiresEdits: "Requires Edits",
-        quarterlyTitle: "Quarterly Summary",
-        quarterlyComplianceLabel: "Q Compliance",
-        quarterlySubmittedLabel: "Q Submitted",
-        quarterlyApprovedLabel: "Q Approved",
-        quarterlyQoqLabel: "vs. Previous Quarter",
-        quarterlyNoData: "No data available for this quarter.",
-        quarterlyTopCampuses: "Top Campuses This Quarter",
-        quarterlySelector: "Quarter",
-    },
-
-    /* ── Notifications ─────────────────────────────────────────────────── */
-    notifications: {
-        pageTitle: "Inbox",
-        markAllRead: "Mark all as read",
-        emptyState: {
-            title: "All Caught Up",
-            description: "You have no new notifications.",
-        },
-        types: {
-            REPORT_SUBMITTED: "Report Submitted",
-            REPORT_EDIT_REQUESTED: "Edit Requested",
-            REPORT_APPROVED: "Report Approved",
-            REPORT_REVIEWED: "Report Reviewed",
-            REPORT_LOCKED: "Report Locked",
-            REPORT_EDIT_SUBMITTED: "Edit Submitted",
-            REPORT_EDIT_APPROVED: "Edit Approved",
-            REPORT_EDIT_REJECTED: "Edit Rejected",
-            REPORT_UPDATE_REQUESTED: "Update Requested",
-            REPORT_UPDATE_APPROVED: "Update Approved",
-            REPORT_UPDATE_REJECTED: "Update Rejected",
-            REPORT_DEADLINE_REMINDER: "Deadline Reminder",
-            GOAL_UNLOCK_REQUESTED: "Goal Unlock Requested",
-            GOAL_UNLOCK_APPROVED: "Goal Unlock Approved",
-            GOAL_UNLOCK_REJECTED: "Goal Unlock Rejected",
-        },
-    },
-
-    /* ── Common / Shared ────────────────────────────────────────────────── */
-    common: {
-        save: "Save",
-        saving: "Saving…",
-        cancel: "Cancel",
-        confirm: "Confirm",
-        delete: "Delete",
-        edit: "Edit",
-        view: "View",
-        close: "Close",
-        back: "Back",
-        next: "Next",
-        previous: "Previous",
-        search: "Search",
-        filter: "Filter",
-        reset: "Reset",
-        export: "Export",
-        loading: "Loading…",
-        submitting: "Submitting…",
-        required: "Required",
-        optional: "Optional",
-        yes: "Yes",
-        no: "No",
-        all: "All",
-        none: "None",
-        unknown: "Unknown",
-        activate: "Activate",
-        deactivate: "Deactivate",
-        noResultsTitle: "Nothing here yet",
-        noResultsDescription: "Try adjusting your filters.",
-        viewAll: "View all",
-        successSave: "Saved successfully.",
-        successDelete: "Deleted successfully.",
-        errorDefault: "Something went wrong. Please try again.",
-        errorNotFound: "The requested resource was not found.",
-        errorUnauthorized: "You are not authorised to perform this action.",
-        pagination: {
-            showing: "Showing",
-            to: "to",
-            of: "of",
-            results: "results",
-        },
-        darkMode: "dark mode",
-        lightMode: "light mode",
-        switchTo: "Switch to",
-    },
-
-    /* ── Profile ───────────────────────────────────────────────────────────── */
-    profile: {
-        pageTitle: "My Profile",
-        editProfile: "Edit Profile",
-        changePassword: "Change Password",
-        accountInfoLabel: "Account Information",
-        personalInfoLabel: "Personal Information",
-        firstNameLabel: "First Name",
-        lastNameLabel: "Last Name",
-        emailLabel: "Email Address",
-        phoneLabel: "Phone Number",
-        roleLabel: "Role",
-        campusLabel: "Campus",
-        groupLabel: "Group",
-        saveChanges: "Save Changes",
-        saving: "Saving…",
-        passwordSection: "Change Password",
-        currentPasswordLabel: "Current Password",
-        newPasswordLabel: "New Password",
-        confirmPasswordLabel: "Confirm New Password",
-        updatePassword: "Update Password",
-        passwordUpdated: "Password updated successfully.",
-        profileUpdated: "Profile updated successfully.",
-        memberSince: "Member Since",
-        lastUpdated: "Last Updated",
-        tabs: {
-            profile: "Profile",
-            security: "Security",
-            appearance: "Appearance",
-            notifications: "Notifications",
-        },
-    },
-
-    /* ── Invite Links ─────────────────────────────────────────────────────── */
-    invites: {
-        pageTitle: "Invite Links",
-        newInvite: "Generate Invite Link",
-        copyLink: "Copy Link",
-        copiedLink: "Copied!",
-        revokeLink: "Revoke",
-        targetRoleLabel: "Invite As",
-        campusLabel: "Campus (optional)",
-        groupLabel: "Group (optional)",
-        expiresInLabel: "Expires In",
-        noteLabel: "Internal Note",
-        notePlaceholder: "e.g. For new Lagos campus admin",
-        statusActive: "Active",
-        statusUsed: "Used",
-        statusExpired: "Expired",
-        statusRevoked: "Revoked",
-        expiresAtLabel: "Expires",
-        usedAtLabel: "Used At",
-        createdAtLabel: "Created",
-        linkLabel: "Invite URL",
-        generateButton: "Generate",
-        emptyState: {
-            title: "No Invite Links",
-            description: "Generate a link to invite a new user to the system.",
-        },
-        expiryOptions: {
-            "24": "24 hours",
-            "48": "48 hours",
-            "72": "72 hours (default)",
-            "168": "7 days",
-            "720": "30 days",
-        },
-        deleteConfirm: "Revoke this invite link? The URL will no longer work.",
-    },
-    /* ── Bug Reports ────────────────────────────────────────────────────── */
-    bugReports: {
-        pageTitle: "Report a Bug",
-        managePageTitle: "Bug Reports",
-        categoryLabel: "Issue Type",
-        categoryPlaceholder: "Select an issue type",
-        descriptionLabel: "Description",
-        descriptionPlaceholder: "Describe the issue you encountered in detail...",
-        screenshotLabel: "Screenshot (optional)",
-        screenshotHint: "Upload a screenshot to help us understand the issue.",
-        emailLabel: "Contact Email",
-        emailPlaceholder: "your.email@example.com",
-        submitButton: "Submit Bug Report",
-        submitting: "Submitting...",
-        submitSuccess: "Bug report submitted. Thank you!",
-        statusLabel: "Status",
-        adminNotesLabel: "Admin Notes",
-        adminNotesPlaceholder: "Internal notes about this bug report...",
-        categories: {
-            UI_DISPLAY: "UI / Display Issue",
-            NAVIGATION: "Navigation Problem",
-            DATA_ISSUE: "Data Inaccuracy",
-            PERFORMANCE: "Slow Performance",
-            AUTHENTICATION: "Login / Authentication",
-            REPORT_SUBMISSION: "Report Submission",
-            NOTIFICATION: "Notification Issue",
-            OTHER: "Other",
-        },
-        statuses: {
-            OPEN: "Open",
-            IN_PROGRESS: "In Progress",
-            RESOLVED: "Resolved",
-            CLOSED: "Closed",
-        },
-        emptyState: {
-            title: "No Bug Reports",
-            description: "No bug reports have been submitted yet.",
-        },
-        updateSuccess: "Bug report updated.",
-    },
-    /* ── Settings ───────────────────────────────────────────────────────── */
-    settings: {
-        pageTitle: "App Settings",
-        appearanceSection: "Appearance",
-        themeLabel: "Theme",
-        themeDescription: "Choose how the app looks to you.",
-        themeSystem: "System default",
-        themeLight: "Light",
-        themeDark: "Dark",
-        notificationsSection: "Notification Preferences",
-        emailNotificationsLabel: "Email Notifications",
-        emailNotificationsDescription: "Receive report deadline and status updates via email.",
-        inAppNotificationsLabel: "In-App Notifications",
-        inAppNotificationsDescription: "Show notification badge and pop-ups in the app.",
-        deadlineRemindersLabel: "Deadline Reminders",
-        deadlineRemindersDescription: "Get reminders 24 h and 48 h before report deadlines.",
-        pushNotificationsSection: "Push Notifications",
-        pushNotificationsLabel: "Push Notifications",
-        pushNotificationsDescription: "Receive real-time push notifications on this device.",
-        pushEnabled: "Push notifications enabled.",
-        pushDisabled: "Push notifications disabled.",
-        pushNotSupported: "Push notifications are not supported in this browser.",
-        pushPermissionDenied: "Permission denied. Enable notifications in your browser settings.",
-        enablePush: "Enable Push",
-        disablePush: "Disable Push",
-        saved: "Preferences saved.",
-        savePreferences: "Save Preferences",
-    },
-    /* ── Offline Page ────────────────────────────────────────────────────────── */
-    offline: {
-        title: "You're Offline",
-        description: "It looks like you've lost your internet connection. Check your connection and try again.",
-        retryButton: "Try Again",
-        hint: "Previously viewed pages may still be accessible from cache.",
-    },
-
-    /* ── Error Pages ─────────────────────────────────────────────────────── */
+  /* ── Auth ─────────────────────────────────────────────────────────────── */
+  auth: {
+    loginTitle: "Sign In",
+    loginSubtitle: "Welcome back to the Harvesters Reporting System",
+    emailLabel: "Email Address",
+    emailPlaceholder: "you@harvesters.org",
+    passwordLabel: "Password",
+    passwordPlaceholder: "Enter your password",
+    loginButton: "Sign In",
+    loggingIn: "Signing in…",
+    forgotPassword: "Forgot password?",
+    noAccount: "Don't have an account?",
+    registerLink: "Create an account",
+    registerTitle: "Create Account",
+    registerSubtitle: "Set up your Harvesters Reporting System account",
+    firstNameLabel: "First Name",
+    lastNameLabel: "Last Name",
+    firstNamePlaceholder: "Your first name",
+    lastNamePlaceholder: "Your last name",
+    phoneLabel: "Phone Number",
+    phonePlaceholder: "+234 800 000 0000",
+    registerButton: "Create Account",
+    alreadyHaveAccount: "Already have an account?",
+    loginLink: "Sign in",
+    forgotTitle: "Reset Password",
+    forgotSubtitle: "Enter your email and we'll send reset instructions",
+    sendResetLink: "Send Reset Link",
+    resetTitle: "Set New Password",
+    resetSubtitle: "Choose a strong new password",
+    newPasswordLabel: "New Password",
+    confirmPasswordLabel: "Confirm Password",
+    resetButton: "Reset Password",
+    joinTitle: "Join via Invite",
+    joinSubtitle: "Complete your registration using an invite link",
     errors: {
-        generic: "Something went wrong. Please try again.",
-        notFoundTitle: "Page Not Found",
-        notFoundDescription: "The page you are looking for does not exist.",
-        notFoundCta: "Go to Dashboard",
-        errorTitle: "Something Went Wrong",
-        errorDescription: "An unexpected error occurred. Our team has been notified.",
-        errorCta: "Try Again",
-        offlineTitle: "You're Offline",
-        offlineDescription: "Check your internet connection and try again.",
-        onlineTitle: "You're Back Online",
-        onlineDescription: "Connection restored.",
+      invalidCredentials: "Invalid email or password.",
+      serverError: "Something went wrong. Please try again.",
+      emailRequired: "Email is required.",
+      emailInvalid: "Please enter a valid email address.",
+      passwordRequired: "Password is required.",
+      passwordsDoNotMatch: "Passwords do not match.",
+      passwordTooShort: "Password must be at least 8 characters.",
+      invalidToken: "This invite link is invalid or has expired.",
     },
+    accountInfoLabel: "Account Information",
+    passwordChangedSuccess: "Password changed successfully.",
+    currentPasswordLabel: "Current Password",
+    changePasswordAction: "Change Password",
+    profileTabLabel: "Profile",
+    passwordTabLabel: "Password",
+    inviteInvalidTitle: "Invalid Invite Link",
+    inviteExpiredTitle: "Invite Link Expired",
+    inviteUsedTitle: "Invite Already Used",
+    goToLogin: "Go to Login",
+    registrationSuccessTitle: "Registration Successful",
+    registrationSuccessMessage: "Your account has been created. You can now sign in.",
+    redirectingIn: "Redirecting to login in",
+    inviteRoleLabel: "You have been invited as",
+    rememberMe: "Remember me",
+    haveInvite: "Have an invite link?",
+    joinWithInvite: "Join with invite",
+    noInvite: "No invite link?",
+    registerWithoutInvite: "Create a free account",
+  },
 
-    /* ── SEO / Meta ──────────────────────────────────────────────────────────── */
-    seo: {
-        appDescription: "The central report management platform for Harvesters International Christian Centre — campus report submission, review, and analytics.",
-        // Auth pages
-        loginDescription: "Sign in to the Harvesters Reporting System to access your campus reports and analytics.",
-        registerDescription: "Create your Harvesters Reporting System account to start managing campus reports.",
-        forgotPasswordDescription: "Reset your Harvesters Reporting System password.",
-        resetPasswordDescription: "Set a new password for your Harvesters Reporting System account.",
-        joinTitle: "You're Invited",
-        joinDescription: "You have been invited to join the Harvesters Reporting System — the central platform for campus report submission and analytics at Harvesters International Christian Centre.",
-        // Dashboard pages
-        dashboardDescription: "View your reporting dashboard — KPIs, recent activity, and upcoming deadlines.",
-        reportsDescription: "Manage, submit, and review campus reports across Harvesters campuses.",
-        newReportDescription: "Create and submit a new campus report.",
-        reportDetailDescription: "View the full details and history of this campus report.",
-        reportEditDescription: "Edit and update this campus report.",
-        templatesDescription: "Manage report templates used across campuses for standardised data collection.",
-        newTemplateDescription: "Create a new report template to standardise campus reporting.",
-        templateDetailDescription: "View and manage this report template.",
-        usersDescription: "Manage system users — roles, campus assignments, and access levels.",
-        userDetailDescription: "View and manage this user's profile and role assignment.",
-        orgDescription: "Manage the organisation hierarchy — groups, campuses, and zones.",
-        analyticsDescription: "Analyse report data, trends, and compliance metrics across all campuses.",
-        inboxDescription: "Stay up to date with report approvals, edit requests, and system notifications.",
-        goalsDescription: "Set and track performance goals to measure campus progress against targets.",
-        invitesDescription: "Generate and manage invite links to onboard new users to the system.",
-        bugReportsDescription: "Report a bug or issue you encountered in the Harvesters Reporting System.",
-        bugReportsManageDescription: "Review and manage all bug reports submitted by system users.",
-        profileDescription: "Manage your profile, security settings, and notification preferences.",
+  /* ── Reports ────────────────────────────────────────────────────────── */
+  reports: {
+    pageTitle: "Reports",
+    newReport: "New Report",
+    submitReport: "Submit Report",
+    saveDraft: "Save Draft",
+    requestEdit: "Request Edit",
+    approveReport: "Approve",
+    markReviewed: "Mark Reviewed",
+    lockReport: "Lock Report",
+    viewReport: "View Report",
+    editReport: "Edit Report",
+    viewHistory: "View History",
+    requestUpdate: "Request Update",
+    filterByStatus: "Filter by status",
+    filterByCampus: "Filter by campus",
+    filterByPeriod: "Filter by period",
+    filterByTemplate: "Filter by template",
+    searchPlaceholder: "Search reports…",
+    periodLabel: "Period",
+    statusLabel: "Status",
+    campusLabel: "Campus",
+    groupLabel: "Group",
+    deadlineLabel: "Deadline",
+    submittedByLabel: "Submitted By",
+    submittedAtLabel: "Submitted At",
+    reviewedByLabel: "Reviewed By",
+    approvedByLabel: "Approved By",
+    lockedAtLabel: "Locked At",
+    notesLabel: "Notes",
+    notesPlaceholder: "Add any notes or context…",
+    dataEntryBadge: "Data Entry",
+    fieldGoal: "Goal",
+    fieldAchieved: "Achieved",
+    fieldYoY: "YoY Goal",
+    fieldGoalComment: "Add goal comment",
+    fieldAchievedComment: "Add context",
+    fieldYoYComment: "Add YoY comment",
+    metricComment: "Add comment",
+    commentPlaceholder: "Optional context or note…",
+    goalPrefilledTooltip: "Pre-filled from set goals — not editable while filling a report",
+    goalFromSource: "Goal source",
+    goalNotSet: "No goal set",
+    goalLocked: "Goal locked",
+    goalsLoading: "Loading goals…",
+    goalsPrefilledBadge: "goals pre-filled",
+    noGoalsSet: "No goals set for this period — enter values manually",
+    statVsGoal: "vs Goal",
+    statVsYoY: "vs Last Year",
+    requiredFilled: "required filled",
+    liveStats: "Live Statistics",
+    statOverallGoal: "Overall Goal Progress",
+    statYoYGrowth: "Year-on-Year Growth",
+    statMetricsWithGoal: "Metrics with Goals",
+    metricsFormTitle: "Report Data",
+    sectionRequired: "Required",
+    sectionOptional: "Optional",
+    emptyState: {
+      title: "No Reports Found",
+      description: "No reports match your current filters.",
+      newReportCta: "Submit your first report",
     },
+    deleteConfirm: "Are you sure you want to delete this report?",
+    submitConfirm: "Submit this report for review?",
+    approveConfirm: "Approve this report?",
+    lockConfirm: "Lock this report? This cannot be undone.",
+    editRequestTitle: "Request Edit",
+    editRequestReasonLabel: "Reason for Edit",
+    editRequestReasonPlaceholder: "Describe what needs to be corrected…",
+    editRequestSubmit: "Submit Edit Request",
+    updateRequestTitle: "Request Update",
+    updateReasonLabel: "Reason for Update",
+    updateReasonPlaceholder: "Explain why this update is needed…",
+    updateRequestSubmit: "Submit Update Request",
+    historyTitle: "Report History",
+    auditTrailTitle: "Audit Trail",
+    eventLabels: {
+      CREATED: "Report Created",
+      SUBMITTED: "Report Submitted",
+      EDIT_REQUESTED: "Edits Requested",
+      EDIT_SUBMITTED: "Edit Submitted",
+      EDIT_APPROVED: "Edit Approved",
+      EDIT_REJECTED: "Edit Rejected",
+      EDIT_APPLIED: "Edit Applied",
+      APPROVED: "Report Approved",
+      REVIEWED: "Report Reviewed",
+      LOCKED: "Report Locked",
+      DEADLINE_PASSED: "Deadline Passed",
+      UPDATE_REQUESTED: "Update Requested",
+      UPDATE_APPROVED: "Update Approved",
+      UPDATE_REJECTED: "Update Rejected",
+      DATA_ENTRY_CREATED: "Data Entry Submitted",
+      TEMPLATE_VERSION_NOTE: "Template Version Updated",
+      AUTO_APPROVED: "Auto-Approved",
+    },
+    sections: {
+      attendanceTitle: "Weekly Attendance",
+      salvationsTitle: "Salvations & First Timers",
+      discipleshipTitle: "Discipleship",
+      tithesTitle: "Tithes & Offerings",
+      workersTitle: "Workers",
+      outreachTitle: "Outreach",
+      youthTitle: "Youth",
+      childrenTitle: "Children",
+      mediaTitle: "Media & Digital",
+      prayerTitle: "Prayer",
+      infrastructureTitle: "Infrastructure & Facilities",
+    },
+    status: {
+      DRAFT: "Draft",
+      SUBMITTED: "Submitted",
+      REQUIRES_EDITS: "Requires Edits",
+      APPROVED: "Approved",
+      REVIEWED: "Reviewed",
+      LOCKED: "Locked",
+    },
+    actions: {
+      submit: "Submit",
+      approve: "Approve",
+      review: "Mark Reviewed",
+      lock: "Lock",
+      requestEdit: "Request Edit",
+    },
+    columnLabels: {
+      report: "Report",
+      title: "Title",
+      campus: "Campus",
+      period: "Period",
+      status: "Status",
+      submittedBy: "Submitted By",
+      submittedAt: "Submitted At",
+      deadline: "Deadline",
+      createdAt: "Created",
+      lockedAt: "Locked At",
+      actions: "",
+    },
+    filterLabels: {
+      status: "Status",
+      campus: "Campus",
+      period: "Period",
+      template: "Template",
+      all: "All",
+    },
+    metadata: {
+      title: "Details",
+      templateLabel: "Template",
+      periodTypeLabel: "Period Type",
+      yearLabel: "Year",
+      weekLabel: "Week",
+      monthLabel: "Month",
+      createdByLabel: "Created By",
+      deadlineLabel: "Deadline",
+      lockedAtLabel: "Locked At",
+    },
+    export: {
+      button: "Export (.xlsx)",
+      dialogTitle: "Export Reports",
+      scopeLabel: "Export Scope",
+      scopeAll: "All filtered reports",
+      scopeSelected: "Selected reports only",
+      groupingLabel: "Group by",
+      groupingNone: "None",
+      groupingCampus: "Campus",
+      groupingMonth: "Month",
+      groupingQuarter: "Quarter",
+      contentLabel: "Include",
+      contentMetrics: "Metric values",
+      contentGoals: "Goal values",
+      contentComments: "Comments",
+      contentStatus: "Status history",
+      formatLabel: "Format",
+      formatSingleSheet: "Single sheet",
+      formatMultiSheet: "One sheet per campus",
+      exportButtonLabel: "Export",
+      cancelButtonLabel: "Cancel",
+      listFilename: "harvesters-reports",
+      sheetList: "Reports",
+      sheetMeta: "Overview",
+      sheetMetrics: "Metrics",
+      colTitle: "Title",
+      colCampus: "Campus",
+      colPeriod: "Period",
+      colStatus: "Status",
+      colTemplate: "Template",
+      colDeadline: "Deadline",
+      colCreatedAt: "Created",
+      colSubmittedBy: "Submitted By",
+      colNotes: "Notes",
+      colSection: "Section",
+      colMetric: "Metric",
+      colAchieved: "Achieved",
+      colGoal: "Goal",
+      colPercentage: "% of Goal",
+      colComment: "Comment",
+    },
+  },
+
+  /* ── Templates ────────────────────────────────────────────────────────── */
+  templates: {
+    pageTitle: "Report Templates",
+    newTemplate: "New Template",
+    editTemplate: "Edit Template",
+    previewTemplate: "Preview",
+    publishTemplate: "Publish",
+    archiveTemplate: "Archive",
+    setDefault: "Set as Default",
+    versionsLabel: "Version History",
+    goalPromptTitle: "Set Goals for This Template?",
+    goalPromptDescription:
+      "This template captures goals for some metrics. Setting goals now lets fillers see progress against targets in the report form.",
+    goalPromptConfirm: "Set Goals Now",
+    goalPromptSkip: "Set Goals Later",
+    templateSaved: "Template saved.",
+    templateCreated: "Template created.",
+    nameLabel: "Template Name",
+    namePlaceholder: "e.g. Standard Campus Weekly Report",
+    descriptionLabel: "Description",
+    descriptionPlaceholder: "Brief description of this template's purpose",
+    addSection: "Add Section",
+    addMetric: "Add Metric",
+    removeSection: "Remove Section",
+    sectionLabel: "Section",
+    sectionsLabel: "Sections",
+    sectionNameLabel: "Section Name",
+    metricNameLabel: "Metric Name",
+    fieldTypeLabel: "Field Type",
+    calculationTypeLabel: "Calculation Method",
+    isRequiredLabel: "Required",
+    capturesGoalLabel: "Captures Goal",
+    capturesAchievedLabel: "Captures Achieved",
+    capturesYoYLabel: "Captures YoY Goal",
+    defaultBadge: "Default",
+    createTemplate: "Create Template",
+    emptySections: "No sections yet. Click Add Section to start building this template.",
+    emptyMetrics: "No metrics yet. Add a metric below.",
+    emptyState: {
+      title: "No Templates",
+      description: "Create a report template to start collecting data.",
+    },
+  },
+
+  /* ── Goals ─────────────────────────────────────────────────────────────── */
+  goals: {
+    pageTitle: "Goals",
+    setGoal: "Set Goal",
+    editGoal: "Edit Goal",
+    requestUnlock: "Request Edit",
+    approveUnlock: "Approve",
+    rejectUnlock: "Reject",
+    targetValueLabel: "Target Value",
+    yearLabel: "Year",
+    monthLabel: "Month",
+    modeLabel: "Goal Mode",
+    lockedBadge: "Locked",
+    pendingUnlockBadge: "Unlock Pending",
+    unlockReasonLabel: "Reason for Unlock",
+    unlockReasonPlaceholder: "Explain why this goal needs to be changed\u2026",
+    cancelEdit: "Cancel",
+    modeAnnual: "Annual \u2014 same target each month",
+    modeMonthly: "Monthly \u2014 set per month individually",
+    campusLabel: "Campus",
+    allCampuses: "All Campuses",
+    annualTargetLabel: "Annual Target (applies to all 12 months)",
+    saveGoals: "Save Goals",
+    savedGoals: "Goals saved successfully.",
+    templateLabel: "Template",
+    months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    lockedNote: "Locked \u2014 submit an unlock request to change this goal",
+    noTemplate: "No active template found. Create a template first.",
+    saveAll: "Save All Goals",
+    metricColumn: "Metric",
+    annualTargetShort: "Target",
+    bulkNote: "Set annual targets for all campuses in a single view.",
+    noGoalSet: "—",
+    emptyState: {
+      title: "No Goals Set",
+      description: "Goals help track expected performance against actuals.",
+    },
+  },
+
+  /* ── Dashboard ────────────────────────────────────────────────────────── */
+  dashboard: {
+    pageTitle: "Dashboard",
+    kpi: {
+      totalReports: "Total Reports",
+      pendingReview: "Pending Review",
+      approvedReports: "Approved",
+      complianceRate: "Compliance Rate",
+      submittedOnTime: "On-Time Submissions",
+      overdueReports: "Overdue",
+      activeTemplates: "Active Templates",
+      totalCampuses: "Total Campuses",
+      totalUsers: "Total Users",
+      drafts: "Drafts",
+      requiresEdits: "Requires Edits",
+      quarterlyCompliance: "Quarter Compliance",
+    },
+    welcomeBack: "Welcome back",
+    recentActivity: "Recent Activity",
+    noActivity: "No recent activity.",
+    upcomingDeadlines: "Upcoming Deadlines",
+    noDeadlines: "No upcoming deadlines.",
+    cta: {
+      pendingApproval: (n: number) => `${n} report${n === 1 ? "" : "s"} pending your approval`,
+      pendingReview: (n: number) =>
+        `${n} approved report${n === 1 ? "" : "s"} awaiting your review sign-off`,
+      draftReports: (n: number) => `You have ${n} draft report${n === 1 ? "" : "s"} in progress`,
+      requiresEdits: (n: number) =>
+        `${n} of your report${n === 1 ? "" : "s"} require${n === 1 ? "s" : ""} edits`,
+      weeklyReportDue: (period: string) => `You have a weekly report due for ${period}`,
+      viewReports: "View Reports",
+    },
+    memberLobby: {
+      title: "Welcome to Harvesters Reporting",
+      subtitle:
+        "Your account has been created successfully. An administrator will assign you a role to get started.",
+      waitingLabel: "Awaiting role assignment",
+      currentRole: "Current role",
+      contactAdmin: "If you believe this is an error, please contact your campus administrator.",
+    },
+  },
+
+  /* ── Users ───────────────────────────────────────────────────────────── */
+  users: {
+    pageTitle: "Users",
+    inviteUser: "Invite User",
+    editUser: "Edit User",
+    deactivateUser: "Deactivate",
+    activateUser: "Activate",
+    resetPassword: "Reset Password",
+    nameLabel: "Name",
+    emailLabel: "Email",
+    roleLabel: "Role",
+    campusLabel: "Campus",
+    groupLabel: "Group",
+    statusLabel: "Status",
+    activeStatus: "Active",
+    inactiveStatus: "Inactive",
+    searchPlaceholder: "Search users…",
+    emptyState: {
+      title: "No Users Found",
+      description: "No users match your current filters.",
+    },
+    confirmDeactivate: "Deactivate this user? They will no longer be able to log in.",
+    confirmActivate: "Reactivate this user?",
+    roles: {
+      SUPERADMIN: "Superadmin",
+      SPO: "SPO",
+      CEO: "CEO",
+      OFFICE_OF_CEO: "Office of CEO",
+      CHURCH_MINISTRY: "Church Ministry",
+      GROUP_PASTOR: "Group Pastor",
+      GROUP_ADMIN: "Group Admin",
+      CAMPUS_PASTOR: "Campus Pastor",
+      CAMPUS_ADMIN: "Campus Admin",
+      DATA_ENTRY: "Data Entry",
+      MEMBER: "Member",
+    },
+    recentReports: "Recent Reports",
+    noReports: "No reports submitted yet.",
+  },
+
+  /* ── Organisation ────────────────────────────────────────────────────── */
+  org: {
+    pageTitle: "Organisation",
+    newGroup: "New Group",
+    newCampus: "New Campus",
+    editGroup: "Edit Group",
+    editCampus: "Edit Campus",
+    groupNameLabel: "Group Name",
+    campusNameLabel: "Campus Name",
+    countryLabel: "Country",
+    locationLabel: "Location",
+    leaderLabel: "Group Leader",
+    adminLabel: "Campus Admin",
+    campusesLabel: "Campuses",
+    membersLabel: "Members",
+    emptyStateGroups: {
+      title: "No Groups",
+      description: "Add an org group to begin building the hierarchy.",
+    },
+    emptyStateCampuses: {
+      title: "No Campuses",
+      description: "Add campuses to organise your reporting structure.",
+    },
+  },
+
+  /* ── Analytics ────────────────────────────────────────────────────────── */
+  analytics: {
+    pageTitle: "Analytics",
+    // Tabs
+    tab: {
+      overview: "Overview",
+      metrics: "Metrics Analysis",
+      trends: "Trends",
+      compliance: "Compliance",
+      quarterly: "Quarterly Summary",
+    },
+    // Section headings
+    complianceTitle: "Report Compliance by Campus",
+    trendsTitle: "Submission Trends",
+    campusBreakdownTitle: "Campus Breakdown",
+    statusBreakdownTitle: "Status Breakdown",
+    metricTrendsTitle: "Key Metrics Over Time",
+    goalVsAchievedTitle: "Goal vs. Achieved",
+    yoyComparisonTitle: "Year-on-Year Comparison",
+    campusMetricCompTitle: "Campus Metric Comparison",
+    cumulativeTrendTitle: "Cumulative Trend",
+    // Controls
+    periodSelectorLabel: "Period",
+    periodGranularityLabel: "Granularity",
+    campusSelectorLabel: "Campus",
+    groupSelectorLabel: "Group",
+    metricSelectorLabel: "Metric",
+    sectionSelectorLabel: "Section",
+    exportButton: "Export",
+    yearLabel: "Year",
+    monthRangeLabel: "Month Range",
+    // Granularity options
+    granularity: {
+      weekly: "Weekly",
+      monthly: "Monthly",
+      quarterly: "Quarterly",
+      annual: "Annual",
+    },
+    // Chart labels
+    chartLabels: {
+      goal: "Goal",
+      achieved: "Achieved",
+      yoy: "Year on Year",
+      submitted: "Submitted",
+      approved: "Approved",
+      count: "Count",
+      value: "Value",
+      percentage: "% Achieved",
+    },
+    // KPI labels
+    kpi: {
+      avgAchievementRate: "Avg. Achievement Rate",
+      metricsTracked: "Metrics Tracked",
+      campusesReporting: "Campuses Reporting",
+      goalsSet: "Goals Set",
+    },
+    // State
+    noData: "No data available for the selected period.",
+    noMetricSelected: "Select a metric above to view the analysis.",
+    loadingMetrics: "Loading metrics…",
+    drafts: "Drafts",
+    requiresEdits: "Requires Edits",
+    quarterlyTitle: "Quarterly Summary",
+    quarterlyComplianceLabel: "Q Compliance",
+    quarterlySubmittedLabel: "Q Submitted",
+    quarterlyApprovedLabel: "Q Approved",
+    quarterlyQoqLabel: "vs. Previous Quarter",
+    quarterlyNoData: "No data available for this quarter.",
+    quarterlyTopCampuses: "Top Campuses This Quarter",
+    quarterlySelector: "Quarter",
+  },
+
+  /* ── Notifications ─────────────────────────────────────────────────── */
+  notifications: {
+    pageTitle: "Inbox",
+    markAllRead: "Mark all as read",
+    emptyState: {
+      title: "All Caught Up",
+      description: "You have no new notifications.",
+    },
+    types: {
+      REPORT_SUBMITTED: "Report Submitted",
+      REPORT_EDIT_REQUESTED: "Edit Requested",
+      REPORT_APPROVED: "Report Approved",
+      REPORT_REVIEWED: "Report Reviewed",
+      REPORT_LOCKED: "Report Locked",
+      REPORT_EDIT_SUBMITTED: "Edit Submitted",
+      REPORT_EDIT_APPROVED: "Edit Approved",
+      REPORT_EDIT_REJECTED: "Edit Rejected",
+      REPORT_UPDATE_REQUESTED: "Update Requested",
+      REPORT_UPDATE_APPROVED: "Update Approved",
+      REPORT_UPDATE_REJECTED: "Update Rejected",
+      REPORT_DEADLINE_REMINDER: "Deadline Reminder",
+      GOAL_UNLOCK_REQUESTED: "Goal Unlock Requested",
+      GOAL_UNLOCK_APPROVED: "Goal Unlock Approved",
+      GOAL_UNLOCK_REJECTED: "Goal Unlock Rejected",
+    },
+  },
+
+  /* ── Common / Shared ────────────────────────────────────────────────── */
+  common: {
+    save: "Save",
+    saving: "Saving…",
+    cancel: "Cancel",
+    confirm: "Confirm",
+    delete: "Delete",
+    edit: "Edit",
+    view: "View",
+    close: "Close",
+    back: "Back",
+    next: "Next",
+    previous: "Previous",
+    search: "Search",
+    filter: "Filter",
+    reset: "Reset",
+    export: "Export",
+    loading: "Loading…",
+    submitting: "Submitting…",
+    required: "Required",
+    optional: "Optional",
+    yes: "Yes",
+    no: "No",
+    all: "All",
+    none: "None",
+    unknown: "Unknown",
+    activate: "Activate",
+    deactivate: "Deactivate",
+    noResultsTitle: "Nothing here yet",
+    noResultsDescription: "Try adjusting your filters.",
+    viewAll: "View all",
+    successSave: "Saved successfully.",
+    successDelete: "Deleted successfully.",
+    errorDefault: "Something went wrong. Please try again.",
+    errorNotFound: "The requested resource was not found.",
+    errorUnauthorized: "You are not authorised to perform this action.",
+    pagination: {
+      showing: "Showing",
+      to: "to",
+      of: "of",
+      results: "results",
+    },
+    darkMode: "dark mode",
+    lightMode: "light mode",
+    switchTo: "Switch to",
+  },
+
+  /* ── Profile ───────────────────────────────────────────────────────────── */
+  profile: {
+    pageTitle: "My Profile",
+    editProfile: "Edit Profile",
+    changePassword: "Change Password",
+    accountInfoLabel: "Account Information",
+    personalInfoLabel: "Personal Information",
+    firstNameLabel: "First Name",
+    lastNameLabel: "Last Name",
+    emailLabel: "Email Address",
+    phoneLabel: "Phone Number",
+    roleLabel: "Role",
+    campusLabel: "Campus",
+    groupLabel: "Group",
+    saveChanges: "Save Changes",
+    saving: "Saving…",
+    passwordSection: "Change Password",
+    currentPasswordLabel: "Current Password",
+    newPasswordLabel: "New Password",
+    confirmPasswordLabel: "Confirm New Password",
+    updatePassword: "Update Password",
+    passwordUpdated: "Password updated successfully.",
+    profileUpdated: "Profile updated successfully.",
+    memberSince: "Member Since",
+    lastUpdated: "Last Updated",
+    tabs: {
+      profile: "Profile",
+      security: "Security",
+      appearance: "Appearance",
+      notifications: "Notifications",
+    },
+  },
+
+  /* ── Invite Links ─────────────────────────────────────────────────────── */
+  invites: {
+    pageTitle: "Invite Links",
+    newInvite: "Generate Invite Link",
+    copyLink: "Copy Link",
+    copiedLink: "Copied!",
+    revokeLink: "Revoke",
+    targetRoleLabel: "Invite As",
+    campusLabel: "Campus (optional)",
+    groupLabel: "Group (optional)",
+    expiresInLabel: "Expires In",
+    noteLabel: "Internal Note",
+    notePlaceholder: "e.g. For new Lagos campus admin",
+    statusActive: "Active",
+    statusUsed: "Used",
+    statusExpired: "Expired",
+    statusRevoked: "Revoked",
+    expiresAtLabel: "Expires",
+    usedAtLabel: "Used At",
+    createdAtLabel: "Created",
+    linkLabel: "Invite URL",
+    generateButton: "Generate",
+    emptyState: {
+      title: "No Invite Links",
+      description: "Generate a link to invite a new user to the system.",
+    },
+    expiryOptions: {
+      "24": "24 hours",
+      "48": "48 hours",
+      "72": "72 hours (default)",
+      "168": "7 days",
+      "720": "30 days",
+    },
+    deleteConfirm: "Revoke this invite link? The URL will no longer work.",
+  },
+  /* ── Bug Reports ────────────────────────────────────────────────────── */
+  bugReports: {
+    pageTitle: "Report a Bug",
+    managePageTitle: "Bug Reports",
+    categoryLabel: "Issue Type",
+    categoryPlaceholder: "Select an issue type",
+    descriptionLabel: "Description",
+    descriptionPlaceholder: "Describe the issue you encountered in detail...",
+    screenshotLabel: "Screenshot (optional)",
+    screenshotHint: "Upload a screenshot to help us understand the issue.",
+    emailLabel: "Contact Email",
+    emailPlaceholder: "your.email@example.com",
+    submitButton: "Submit Bug Report",
+    submitting: "Submitting...",
+    submitSuccess: "Bug report submitted. Thank you!",
+    statusLabel: "Status",
+    adminNotesLabel: "Admin Notes",
+    adminNotesPlaceholder: "Internal notes about this bug report...",
+    categories: {
+      UI_DISPLAY: "UI / Display Issue",
+      NAVIGATION: "Navigation Problem",
+      DATA_ISSUE: "Data Inaccuracy",
+      PERFORMANCE: "Slow Performance",
+      AUTHENTICATION: "Login / Authentication",
+      REPORT_SUBMISSION: "Report Submission",
+      NOTIFICATION: "Notification Issue",
+      OTHER: "Other",
+    },
+    statuses: {
+      OPEN: "Open",
+      IN_PROGRESS: "In Progress",
+      RESOLVED: "Resolved",
+      CLOSED: "Closed",
+    },
+    emptyState: {
+      title: "No Bug Reports",
+      description: "No bug reports have been submitted yet.",
+    },
+    updateSuccess: "Bug report updated.",
+  },
+  /* ── Settings ───────────────────────────────────────────────────────── */
+  settings: {
+    pageTitle: "App Settings",
+    appearanceSection: "Appearance",
+    themeLabel: "Theme",
+    themeDescription: "Choose how the app looks to you.",
+    themeSystem: "System default",
+    themeLight: "Light",
+    themeDark: "Dark",
+    notificationsSection: "Notification Preferences",
+    emailNotificationsLabel: "Email Notifications",
+    emailNotificationsDescription: "Receive report deadline and status updates via email.",
+    inAppNotificationsLabel: "In-App Notifications",
+    inAppNotificationsDescription: "Show notification badge and pop-ups in the app.",
+    deadlineRemindersLabel: "Deadline Reminders",
+    deadlineRemindersDescription: "Get reminders 24 h and 48 h before report deadlines.",
+    pushNotificationsSection: "Push Notifications",
+    pushNotificationsLabel: "Push Notifications",
+    pushNotificationsDescription: "Receive real-time push notifications on this device.",
+    pushEnabled: "Push notifications enabled.",
+    pushDisabled: "Push notifications disabled.",
+    pushNotSupported: "Push notifications are not supported in this browser.",
+    pushPermissionDenied: "Permission denied. Enable notifications in your browser settings.",
+    enablePush: "Enable Push",
+    disablePush: "Disable Push",
+    saved: "Preferences saved.",
+    savePreferences: "Save Preferences",
+  },
+  /* ── Offline Page ────────────────────────────────────────────────────────── */
+  offline: {
+    title: "You're Offline",
+    description:
+      "It looks like you've lost your internet connection. Check your connection and try again.",
+    retryButton: "Try Again",
+    hint: "Previously viewed pages may still be accessible from cache.",
+  },
+
+  /* ── Error Pages ─────────────────────────────────────────────────────── */
+  errors: {
+    generic: "Something went wrong. Please try again.",
+    notFoundTitle: "Page Not Found",
+    notFoundDescription: "The page you are looking for does not exist.",
+    notFoundCta: "Go to Dashboard",
+    errorTitle: "Something Went Wrong",
+    errorDescription: "An unexpected error occurred. Our team has been notified.",
+    errorCta: "Try Again",
+    offlineTitle: "You're Offline",
+    offlineDescription: "Check your internet connection and try again.",
+    onlineTitle: "You're Back Online",
+    onlineDescription: "Connection restored.",
+  },
+
+  /* ── SEO / Meta ──────────────────────────────────────────────────────────── */
+  seo: {
+    appDescription:
+      "The central report management platform for Harvesters International Christian Centre — campus report submission, review, and analytics.",
+    // Auth pages
+    loginDescription:
+      "Sign in to the Harvesters Reporting System to access your campus reports and analytics.",
+    registerDescription:
+      "Create your Harvesters Reporting System account to start managing campus reports.",
+    forgotPasswordDescription: "Reset your Harvesters Reporting System password.",
+    resetPasswordDescription: "Set a new password for your Harvesters Reporting System account.",
+    joinTitle: "You're Invited",
+    joinDescription:
+      "You have been invited to join the Harvesters Reporting System — the central platform for campus report submission and analytics at Harvesters International Christian Centre.",
+    // Dashboard pages
+    dashboardDescription:
+      "View your reporting dashboard — KPIs, recent activity, and upcoming deadlines.",
+    reportsDescription: "Manage, submit, and review campus reports across Harvesters campuses.",
+    newReportDescription: "Create and submit a new campus report.",
+    reportDetailDescription: "View the full details and history of this campus report.",
+    reportEditDescription: "Edit and update this campus report.",
+    templatesDescription:
+      "Manage report templates used across campuses for standardised data collection.",
+    newTemplateDescription: "Create a new report template to standardise campus reporting.",
+    templateDetailDescription: "View and manage this report template.",
+    usersDescription: "Manage system users — roles, campus assignments, and access levels.",
+    userDetailDescription: "View and manage this user's profile and role assignment.",
+    orgDescription: "Manage the organisation hierarchy — groups, campuses, and zones.",
+    analyticsDescription:
+      "Analyse report data, trends, and compliance metrics across all campuses.",
+    inboxDescription:
+      "Stay up to date with report approvals, edit requests, and system notifications.",
+    goalsDescription: "Set and track performance goals to measure campus progress against targets.",
+    invitesDescription: "Generate and manage invite links to onboard new users to the system.",
+    bugReportsDescription:
+      "Report a bug or issue you encountered in the Harvesters Reporting System.",
+    bugReportsManageDescription: "Review and manage all bug reports submitted by system users.",
+    profileDescription: "Manage your profile, security settings, and notification preferences.",
+  },
 } satisfies AppContent;
 
 export type ContentKey = typeof CONTENT;
-````
+```
 
 ## File: package.json
-````json
+
+```json
 {
   "name": "harvesters-reporting-system",
   "version": "1.0.0",
@@ -26417,4 +27420,4 @@ export type ContentKey = typeof CONTENT;
     "typescript": "^5"
   }
 }
-````
+```

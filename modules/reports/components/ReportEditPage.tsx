@@ -11,8 +11,9 @@
 import { useState, use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { message } from "antd";
-import { SaveOutlined, ArrowLeftOutlined, LockOutlined } from "@ant-design/icons";
+import { SaveOutlined, ArrowLeftOutlined, LockOutlined, SendOutlined } from "@ant-design/icons";
 import { useRole } from "@/lib/hooks/useRole";
+import { UserRole, ReportStatus } from "@/types/global";
 import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
@@ -27,7 +28,6 @@ import {
   type MetricValues,
   type GoalsForReportMap,
 } from "./ReportSectionsForm";
-import { ReportStatus } from "@/types/global";
 
 const rk = CONTENT.reports as Record<string, unknown>;
 
@@ -40,7 +40,7 @@ interface PageProps {
 export function ReportEditPage({ params }: PageProps) {
   const { id } = use(params);
   const router = useRouter();
-  const { can } = useRole();
+  const { can, role } = useRole();
 
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
@@ -120,7 +120,7 @@ export function ReportEditPage({ params }: PageProps) {
   };
 
   /* Guards */
-  if (!can.fillReports) {
+  if (!can.fillReports && role !== UserRole.SUPERADMIN) {
     router.replace(APP_ROUTES.reports);
     return null;
   }
@@ -150,7 +150,9 @@ export function ReportEditPage({ params }: PageProps) {
   }
 
   const isEditable =
-    report.status === ReportStatus.DRAFT || report.status === ReportStatus.REQUIRES_EDITS;
+    report.status === ReportStatus.DRAFT ||
+    report.status === ReportStatus.REQUIRES_EDITS ||
+    (role === UserRole.SUPERADMIN && report.status === ReportStatus.LOCKED);
   if (!isEditable) {
     return (
       <PageLayout title={report.title ?? "Report"}>
@@ -228,6 +230,37 @@ export function ReportEditPage({ params }: PageProps) {
           <Button onClick={() => router.push(APP_ROUTES.reportDetail(id))}>
             {CONTENT.common.cancel as string}
           </Button>
+          {can.submitReports &&
+            (report.status === ReportStatus.DRAFT ||
+              report.status === ReportStatus.REQUIRES_EDITS) && (
+              <Button
+                type="default"
+                icon={<SendOutlined />}
+                loading={saving}
+                onClick={async () => {
+                  setSaving(true);
+                  try {
+                    const res = await fetch(API_ROUTES.reports.submit(id), {
+                      method: "POST",
+                      credentials: "include",
+                    });
+                    const json = await res.json();
+                    if (!res.ok) {
+                      message.error(json.error ?? (CONTENT.common.errorDefault as string));
+                      return;
+                    }
+                    message.success(CONTENT.common.successSave as string);
+                    router.push(APP_ROUTES.reportDetail(id));
+                  } catch {
+                    message.error(CONTENT.common.errorDefault as string);
+                  } finally {
+                    setSaving(false);
+                  }
+                }}
+              >
+                {CONTENT.reports.actions?.submit ?? "Submit"}
+              </Button>
+            )}
           <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={handleSave}>
             {CONTENT.common.save as string}
           </Button>

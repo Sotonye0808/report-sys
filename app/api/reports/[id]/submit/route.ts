@@ -15,7 +15,8 @@ import {
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
 import { REPORT_STATUS_TRANSITIONS } from "@/config/reports";
-import { UserRole, ReportStatus, ReportEventType } from "@/types/global";
+import { createNotification } from "@/lib/utils/notifications";
+import { UserRole, ReportStatus, ReportEventType, NotificationType } from "@/types/global";
 
 export async function POST(
     req: NextRequest,
@@ -50,6 +51,27 @@ export async function POST(
 
         const now = new Date().toISOString();
 
+        const recipient =
+            (await db.user.findFirst({
+                where: {
+                    role: UserRole.GROUP_ADMIN,
+                    orgGroupId: report.orgGroupId ?? undefined,
+                    isActive: true,
+                },
+            })) ||
+            (await db.user.findFirst({
+                where: {
+                    role: UserRole.CAMPUS_PASTOR,
+                    campusId: report.campusId ?? undefined,
+                    isActive: true,
+                },
+            })) ||
+            (await db.user.findFirst({
+                where: { role: UserRole.SUPERADMIN, isActive: true },
+            }));
+
+        const actorName = [auth.user.firstName, auth.user.lastName].filter(Boolean).join(" ").trim();
+
         const updated = await db.$transaction(async (tx) => {
             const r = await tx.report.update({
                 where: { id },
@@ -71,11 +93,25 @@ export async function POST(
                 },
             });
 
+            if (recipient && recipient.id !== auth.user.id) {
+                await createNotification(
+                    {
+                        userId: recipient.id,
+                        type: NotificationType.REPORT_SUBMITTED,
+                        title: "Report Submitted",
+                        message: `A report was submitted by ${actorName || auth.user.email}`,
+                        reportId: id,
+                    },
+                    tx,
+                );
+            }
+
             return r;
         });
 
-        await cache.invalidatePattern(`report:${id}*`);
-        await cache.invalidatePattern(`reports:list:${auth.user.id}:*`);
+        cache.invalidatePatternAsync(`report:${id}*`);
+        cache.invalidatePatternAsync(`reports:list:${auth.user.id}:*`);
+        if (recipient) cache.invalidatePatternAsync(`notifications:${recipient.id}*`);
 
         return NextResponse.json(successResponse(updated));
     } catch (err) {
