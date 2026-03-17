@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
             avatar: userProfile.avatar ?? undefined,
         };
 
-        const tokens = generateTokens(authUser);
+        const tokens = generateTokens(authUser, rememberMe);
         await setAuthCookies(tokens, rememberMe);
 
         return NextResponse.json(successResponse({ user: authUser }), { status: 200 });

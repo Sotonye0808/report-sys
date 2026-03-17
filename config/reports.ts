@@ -55,7 +55,12 @@ export const REPORT_STATUS_TRANSITIONS: Record<
             requiredRole: [UserRole.SUPERADMIN],
         },
     ],
-    [ReportStatus.LOCKED]: [],
+    [ReportStatus.LOCKED]: [
+        {
+            to: ReportStatus.DRAFT,
+            requiredRole: [UserRole.SUPERADMIN],
+        },
+    ],
 };
 
 /* ── Deadline Config ──────────────────────────────────────────────────────── */

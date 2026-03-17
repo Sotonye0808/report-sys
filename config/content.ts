@@ -178,6 +178,7 @@ export const CONTENT = {
             APPROVED: "Report Approved",
             REVIEWED: "Report Reviewed",
             LOCKED: "Report Locked",
+            UNLOCKED: "Report Unlocked",
             DEADLINE_PASSED: "Deadline Passed",
             UPDATE_REQUESTED: "Update Requested",
             UPDATE_APPROVED: "Update Approved",
@@ -212,6 +213,7 @@ export const CONTENT = {
             approve: "Approve",
             review: "Mark Reviewed",
             lock: "Lock",
+            unlock: "Unlock",
             requestEdit: "Request Edit",
         },
         columnLabels: {
@@ -560,6 +562,7 @@ export const CONTENT = {
             REPORT_APPROVED: "Report Approved",
             REPORT_REVIEWED: "Report Reviewed",
             REPORT_LOCKED: "Report Locked",
+            REPORT_UNLOCKED: "Report Unlocked",
             REPORT_EDIT_SUBMITTED: "Edit Submitted",
             REPORT_EDIT_APPROVED: "Edit Approved",
             REPORT_EDIT_REJECTED: "Edit Rejected",

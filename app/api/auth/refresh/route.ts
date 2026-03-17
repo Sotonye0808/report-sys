@@ -43,8 +43,8 @@ export async function POST(req: NextRequest) {
             avatar: userProfile.avatar ?? undefined,
         };
 
-        const tokens = generateTokens(authUser);
-        await setAuthCookies(tokens);
+        const tokens = generateTokens(authUser, payload.rememberMe);
+        await setAuthCookies(tokens, payload.rememberMe);
 
         return NextResponse.json(successResponse({ user: authUser }));
     } catch (err) {

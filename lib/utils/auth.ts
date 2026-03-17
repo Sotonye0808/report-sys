@@ -9,6 +9,7 @@ import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { db } from "@/lib/data/db";
+import { parseDurationToSecondsOrDefault } from "@/lib/utils/duration";
 import { UserRole } from "@/types/global";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -22,6 +23,12 @@ const REFRESH_EXPIRY = process.env.JWT_REFRESH_EXPIRES_IN ?? "7d";
 const COOKIE_NAME = process.env.COOKIE_NAME ?? "hrs_token";
 const REFRESH_COOKIE_NAME = process.env.REFRESH_COOKIE_NAME ?? "hrs_refresh";
 
+// Cookie maxAge in seconds (matches JWT expiry by default)
+const ACCESS_MAX_AGE_DEFAULT = parseDurationToSecondsOrDefault(ACCESS_EXPIRY, 60 * 15);
+const REFRESH_MAX_AGE_DEFAULT = parseDurationToSecondsOrDefault(REFRESH_EXPIRY, 60 * 60 * 24 * 7);
+const ACCESS_MAX_AGE_REMEMBER_ME = parseDurationToSecondsOrDefault(process.env.JWT_EXPIRES_IN_REMEMBER_ME ?? "30d", 60 * 60 * 24 * 30);
+const REFRESH_MAX_AGE_REMEMBER_ME = parseDurationToSecondsOrDefault(process.env.JWT_REFRESH_EXPIRES_IN_REMEMBER_ME ?? "90d", 60 * 60 * 24 * 90);
+
 interface JWTPayload {
     userId: string;
     email: string;
@@ -31,6 +38,11 @@ interface JWTPayload {
 interface AuthTokens {
     accessToken: string;
     refreshToken: string;
+}
+
+interface RefreshTokenPayload {
+    userId: string;
+    rememberMe?: boolean;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -58,16 +70,17 @@ export function generateAccessToken(user: AuthUser): string {
     );
 }
 
-export function generateRefreshToken(userId: string): string {
-    return jwt.sign({ userId }, REFRESH_SECRET, {
+export function generateRefreshToken(userId: string, rememberMe?: boolean): string {
+    const payload: RefreshTokenPayload = { userId, rememberMe };
+    return jwt.sign(payload, REFRESH_SECRET, {
         expiresIn: REFRESH_EXPIRY,
     } as jwt.SignOptions);
 }
 
-export function generateTokens(user: AuthUser): AuthTokens {
+export function generateTokens(user: AuthUser, rememberMe?: boolean): AuthTokens {
     return {
         accessToken: generateAccessToken(user),
-        refreshToken: generateRefreshToken(user.id),
+        refreshToken: generateRefreshToken(user.id, rememberMe),
     };
 }
 
@@ -79,9 +92,9 @@ export function verifyAccessToken(token: string): JWTPayload | null {
     }
 }
 
-export function verifyRefreshToken(token: string): { userId: string } | null {
+export function verifyRefreshToken(token: string): RefreshTokenPayload | null {
     try {
-        return jwt.verify(token, REFRESH_SECRET) as { userId: string };
+        return jwt.verify(token, REFRESH_SECRET) as RefreshTokenPayload;
     } catch {
         return null;
     }
@@ -95,9 +108,8 @@ export async function setAuthCookies(tokens: AuthTokens, rememberMe?: boolean): 
     const cookieStore = await cookies();
     const isProd = process.env.NODE_ENV === "production";
 
-    // Standard: 15min access, 7d refresh. Remember me: 30d access, 90d refresh.
-    const accessMaxAge = rememberMe ? 60 * 60 * 24 * 30 : 60 * 15;
-    const refreshMaxAge = rememberMe ? 60 * 60 * 24 * 90 : 60 * 60 * 24 * 7;
+    const accessMaxAge = rememberMe ? ACCESS_MAX_AGE_REMEMBER_ME : ACCESS_MAX_AGE_DEFAULT;
+    const refreshMaxAge = rememberMe ? REFRESH_MAX_AGE_REMEMBER_ME : REFRESH_MAX_AGE_DEFAULT;
 
     cookieStore.set(COOKIE_NAME, tokens.accessToken, {
         httpOnly: true,

@@ -16,7 +16,8 @@ import {
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
 import { REPORT_STATUS_TRANSITIONS } from "@/config/reports";
-import { UserRole, ReportStatus, ReportEventType, ReportEditStatus } from "@/types/global";
+import { createNotification } from "@/lib/utils/notifications";
+import { UserRole, ReportStatus, ReportEventType, ReportEditStatus, NotificationType } from "@/types/global";
 
 const RequestEditSchema = z.object({
     reason: z.string().min(1, "Reason is required.").max(1000),
@@ -56,6 +57,9 @@ export async function POST(
         const body = RequestEditSchema.parse(await req.json());
         const now = new Date().toISOString();
 
+        const recipientId = report.submittedById ?? report.createdById;
+        const actorName = [auth.user.firstName, auth.user.lastName].filter(Boolean).join(" ").trim();
+
         const updated = await db.$transaction(async (tx) => {
             const r = await tx.report.update({
                 where: { id },
@@ -88,11 +92,25 @@ export async function POST(
                 },
             });
 
+            if (recipientId && recipientId !== auth.user.id) {
+                await createNotification(
+                    {
+                        userId: recipientId,
+                        type: NotificationType.REPORT_EDIT_REQUESTED,
+                        title: "Edit Requested",
+                        message: `An edit was requested on your report by ${actorName || auth.user.email}`,
+                        reportId: id,
+                    },
+                    tx,
+                );
+            }
+
             return r;
         });
 
         await cache.invalidatePattern(`report:${id}*`);
         await cache.invalidatePattern(`reports:list:*`);
+        if (recipientId) await cache.invalidatePattern(`notifications:${recipientId}*`);
 
         return NextResponse.json(successResponse(updated));
     } catch (err) {

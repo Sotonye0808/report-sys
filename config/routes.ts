@@ -94,6 +94,8 @@ export const API_ROUTES = {
         approve: (id: string) => `/api/reports/${id}/approve`,
         review: (id: string) => `/api/reports/${id}/review`,
         lock: (id: string) => `/api/reports/${id}/lock`,
+        unlock: (id: string) => `/api/reports/${id}/unlock`,
+
         requestEdit: (id: string) => `/api/reports/${id}/request-edit`,
         history: (id: string) => `/api/reports/${id}/history`,
     },

@@ -141,6 +141,6 @@ export async function POST(req: NextRequest) {
         });
     });
 
-    await cache.invalidatePattern("templates:*");
+    cache.invalidatePatternAsync("templates:*");
     return NextResponse.json({ success: true, data: template }, { status: 201 });
 }

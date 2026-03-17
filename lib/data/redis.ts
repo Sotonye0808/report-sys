@@ -97,6 +97,25 @@ export const cache = {
         }
     },
 
+    /**
+     * Invalidate cache keys matching a glob pattern.
+     * This is intentionally fire-and-forget to avoid blocking requests.
+     * The call will be cancelled after `timeoutMs` milliseconds.
+     */
+    invalidatePatternAsync(pattern: string, timeoutMs = 1500): void {
+        void (async () => {
+            try {
+                await Promise.race([
+                    cache.invalidatePattern(pattern),
+                    new Promise<void>((resolve) => setTimeout(resolve, timeoutMs)),
+                ]);
+            } catch (err) {
+                // eslint-disable-next-line no-console
+                console.error("[cache] invalidatePatternAsync error:", err);
+            }
+        })();
+    },
+
     async flush(): Promise<void> {
         await cache.invalidatePattern("*");
     },

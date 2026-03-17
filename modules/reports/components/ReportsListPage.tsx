@@ -9,7 +9,13 @@
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Select } from "antd";
-import { PlusOutlined, LockOutlined, EyeOutlined, EditOutlined, DownloadOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  LockOutlined,
+  EyeOutlined,
+  EditOutlined,
+  DownloadOutlined,
+} from "@ant-design/icons";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
 import { useApiData } from "@/lib/hooks/useApiData";
@@ -310,7 +316,7 @@ export function ReportsListPage() {
         title={CONTENT.reports.pageTitle as string}
         actions={
           <div className="flex gap-2">
-            {can.fillReports && (
+            {can.createReports && (
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
@@ -324,7 +330,8 @@ export function ReportsListPage() {
               onClick={() => setExportOpen(true)}
               disabled={!filteredReports || filteredReports.length === 0}
             >
-              {((CONTENT.reports as unknown as Record<string, Record<string, string>>).export?.button) ?? "Export"}
+              {(CONTENT.reports as unknown as Record<string, Record<string, string>>).export
+                ?.button ?? "Export"}
             </Button>
           </div>
         }

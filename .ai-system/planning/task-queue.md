@@ -8,9 +8,13 @@
 
 > **Section summary:** Tasks actively being worked on. Agents pick the first incomplete task.
 
-- [ ] [First task — be specific: "Extract database queries from userController.js into userService.js"]
-- [ ] [Second task]
-- [ ] [Third task]
+- [x] Fix report template edit failures (500/504) + stabilize cache invalidation
+- [x] Align auth session lifetime with env config and add automatic token refresh
+- [ ] Add regression tests for report template API and auth refresh behavior
+- [ ] Add regression tests for report unlock and audit trail visibility
+- [x] Ensure superadmin (and other empowered roles) can edit/submit draft reports and see action buttons on report detail
+- [x] Add unlock-report action + backend endpoint so superadmin can unlock & edit locked reports
+- [x] Make “Add report” button always visible for superadmin and roles with create-report privilege
 
 ---
 
@@ -36,7 +40,12 @@
 
 > **Section summary:** Tasks finished in the current sprint. Cleared at sprint end and moved to dev-history.md.
 
-- [x] [Completed task]
+- [x] Fix report template edit failures (500/504) + stabilize cache invalidation
+- [x] Align auth session lifetime with env config and add automatic token refresh
+- [x] Ensure superadmin (and other empowered roles) can edit/submit draft reports and see action buttons on report detail
+- [x] Add unlock-report action + backend endpoint so superadmin can unlock & edit locked reports
+- [x] Make “Add report” button always visible for superadmin and roles with create-report privilege
+- [x] Add create report privilege to Office of CEO role
 
 ---
 
