@@ -180,7 +180,7 @@ export async function POST(req: NextRequest) {
             return newReport;
         });
 
-        await cache.invalidatePattern(`reports:list:${auth.user.id}:*`);
+        cache.invalidatePatternAsync(`reports:list:${auth.user.id}:*`);
 
         return NextResponse.json(successResponse(report), { status: 201 });
     } catch (err) {

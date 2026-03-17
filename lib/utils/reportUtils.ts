@@ -47,6 +47,7 @@ export function formatReportPeriod(report: {
  */
 export function getReportLabel(
     report: {
+        title?: string;
         templateId: string;
         periodType: ReportPeriodType;
         periodYear: number;
@@ -55,6 +56,9 @@ export function getReportLabel(
     },
     templates: ReportTemplate[],
 ): string {
+    if (report.title && report.title.trim().length > 0) {
+        return report.title;
+    }
     const template = templates.find((t) => t.id === report.templateId);
     const period = formatReportPeriod(report);
     return template ? `${template.name} — ${period}` : period;

@@ -88,8 +88,8 @@ export async function PUT(
         omit: { passwordHash: true },
     });
 
-    await cache.invalidatePattern(`users:detail:${id}`);
-    await cache.invalidatePattern("users:list:*");
+    cache.invalidatePatternAsync(`users:detail:${id}`);
+    cache.invalidatePatternAsync("users:list:*");
 
     return NextResponse.json({ success: true, data: updated });
 }

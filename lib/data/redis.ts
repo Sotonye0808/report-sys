@@ -34,6 +34,15 @@ function key(k: string): string {
     return `${PREFIX}${k}`;
 }
 
+const REDIS_OP_TIMEOUT_MS = Number(process.env.REDIS_OP_TIMEOUT_MS ?? 2000);
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+    return Promise.race([
+        promise,
+        new Promise<T>((_, reject) => setTimeout(() => reject(new Error("Redis operation timed out")), timeoutMs)),
+    ]);
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Cache utilities — drop-in for mockCache API surface
 // ─────────────────────────────────────────────────────────────────────────────
@@ -46,25 +55,48 @@ export const cache = {
      * directly without calling `JSON.parse()` again.
      */
     async get(k: string): Promise<unknown> {
-        const val = await redis.get<unknown>(key(k));
-        return val ?? null;
+        try {
+            const val = await withTimeout(redis.get<unknown>(key(k)), REDIS_OP_TIMEOUT_MS);
+            return val ?? null;
+        } catch (err) {
+            // Cache errors should not break app flow.
+            // eslint-disable-next-line no-console
+            console.error("[cache] get error:", err);
+            return null;
+        }
     },
 
     async set(k: string, value: string, ttlSeconds?: number): Promise<void> {
-        if (ttlSeconds) {
-            await redis.set(key(k), value, { ex: ttlSeconds });
-        } else {
-            await redis.set(key(k), value);
+        try {
+            if (ttlSeconds) {
+                await withTimeout(redis.set(key(k), value, { ex: ttlSeconds }), REDIS_OP_TIMEOUT_MS);
+            } else {
+                await withTimeout(redis.set(key(k), value), REDIS_OP_TIMEOUT_MS);
+            }
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.error("[cache] set error:", err);
         }
     },
 
     async del(k: string): Promise<void> {
-        await redis.del(key(k));
+        try {
+            await withTimeout(redis.del(key(k)), REDIS_OP_TIMEOUT_MS);
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.error("[cache] del error:", err);
+        }
     },
 
     async exists(k: string): Promise<boolean> {
-        const result = await redis.exists(key(k));
-        return result === 1;
+        try {
+            const result = await withTimeout(redis.exists(key(k)), REDIS_OP_TIMEOUT_MS);
+            return result === 1;
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.error("[cache] exists error:", err);
+            return false;
+        }
     },
 
     /**
@@ -102,7 +134,7 @@ export const cache = {
      * This is intentionally fire-and-forget to avoid blocking requests.
      * The call will be cancelled after `timeoutMs` milliseconds.
      */
-    invalidatePatternAsync(pattern: string, timeoutMs = 1500): void {
+    invalidatePatternAsync(pattern: string, timeoutMs = 5000): void {
         void (async () => {
             try {
                 await Promise.race([
