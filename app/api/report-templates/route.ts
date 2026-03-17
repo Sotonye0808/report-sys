@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
         // If no org group is provided for the template, try to infer a sensible
         // default: the first OrgGroup for the organisation. This ensures seeded
         // templates (which may have null orgGroupId) receive a valid group id.
-        const defaultGroup = await tx.orgGroup.findFirst({ where: { organisationId: body.organisationId } });
+        const defaultGroup = await tx.orgGroup.findFirst();
         if (body.isDefault) {
             await tx.reportTemplate.updateMany({
                 where: { isDefault: true },
