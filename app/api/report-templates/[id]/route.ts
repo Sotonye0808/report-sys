@@ -58,27 +58,43 @@ export async function GET(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> },
 ) {
-    const { id } = await params;
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+    try {
+        const { id } = await params;
+        const auth = await verifyAuth(req);
+        if (!auth.success) {
+            return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+        }
+
+        const cacheKey = `templates:detail:${id}`;
+        const cached = await cache.get(cacheKey);
+        if (cached) {
+            try {
+                const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
+                return NextResponse.json(parsed);
+            } catch {
+                // Cached payload is invalid JSON; ignore and refetch from the database.
+            }
+        }
+
+        const template = await db.reportTemplate.findUnique({
+            where: { id },
+            include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
+        });
+        if (!template) {
+            return NextResponse.json({ success: false, error: "Template not found." }, { status: 404 });
+        }
+
+        const response = { success: true, data: template };
+        await cache.set(cacheKey, JSON.stringify(response), 120);
+        return NextResponse.json(response);
+    } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error("[api] Error in GET /api/report-templates/:id", err);
+        return NextResponse.json(
+            { success: false, error: "An error occurred while loading the template." },
+            { status: 500 },
+        );
     }
-
-    const cacheKey = `templates:detail:${id}`;
-    const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(cached);
-
-    const template = await db.reportTemplate.findUnique({
-        where: { id },
-        include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
-    });
-    if (!template) {
-        return NextResponse.json({ success: false, error: "Template not found." }, { status: 404 });
-    }
-
-    const response = { success: true, data: template };
-    await cache.set(cacheKey, JSON.stringify(response), 120);
-    return NextResponse.json(response);
 }
 
 /* ── PUT /api/report-templates/:id ───────────────────────────────────────── */

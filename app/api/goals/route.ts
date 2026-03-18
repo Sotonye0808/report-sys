@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db } from "@/lib/data/db";
+import { successResponse, errorResponse, handleApiError } from "@/lib/utils/api";
 import { UserRole, GoalMode } from "@/types/global";
 
 const READ_ROLES: UserRole[] = [
@@ -69,67 +70,65 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-    const auth = await verifyAuth(req, WRITE_ROLES);
-    if (!auth.success)
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status });
+    try {
+        const auth = await verifyAuth(req, WRITE_ROLES);
+        if (!auth.success) return errorResponse(auth.error, auth.status ?? 401);
 
-    const body = CreateGoalSchema.parse(await req.json());
+        const body = CreateGoalSchema.parse(await req.json());
 
-    // Non-superadmin / non-SPO can only set goals for their own campus
-    if (
-        auth.user.role !== UserRole.SUPERADMIN &&
-        auth.user.role !== UserRole.SPO &&
-        auth.user.role !== UserRole.CEO &&
-        auth.user.role !== UserRole.CHURCH_MINISTRY
-    ) {
-        if (auth.user.campusId && body.campusId !== auth.user.campusId) {
-            return NextResponse.json(
-                { success: false, error: "Cannot set goals for a different campus." },
-                { status: 403 },
-            );
+        // Non-superadmin / non-SPO can only set goals for their own campus
+        if (
+            auth.user.role !== UserRole.SUPERADMIN &&
+            auth.user.role !== UserRole.SPO &&
+            auth.user.role !== UserRole.CEO &&
+            auth.user.role !== UserRole.CHURCH_MINISTRY
+        ) {
+            if (auth.user.campusId && body.campusId !== auth.user.campusId) {
+                return errorResponse("Cannot set goals for a different campus.", 403);
+            }
         }
-    }
 
-    const now = new Date();
+        const goal = await db.$transaction(async (tx) => {
+            const existingWhere: Record<string, unknown> = {
+                campusId: body.campusId,
+                templateMetricId: body.templateMetricId,
+                year: body.year,
+                mode: body.mode,
+            };
+            if (body.month != null) existingWhere.month = body.month;
 
-    // Upsert: find existing for same campus/metric/year/mode
-    const existingWhere: Record<string, unknown> = {
-        campusId: body.campusId,
-        templateMetricId: body.templateMetricId,
-        year: body.year,
-        mode: body.mode,
-    };
-    if (body.month != null) existingWhere.month = body.month;
+            const existing = await tx.goal.findFirst({ where: existingWhere });
 
-    const existing = await db.goal.findFirst({ where: existingWhere });
+            if (existing) {
+                if (existing.isLocked && auth.user.role !== UserRole.SUPERADMIN) {
+                    throw new Error("This goal is locked. Submit an unlock request to edit it.");
+                }
+                return tx.goal.update({
+                    where: { id: existing.id },
+                    data: { targetValue: body.targetValue, mode: body.mode as GoalMode },
+                });
+            }
 
-    if (existing) {
-        if (existing.isLocked && auth.user.role !== UserRole.SUPERADMIN) {
-            return NextResponse.json(
-                { success: false, error: "This goal is locked. Submit an unlock request to edit it." },
-                { status: 403 },
-            );
-        }
-        const updated = await db.goal.update({
-            where: { id: existing.id },
-            data: { targetValue: body.targetValue, mode: body.mode as GoalMode },
+            return tx.goal.create({
+                data: {
+                    campusId: body.campusId,
+                    templateMetricId: body.templateMetricId,
+                    metricName: body.metricName,
+                    mode: body.mode as GoalMode,
+                    year: body.year,
+                    month: body.month,
+                    targetValue: body.targetValue,
+                    isLocked: false,
+                    createdById: auth.user.id,
+                },
+            });
         });
-        return NextResponse.json({ success: true, data: updated });
+
+        return NextResponse.json(successResponse(goal), { status: 201 });
+    } catch (err) {
+        if (err instanceof Error && err.message.includes("locked")) {
+            return errorResponse(err.message, 403);
+        }
+        return handleApiError(err);
     }
-
-    const goal = await db.goal.create({
-        data: {
-            campusId: body.campusId,
-            templateMetricId: body.templateMetricId,
-            metricName: body.metricName,
-            mode: body.mode as GoalMode,
-            year: body.year,
-            month: body.month,
-            targetValue: body.targetValue,
-            isLocked: false,
-            createdById: auth.user.id,
-        },
-    });
-
-    return NextResponse.json({ success: true, data: goal }, { status: 201 });
 }

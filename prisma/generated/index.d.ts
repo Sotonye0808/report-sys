@@ -30579,6 +30579,7 @@ export namespace Prisma {
 
   export type GoalWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    campusId_templateMetricId_year_mode_month?: GoalCampusIdTemplateMetricIdYearModeMonthCompoundUniqueInput
     AND?: GoalWhereInput | GoalWhereInput[]
     OR?: GoalWhereInput[]
     NOT?: GoalWhereInput | GoalWhereInput[]
@@ -30604,7 +30605,7 @@ export namespace Prisma {
     createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
     lockedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     editRequests?: GoalEditRequestListRelationFilter
-  }, "id">
+  }, "id" | "campusId_templateMetricId_year_mode_month">
 
   export type GoalOrderByWithAggregationInput = {
     id?: SortOrder
@@ -34569,6 +34570,14 @@ export namespace Prisma {
   export type ReportTemplateNullableScalarRelationFilter = {
     is?: ReportTemplateWhereInput | null
     isNot?: ReportTemplateWhereInput | null
+  }
+
+  export type GoalCampusIdTemplateMetricIdYearModeMonthCompoundUniqueInput = {
+    campusId: string
+    templateMetricId: string
+    year: number
+    mode: $Enums.GoalMode
+    month: number
   }
 
   export type GoalCountOrderByAggregateInput = {
