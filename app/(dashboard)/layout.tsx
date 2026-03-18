@@ -263,9 +263,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     setDrawerOpen(false);
   }, [pathname]);
 
-  // Redirect unauthenticated users to login
+  // Redirect unauthenticated users to login (only when online)
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!isLoading && !user && typeof window !== "undefined" && navigator.onLine) {
       router.replace("/login");
     }
   }, [isLoading, user, router]);

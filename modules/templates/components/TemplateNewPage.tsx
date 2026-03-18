@@ -6,7 +6,7 @@
  * Mirrors TemplateDetailPage architecture.
  */
 
-import { useState } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Form, message, Switch, Select, Collapse, Badge, Modal } from "antd";
 import {
@@ -16,6 +16,8 @@ import {
   DragOutlined,
   TrophyOutlined,
 } from "@ant-design/icons";
+import { useDraftCache } from "@/lib/hooks/useDraftCache";
+import { offlineFetch } from "@/lib/utils/offlineFetch";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { MetricFieldType, MetricCalculationType } from "@/types/global";
@@ -26,15 +28,15 @@ import { PageLayout } from "@/components/ui/PageLayout";
 const ORG_ID = process.env.NEXT_PUBLIC_ORG_ID ?? "harvesters";
 
 const FIELD_TYPE_OPTIONS = [
-  { value: MetricFieldType.NUMBER,     label: "Number" },
+  { value: MetricFieldType.NUMBER, label: "Number" },
   { value: MetricFieldType.PERCENTAGE, label: "Percentage (%)" },
-  { value: MetricFieldType.CURRENCY,   label: "Currency" },
-  { value: MetricFieldType.TEXT,       label: "Text" },
+  { value: MetricFieldType.CURRENCY, label: "Currency" },
+  { value: MetricFieldType.TEXT, label: "Text" },
 ];
 
 const CALC_TYPE_OPTIONS = [
-  { value: MetricCalculationType.SUM,      label: "Sum (cumulative)" },
-  { value: MetricCalculationType.AVERAGE,  label: "Average (rolling mean)" },
+  { value: MetricCalculationType.SUM, label: "Sum (cumulative)" },
+  { value: MetricCalculationType.AVERAGE, label: "Average (rolling mean)" },
   { value: MetricCalculationType.SNAPSHOT, label: "Snapshot (last value)" },
 ];
 
@@ -69,10 +71,10 @@ interface MetricRowProps {
 function MetricRow({ metric, onChange, onRemove }: MetricRowProps) {
   type BoolKey = "isRequired" | "capturesGoal" | "capturesAchieved" | "capturesYoY";
   const TOGGLES: { key: BoolKey; label: string }[] = [
-    { key: "isRequired",       label: CONTENT.templates.isRequiredLabel as string },
-    { key: "capturesGoal",     label: CONTENT.templates.capturesGoalLabel as string },
+    { key: "isRequired", label: CONTENT.templates.isRequiredLabel as string },
+    { key: "capturesGoal", label: CONTENT.templates.capturesGoalLabel as string },
     { key: "capturesAchieved", label: CONTENT.templates.capturesAchievedLabel as string },
-    { key: "capturesYoY",      label: CONTENT.templates.capturesYoYLabel as string },
+    { key: "capturesYoY", label: CONTENT.templates.capturesYoYLabel as string },
   ];
 
   return (
@@ -174,12 +176,36 @@ export function TemplateNewPage() {
   const [goalPromptVisible, setGoalPromptVisible] = useState(false);
   const [createdTemplateId, setCreatedTemplateId] = useState<string | null>(null);
 
-  /* ── Section helpers ────────────────────────────────────────── */
-  const addSection = () =>
-    setSections((prev) => [...prev, makeEmptySection(prev.length + 1)]);
+  const {
+    cachedDraft,
+    isLoaded: isDraftLoaded,
+    saveDraft,
+    clearDraft,
+  } = useDraftCache<{ formValues: HeaderFormValues; sections: DraftSection[] }>(
+    "draft:template:new",
+  );
+  const draftRestoredRef = useRef(false);
 
-  const removeSection = (sId: string) =>
-    setSections((prev) => prev.filter((s) => s.id !== sId));
+  useEffect(() => {
+    if (isDraftLoaded && cachedDraft && !draftRestoredRef.current) {
+      draftRestoredRef.current = true;
+      form.setFieldsValue(cachedDraft.formValues);
+      setSections(cachedDraft.sections);
+    }
+  }, [cachedDraft, isDraftLoaded, form]);
+
+  useEffect(() => {
+    if (!draftRestoredRef.current) return;
+    saveDraft({
+      formValues: form.getFieldsValue(true) as HeaderFormValues,
+      sections,
+    });
+  }, [form, sections, saveDraft]);
+
+  /* ── Section helpers ────────────────────────────────────────── */
+  const addSection = () => setSections((prev) => [...prev, makeEmptySection(prev.length + 1)]);
+
+  const removeSection = (sId: string) => setSections((prev) => prev.filter((s) => s.id !== sId));
 
   const updateSection = (sId: string, patch: Partial<DraftSection>) =>
     setSections((prev) => prev.map((s) => (s.id === sId ? { ...s, ...patch } : s)));
@@ -258,13 +284,22 @@ export function TemplateNewPage() {
         })),
       };
 
-      const res = await fetch(API_ROUTES.reportTemplates.list, {
+      const { ok, queued, response } = await offlineFetch(API_ROUTES.reportTemplates.list, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        credentials: "include",
       });
-      const json = await res.json();
-      if (!res.ok) {
+
+      if (queued) {
+        message.success("Saved locally and will sync when you're back online.");
+        clearDraft();
+        router.push(APP_ROUTES.templates);
+        return;
+      }
+
+      const json = response ? await response.json().catch(() => ({})) : {};
+      if (!ok) {
         message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
         setSaving(false);
         return;
@@ -272,6 +307,7 @@ export function TemplateNewPage() {
       message.success(CONTENT.templates.templateCreated as string);
       // If any metric captures goals, prompt to set goals now
       const hasGoalMetrics = sections.some((s) => s.metrics.some((m) => m.capturesGoal));
+      clearDraft();
       if (hasGoalMetrics && json.data?.id) {
         setCreatedTemplateId(json.data.id);
         setGoalPromptVisible(true);
@@ -290,184 +326,188 @@ export function TemplateNewPage() {
 
   return (
     <>
-    <PageLayout
-      title={CONTENT.templates.newTemplate as string}
-      actions={
-        <Button onClick={() => router.push(APP_ROUTES.templates)}>
-          {CONTENT.common.cancel as string}
-        </Button>
-      }
-    >
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleSubmit}
-        requiredMark={false}
-        initialValues={{ isDefault: false }}
+      <PageLayout
+        title={CONTENT.templates.newTemplate as string}
+        actions={
+          <Button onClick={() => router.push(APP_ROUTES.templates)}>
+            {CONTENT.common.cancel as string}
+          </Button>
+        }
       >
-        <div className="max-w-4xl space-y-6">
-          {/* Metadata card */}
-          <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6 space-y-4">
-            <Form.Item
-              name="name"
-              label={CONTENT.templates.nameLabel as string}
-              rules={[{ required: true, message: "Template name is required." }]}
-            >
-              <Input size="large" placeholder={CONTENT.templates.namePlaceholder as string} />
-            </Form.Item>
-            <Form.Item name="description" label={CONTENT.templates.descriptionLabel as string}>
-              <Input.TextArea rows={2} placeholder={CONTENT.templates.descriptionPlaceholder as string} />
-            </Form.Item>
-            <div className="flex items-center gap-2">
-              <Form.Item name="isDefault" valuePropName="checked" noStyle>
-                <Switch size="small" />
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          requiredMark={false}
+          initialValues={{ isDefault: false }}
+        >
+          <div className="max-w-4xl space-y-6">
+            {/* Metadata card */}
+            <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6 space-y-4">
+              <Form.Item
+                name="name"
+                label={CONTENT.templates.nameLabel as string}
+                rules={[{ required: true, message: "Template name is required." }]}
+              >
+                <Input size="large" placeholder={CONTENT.templates.namePlaceholder as string} />
               </Form.Item>
-              <span className="text-sm text-ds-text-secondary">
-                {CONTENT.templates.setDefault as string}
-              </span>
-            </div>
-          </div>
-
-          {/* Sections + metrics */}
-          <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6">
-            <div className="flex items-center justify-between mb-5">
-              <div>
-                <h3 className="text-sm font-semibold text-ds-text-primary">
-                  {CONTENT.templates.sectionsLabel as string}
-                  <Badge
-                    count={sections.length}
-                    className="ml-2"
-                    style={{ backgroundColor: "var(--ds-brand-accent)" }}
-                  />
-                </h3>
-                <p className="text-xs text-ds-text-subtle mt-0.5">
-                  {totalMetrics} metric{totalMetrics === 1 ? "" : "s"} across {sections.length} section{sections.length === 1 ? "" : "s"}
-                </p>
+              <Form.Item name="description" label={CONTENT.templates.descriptionLabel as string}>
+                <Input.TextArea
+                  rows={2}
+                  placeholder={CONTENT.templates.descriptionPlaceholder as string}
+                />
+              </Form.Item>
+              <div className="flex items-center gap-2">
+                <Form.Item name="isDefault" valuePropName="checked" noStyle>
+                  <Switch size="small" />
+                </Form.Item>
+                <span className="text-sm text-ds-text-secondary">
+                  {CONTENT.templates.setDefault as string}
+                </span>
               </div>
-              <Button icon={<PlusOutlined />} size="small" onClick={addSection}>
-                {CONTENT.templates.addSection as string}
-              </Button>
             </div>
 
-            {sections.length === 0 ? (
-              <div className="text-center py-10 text-ds-text-subtle text-sm">
-                {CONTENT.templates.emptySections as string}
+            {/* Sections + metrics */}
+            <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h3 className="text-sm font-semibold text-ds-text-primary">
+                    {CONTENT.templates.sectionsLabel as string}
+                    <Badge
+                      count={sections.length}
+                      className="ml-2"
+                      style={{ backgroundColor: "var(--ds-brand-accent)" }}
+                    />
+                  </h3>
+                  <p className="text-xs text-ds-text-subtle mt-0.5">
+                    {totalMetrics} metric{totalMetrics === 1 ? "" : "s"} across {sections.length}{" "}
+                    section{sections.length === 1 ? "" : "s"}
+                  </p>
+                </div>
+                <Button icon={<PlusOutlined />} size="small" onClick={addSection}>
+                  {CONTENT.templates.addSection as string}
+                </Button>
               </div>
-            ) : (
-              <Collapse
-                accordion={false}
-                defaultActiveKey={sections.map((s) => s.id)}
-                items={sections.map((section, si) => ({
-                  key: section.id,
-                  label: (
-                    <div className="flex items-center gap-3 min-w-0">
-                      <DragOutlined className="text-ds-text-subtle flex-shrink-0" />
-                      <span className="font-medium text-ds-text-primary truncate">
-                        {section.name || `${CONTENT.templates.sectionLabel as string} ${si + 1}`}
-                      </span>
-                      <span className="text-xs text-ds-text-subtle flex-shrink-0">
-                        {section.metrics.length} metric{section.metrics.length === 1 ? "" : "s"}
-                        {section.isRequired && <span className="ml-1 text-red-500">*</span>}
-                      </span>
-                    </div>
-                  ),
-                  children: (
-                    <div className="space-y-4 pt-1">
-                      {/* Section name + required toggle */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
-                        <div>
-                          <label className="text-xs font-medium text-ds-text-secondary block mb-1">
-                            {CONTENT.templates.sectionNameLabel as string} *
-                          </label>
-                          <Input
-                            size="middle"
-                            value={section.name}
-                            onChange={(e) => updateSection(section.id, { name: e.target.value })}
-                            placeholder="e.g. Weekly Attendance"
-                          />
-                        </div>
-                        <div className="flex items-end gap-3">
-                          <div className="flex-1">
+
+              {sections.length === 0 ? (
+                <div className="text-center py-10 text-ds-text-subtle text-sm">
+                  {CONTENT.templates.emptySections as string}
+                </div>
+              ) : (
+                <Collapse
+                  accordion={false}
+                  defaultActiveKey={sections.map((s) => s.id)}
+                  items={sections.map((section, si) => ({
+                    key: section.id,
+                    label: (
+                      <div className="flex items-center gap-3 min-w-0">
+                        <DragOutlined className="text-ds-text-subtle flex-shrink-0" />
+                        <span className="font-medium text-ds-text-primary truncate">
+                          {section.name || `${CONTENT.templates.sectionLabel as string} ${si + 1}`}
+                        </span>
+                        <span className="text-xs text-ds-text-subtle flex-shrink-0">
+                          {section.metrics.length} metric{section.metrics.length === 1 ? "" : "s"}
+                          {section.isRequired && <span className="ml-1 text-red-500">*</span>}
+                        </span>
+                      </div>
+                    ),
+                    children: (
+                      <div className="space-y-4 pt-1">
+                        {/* Section name + required toggle */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+                          <div>
                             <label className="text-xs font-medium text-ds-text-secondary block mb-1">
-                              {CONTENT.templates.descriptionLabel as string}
+                              {CONTENT.templates.sectionNameLabel as string} *
                             </label>
                             <Input
                               size="middle"
-                              value={section.description}
-                              onChange={(e) =>
-                                updateSection(section.id, { description: e.target.value })
-                              }
-                              placeholder="Optional"
+                              value={section.name}
+                              onChange={(e) => updateSection(section.id, { name: e.target.value })}
+                              placeholder="e.g. Weekly Attendance"
                             />
                           </div>
-                          <div className="flex items-center gap-1.5 pb-0.5 flex-shrink-0">
-                            <Switch
-                              size="small"
-                              checked={section.isRequired}
-                              onChange={(v) => updateSection(section.id, { isRequired: v })}
-                            />
-                            <span className="text-xs text-ds-text-secondary whitespace-nowrap">
-                              {CONTENT.templates.isRequiredLabel as string}
-                            </span>
+                          <div className="flex items-end gap-3">
+                            <div className="flex-1">
+                              <label className="text-xs font-medium text-ds-text-secondary block mb-1">
+                                {CONTENT.templates.descriptionLabel as string}
+                              </label>
+                              <Input
+                                size="middle"
+                                value={section.description}
+                                onChange={(e) =>
+                                  updateSection(section.id, { description: e.target.value })
+                                }
+                                placeholder="Optional"
+                              />
+                            </div>
+                            <div className="flex items-center gap-1.5 pb-0.5 flex-shrink-0">
+                              <Switch
+                                size="small"
+                                checked={section.isRequired}
+                                onChange={(v) => updateSection(section.id, { isRequired: v })}
+                              />
+                              <span className="text-xs text-ds-text-secondary whitespace-nowrap">
+                                {CONTENT.templates.isRequiredLabel as string}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Metrics list */}
-                      <div className="space-y-2">
-                        {section.metrics.length === 0 && (
-                          <p className="text-xs text-ds-text-subtle py-2">
-                            {CONTENT.templates.emptyMetrics as string}
-                          </p>
-                        )}
-                        {section.metrics.map((metric) => (
-                          <MetricRow
-                            key={metric.id}
-                            metric={metric}
-                            onChange={(patch) => updateMetric(section.id, metric.id, patch)}
-                            onRemove={() => removeMetric(section.id, metric.id)}
-                          />
-                        ))}
-                      </div>
+                        {/* Metrics list */}
+                        <div className="space-y-2">
+                          {section.metrics.length === 0 && (
+                            <p className="text-xs text-ds-text-subtle py-2">
+                              {CONTENT.templates.emptyMetrics as string}
+                            </p>
+                          )}
+                          {section.metrics.map((metric) => (
+                            <MetricRow
+                              key={metric.id}
+                              metric={metric}
+                              onChange={(patch) => updateMetric(section.id, metric.id, patch)}
+                              onRemove={() => removeMetric(section.id, metric.id)}
+                            />
+                          ))}
+                        </div>
 
-                      {/* Section footer actions */}
-                      <div className="flex items-center justify-between pt-2 border-t border-ds-border-subtle">
-                        <Button
-                          icon={<PlusOutlined />}
-                          size="small"
-                          onClick={() => addMetric(section.id)}
-                        >
-                          {CONTENT.templates.addMetric as string}
-                        </Button>
-                        <Button
-                          type="text"
-                          danger
-                          size="small"
-                          icon={<DeleteOutlined />}
-                          onClick={() => removeSection(section.id)}
-                        >
-                          {CONTENT.templates.removeSection as string}
-                        </Button>
+                        {/* Section footer actions */}
+                        <div className="flex items-center justify-between pt-2 border-t border-ds-border-subtle">
+                          <Button
+                            icon={<PlusOutlined />}
+                            size="small"
+                            onClick={() => addMetric(section.id)}
+                          >
+                            {CONTENT.templates.addMetric as string}
+                          </Button>
+                          <Button
+                            type="text"
+                            danger
+                            size="small"
+                            icon={<DeleteOutlined />}
+                            onClick={() => removeSection(section.id)}
+                          >
+                            {CONTENT.templates.removeSection as string}
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ),
-                }))}
-              />
-            )}
+                    ),
+                  }))}
+                />
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="flex justify-end gap-3">
+              <Button onClick={() => router.push(APP_ROUTES.templates)}>
+                {CONTENT.common.cancel as string}
+              </Button>
+              <Button type="primary" htmlType="submit" icon={<SaveOutlined />} loading={saving}>
+                {CONTENT.templates.createTemplate as string}
+              </Button>
+            </div>
           </div>
-
-          {/* Footer */}
-          <div className="flex justify-end gap-3">
-            <Button onClick={() => router.push(APP_ROUTES.templates)}>
-              {CONTENT.common.cancel as string}
-            </Button>
-            <Button type="primary" htmlType="submit" icon={<SaveOutlined />} loading={saving}>
-              {CONTENT.templates.createTemplate as string}
-            </Button>
-          </div>
-        </div>
-      </Form>
-    </PageLayout>
+        </Form>
+      </PageLayout>
 
       {/* Goal-set prompt modal */}
       <Modal
@@ -479,7 +519,13 @@ export function TemplateNewPage() {
           </div>
         }
         footer={[
-          <Button key="later" onClick={() => { setGoalPromptVisible(false); router.push(APP_ROUTES.templates); }}>
+          <Button
+            key="later"
+            onClick={() => {
+              setGoalPromptVisible(false);
+              router.push(APP_ROUTES.templates);
+            }}
+          >
             {CONTENT.templates.goalPromptSkip as string}
           </Button>,
           <Button
@@ -494,7 +540,10 @@ export function TemplateNewPage() {
             {CONTENT.templates.goalPromptConfirm as string}
           </Button>,
         ]}
-        onCancel={() => { setGoalPromptVisible(false); router.push(APP_ROUTES.templates); }}
+        onCancel={() => {
+          setGoalPromptVisible(false);
+          router.push(APP_ROUTES.templates);
+        }}
         closable={false}
       >
         <p className="text-sm text-ds-text-secondary py-2">

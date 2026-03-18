@@ -82,9 +82,9 @@ export function PageLayout({
   actions,
 }: PageLayoutProps) {
   return (
-    <div className={`p-6 max-w-screen-2xl mx-auto ${className}`}>
+    <div className={`min-h-screen flex flex-col p-6 max-w-screen-2xl mx-auto ${className}`}>
       {title && <PageHeader title={title} subtitle={subtitle} icon={icon} actions={actions} />}
-      {children}
+      <div className="flex-1 overflow-auto">{children}</div>
     </div>
   );
 }
