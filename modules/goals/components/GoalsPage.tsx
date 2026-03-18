@@ -35,6 +35,33 @@ import {
   SaveOutlined,
   GlobalOutlined,
 } from "@ant-design/icons";
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function postWithRetry(
+  url: string,
+  options: RequestInit,
+  maxAttempts = 3,
+  initialDelayMs = 500,
+): Promise<Response> {
+  let attempt = 0;
+  let delay = initialDelayMs;
+
+  while (true) {
+    const res = await fetch(url, options);
+    if (res.ok) return res;
+
+    if (res.status !== 429 || attempt >= maxAttempts - 1) {
+      return res;
+    }
+
+    await sleep(delay);
+    attempt += 1;
+    delay *= 2;
+  }
+}
 import { useAuth } from "@/providers/AuthProvider";
 import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
@@ -296,15 +323,24 @@ function BulkGoalTable({
         }
       }
 
-      await Promise.all(
-        payloads.map((payload) =>
-          fetch(API_ROUTES.goals.list, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          }),
-        ),
+      const res = await postWithRetry(
+        API_ROUTES.goals.bulk,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payloads),
+        },
+        3,
+        500,
       );
+
+      const json = await res.json();
+      if (!res.ok || !json?.success) {
+        message.error(
+          json?.error ?? (CONTENT.errors as Record<string, string>).generic ?? "Error saving goals.",
+        );
+        return;
+      }
 
       message.success(g.savedGoals as string);
     } catch {
@@ -556,32 +592,31 @@ function AllCampusesMatrix({
           });
         }
       }
-      await Promise.all(
-        payloads.map((payload) =>
-          fetch(API_ROUTES.goals.list, {
+
+        const res = await postWithRetry(
+          API_ROUTES.goals.bulk,
+          {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          }),
-        ),
-      );
-      message.success(g.savedGoals as string);
-    } catch {
-      message.error("Error saving goals.");
-    } finally {
-      setSaving(false);
-    }
-  };
+            body: JSON.stringify(payloads),
+          },
+          3,
+          500,
+        );
 
-  if (sections.length === 0) {
-    return (
-      <EmptyState
-        icon={<TrophyOutlined />}
-        title="No goal metrics found"
-        description="No metrics with goal-capturing enabled exist in active templates."
-      />
-    );
-  }
+        const json = await res.json();
+        if (!res.ok || !json?.success) {
+          message.error(json?.error ?? "Error saving goals.");
+          return;
+        }
+
+        message.success(g.savedGoals as string);
+      } catch {
+        message.error("Error saving goals.");
+      } finally {
+        setSaving(false);
+      }
+    };
 
   return (
     <div className="space-y-4">

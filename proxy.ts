@@ -51,6 +51,7 @@ const PREFIX = process.env.REDIS_PREFIX ?? "hrs:";
 
 let _apiLimiter: Ratelimit | null = null;
 let _authLimiter: Ratelimit | null = null;
+let _bulkLimiter: Ratelimit | null = null;
 
 function getApiLimiter(): Ratelimit | null {
     if (_apiLimiter) return _apiLimiter;
@@ -66,6 +67,15 @@ function getAuthLimiter(): Ratelimit | null {
     if (!r) return null;
     _authLimiter = new Ratelimit({ redis: r, limiter: Ratelimit.slidingWindow(10, "60 s"), prefix: `${PREFIX}rl:auth`, analytics: true });
     return _authLimiter;
+}
+
+function getBulkLimiter(): Ratelimit | null {
+    if (_bulkLimiter) return _bulkLimiter;
+    const r = getRedis();
+    if (!r) return null;
+    // Bulk operations are expected to be coalesced in a single request. Allow a higher burst.
+    _bulkLimiter = new Ratelimit({ redis: r, limiter: Ratelimit.slidingWindow(120, "60 s"), prefix: `${PREFIX}rl:bulk`, analytics: true });
+    return _bulkLimiter;
 }
 
 /* ── Auth Constants ────────────────────────────────────────────────────────── */
@@ -154,8 +164,9 @@ export async function proxy(req: NextRequest) {
             "unknown";
 
         const isAuth = pathname.startsWith("/api/auth/");
-        const limiter = isAuth ? getAuthLimiter() : getApiLimiter();
-        const identifier = `${ip}:${isAuth ? "auth" : "api"}`;
+        const isBulk = pathname === "/api/goals/bulk";
+        const limiter = isAuth ? getAuthLimiter() : isBulk ? getBulkLimiter() : getApiLimiter();
+        const identifier = `${ip}:${isAuth ? "auth" : isBulk ? "bulk" : "api"}`;
 
         if (limiter) {
             try {

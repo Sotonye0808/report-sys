@@ -131,6 +131,7 @@ export const API_ROUTES = {
     },
     goals: {
         list: "/api/goals",
+        bulk: "/api/goals/bulk",
         forReport: "/api/goals/for-report",
         detail: (id: string) => `/api/goals/${id}`,
         unlockRequest: (id: string) => `/api/goals/${id}/unlock-request`,

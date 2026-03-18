@@ -54,23 +54,39 @@ const TEMPLATE_MANAGE_ROLES: UserRole[] = [
 /* ── GET /api/report-templates ────────────────────────────────────────────── */
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+    try {
+        const auth = await verifyAuth(req);
+        if (!auth.success) {
+            return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+        }
+
+        const cacheKey = "templates:list";
+        const cached = await cache.get(cacheKey);
+        if (cached) {
+            try {
+                const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
+                return NextResponse.json(parsed);
+            } catch {
+                // Cached payload is invalid JSON; ignore and refetch from the database.
+            }
+        }
+
+        const templates = await db.reportTemplate.findMany({
+            orderBy: { createdAt: "desc" },
+            include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
+        });
+
+        const response = { success: true, data: templates };
+        await cache.set(cacheKey, JSON.stringify(response), 60);
+        return NextResponse.json(response);
+    } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error("[api] Error in GET /api/report-templates", err);
+        return NextResponse.json(
+            { success: false, error: "An error occurred while loading templates." },
+            { status: 500 },
+        );
     }
-
-    const cacheKey = "templates:list";
-    const cached = await cache.get(cacheKey);
-    if (cached) return NextResponse.json(cached);
-
-    const templates = await db.reportTemplate.findMany({
-        orderBy: { createdAt: "desc" },
-        include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
-    });
-
-    const response = { success: true, data: templates };
-    await cache.set(cacheKey, JSON.stringify(response), 60);
-    return NextResponse.json(response);
 }
 
 /* ── POST /api/report-templates ──────────────────────────────────────────── */

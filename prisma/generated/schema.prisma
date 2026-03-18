@@ -524,6 +524,7 @@ model Goal {
   lockedBy       User?                @relation("GoalLocker", fields: [lockedById], references: [id])
   editRequests   GoalEditRequest[]
 
+  @@unique([campusId, templateMetricId, year, mode, month])
   @@index([campusId, templateMetricId, year])
   @@map("goals")
 }

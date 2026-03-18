@@ -15,6 +15,11 @@
 - [x] Ensure superadmin (and other empowered roles) can edit/submit draft reports and see action buttons on report detail
 - [x] Add unlock-report action + backend endpoint so superadmin can unlock & edit locked reports
 - [x] Make “Add report” button always visible for superadmin and roles with create-report privilege
+- [x] Fix goal save 429s and enforce ACID bulk goal updates (batch endpoint + transaction)
+- [x] Update goal bulk UI to use batch endpoint and handle 429 with retry/backoff
+- [x] Adjust API rate limiter configuration for bulk operations to prevent false-positives
+- [ ] Add regression tests for bulk goal upsert atomicity and rate-limit handling
+- [x] Harden report template API caching to prevent 500s (parse cached payload + improved error logging)
 
 ---
 
