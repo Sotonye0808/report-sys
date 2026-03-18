@@ -15,6 +15,7 @@ import { SaveOutlined, ArrowLeftOutlined, LockOutlined, SendOutlined } from "@an
 import { useRole } from "@/lib/hooks/useRole";
 import { UserRole, ReportStatus } from "@/types/global";
 import { useApiData } from "@/lib/hooks/useApiData";
+import { offlineFetch } from "@/lib/utils/offlineFetch";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
@@ -94,7 +95,7 @@ export function ReportEditPage({ params }: PageProps) {
         setSaving(false);
         return;
       }
-      const res = await fetch(API_ROUTES.reports.detail(id), {
+      const { ok, queued, response } = await offlineFetch(API_ROUTES.reports.detail(id), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -102,9 +103,16 @@ export function ReportEditPage({ params }: PageProps) {
           notes,
           sections: buildSectionsPayload(template, metricValues, goalsMap),
         }),
+        credentials: "include",
       });
-      const json = await res.json();
-      if (!res.ok) {
+
+      if (queued) {
+        message.success("Saved locally and will sync when you're back online.");
+        return;
+      }
+
+      const json = response ? await response.json().catch(() => ({})) : {};
+      if (!ok) {
         message.error(json.error ?? (CONTENT.common.errorDefault as string));
         setSaving(false);
         return;
@@ -240,12 +248,18 @@ export function ReportEditPage({ params }: PageProps) {
                 onClick={async () => {
                   setSaving(true);
                   try {
-                    const res = await fetch(API_ROUTES.reports.submit(id), {
+                    const { ok, queued, response } = await offlineFetch(API_ROUTES.reports.submit(id), {
                       method: "POST",
                       credentials: "include",
                     });
-                    const json = await res.json();
-                    if (!res.ok) {
+
+                    if (queued) {
+                      message.success("Submit queued and will be retried when you're back online.");
+                      return;
+                    }
+
+                    const json = response ? await response.json().catch(() => ({})) : {};
+                    if (!ok) {
                       message.error(json.error ?? (CONTENT.common.errorDefault as string));
                       return;
                     }

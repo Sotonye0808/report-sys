@@ -6,7 +6,7 @@
  * SUPERADMIN only.
  */
 
-import { useState, use } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import { useRouter } from "next/navigation";
 import { Form, message, Modal, Switch, Select, Tag, Collapse, Badge } from "antd";
 import {
@@ -19,6 +19,8 @@ import {
   TrophyOutlined,
 } from "@ant-design/icons";
 import { useApiData } from "@/lib/hooks/useApiData";
+import { useDraftCache } from "@/lib/hooks/useDraftCache";
+import { offlineFetch } from "@/lib/utils/offlineFetch";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { MetricFieldType, MetricCalculationType } from "@/types/global";
@@ -150,43 +152,57 @@ export function TemplateDetailPage({ params }: PageProps) {
   const [saving, setSaving] = useState(false);
   const [goalPromptVisible, setGoalPromptVisible] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const {
+    cachedDraft,
+    isLoaded: isDraftLoaded,
+    saveDraft,
+    clearDraft,
+  } = useDraftCache<{ formValues: any; sections: DraftSection[] }>(`draft:template:${id}`);
+  const draftRestoredRef = useRef(false);
 
   const { data: template } = useApiData<TemplateWithMeta>(API_ROUTES.reportTemplates.detail(id));
 
-  if (template && !initialized) {
-    form.setFieldsValue({
-      name: template.name,
-      description: template.description ?? "",
-      isDefault: template.isDefault ?? false,
-      isArchived: template.isArchived ?? false,
-    });
-    const rawSections = (template.sections ?? []) as ReportTemplateSection[];
-    setSections(
-      rawSections
-        .sort((a, b) => a.order - b.order)
-        .map((s) => ({
-          id: s.id,
-          name: s.name,
-          description: s.description ?? "",
-          isRequired: s.isRequired,
-          order: s.order,
-          metrics: (s.metrics ?? [])
-            .sort((a, b) => a.order - b.order)
-            .map((m) => ({
-              id: m.id,
-              name: m.name,
-              description: m.description ?? "",
-              fieldType: m.fieldType,
-              calculationType: m.calculationType,
-              isRequired: m.isRequired,
-              capturesGoal: m.capturesGoal,
-              capturesAchieved: m.capturesAchieved,
-              capturesYoY: m.capturesYoY,
-              order: m.order,
-            })),
-        })),
-    );
-    setInitialized(true);
+  if (!initialized) {
+    if (isDraftLoaded && cachedDraft && !draftRestoredRef.current) {
+      draftRestoredRef.current = true;
+      form.setFieldsValue(cachedDraft.formValues);
+      setSections(cachedDraft.sections);
+      setInitialized(true);
+    } else if (template) {
+      form.setFieldsValue({
+        name: template.name,
+        description: template.description ?? "",
+        isDefault: template.isDefault ?? false,
+        isArchived: template.isArchived ?? false,
+      });
+      const rawSections = (template.sections ?? []) as ReportTemplateSection[];
+      setSections(
+        rawSections
+          .sort((a, b) => a.order - b.order)
+          .map((s) => ({
+            id: s.id,
+            name: s.name,
+            description: s.description ?? "",
+            isRequired: s.isRequired,
+            order: s.order,
+            metrics: (s.metrics ?? [])
+              .sort((a, b) => a.order - b.order)
+              .map((m) => ({
+                id: m.id,
+                name: m.name,
+                description: m.description ?? "",
+                fieldType: m.fieldType,
+                calculationType: m.calculationType,
+                isRequired: m.isRequired,
+                capturesGoal: m.capturesGoal,
+                capturesAchieved: m.capturesAchieved,
+                capturesYoY: m.capturesYoY,
+                order: m.order,
+              })),
+          })),
+      );
+      setInitialized(true);
+    }
   }
 
   const updateSection = (sId: string, patch: Partial<DraftSection>) =>
@@ -245,6 +261,14 @@ export function TemplateDetailPage({ params }: PageProps) {
       }),
     );
 
+  useEffect(() => {
+    if (!draftRestoredRef.current) return;
+    saveDraft({
+      formValues: form.getFieldsValue(true) as any,
+      sections: sections ?? [],
+    });
+  }, [form, sections, saveDraft]);
+
   const handleSave = async (values: {
     name: string;
     description: string;
@@ -288,17 +312,25 @@ export function TemplateDetailPage({ params }: PageProps) {
           })),
         })),
       };
-      const res = await fetch(API_ROUTES.reportTemplates.detail(id), {
+      const { ok, queued, response } = await offlineFetch(API_ROUTES.reportTemplates.detail(id), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        credentials: "include",
       });
-      const json = await res.json();
-      if (!res.ok) {
+
+      if (queued) {
+        message.success("Saved locally and will sync when you're back online.");
+        return;
+      }
+
+      const json = response ? await response.json().catch(() => ({})) : {};
+      if (!ok) {
         message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
         return;
       }
       message.success(CONTENT.templates.templateSaved as string);
+      clearDraft();
       // Prompt to update goals if any metric captures a goal
       const hasGoalMetrics = draft.some((s) => s.metrics.some((m) => m.capturesGoal));
       if (hasGoalMetrics) setGoalPromptVisible(true);

@@ -14,6 +14,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Select, Tabs, Segmented, Progress } from "antd";
+import Button from "@/components/ui/Button";
+import { DownloadOutlined } from "@ant-design/icons";
 import {
   BarChart,
   Bar,
@@ -31,6 +33,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import { utils, writeFile } from "xlsx";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
 import { useApiData } from "@/lib/hooks/useApiData";
@@ -286,6 +289,7 @@ export function AnalyticsPage() {
 
   /* Shared controls */
   const [year, setYear] = useState(CURRENT_YEAR);
+  const [activeTab, setActiveTab] = useState("overview");
   const [campusFilter, setCampusFilter] = useState<string | undefined>(
     // Non-superadmin defaults default to own campus
     undefined,
@@ -317,6 +321,96 @@ export function AnalyticsPage() {
 
   /* Effective campus filter â€” non-cross-campus roles forced to own campus */
   const effectiveCampusId = canSeeCrossCampus ? campusFilter : user?.campusId;
+
+  const exportToXlsx = (sheets: { name: string; data: any[] }[], filename: string) => {
+    const workbook = utils.book_new();
+    for (const sheet of sheets) {
+      const ws = utils.json_to_sheet(sheet.data);
+      utils.book_append_sheet(workbook, ws, sheet.name);
+    }
+    writeFile(workbook, filename);
+  };
+
+  const handleExport = () => {
+    const campusLabel = allCampuses?.find((c) => c.id === effectiveCampusId)?.name ?? "all";
+    const baseFilename = `analytics-${activeTab}-${year}-${campusLabel}`.replace(/[^a-zA-Z0-9-_\.]/g, "_");
+
+    if (activeTab === "overview" && overview) {
+      exportToXlsx(
+        [
+          {
+            name: "Summary",
+            data: [
+              { metric: "Total Reports", value: overview.totals.total },
+              { metric: "Submitted", value: overview.totals.submitted },
+              { metric: "Approved", value: overview.totals.approved },
+              { metric: "Compliance", value: overview.compliance },
+            ],
+          },
+          { name: "Campus Breakdown", data: overview.campusBreakdown },
+          { name: "Status Trend", data: overview.statusTrend },
+        ],
+        `${baseFilename}.xlsx`,
+      );
+      return;
+    }
+
+    if (activeTab === "metrics" && metricsData) {
+      exportToXlsx(
+        [
+          { name: "Metric Aggregate", data: metricsData.aggregate },
+          { name: "By Campus", data: metricsData.byCampus.flatMap((c) =>
+              c.series.map((p) => ({ campus: c.campusName, ...p })),
+            ),
+          },
+        ],
+        `${baseFilename}.xlsx`,
+      );
+      return;
+    }
+
+    if (activeTab === "trends" && overview) {
+      exportToXlsx(
+        [
+          { name: "Status Trend", data: overview.statusTrend },
+          { name: "Quarterly Trend", data: overview.quarterlyTrend },
+        ],
+        `${baseFilename}.xlsx`,
+      );
+      return;
+    }
+
+    if (activeTab === "compliance" && overview) {
+      exportToXlsx(
+        [{ name: "Campus Breakdown", data: overview.campusBreakdown }],
+        `${baseFilename}.xlsx`,
+      );
+      return;
+    }
+
+    if (activeTab === "quarterly" && quarterlyData) {
+      exportToXlsx(
+        [
+          { name: "Quarterly Summary", data: [quarterlyData] },
+          { name: "Campus Breakdown", data: quarterlyData.campusBreakdown },
+          { name: "Monthly Breakdown", data: quarterlyData.monthlyBreakdown },
+        ],
+        `${baseFilename}.xlsx`,
+      );
+      return;
+    }
+
+    // Fallback: export overview if available
+    if (overview) {
+      exportToXlsx(
+        [
+          { name: "Summary", data: [overview.totals] },
+          { name: "Campus Breakdown", data: overview.campusBreakdown },
+        ],
+        `${baseFilename}.xlsx`,
+      );
+    }
+  };
 
   /* â”€â”€ Fetch overview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
@@ -494,6 +588,14 @@ export function AnalyticsPage() {
         size="middle"
         style={{ width: 100 }}
       />
+      <Button
+        icon={<DownloadOutlined />}
+        onClick={handleExport}
+        type="default"
+        size="middle"
+      >
+        Export
+      </Button>
     </div>
   );
 
@@ -982,7 +1084,12 @@ export function AnalyticsPage() {
   return (
     <PageLayout>
       <PageHeader title={CONTENT.analytics.pageTitle as string} actions={sharedControls} />
-      <Tabs items={TAB_ITEMS} destroyInactiveTabPane={false} />
+      <Tabs
+        items={TAB_ITEMS}
+        destroyInactiveTabPane={false}
+        activeKey={activeTab}
+        onChange={(key) => setActiveTab(key)}
+      />
     </PageLayout>
   );
 }

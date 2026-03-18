@@ -20,6 +20,10 @@
 - [x] Adjust API rate limiter configuration for bulk operations to prevent false-positives
 - [ ] Add regression tests for bulk goal upsert atomicity and rate-limit handling
 - [x] Harden report template API caching to prevent 500s (parse cached payload + improved error logging)
+- [x] Implement offline draft persistence + restore for reports, templates, and goals
+- [ ] Add offline sync indicator + retry queue for pending offline submissions
+- [x] Fix offline/online redirect loop (dashboard loading stuck) by restoring pre-navigation state
+- [x] Implement draft persistence for goals page and templates editing
 
 ---
 

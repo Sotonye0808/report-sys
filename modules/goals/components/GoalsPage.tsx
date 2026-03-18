@@ -15,7 +15,7 @@
  *   - Locked goals show a lock badge; editing them opens an unlock-request modal.
  */
 
-import { useState, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   InputNumber,
   Select,
@@ -36,34 +36,10 @@ import {
   GlobalOutlined,
 } from "@ant-design/icons";
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function postWithRetry(
-  url: string,
-  options: RequestInit,
-  maxAttempts = 3,
-  initialDelayMs = 500,
-): Promise<Response> {
-  let attempt = 0;
-  let delay = initialDelayMs;
-
-  while (true) {
-    const res = await fetch(url, options);
-    if (res.ok) return res;
-
-    if (res.status !== 429 || attempt >= maxAttempts - 1) {
-      return res;
-    }
-
-    await sleep(delay);
-    attempt += 1;
-    delay *= 2;
-  }
-}
 import { useAuth } from "@/providers/AuthProvider";
 import { useApiData } from "@/lib/hooks/useApiData";
+import { useDraftCache } from "@/lib/hooks/useDraftCache";
+import { offlineFetch } from "@/lib/utils/offlineFetch";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES } from "@/config/routes";
 import { ROLE_CONFIG } from "@/config/roles";
@@ -119,6 +95,15 @@ function canSeeAllCampuses(role: UserRole): boolean {
 type BulkGoalValues = Record<string, number | undefined>;
 /** keyed by campusId then metricId (for all-campuses view) */
 type MatrixValues = Record<string, BulkGoalValues>;
+
+interface GoalsDraft {
+  year: number;
+  mode: GoalMode;
+  activeTab?: string;
+  annValues: BulkGoalValues;
+  monthValues: Record<string, Record<number, number>>;
+  matrixValues: MatrixValues;
+}
 
 /* ── Helpers ─────────────────────────────────────────────────────────────────  */
 
@@ -262,8 +247,34 @@ function BulkGoalTable({
     }
     return init;
   });
+
+  const draftKey = `draft:goals:campus:${campusId}:${year}:${mode}`;
+  const {
+    cachedDraft,
+    isLoaded: isDraftLoaded,
+    saveDraft,
+    clearDraft,
+  } = useDraftCache<{
+    annValues: BulkGoalValues;
+    monthValues: Record<string, Record<number, number>>;
+  }>(draftKey);
+  const draftRestoredRef = useRef(false);
+
   const [saving, setSaving] = useState(false);
   const [unlockGoal, setUnlockGoal] = useState<Goal | undefined>(undefined);
+
+  useEffect(() => {
+    if (isDraftLoaded && cachedDraft && !draftRestoredRef.current) {
+      draftRestoredRef.current = true;
+      setAnnValues(cachedDraft.annValues);
+      setMonthValues(cachedDraft.monthValues);
+    }
+  }, [cachedDraft, isDraftLoaded]);
+
+  useEffect(() => {
+    if (!draftRestoredRef.current) return;
+    saveDraft({ annValues, monthValues });
+  }, [annValues, monthValues, saveDraft]);
 
   /* Collect all goal-capturing metrics across all templates */
   const sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }> =
@@ -323,26 +334,41 @@ function BulkGoalTable({
         }
       }
 
-      const res = await postWithRetry(
-        API_ROUTES.goals.bulk,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payloads),
-        },
-        3,
-        500,
-      );
+      const { ok, queued, response } = await offlineFetch(API_ROUTES.goals.bulk, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payloads),
+        credentials: "include",
+      });
 
-      const json = await res.json();
-      if (!res.ok || !json?.success) {
+      if (queued) {
+        message.success("Changes saved locally and will sync when you're back online.");
+        clearDraft();
+        return;
+      }
+
+      if (!ok) {
+        const json = response ? await response.json().catch(() => ({})) : {};
         message.error(
-          json?.error ?? (CONTENT.errors as Record<string, string>).generic ?? "Error saving goals.",
+          json?.error ??
+            (CONTENT.errors as Record<string, string>).generic ??
+            "Error saving goals.",
+        );
+        return;
+      }
+
+      const json = response ? await response.json().catch(() => ({})) : {};
+      if (!json?.success) {
+        message.error(
+          json?.error ??
+            (CONTENT.errors as Record<string, string>).generic ??
+            "Error saving goals.",
         );
         return;
       }
 
       message.success(g.savedGoals as string);
+      clearDraft();
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic ?? "Error saving goals.");
     } finally {
@@ -537,6 +563,16 @@ function AllCampusesMatrix({
   isSuperadmin,
 }: AllCampusesMatrixProps) {
   const goalMap = goalsToMap(goals);
+
+  const draftKey = `draft:goals:matrix:${year}:${mode}`;
+  const {
+    cachedDraft,
+    isLoaded: isDraftLoaded,
+    saveDraft,
+    clearDraft,
+  } = useDraftCache<{ matrixValues: MatrixValues }>(draftKey);
+  const draftRestoredRef = useRef(false);
+
   /** campusId -> metricId -> value */
   const [matrixValues, setMatrixValues] = useState<MatrixValues>(() => {
     const init: MatrixValues = {};
@@ -547,6 +583,18 @@ function AllCampusesMatrix({
     return init;
   });
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (isDraftLoaded && cachedDraft && !draftRestoredRef.current) {
+      draftRestoredRef.current = true;
+      setMatrixValues(cachedDraft.matrixValues);
+    }
+  }, [cachedDraft, isDraftLoaded]);
+
+  useEffect(() => {
+    if (!draftRestoredRef.current) return;
+    saveDraft({ matrixValues });
+  }, [matrixValues, saveDraft]);
 
   const sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }> =
     templates.flatMap((tmpl) =>
@@ -593,30 +641,39 @@ function AllCampusesMatrix({
         }
       }
 
-        const res = await postWithRetry(
-          API_ROUTES.goals.bulk,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payloads),
-          },
-          3,
-          500,
-        );
+      const { ok, queued, response } = await offlineFetch(API_ROUTES.goals.bulk, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payloads),
+        credentials: "include",
+      });
 
-        const json = await res.json();
-        if (!res.ok || !json?.success) {
-          message.error(json?.error ?? "Error saving goals.");
-          return;
-        }
-
-        message.success(g.savedGoals as string);
-      } catch {
-        message.error("Error saving goals.");
-      } finally {
-        setSaving(false);
+      if (queued) {
+        message.success("Changes saved locally and will sync when you're back online.");
+        clearDraft();
+        return;
       }
-    };
+
+      if (!ok) {
+        const json = response ? await response.json().catch(() => ({})) : {};
+        message.error(json?.error ?? "Error saving goals.");
+        return;
+      }
+
+      const json = response ? await response.json().catch(() => ({})) : {};
+      if (!json?.success) {
+        message.error(json?.error ?? "Error saving goals.");
+        return;
+      }
+
+      message.success(g.savedGoals as string);
+      clearDraft();
+    } catch {
+      message.error("Error saving goals.");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="space-y-4">

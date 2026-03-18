@@ -38,9 +38,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const checkAuth = async () => {
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 4000);
+
     try {
       // 1. Try the access token first
-      const meRes = await fetch("/api/auth/me", { credentials: "include" });
+      const meRes = await fetch("/api/auth/me", {
+        credentials: "include",
+        signal: controller.signal,
+      });
       if (meRes.ok) {
         const data: ApiResponse<AuthUser> = await meRes.json();
         if (data.success) {
@@ -54,6 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const refreshRes = await fetch("/api/auth/refresh", {
           method: "POST",
           credentials: "include",
+          signal: controller.signal,
         });
         if (refreshRes.ok) {
           const refreshData: ApiResponse<{ user: AuthUser }> = await refreshRes.json();
@@ -66,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       persistUser(null);
     } catch {
-      // Network failure — fall back to cached user for offline resilience
+      // Network failure / offline — fall back to cached user for offline resilience
       if (typeof navigator !== "undefined" && !navigator.onLine) {
         try {
           const cached = localStorage.getItem("hrs:auth-user");
@@ -80,6 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       setUser(null);
     } finally {
+      window.clearTimeout(timeoutId);
       setIsLoading(false);
     }
   };
