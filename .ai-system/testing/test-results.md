@@ -22,14 +22,14 @@
 
 ## Active Failures
 
-| Test | Error | Status | Assigned To |
-|------|-------|--------|------------|
+| Test        | Error           | Status                             | Assigned To |
+| ----------- | --------------- | ---------------------------------- | ----------- |
 | [test name] | [error message] | [Investigating / Fixed / Wont Fix] | [agent/dev] |
 
 ---
 
 ## History
 
-| Date | Passed | Failed | Notes |
-|------|--------|--------|-------|
-| [date] | [n] | [n] | [notes] |
+| Date   | Passed | Failed | Notes   |
+| ------ | ------ | ------ | ------- |
+| [date] | [n]    | [n]    | [notes] |

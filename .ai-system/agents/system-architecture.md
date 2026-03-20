@@ -117,6 +117,7 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 - Auth and access control are role-based; permissions are defined in `config/roles.ts` and must be updated when adding new roles or capabilities.
 - Some feature modules still rely on `any` types due to legacy data shapes; type tightening is a priority before release.
 - Offline sync is experimental and depends on service worker support; current implementation is a best-effort cache.
+- Email provider initialization must be environment-safe: `lib/email/resend.ts` now uses an optional client instance when `RESEND_API_KEY` is missing, preventing build-time failures.
 
 ---
 

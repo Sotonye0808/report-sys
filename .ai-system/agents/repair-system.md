@@ -50,12 +50,14 @@
 ### React / Next.js
 
 **Hydration Mismatch**
+
 - Symptom: `Hydration failed because the initial UI does not match what was rendered on the server`
 - Cause: Browser-only logic (window, localStorage, Date.now()) running during server render
 - Fix: Wrap in `useEffect` or use `dynamic(() => import(...), { ssr: false })`
 - Prevention: Never access browser APIs outside useEffect in components
 
 **Missing Key Prop**
+
 - Symptom: `Each child in a list should have a unique "key" prop`
 - Cause: `.map()` rendering without a stable unique key
 - Fix: Add `key={item.id}` — use a stable unique ID, not the array index
@@ -65,12 +67,14 @@
 ### Node.js / Backend
 
 **Unhandled Promise Rejection**
+
 - Symptom: Server crashes silently or logs `UnhandledPromiseRejectionWarning`
 - Cause: async function missing try/catch, or `.catch()` not attached to promise
 - Fix: Wrap async route handlers in try/catch, use an async error middleware
 - Prevention: Always use a global async error wrapper for Express routes
 
 **Database Connection Pool Exhausted**
+
 - Symptom: Requests hang indefinitely under load
 - Cause: Connection pool limit too low or connections not being released
 - Fix: Increase pool size in config, ensure `client.release()` in finally blocks
@@ -81,6 +85,7 @@
 ### Configuration / Environment
 
 **Missing Environment Variable**
+
 - Symptom: `undefined` values in production, features silently broken
 - Cause: Variable defined in `.env.local` but not in production environment
 - Fix: Add to deployment environment variables and validate on startup
@@ -103,14 +108,17 @@ Next.js build fails while collecting page data for `/api/auth/forgot-password` w
 `lib/email/resend.ts` instantiated `new Resend(process.env.RESEND_API_KEY)` at module load, causing throw in build env with no key.
 
 **Fix Applied:**
+
 - `resend` is now created conditionally: `process.env.RESEND_API_KEY ? new Resend(...) : null`
 - `sendEmail` now checks both API key and `resend` instance before sending email.
 
 **Prevention:**
+
 - Defer third-party client initialization behind environment validation.
 - Normalize module behavior for missing credentials (no throw in module scope).
 
 **Files Affected:**
+
 - `lib/email/resend.ts`
 
 **Date:** 2026-03-20
@@ -124,13 +132,16 @@ Deploy preview raised an error with `@prisma/client` import from `modules/report
 `reportWorkflow.ts` was referencing `Prisma.InputJsonValue` from `@prisma/client`; imported path not used elsewhere and caused mismatch in codebase style.
 
 **Fix Applied:**
+
 - Removed `import { Prisma } from "@prisma/client"`.
 - Changed `sections` cast to `any` so workflow logic remains functional without direct Prisma type import.
 
 **Prevention:**
+
 - Prefer DB client abstractions or local JSON wrapper types for shared service code.
 
 **Files Affected:**
+
 - `modules/reports/services/reportWorkflow.ts`
 
 **Date:** 2026-03-20
@@ -144,12 +155,15 @@ Deploy preview raised an error with `@prisma/client` import from `modules/report
 TypeScript project doesn't allow `*.ts` extension in import paths.
 
 **Fix Applied:**
+
 - Updated `test/reportWorkflow.test.ts` to import `../modules/reports/services/reportWorkflowUtils`.
 
 **Prevention:**
+
 - Avoid explicit `.ts` extensions in import statements in TypeScript files unless `allowImportingTsExtensions` is enabled.
 
 **Files Affected:**
+
 - `test/reportWorkflow.test.ts`
 
 **Date:** 2026-03-20
