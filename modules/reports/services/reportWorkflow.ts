@@ -4,7 +4,6 @@
  * Shared report workflow service (submit/request-edit/approve/review/lock/unlock)
  */
 import { db, cache } from "@/lib/data/db";
-import { Prisma } from "@prisma/client";
 import { createReportEvent, createAuditNotification } from "@/lib/utils/audit";
 import { ReportStatus, ReportEventType, NotificationType, UserRole, ReportEditStatus } from "@/types/global";
 import { canTransition } from "@/modules/reports/services/reportWorkflowUtils";
@@ -232,7 +231,7 @@ export async function createReportEdit(
             reportId,
             submittedById: actorId,
             reason,
-            sections: sections as unknown as Prisma.InputJsonValue,
+            sections: sections as unknown as any,
             status: ReportEditStatus.DRAFT,
         },
     });

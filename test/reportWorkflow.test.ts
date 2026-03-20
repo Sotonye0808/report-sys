@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, it } from "node:test";
-import { canTransition } from "../modules/reports/services/reportWorkflowUtils.ts";
+import { canTransition } from "../modules/reports/services/reportWorkflowUtils";
 import { UserRole, ReportStatus } from "../types/global.js";
 
 describe("reportWorkflow canTransition", () => {

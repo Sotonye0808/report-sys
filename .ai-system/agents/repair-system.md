@@ -93,3 +93,63 @@
 > **Section summary:** Errors that have been fully resolved and are unlikely to recur. Kept for reference.
 
 [Entries move here when the underlying cause has been permanently fixed]
+
+## Resend client initialization during build
+
+**Symptom:**
+Next.js build fails while collecting page data for `/api/auth/forgot-password` with runtime error `Missing API key. Pass it to the constructor new Resend("re_123")`.
+
+**Root Cause:**
+`lib/email/resend.ts` instantiated `new Resend(process.env.RESEND_API_KEY)` at module load, causing throw in build env with no key.
+
+**Fix Applied:**
+- `resend` is now created conditionally: `process.env.RESEND_API_KEY ? new Resend(...) : null`
+- `sendEmail` now checks both API key and `resend` instance before sending email.
+
+**Prevention:**
+- Defer third-party client initialization behind environment validation.
+- Normalize module behavior for missing credentials (no throw in module scope).
+
+**Files Affected:**
+- `lib/email/resend.ts`
+
+**Date:** 2026-03-20
+
+## Prisma import in report workflow
+
+**Symptom:**
+Deploy preview raised an error with `@prisma/client` import from `modules/reports/services/reportWorkflow.ts`.
+
+**Root Cause:**
+`reportWorkflow.ts` was referencing `Prisma.InputJsonValue` from `@prisma/client`; imported path not used elsewhere and caused mismatch in codebase style.
+
+**Fix Applied:**
+- Removed `import { Prisma } from "@prisma/client"`.
+- Changed `sections` cast to `any` so workflow logic remains functional without direct Prisma type import.
+
+**Prevention:**
+- Prefer DB client abstractions or local JSON wrapper types for shared service code.
+
+**Files Affected:**
+- `modules/reports/services/reportWorkflow.ts`
+
+**Date:** 2026-03-20
+
+## Typescript import extension issue in tests
+
+**Symptom:**
+`npx tsc --noEmit` fails with `TS5097` for `../modules/reports/services/reportWorkflowUtils.ts` import path.
+
+**Root Cause:**
+TypeScript project doesn't allow `*.ts` extension in import paths.
+
+**Fix Applied:**
+- Updated `test/reportWorkflow.test.ts` to import `../modules/reports/services/reportWorkflowUtils`.
+
+**Prevention:**
+- Avoid explicit `.ts` extensions in import statements in TypeScript files unless `allowImportingTsExtensions` is enabled.
+
+**Files Affected:**
+- `test/reportWorkflow.test.ts`
+
+**Date:** 2026-03-20
