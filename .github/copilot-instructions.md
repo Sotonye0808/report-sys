@@ -1,5 +1,3 @@
----
-
 # Copilot Instructions Redirect — Harvesters Reporting System
 
 > **IMPORTANT:** This file is no longer the source of truth for AI-assisted development. All AI agents, Copilot, and automation tools must reference `.ai-system/agents/general-instructions.md` and the `.ai-system/` directory for canonical instructions, architecture, and project context.

@@ -165,6 +165,9 @@ export const CONTENT = {
         updateReasonLabel: "Reason for Update",
         updateReasonPlaceholder: "Explain why this update is needed…",
         updateRequestSubmit: "Submit Update Request",
+        editRequestDraftTitle: "Draft Edit",
+        editRequestApprove: "Approve Edit",
+        editRequestReject: "Reject Edit",
         historyTitle: "Report History",
         auditTrailTitle: "Audit Trail",
         eventLabels: {
@@ -175,6 +178,7 @@ export const CONTENT = {
             EDIT_APPROVED: "Edit Approved",
             EDIT_REJECTED: "Edit Rejected",
             EDIT_APPLIED: "Edit Applied",
+            TRANSLATED: "Translated",
             APPROVED: "Report Approved",
             REVIEWED: "Report Reviewed",
             LOCKED: "Report Locked",

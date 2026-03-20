@@ -51,7 +51,8 @@
 - [x] Create `app/page.tsx` — redirect to `/dashboard` depending on role; unauthenticated → `/login`
 - [x] Create `app/error.tsx` — global error boundary with `--ds-*` token styling
 - [x] Create `app/not-found.tsx` — 404 page with brand styling
-- [-] Create `app/manifest.ts`, `app/robots.ts`, `app/sitemap.ts`, `app/viewport.ts` — adapted from relics (`sitemap.ts` not yet created)
+- [x] Create `app/manifest.ts`, `app/robots.ts`, `app/viewport.ts` — adapted from relics
+- [ ] Create `app/sitemap.ts` — sitemap generation for SEO and crawlability
 
 ---
 
@@ -372,6 +373,8 @@
 - [x] `POST /api/reports/[id]/approve` — Campus Pastor only; `mockDb.transaction()` → status `APPROVED` + `ReportEvent(APPROVED)` + `ReportVersion` snapshot + `Notification` to submitter and Group Admin
 - [x] `POST /api/reports/[id]/review` — Group Admin or Group Pastor only; `mockDb.transaction()` → status `REVIEWED` + `ReportEvent(REVIEWED)` + `Notification` to submitter
 - [x] `POST /api/reports/[id]/lock` — Superadmin or auto-triggered; `mockDb.transaction()` → status `LOCKED` + `ReportEvent(LOCKED)` + lock all metric fields
+- [ ] Extract report workflow logic into a shared service layer (e.g., `modules/reports/services/reportWorkflow.ts`) and centralize event/notification creation via a shared audit helper
+- [ ] Add email notification integration to report workflow events (submit, approve, review, lock, deadline reminders)
 
 ### 8.3 — Report Edit API Routes
 

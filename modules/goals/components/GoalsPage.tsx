@@ -774,6 +774,11 @@ export function GoalsPage() {
   const { data: campuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
   const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
   const { data: goals } = useApiData<Goal[]>(`${API_ROUTES.goals.list}?year=${year}`, [year]);
+  const {
+    data: goalEditRequests,
+    loading: goalEditRequestsLoading,
+    refetch: refetchGoalEditRequests,
+  } = useApiData<any[]>(API_ROUTES.goals.editRequests);
 
   if (!user || !campuses || !templates || !goals) return <LoadingSkeleton rows={8} />;
 
@@ -784,6 +789,34 @@ export function GoalsPage() {
   const visibleCampuses = seeAllCampuses
     ? campuses
     : campuses.filter((c) => c.id === user.campusId);
+
+  const handleApproveGoalEdit = async (requestId: string) => {
+    try {
+      const res = await fetch(API_ROUTES.goals.editRequestApprove(requestId), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok) throw new Error("Failed to approve request");
+      message.success("Goal unlock request approved.");
+      refetchGoalEditRequests();
+    } catch {
+      message.error("Failed to approve request.");
+    }
+  };
+
+  const handleRejectGoalEdit = async (requestId: string) => {
+    try {
+      const res = await fetch(API_ROUTES.goals.editRequestReject(requestId), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok) throw new Error("Failed to reject request");
+      message.success("Goal unlock request rejected.");
+      refetchGoalEditRequests();
+    } catch {
+      message.error("Failed to reject request.");
+    }
+  };
 
   /* Build tab items */
   const campusTabs = visibleCampuses.map((campus) => ({
@@ -854,6 +887,45 @@ export function GoalsPage() {
           </div>
         }
       />
+
+      {goalEditRequestsLoading ? (
+        <p className="text-xs text-ds-text-subtle">Loading unlock requests…</p>
+      ) : goalEditRequests && goalEditRequests.length > 0 ? (
+        <div className="bg-ds-surface-elevated p-4 rounded-ds-2xl border border-ds-border-base mb-4">
+          <h3 className="font-semibold mb-2">Goal Unlock Requests</h3>
+          <ul className="space-y-2">
+            {goalEditRequests.map((req) => (
+              <li
+                key={req.id}
+                className="p-3 rounded-ds-lg border border-ds-border-subtle flex justify-between items-start"
+              >
+                <div>
+                  <p className="text-sm font-medium">{req.reason}</p>
+                  <p className="text-xs text-ds-text-subtle">
+                    {req.status} • requested by {req.requestedById}
+                  </p>
+                </div>
+                <div className="space-x-2">
+                  {req.status === GoalEditRequestStatus.PENDING && (
+                    <>
+                      <Button size="small" onClick={() => handleApproveGoalEdit(req.id)}>
+                        {g.approveUnlock as string}
+                      </Button>
+                      <Button
+                        size="small"
+                        type="default"
+                        onClick={() => handleRejectGoalEdit(req.id)}
+                      >
+                        {g.rejectUnlock as string}
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       {tabItems.length === 0 ? (
         <EmptyState

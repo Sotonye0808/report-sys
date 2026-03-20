@@ -76,3 +76,100 @@ Add a dedicated `UNLOCKED` audit event and ensure it displays correctly in the r
 
 - A new `ReportEventType.UNLOCKED` enum value was added, which requires a Prisma migration (schema change) and regeneration of the Prisma client.
 - The audit trail should now show “Report Unlocked” events with a distinct icon/color.
+
+---
+
+## Session 3 — 2026-03-20
+
+**Completed:**
+
+- Implemented core audit trail service (`lib/utils/audit.ts`) and report workflow service (`modules/reports/services/reportWorkflow.ts`).
+- Refactored report endpoints (`submit`, `request-edit`, `approve`, `review`, `lock`, `unlock`) to use workflow service and audit utilities.
+- Added email wiring for invite links (`/api/invite-links`) and forgot-password (`/api/auth/forgot-password`) via `lib/email/resend.ts`.
+- Added invite recipient email support in UI (`modules/users/components/InvitesPage.tsx`).
+- Updated `.env.example` to include email/resend and production variables.
+
+**Files Modified:**
+
+- lib/utils/audit.ts — central event + notification + email helper
+- modules/reports/services/reportWorkflow.ts — shared report workflow actions
+- app/api/reports/[id]/submit/route.ts — rewired to submitReport
+- app/api/reports/[id]/request-edit/route.ts — rewired to requestEditReport
+- app/api/reports/[id]/approve/route.ts — rewired to approveReport
+- app/api/reports/[id]/review/route.ts — rewired to reviewReport
+- app/api/reports/[id]/lock/route.ts — rewired to lockReport
+- app/api/reports/[id]/unlock/route.ts — rewired to unlockReport
+- app/api/auth/forgot-password/route.ts — added sendPasswordResetEmail call
+- app/api/invite-links/route.ts — added recipientEmail + sendInviteEmail
+- modules/users/components/InvitesPage.tsx — added invite email form field
+- .env.example — added RESEND_API_KEY/EMAIL_FROM/DB and Redis placeholders
+- .ai-system/planning/task-queue.md — updated with Phase A tasks
+- .ai-system/memory/lessons-learned.md — added central audit helper lesson
+
+**Next Task:**
+
+- Implement /api/report-update-requests and /api/reports/[id]/edits endpoints + pages.
+- Add unit/integration tests for workflow service, audit function, and email dispatch logic.
+- Add `reportHistory` event type in UI if missing (for UNLOCKED/other transitions). Use shared event display map.
+
+**Notes / Blockers:**
+
+- `reportWorkflow` uses `report.title` fallback; field might not existing, validate model.
+- `reportWorkflow` currently sends ReportStatus via Notification title; could be more user-friendly by mapping in `config/content.ts`.
+
+## Session 4 — 2026-03-20
+
+**Completed:**
+
+- Added report edit CRUD endpoints:
+  - `app/api/reports/[id]/edits/route.ts` — list/create edit drafts
+  - `app/api/reports/[id]/edits/submit/route.ts` — submit an edit for review
+  - `app/api/reports/[id]/edits/[editId]/approve/route.ts` — approve edit request
+  - `app/api/reports/[id]/edits/[editId]/reject/route.ts` — reject edit request
+- Extended `modules/reports/services/reportWorkflow.ts` to support create/submit/approve/reject edit lifecycle with `ReportEvent` and audit notifications.
+- Implemented goal unlock request CRUD endpoints:
+  - `app/api/goals/edit-requests/route.ts` — list/create requests
+  - `app/api/goals/edit-requests/[id]/approve/route.ts` — approve request
+  - `app/api/goals/edit-requests/[id]/reject/route.ts` — reject request
+- Updated `modules/goals/components/GoalsPage.tsx` to display unlock requests and allow approval/rejection.
+- Added template versions route and service:
+  - `app/api/report-templates/[id]/versions/route.ts`
+  - `modules/reports/services/templateHistory.ts`
+- Added new `app/sitemap.ts` route for public sitemap generation.
+- Added unit tests and flow tests for workflow utilities and request routes:
+  - `test/reportWorkflow.test.ts`
+  - `test/reportUpdateRequestFlow.test.ts`
+- Updated task queue and progress tracking in `.ai-system/planning/task-queue.md`.
+
+**Files Modified:**
+
+- modules/reports/services/reportWorkflow.ts
+- modules/reports/services/reportWorkflowUtils.ts
+- modules/reports/services/templateHistory.ts
+- app/api/reports/[id]/edits/route.ts
+- app/api/reports/[id]/edits/submit/route.ts
+- app/api/reports/[id]/edits/[editId]/approve/route.ts
+- app/api/reports/[id]/edits/[editId]/reject/route.ts
+- app/api/goals/edit-requests/route.ts
+- app/api/goals/edit-requests/[id]/approve/route.ts
+- app/api/goals/edit-requests/[id]/reject/route.ts
+- app/api/report-templates/[id]/versions/route.ts
+- app/sitemap.ts
+- modules/goals/components/GoalsPage.tsx
+- config/routes.ts
+- config/content.ts
+- test/reportWorkflow.test.ts
+- test/reportUpdateRequestFlow.test.ts
+- package.json
+- .ai-system/planning/task-queue.md
+- .ai-system/checkpoints/session-log.md
+
+**Next Task:**
+
+- Add or update UI pages for report edit management, goal unlock request management, and template version history.
+- Add API paging/filtering for request lists and secure route guards.
+- Run full `npm run lint` and remediate any remaining lint issues.
+
+**Notes / Blockers:**
+
+- Existing lint toolchain requires .eslintrc or config fix; current lint issue is outside current feature scope.

@@ -112,6 +112,7 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
 
   const handleSubmit = async (values: {
     targetRole: UserRole;
+    recipientEmail?: string;
     expiresInHours: number;
     note?: string;
     campusId?: string;
@@ -159,14 +160,32 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
           rules={[{ required: true }]}
           className="min-w-[180px]"
         >
-          <Select options={roleOptions} placeholder="Select role" onChange={() => {
-            form.setFieldsValue({ campusId: undefined, groupId: undefined });
-          }} />
+          <Select
+            options={roleOptions}
+            placeholder="Select role"
+            onChange={() => {
+              form.setFieldsValue({ campusId: undefined, groupId: undefined });
+            }}
+          />
+        </Form.Item>
+        <Form.Item
+          name="recipientEmail"
+          label={((CONTENT.invites as any).recipientEmailLabel as string) ?? "Recipient Email"}
+          className="min-w-[220px]"
+          rules={[{ type: "email", message: "Please enter a valid email." }]}
+        >
+          <input
+            className="border border-ds-border-base rounded-ds-md px-3 py-1.5 text-sm bg-ds-surface-base text-ds-text-primary focus:outline-none focus:ring-2 focus:ring-ds-brand-accent w-full"
+            placeholder={
+              ((CONTENT.invites as any).recipientEmailPlaceholder as string) ??
+              "Enter recipient email"
+            }
+          />
         </Form.Item>
         {showCampusField && (
           <Form.Item
             name="campusId"
-            label={CONTENT.invites.campusLabel as string ?? "Campus"}
+            label={(CONTENT.invites.campusLabel as string) ?? "Campus"}
             rules={[{ required: true, message: "Campus is required for this role" }]}
             className="min-w-[180px]"
           >
@@ -176,7 +195,7 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
         {showGroupField && (
           <Form.Item
             name="groupId"
-            label={CONTENT.invites.groupLabel as string ?? "Group"}
+            label={(CONTENT.invites.groupLabel as string) ?? "Group"}
             rules={[{ required: true, message: "Group is required for this role" }]}
             className="min-w-[180px]"
           >
