@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db } from "@/lib/data/db";
+import { sendInviteEmail } from "@/lib/email/resend";
 import { UserRole, InviteLinkType, HIERARCHY_ORDER } from "@/types/global";
 
 const ALLOWED_ROLES = [
@@ -22,6 +23,7 @@ const ALLOWED_ROLES = [
 
 const CreateInviteLinkSchema = z.object({
   targetRole: z.nativeEnum(UserRole),
+  recipientEmail: z.string().email().optional(),
   campusId: z.string().uuid().optional(),
   groupId: z.string().uuid().optional(),
   expiresInHours: z.coerce.number().min(1).max(720).default(72),
@@ -75,6 +77,20 @@ export async function POST(req: NextRequest) {
       isActive: true,
     },
   });
+
+  if (body.recipientEmail && process.env.RESEND_API_KEY) {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "";
+    const inviteUrl = `${appUrl}/join?token=${token}`;
+    await sendInviteEmail({
+      to: body.recipientEmail,
+      inviterName: `${auth.user.firstName} ${auth.user.lastName}`.trim() || "Harvesters Admin",
+      role: body.targetRole,
+      joinUrl: inviteUrl,
+    }).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn("[invite-links] failed to send invite email", err);
+    });
+  }
 
   return NextResponse.json({ success: true, data: link }, { status: 201 });
 }

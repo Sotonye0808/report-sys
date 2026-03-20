@@ -4,24 +4,14 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
-import { db, cache } from "@/lib/data/db";
 import {
     successResponse,
-    errorResponse,
     unauthorizedResponse,
-    notFoundResponse,
     handleApiError,
 } from "@/lib/utils/api";
-import { ROLE_CONFIG } from "@/config/roles";
-import { REPORT_STATUS_TRANSITIONS } from "@/config/reports";
-import { createNotification } from "@/lib/utils/notifications";
-import { UserRole, ReportStatus, ReportEventType, NotificationType } from "@/types/global";
-
-const ApproveSchema = z.object({
-    notes: z.string().optional(),
-});
+import { approveReport } from "@/modules/reports/services/reportWorkflow";
+import { UserRole } from "@/types/global";
 
 export async function POST(
     req: NextRequest,
@@ -32,72 +22,13 @@ export async function POST(
         if (!auth.success) return unauthorizedResponse(auth.error);
 
         const { id } = await params;
-        const report = await db.report.findUnique({ where: { id } });
-        if (!report) return notFoundResponse("Report not found.");
 
-        const role = auth.user.role as UserRole;
-        const roleConfig = ROLE_CONFIG[role];
-
-        if (!roleConfig.canApproveReports) {
-            return errorResponse("You do not have permission to approve reports.", 403);
-        }
-
-        const allowed = REPORT_STATUS_TRANSITIONS[report.status];
-        const transition = allowed.find(
-            (t) => t.to === ReportStatus.APPROVED && t.requiredRole.includes(role),
-        );
-        if (!transition) {
-            return errorResponse(`Cannot approve a report in status "${report.status}".`, 409);
-        }
-
-        const body = await req.json().catch(() => ({}));
-        const { notes } = ApproveSchema.parse(body);
-        const now = new Date().toISOString();
-
-        const recipientId = report.submittedById ?? report.createdById;
-        const actorName = [auth.user.firstName, auth.user.lastName].filter(Boolean).join(" ").trim();
-
-        const updated = await db.$transaction(async (tx) => {
-            const r = await tx.report.update({
-                where: { id },
-                data: {
-                    status: ReportStatus.APPROVED,
-                    approvedById: auth.user.id,
-                    updatedAt: new Date(),
-                },
-            });
-
-            await tx.reportEvent.create({
-                data: {
-                    reportId: id,
-                    eventType: ReportEventType.APPROVED,
-                    actorId: auth.user.id,
-                    timestamp: new Date(),
-                    previousStatus: report.status,
-                    newStatus: ReportStatus.APPROVED,
-                    details: notes,
-                },
-            });
-
-            if (recipientId && recipientId !== auth.user.id) {
-                await createNotification(
-                    {
-                        userId: recipientId,
-                        type: NotificationType.REPORT_APPROVED,
-                        title: "Report Approved",
-                        message: `Your report was approved by ${actorName || auth.user.email}`,
-                        reportId: id,
-                    },
-                    tx,
-                );
-            }
-
-            return r;
+        const updated = await approveReport({
+            reportId: id,
+            actorId: auth.user.id,
+            actorName: [auth.user.firstName, auth.user.lastName].filter(Boolean).join(" ").trim(),
+            actorRole: auth.user.role as UserRole,
         });
-
-        await cache.invalidatePattern(`report:${id}*`);
-        await cache.invalidatePattern(`reports:list:*`);
-        if (recipientId) await cache.invalidatePattern(`notifications:${recipientId}*`);
 
         return NextResponse.json(successResponse(updated));
     } catch (err) {

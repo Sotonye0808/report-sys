@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db, cache } from "@/lib/data/db";
+import { sendPasswordResetEmail } from "@/lib/email/resend";
 
 const Schema = z.object({
   email: z.string().email(),
@@ -31,7 +32,20 @@ export async function POST(req: NextRequest) {
   /* Store reset token in cache (key: pwd-reset:{token} → userId) */
   await cache.set(`pwd-reset:${token}`, JSON.stringify({ userId: user.id, expiresAt }), 3600);
 
-  /* In production: send email. In dev: include token in response. */
+  /* Send password reset email if possible */
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "";
+  const resetUrl = `${appUrl}/reset-password?token=${token}`;
+  if (process.env.RESEND_API_KEY) {
+    sendPasswordResetEmail({
+      to: user.email,
+      resetUrl,
+    }).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn("[forgot-password] Failed to send reset email", err);
+    });
+  }
+
+  /* In production: do not expose token. In dev: include token in response. */
   const response: Record<string, unknown> = {
     success: true,
     message: "If this email exists, a reset link has been sent.",

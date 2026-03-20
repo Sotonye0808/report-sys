@@ -97,6 +97,10 @@ export const API_ROUTES = {
         unlock: (id: string) => `/api/reports/${id}/unlock`,
 
         requestEdit: (id: string) => `/api/reports/${id}/request-edit`,
+        edits: (id: string) => `/api/reports/${id}/edits`,
+        editsSubmit: (id: string) => `/api/reports/${id}/edits/submit`,
+        editsApprove: (id: string, editId: string) => `/api/reports/${id}/edits/${editId}/approve`,
+        editsReject: (id: string, editId: string) => `/api/reports/${id}/edits/${editId}/reject`,
         history: (id: string) => `/api/reports/${id}/history`,
     },
     reportTemplates: {
@@ -137,6 +141,9 @@ export const API_ROUTES = {
         unlockRequest: (id: string) => `/api/goals/${id}/unlock-request`,
         approveUnlock: (id: string) => `/api/goals/${id}/unlock-request/approve`,
         rejectUnlock: (id: string) => `/api/goals/${id}/unlock-request/reject`,
+        editRequests: "/api/goals/edit-requests",
+        editRequestApprove: (id: string) => `/api/goals/edit-requests/${id}/approve`,
+        editRequestReject: (id: string) => `/api/goals/edit-requests/${id}/reject`,
     },
     notifications: {
         list: "/api/notifications",

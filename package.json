@@ -19,8 +19,10 @@
     "db:seed:full:reset": "tsx prisma/seed.ts --reset",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset",
+    "test": "tsx \"test/**/*.test.ts\"",
     "postinstall": "prisma generate"
   },
+  "type": "module",
   "dependencies": {
     "@ant-design/cssinjs": "^2.0.2",
     "@ant-design/icons": "^6.1.0",
