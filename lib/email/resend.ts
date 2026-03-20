@@ -11,9 +11,9 @@
 
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const FROM = process.env.EMAIL_FROM ?? "Harvesters Reporting <noreply@harvesters.org>";
+
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 /* ── Low-level send ─────────────────────────────────────────────────────────── */
 
@@ -25,7 +25,7 @@ interface SendEmailParams {
 }
 
 export async function sendEmail({ to, subject, html, text }: SendEmailParams) {
-    if (!process.env.RESEND_API_KEY) {
+    if (!process.env.RESEND_API_KEY || !resend) {
         console.warn("[email] RESEND_API_KEY not set — skipping email send:", subject);
         return null;
     }
