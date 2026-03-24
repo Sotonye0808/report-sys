@@ -12,6 +12,7 @@ import { UserRole } from "@/types/global";
 
 const UpdateCampusSchema = z.object({
   name: z.string().min(1).max(80).optional(),
+  groupId: z.string().uuid().optional(),
   country: z.string().max(60).optional(),
   location: z.string().max(120).optional(),
   adminId: z.string().uuid().nullable().optional(),
@@ -54,6 +55,7 @@ export async function PUT(
     where: { id },
     data: {
       ...(body.name !== undefined && { name: body.name }),
+      ...(body.groupId !== undefined && { parentId: body.groupId }),
       ...(body.country !== undefined && { country: body.country }),
       ...(body.location !== undefined && { location: body.location }),
       ...(body.adminId !== undefined && { adminId: body.adminId }),

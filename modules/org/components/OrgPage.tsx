@@ -32,6 +32,7 @@ function CampusesTab() {
   const [form] = Form.useForm();
 
   const { data: campuses, refetch } = useApiData<Campus[]>(API_ROUTES.org.campuses);
+  const { data: groups } = useApiData<OrgGroup[]>(API_ROUTES.org.groups);
 
   const filtered = (campuses ?? []).filter(
     (c) => !search || c.name.toLowerCase().includes(search.toLowerCase()),
@@ -42,6 +43,14 @@ function CampusesTab() {
       key: "name",
       title: CONTENT.org.campusNameLabel as string,
       render: (row: Campus) => <span className="font-medium text-ds-text-primary">{row.name}</span>,
+    },
+    {
+      key: "group",
+      title: CONTENT.org.groupNameLabel as string,
+      render: (row: Campus & { parentId?: string }) => {
+        const group = groups?.find((g) => g.id === row.parentId);
+        return <span className="text-sm text-ds-text-secondary">{group?.name ?? "—"}</span>;
+      },
     },
     {
       key: "location",
@@ -69,6 +78,7 @@ function CampusesTab() {
             setEditTarget(row);
             form.setFieldsValue({
               name: row.name,
+              groupId: (row as Campus & { parentId?: string }).parentId ?? null,
               location: (row as Campus & { location?: string }).location ?? "",
               country: (row as Campus & { country?: string }).country ?? "",
             });
@@ -80,14 +90,17 @@ function CampusesTab() {
     },
   ];
 
-  const handleSave = async (values: { name: string; location: string; country: string }) => {
+  const handleSave = async (values: { name: string; location: string; country: string; groupId?: string | null }) => {
     setSaving(true);
     try {
       if (editTarget) {
         const res = await fetch(API_ROUTES.org.campus(editTarget.id), {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
+          body: JSON.stringify({
+            ...values,
+            groupId: values.groupId || null,
+          }),
         });
         if (!res.ok) {
           const j = await res.json();
@@ -102,7 +115,11 @@ function CampusesTab() {
         const res = await fetch(API_ROUTES.org.campuses, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...values, organisationId: ORG_ID }),
+          body: JSON.stringify({
+            ...values,
+            organisationId: ORG_ID,
+            groupId: values.groupId || null,
+          }),
         });
         if (!res.ok) {
           const j = await res.json();
@@ -177,6 +194,16 @@ function CampusesTab() {
             rules={[{ required: true }]}
           >
             <Input size="large" />
+          </Form.Item>
+          <Form.Item name="groupId" label={CONTENT.org.groupNameLabel as string}>
+            <select className="w-full p-2 border border-ds-border-base rounded-ds-lg" value={form.getFieldValue("groupId") ?? ""} onChange={(e) => form.setFieldsValue({ groupId: e.target.value || null })}>
+              <option value="">(No group)</option>
+              {groups?.map((group) => (
+                <option key={group.id} value={group.id}>
+                  {group.name}
+                </option>
+              ))}
+            </select>
           </Form.Item>
           <Form.Item name="location" label={CONTENT.org.locationLabel as string}>
             <Input size="large" />

@@ -18,46 +18,46 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 /* ── Low-level send ─────────────────────────────────────────────────────────── */
 
 interface SendEmailParams {
-    to: string | string[];
-    subject: string;
-    html: string;
-    text?: string;
+  to: string | string[];
+  subject: string;
+  html: string;
+  text?: string;
 }
 
 export async function sendEmail({ to, subject, html, text }: SendEmailParams) {
-    if (!process.env.RESEND_API_KEY || !resend) {
-        console.warn("[email] RESEND_API_KEY not set — skipping email send:", subject);
-        return null;
-    }
+  if (!process.env.RESEND_API_KEY || !resend) {
+    console.warn("[email] RESEND_API_KEY not set — skipping email send:", subject);
+    return null;
+  }
 
-    const { data, error } = await resend.emails.send({
-        from: FROM,
-        to: Array.isArray(to) ? to : [to],
-        subject,
-        html,
-        text,
-    });
+  const { data, error } = await resend.emails.send({
+    from: FROM,
+    to: Array.isArray(to) ? to : [to],
+    subject,
+    html,
+    text,
+  });
 
-    if (error) {
-        console.error("[email] Failed to send:", error);
-        throw new Error(error.message);
-    }
+  if (error) {
+    console.error("[email] Failed to send:", error);
+    throw new Error(error.message);
+  }
 
-    return data;
+  return data;
 }
 
 /* ── Domain-specific email helpers ──────────────────────────────────────────── */
 
 export async function sendInviteEmail(params: {
-    to: string;
-    inviterName: string;
-    role: string;
-    joinUrl: string;
+  to: string;
+  inviterName: string;
+  role: string;
+  joinUrl: string;
 }) {
-    return sendEmail({
-        to: params.to,
-        subject: "You've been invited to Harvesters Reporting System",
-        html: `
+  return sendEmail({
+    to: params.to,
+    subject: "You've been invited to Harvesters Reporting System",
+    html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;padding:32px">
         <div style="background:#10b981;color:#fff;padding:16px 24px;border-radius:12px 12px 0 0">
           <h1 style="margin:0;font-size:20px">Harvesters Reporting System</h1>
@@ -72,17 +72,17 @@ export async function sendInviteEmail(params: {
         </div>
       </div>
     `,
-    });
+  });
 }
 
 export async function sendPasswordResetEmail(params: {
-    to: string;
-    resetUrl: string;
+  to: string;
+  resetUrl: string;
 }) {
-    return sendEmail({
-        to: params.to,
-        subject: "Reset Your Password — Harvesters Reporting",
-        html: `
+  return sendEmail({
+    to: params.to,
+    subject: "Reset Your Password — Harvesters Reporting",
+    html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;padding:32px">
         <div style="background:#10b981;color:#fff;padding:16px 24px;border-radius:12px 12px 0 0">
           <h1 style="margin:0;font-size:20px">Password Reset</h1>
@@ -96,22 +96,22 @@ export async function sendPasswordResetEmail(params: {
         </div>
       </div>
     `,
-    });
+  });
 }
 
 export async function sendReportStatusEmail(params: {
-    to: string;
-    reporterName: string;
-    reportTitle: string;
-    newStatus: string;
-    reviewerName?: string;
-    comment?: string;
-    reportUrl: string;
+  to: string;
+  reporterName: string;
+  reportTitle: string;
+  newStatus: string;
+  reviewerName?: string;
+  comment?: string;
+  reportUrl: string;
 }) {
-    return sendEmail({
-        to: params.to,
-        subject: `Report ${params.newStatus}: ${params.reportTitle}`,
-        html: `
+  return sendEmail({
+    to: params.to,
+    subject: `Report ${params.newStatus}: ${params.reportTitle}`,
+    html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;padding:32px">
         <div style="background:#10b981;color:#fff;padding:16px 24px;border-radius:12px 12px 0 0">
           <h1 style="margin:0;font-size:20px">Report Update</h1>
@@ -126,20 +126,20 @@ export async function sendReportStatusEmail(params: {
         </div>
       </div>
     `,
-    });
+  });
 }
 
 export async function sendDeadlineReminderEmail(params: {
-    to: string;
-    userName: string;
-    reportTitle: string;
-    deadlineDate: string;
-    reportUrl: string;
+  to: string;
+  userName: string;
+  reportTitle: string;
+  deadlineDate: string;
+  reportUrl: string;
 }) {
-    return sendEmail({
-        to: params.to,
-        subject: `Deadline Approaching: ${params.reportTitle}`,
-        html: `
+  return sendEmail({
+    to: params.to,
+    subject: `Deadline Approaching: ${params.reportTitle}`,
+    html: `
       <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;padding:32px">
         <div style="background:#f59e0b;color:#fff;padding:16px 24px;border-radius:12px 12px 0 0">
           <h1 style="margin:0;font-size:20px">Deadline Reminder</h1>
@@ -153,16 +153,16 @@ export async function sendDeadlineReminderEmail(params: {
         </div>
       </div>
     `,
-    });
+  });
 }
 
 /* ── Utility ────────────────────────────────────────────────────────────────── */
 
 function escapeHtml(str: string): string {
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }

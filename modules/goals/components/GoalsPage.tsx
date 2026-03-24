@@ -334,36 +334,45 @@ function BulkGoalTable({
         }
       }
 
-      const { ok, queued, response } = await offlineFetch(API_ROUTES.goals.bulk, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payloads),
-        credentials: "include",
-      });
+      // For single-campus bulk editing, save via the non-bulk endpoint to avoid mistaken cross-campus DML semantics.
+      let anyQueued = false;
+      for (const goal of payloads) {
+        const { ok, queued, response } = await offlineFetch(API_ROUTES.goals.list, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(goal),
+          credentials: "include",
+        });
 
-      if (queued) {
+        if (queued) {
+          anyQueued = true;
+          continue;
+        }
+
+        if (!ok) {
+          const json = response ? await response.json().catch(() => ({})) : {};
+          message.error(
+            json?.error ??
+              (CONTENT.errors as Record<string, string>).generic ??
+              "Error saving goals.",
+          );
+          return;
+        }
+
+        const json = response ? await response.json().catch(() => ({})) : {};
+        if (!json?.success) {
+          message.error(
+            json?.error ??
+              (CONTENT.errors as Record<string, string>).generic ??
+              "Error saving goals.",
+          );
+          return;
+        }
+      }
+
+      if (anyQueued) {
         message.success("Changes saved locally and will sync when you're back online.");
         clearDraft();
-        return;
-      }
-
-      if (!ok) {
-        const json = response ? await response.json().catch(() => ({})) : {};
-        message.error(
-          json?.error ??
-            (CONTENT.errors as Record<string, string>).generic ??
-            "Error saving goals.",
-        );
-        return;
-      }
-
-      const json = response ? await response.json().catch(() => ({})) : {};
-      if (!json?.success) {
-        message.error(
-          json?.error ??
-            (CONTENT.errors as Record<string, string>).generic ??
-            "Error saving goals.",
-        );
         return;
       }
 
@@ -514,7 +523,7 @@ function BulkGoalTable({
   }));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 form-scroll-container">
       <Collapse
         items={collapseItems}
         defaultActiveKey={collapseItems.map((i) => i.key)}
@@ -522,7 +531,7 @@ function BulkGoalTable({
       />
 
       {canEdit && (
-        <div className="flex justify-end">
+        <div className="form-action-wrapper flex justify-end">
           <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={handleSaveAll}>
             {g.saveAll as string}
           </Button>
@@ -583,6 +592,7 @@ function AllCampusesMatrix({
     return init;
   });
   const [saving, setSaving] = useState(false);
+  const [allMetricValues, setAllMetricValues] = useState<Record<string, number | undefined>>({});
 
   useEffect(() => {
     if (isDraftLoaded && cachedDraft && !draftRestoredRef.current) {
@@ -616,6 +626,25 @@ function AllCampusesMatrix({
       ...prev,
       [campusId]: { ...(prev[campusId] ?? {}), [metricId]: v ?? undefined },
     }));
+
+  const applyValueToAllCampuses = (metricId: string) => {
+    const val = allMetricValues[metricId];
+    if (val == null) {
+      message.warning("Enter a value first before applying to all campuses.");
+      return;
+    }
+
+    setMatrixValues((prev) => {
+      const next = { ...prev };
+      for (const campus of campuses) {
+        const existing = goalMap[goalKey(campus.id, metricId, year, GoalMode.ANNUAL)];
+        const isLocked = (existing?.isLocked ?? false) && !isSuperadmin;
+        if (isLocked) continue;
+        next[campus.id] = { ...(next[campus.id] ?? {}), [metricId]: val };
+      }
+      return next;
+    });
+  };
 
   const handleSaveAll = async () => {
     if (mode !== GoalMode.ANNUAL) {
@@ -692,6 +721,7 @@ function AllCampusesMatrix({
               <thead>
                 <tr className="border-b border-ds-border-subtle text-xs text-ds-text-secondary">
                   <th className="text-left px-4 py-2 w-40 font-semibold">Metric</th>
+                  <th className="text-center px-2 py-2 font-semibold w-40">Apply to all</th>
                   {campuses.map((campus) => (
                     <th
                       key={campus.id}
@@ -710,6 +740,25 @@ function AllCampusesMatrix({
                       className="border-b border-ds-border-subtle last:border-none hover:bg-ds-surface/40"
                     >
                       <td className="px-4 py-2 text-ds-text-primary font-medium">{metric.name}</td>
+                      <td className="px-2 py-2 text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <InputNumber
+                            size="small"
+                            className="w-20"
+                            min={0}
+                            value={allMetricValues[metric.id]}
+                            onChange={(v) =>
+                              setAllMetricValues((prev) => ({
+                                ...prev,
+                                [metric.id]: v ?? undefined,
+                              }))
+                            }
+                          />
+                          <Button size="small" onClick={() => applyValueToAllCampuses(metric.id)}>
+                            Set
+                          </Button>
+                        </div>
+                      </td>
                       {campuses.map((campus) => {
                         const existing =
                           goalMap[goalKey(campus.id, metric.id, year, GoalMode.ANNUAL)];
@@ -749,7 +798,7 @@ function AllCampusesMatrix({
       ))}
 
       {canEdit && mode === GoalMode.ANNUAL && (
-        <div className="flex justify-end">
+        <div className="form-action-wrapper flex justify-end">
           <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={handleSaveAll}>
             {g.saveAll as string}
           </Button>
@@ -787,7 +836,9 @@ export function GoalsPage() {
   const isSuperadmin = user.role === UserRole.SUPERADMIN;
 
   const visibleCampuses = seeAllCampuses
-    ? campuses
+    ? user.role === UserRole.GROUP_ADMIN || user.role === UserRole.GROUP_PASTOR
+      ? campuses.filter((c) => c.parentId === user.orgGroupId)
+      : campuses
     : campuses.filter((c) => c.id === user.campusId);
 
   const handleApproveGoalEdit = async (requestId: string) => {

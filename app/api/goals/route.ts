@@ -70,11 +70,39 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+    let jsonBody: unknown;
+    try {
+        jsonBody = await req.json();
+    } catch (err) {
+        console.error("[api] Error parsing JSON body in POST /api/goals", {
+            err,
+            url: req.url,
+            method: req.method,
+        });
+        return errorResponse("Invalid JSON payload.", 400);
+    }
+
     try {
         const auth = await verifyAuth(req, WRITE_ROLES);
         if (!auth.success) return errorResponse(auth.error, auth.status ?? 401);
 
-        const body = CreateGoalSchema.parse(await req.json());
+        const parseResult = CreateGoalSchema.safeParse(jsonBody);
+        if (!parseResult.success) {
+            console.error("[api] Zod validation failed in POST /api/goals", {
+                errors: parseResult.error.format(),
+            });
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Invalid goal payload.",
+                    code: 400,
+                    validation: parseResult.error.format(),
+                },
+                { status: 400 },
+            );
+        }
+
+        const body = parseResult.data;
 
         // Non-superadmin / non-SPO can only set goals for their own campus
         if (

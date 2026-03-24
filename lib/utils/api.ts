@@ -32,9 +32,40 @@ export function badRequestResponse(message = "Bad request") {
     return errorResponse(message, 400);
 }
 
+function getErrorPayload(err: unknown) {
+    if (err instanceof Error) {
+        const extra: Record<string, unknown> = {};
+        for (const key in err) {
+            // Include non-standard fields like code/meta from Prisma.
+            (extra as any)[key] = (err as any)[key];
+        }
+
+        return {
+            name: err.name,
+            message: err.message,
+            stack: err.stack,
+            ...extra,
+        };
+    }
+    if (typeof err === "string") {
+        return { message: err };
+    }
+    return { message: "Unknown error" };
+}
+
 export function handleApiError(err: unknown) {
-    console.error("[API Error]", err);
-    const message =
-        err instanceof Error ? err.message : "An unexpected error occurred";
-    return errorResponse(message, 500);
+    const payload = getErrorPayload(err);
+    console.error("[API Error]", payload);
+    const message = payload?.message ?? "An unexpected error occurred";
+
+    // Include debug metadata for production diagnosis (per request).
+    return NextResponse.json(
+        {
+            success: false,
+            error: message,
+            code: 500,
+            debug: payload,
+        },
+        { status: 500 },
+    );
 }

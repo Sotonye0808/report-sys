@@ -373,7 +373,7 @@ export function TemplateDetailPage({ params }: PageProps) {
         }
       >
         <Form form={form} layout="vertical" onFinish={handleSave} requiredMark={false}>
-          <div className="max-w-4xl space-y-6">
+          <div className="max-w-4xl space-y-6 form-scroll-container">
             {/* Metadata card */}
             <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6 space-y-4">
               <div className="flex gap-2 mb-2 flex-wrap">
@@ -544,7 +544,7 @@ export function TemplateDetailPage({ params }: PageProps) {
             </div>
 
             {/* Footer */}
-            <div className="flex justify-end gap-3">
+            <div className="form-action-wrapper flex justify-end gap-3">
               <Button onClick={() => router.push(APP_ROUTES.templates)}>
                 {CONTENT.common.cancel as string}
               </Button>

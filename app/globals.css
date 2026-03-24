@@ -222,6 +222,36 @@
   --font-ds-mono: var(--ds-font-mono);
 }
 
+/* Form scrolling wrapper to keep action bars visible while long forms scroll */
+.form-scroll-container {
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+  min-height: 200px;
+  padding-right: 4px;
+}
+
+.form-scroll-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.form-scroll-container::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 116, 139, 0.35);
+  border-radius: 9999px;
+}
+
+.form-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.form-action-wrapper {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: var(--ds-surface-base);
+  border-top: 1px solid var(--ds-border-base);
+  padding: 0.75rem 0;
+}
+
 /* ══════════════════════════════════════════════════════════════════════════════
    6. BASE STYLES
    ══════════════════════════════════════════════════════════════════════════════ */

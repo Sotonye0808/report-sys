@@ -92,71 +92,139 @@ export async function GET(req: NextRequest) {
 /* ── POST /api/report-templates ──────────────────────────────────────────── */
 
 export async function POST(req: NextRequest) {
-    const auth = await verifyAuth(req, TEMPLATE_MANAGE_ROLES);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+    let jsonBody: unknown;
+    try {
+        jsonBody = await req.json();
+    } catch (err) {
+        console.error("[api] Error parsing JSON body in POST /api/report-templates", {
+            err,
+            url: req.url,
+            method: req.method,
+        });
+        return NextResponse.json(
+            {
+                success: false,
+                error: "Invalid JSON payload.",
+                code: 400,
+                debug: err instanceof Error ? err.message : String(err),
+            },
+            { status: 400 },
+        );
     }
 
-    const body = CreateTemplateSchema.parse(await req.json());
-
-    const template = await db.$transaction(async (tx) => {
-        // If no org group is provided for the template, try to infer a sensible
-        // default: the first OrgGroup for the organisation. This ensures seeded
-        // templates (which may have null orgGroupId) receive a valid group id.
-        const defaultGroup = await tx.orgGroup.findFirst();
-        if (body.isDefault) {
-            await tx.reportTemplate.updateMany({
-                where: { isDefault: true },
-                data: { isDefault: false },
-            });
+    try {
+        const auth = await verifyAuth(req, TEMPLATE_MANAGE_ROLES);
+        if (!auth.success) {
+            return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
         }
 
-        const tpl = await tx.reportTemplate.create({
-            data: {
-                name: body.name,
-                description: body.description,
-                orgGroupId: defaultGroup?.id ?? null,
-                organisationId: body.organisationId,
-                createdById: auth.user.id,
-                isActive: true,
-                isDefault: body.isDefault ?? false,
-            },
-        });
-
-        for (const section of body.sections) {
-            const sec = await tx.reportTemplateSection.create({
-                data: {
-                    templateId: tpl.id,
-                    name: section.name,
-                    description: section.description,
-                    order: section.order,
-                    isRequired: section.isRequired,
-                },
+        const parseResult = CreateTemplateSchema.safeParse(jsonBody);
+        if (!parseResult.success) {
+            console.error("[api] Zod validation failed in POST /api/report-templates", {
+                errors: parseResult.error.format(),
             });
-            for (const metric of section.metrics) {
-                await tx.reportTemplateMetric.create({
-                    data: {
-                        sectionId: sec.id,
-                        name: metric.name,
-                        description: metric.description,
-                        fieldType: metric.fieldType,
-                        calculationType: metric.calculationType,
-                        isRequired: metric.isRequired,
-                        capturesGoal: metric.capturesGoal,
-                        capturesAchieved: metric.capturesAchieved,
-                        capturesYoY: metric.capturesYoY,
-                        order: metric.order,
-                    },
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Invalid template data.",
+                    code: 400,
+                    validation: parseResult.error.format(),
+                },
+                { status: 400 },
+            );
+        }
+
+        const body = parseResult.data;
+
+        const template = await db.$transaction(async (tx) => {
+            // If no org group is provided for the template, try to infer a sensible
+            // default: the first OrgGroup for the organisation. This ensures seeded
+            // templates (which may have null orgGroupId) receive a valid group id.
+            const defaultGroup = await tx.orgGroup.findFirst();
+            if (body.isDefault) {
+                await tx.reportTemplate.updateMany({
+                    where: { isDefault: true },
+                    data: { isDefault: false },
                 });
             }
+
+            const tpl = await tx.reportTemplate.create({
+                data: {
+                    name: body.name,
+                    description: body.description,
+                    orgGroupId: defaultGroup?.id ?? null,
+                    organisationId: body.organisationId,
+                    createdById: auth.user.id,
+                    isActive: true,
+                    isDefault: body.isDefault ?? false,
+                },
+            });
+
+            for (const section of body.sections) {
+                const sec = await tx.reportTemplateSection.create({
+                    data: {
+                        templateId: tpl.id,
+                        name: section.name,
+                        description: section.description,
+                        order: section.order,
+                        isRequired: section.isRequired,
+                    },
+                });
+                for (const metric of section.metrics) {
+                    await tx.reportTemplateMetric.create({
+                        data: {
+                            sectionId: sec.id,
+                            name: metric.name,
+                            description: metric.description,
+                            fieldType: metric.fieldType,
+                            calculationType: metric.calculationType,
+                            isRequired: metric.isRequired,
+                            capturesGoal: metric.capturesGoal,
+                            capturesAchieved: metric.capturesAchieved,
+                            capturesYoY: metric.capturesYoY,
+                            order: metric.order,
+                        },
+                    });
+                }
+            }
+
+            return tx.reportTemplate.findUnique({
+                where: { id: tpl.id },
+                include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
+            });
+        });
+
+        cache.invalidatePatternAsync("templates:*");
+        return NextResponse.json({ success: true, data: template }, { status: 201 });
+    } catch (err) {
+        console.error("[api] Error in POST /api/report-templates", {
+            error: err,
+            route: req.url,
+            method: req.method,
+            requestBody: jsonBody,
+        });
+
+        if (err instanceof z.ZodError) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Invalid template data.",
+                    code: 400,
+                    validation: err.format(),
+                },
+                { status: 400 },
+            );
         }
 
-        return tx.reportTemplate.findUnique({
-            where: { id: tpl.id },
-            include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
-        });
-    });
-
-    cache.invalidatePatternAsync("templates:*");
-    return NextResponse.json({ success: true, data: template }, { status: 201 });
+        const message = err instanceof Error ? err.message : "An unknown error occurred.";
+        return NextResponse.json(
+            {
+                success: false,
+                error: "An error occurred while creating the template.",
+                code: 500,
+                debug: message,
+            },
+            { status: 500 },
+        );
+    }
 }

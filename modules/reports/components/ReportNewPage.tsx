@@ -308,7 +308,7 @@ export function ReportNewPage() {
       title={CONTENT.reports.newReport as string}
       actions={<Button onClick={() => router.back()}>{CONTENT.common.cancel as string}</Button>}
     >
-      <div className="max-w-4xl space-y-6">
+      <div className="max-w-4xl space-y-6 form-scroll-container">
         {/* Meta fields */}
         <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6">
           <Form
@@ -447,7 +447,7 @@ export function ReportNewPage() {
               </div>
             )}
 
-            <div className="flex justify-end gap-3 pt-4">
+            <div className="form-action-wrapper flex justify-end gap-3">
               <Button onClick={() => router.back()}>{CONTENT.common.cancel as string}</Button>
               <Button type="primary" htmlType="submit" icon={<SaveOutlined />} loading={loading}>
                 {CONTENT.reports.saveDraft as string}

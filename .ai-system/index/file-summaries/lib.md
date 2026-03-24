@@ -18,4 +18,5 @@ Shared libraries and utilities used across the application. This is the common c
 ## Notes
 
 - The `lib/data` layer is the only place that should directly import `@prisma/client`.
+- If service modules require prisma types, use shared aliases or `unknown`/`any` casts at module boundary (avoid importing `@prisma/client` directly in modules/).
 - Hooks in `lib/hooks` are lightweight and avoid heavy dependencies to stay reusable across modules.

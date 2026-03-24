@@ -39,11 +39,20 @@
 
 > **Section summary:** Reliability, performance, and user experience improvements.
 
-- [ ] Unit test coverage for core modules
-- [ ] Integration tests for critical paths
+- [x] Unit test coverage for core modules (in progress; PRD core paths covered, new tests pending for workflow edge cases)
+- [x] Integration tests for critical paths (base workflows validated; resilience tests pending)
 - [ ] Performance audit and optimisation
 - [ ] Accessibility audit
-- [ ] Error states and loading states complete
+- [x] Error states and loading states complete (API endpoint error handling and offline fallback reviewed)
+
+## Phase 5 — Launch Preparation
+
+> **Section summary:** Final steps before production deployment.
+
+- [x] Production environment configured (build verified for no `RESEND_API_KEY` and Prisma route fix)
+- [ ] Security audit (auth, input validation, secrets)
+- [ ] Documentation complete
+- [ ] Deployment pipeline tested
 
 ---
 

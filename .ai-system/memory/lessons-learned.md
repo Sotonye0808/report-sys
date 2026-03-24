@@ -32,6 +32,16 @@
 **Context:**
 Multiple API routes in the reports module (submit, approve, lock, etc.) duplicate the same pattern: validate permissions, update the report, create a `ReportEvent`, and optionally emit related notifications.
 
+## Guard 3rd-party client initialization in module scope
+
+**Context:**
+`lib/email/resend.ts` instantiated `Resend` at module load, causing Next.js build failure when `RESEND_API_KEY` is not available for non-prod or pre-production environments.
+
+**What We Learned:**
+Do not instantiate external service clients at module startup unless required environment secrets are validated first. Put initialization behind a guard and ensure the code path is safe for owner-less variable states.
+
+**Apply When:**
+Any helper that loads external service SDKs (email, payment, cloud storage, DB clients) should support no-key / optional-key scenarios for local builds and stale environment states.
 **What We Learned:**
 Creating a shared audit/event helper (e.g., `createReportEvent` or a generic `createAuditEvent`) reduces duplication, enforces consistent event data, and makes it easier to add new resources (templates, goals, etc.) without copying boilerplate.
 
