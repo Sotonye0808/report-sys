@@ -104,13 +104,52 @@ export async function PUT(
     { params }: { params: Promise<{ id: string }> },
 ) {
     const { id } = await params;
+
+    let jsonBody: unknown;
+    try {
+        jsonBody = await req.json();
+    } catch (err) {
+        console.error("[api] Error parsing JSON body in PUT /api/report-templates/:id", {
+            err,
+            url: req.url,
+            method: req.method,
+            templateId: id,
+        });
+        return NextResponse.json(
+            {
+                success: false,
+                error: "Invalid JSON payload.",
+                code: 400,
+                debug: err instanceof Error ? err.message : String(err),
+            },
+            { status: 400 },
+        );
+    }
+
     try {
         const auth = await verifyAuth(req, TEMPLATE_MANAGE_ROLES);
         if (!auth.success) {
             return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
         }
 
-        const body = UpdateTemplateSchema.parse(await req.json());
+        const parseResult = UpdateTemplateSchema.safeParse(jsonBody);
+        if (!parseResult.success) {
+            console.error("[api] Zod validation failed in PUT /api/report-templates/:id", {
+                templateId: id,
+                errors: parseResult.error.format(),
+            });
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Invalid template data.",
+                    code: 400,
+                    validation: parseResult.error.format(),
+                },
+                { status: 400 },
+            );
+        }
+
+        const body = parseResult.data;
 
         const existing = await db.reportTemplate.findUnique({ where: { id } });
         if (!existing) {
@@ -200,8 +239,36 @@ export async function PUT(
 
         return NextResponse.json({ success: true, data: updated });
     } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error("[api] Error in PUT /api/report-templates/:id", err);
-        return NextResponse.json({ success: false, error: "An error occurred while saving the template." }, { status: 500 });
+        const payload = {
+            route: "/api/report-templates/:id",
+            method: "PUT",
+            templateId: id,
+            requestBody: jsonBody,
+        };
+        console.error("[api] Error in PUT /api/report-templates/:id", { ...payload, error: err });
+
+        if (err instanceof z.ZodError) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Invalid template data.",
+                    code: 400,
+                    validation: err.format(),
+                },
+                { status: 400 },
+            );
+        }
+
+        // Include debug info for root-cause triage in logs/responses.
+        const message = err instanceof Error ? err.message : "An unknown error occurred.";
+        return NextResponse.json(
+            {
+                success: false,
+                error: "An error occurred while saving the template.",
+                code: 500,
+                debug: message,
+            },
+            { status: 500 },
+        );
     }
 }

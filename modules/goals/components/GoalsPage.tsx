@@ -583,6 +583,7 @@ function AllCampusesMatrix({
     return init;
   });
   const [saving, setSaving] = useState(false);
+  const [allMetricValues, setAllMetricValues] = useState<Record<string, number | undefined>>({});
 
   useEffect(() => {
     if (isDraftLoaded && cachedDraft && !draftRestoredRef.current) {
@@ -616,6 +617,25 @@ function AllCampusesMatrix({
       ...prev,
       [campusId]: { ...(prev[campusId] ?? {}), [metricId]: v ?? undefined },
     }));
+
+  const applyValueToAllCampuses = (metricId: string) => {
+    const val = allMetricValues[metricId];
+    if (val == null) {
+      message.warning("Enter a value first before applying to all campuses.");
+      return;
+    }
+
+    setMatrixValues((prev) => {
+      const next = { ...prev };
+      for (const campus of campuses) {
+        const existing = goalMap[goalKey(campus.id, metricId, year, GoalMode.ANNUAL)];
+        const isLocked = (existing?.isLocked ?? false) && !isSuperadmin;
+        if (isLocked) continue;
+        next[campus.id] = { ...(next[campus.id] ?? {}), [metricId]: val };
+      }
+      return next;
+    });
+  };
 
   const handleSaveAll = async () => {
     if (mode !== GoalMode.ANNUAL) {
@@ -692,6 +712,7 @@ function AllCampusesMatrix({
               <thead>
                 <tr className="border-b border-ds-border-subtle text-xs text-ds-text-secondary">
                   <th className="text-left px-4 py-2 w-40 font-semibold">Metric</th>
+                  <th className="text-center px-2 py-2 font-semibold w-40">Apply to all</th>
                   {campuses.map((campus) => (
                     <th
                       key={campus.id}
@@ -710,6 +731,25 @@ function AllCampusesMatrix({
                       className="border-b border-ds-border-subtle last:border-none hover:bg-ds-surface/40"
                     >
                       <td className="px-4 py-2 text-ds-text-primary font-medium">{metric.name}</td>
+                      <td className="px-2 py-2 text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <InputNumber
+                            size="small"
+                            className="w-20"
+                            min={0}
+                            value={allMetricValues[metric.id]}
+                            onChange={(v) =>
+                              setAllMetricValues((prev) => ({
+                                ...prev,
+                                [metric.id]: v ?? undefined,
+                              }))
+                            }
+                          />
+                          <Button size="small" onClick={() => applyValueToAllCampuses(metric.id)}>
+                            Set
+                          </Button>
+                        </div>
+                      </td>
                       {campuses.map((campus) => {
                         const existing =
                           goalMap[goalKey(campus.id, metric.id, year, GoalMode.ANNUAL)];
