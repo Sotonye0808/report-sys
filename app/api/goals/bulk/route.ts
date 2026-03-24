@@ -194,45 +194,55 @@ export async function POST(req: NextRequest) {
       g,
     ]));
 
-    const results = await db.$transaction(async (tx) => {
-      return Promise.all(
-        uniqueGoals.map(async (goal) => {
-          const key = makeKey(goal);
-          const existingGoal = existingMap.get(key);
+    const chunkSize = 32;
+    const results: Array<unknown> = [];
 
-          if (existingGoal && existingGoal.isLocked && !isSuperuser) {
-            throw new Error("One or more goals are locked. Unlock them before saving.");
-          }
+    for (let i = 0; i < uniqueGoals.length; i += chunkSize) {
+      const chunk = uniqueGoals.slice(i, i + chunkSize);
+      const chunkResults = await db.$transaction(
+        async (tx) => {
+          return Promise.all(
+            chunk.map(async (goal) => {
+              const key = makeKey(goal);
+              const existingGoal = existingMap.get(key);
 
-          if (existingGoal) {
-            return tx.goal.update({
-              where: { id: existingGoal.id },
-              data: {
-                targetValue: goal.targetValue,
-                metricName: goal.metricName,
-                mode: goal.mode as GoalMode,
-                year: goal.year,
-                month: goal.month,
-              },
-            });
-          }
+              if (existingGoal && existingGoal.isLocked && !isSuperuser) {
+                throw new Error("One or more goals are locked. Unlock them before saving.");
+              }
 
-          return tx.goal.create({
-            data: {
-              campusId: goal.campusId,
-              templateMetricId: goal.templateMetricId,
-              metricName: goal.metricName,
-              mode: goal.mode as GoalMode,
-              year: goal.year,
-              month: goal.month,
-              targetValue: goal.targetValue,
-              isLocked: false,
-              createdById: auth.user.id,
-            },
-          });
-        }),
+              if (existingGoal) {
+                return tx.goal.update({
+                  where: { id: existingGoal.id },
+                  data: {
+                    targetValue: goal.targetValue,
+                    metricName: goal.metricName,
+                    mode: goal.mode as GoalMode,
+                    year: goal.year,
+                    month: goal.month,
+                  },
+                });
+              }
+
+              return tx.goal.create({
+                data: {
+                  campusId: goal.campusId,
+                  templateMetricId: goal.templateMetricId,
+                  metricName: goal.metricName,
+                  mode: goal.mode as GoalMode,
+                  year: goal.year,
+                  month: goal.month,
+                  targetValue: goal.targetValue,
+                  isLocked: false,
+                  createdById: auth.user.id,
+                },
+              });
+            }),
+          );
+        },
+        { timeout: 120000 },
       );
-    });
+      results.push(...chunkResults);
+    }
 
     return NextResponse.json({ success: true, data: results });
   } catch (err) {
