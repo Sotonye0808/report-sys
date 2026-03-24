@@ -34,6 +34,84 @@ const CreateGoalSchema = z.object({
 
 const BulkGoalSchema = z.array(CreateGoalSchema).min(1).max(5000);
 
+const ALL_MARKERS = ["ALL", "*"];
+
+function formatErrorBody(err: unknown) {
+  if (err instanceof Error) {
+    const extra: Record<string, unknown> = {};
+    for (const key in err) {
+      (extra as any)[key] = (err as any)[key];
+    }
+    return {
+      name: err.name,
+      message: err.message,
+      stack: err.stack,
+      ...extra,
+    };
+  }
+  return { message: String(err) };
+}
+
+async function resolveGoalsPayload(
+  goals: z.infer<typeof BulkGoalSchema>,
+  auth: any,
+): Promise<z.infer<typeof BulkGoalSchema>> {
+  const isGlobal =
+    [UserRole.SUPERADMIN, UserRole.SPO, UserRole.CEO, UserRole.CHURCH_MINISTRY].includes(
+      auth.user.role,
+    );
+  const isGroupScope = [UserRole.GROUP_ADMIN, UserRole.GROUP_PASTOR].includes(auth.user.role);
+
+  const allCampuses = await db.campus.findMany({ select: { id: true, parentId: true } });
+
+  const finalGoals: z.infer<typeof BulkGoalSchema> = [];
+
+  for (const goal of goals) {
+    const campusIdNormalized = goal.campusId.trim().toUpperCase();
+
+    if (ALL_MARKERS.includes(campusIdNormalized)) {
+      if (!isGlobal && !isGroupScope) {
+        throw new Error("Insufficient permissions to set goals for all campuses.");
+      }
+
+      const campusesToSet = isGroupScope
+        ? allCampuses.filter((campus) => campus.parentId === auth.user.orgGroupId)
+        : allCampuses;
+
+      if (campusesToSet.length === 0) {
+        throw new Error("No campuses found for the selected scope.");
+      }
+
+      for (const campus of campusesToSet) {
+        finalGoals.push({ ...goal, campusId: campus.id });
+      }
+      continue;
+    }
+
+    const explicitCampus = allCampuses.find((campus) => campus.id === goal.campusId);
+    if (!explicitCampus) {
+      throw new Error(`Campus not found: ${goal.campusId}`);
+    }
+
+    if (isGroupScope && auth.user.orgGroupId && explicitCampus.parentId !== auth.user.orgGroupId) {
+      throw new Error("Cannot set goals for campuses outside your group.");
+    }
+
+    if (
+      auth.user.role === UserRole.CAMPUS_ADMIN ||
+      auth.user.role === UserRole.CAMPUS_PASTOR
+    ) {
+      if (auth.user.campusId && goal.campusId !== auth.user.campusId) {
+        throw new Error("Cannot set goals for a different campus.");
+      }
+    }
+
+    finalGoals.push(goal);
+  }
+
+  return finalGoals;
+}
+
 export async function POST(req: NextRequest) {
   let payload: z.infer<typeof BulkGoalSchema> | undefined;
   let rawBody: unknown;
@@ -82,54 +160,19 @@ export async function POST(req: NextRequest) {
   payload = parseResult.data;
 
   try {
+    const payloadToSet = await resolveGoalsPayload(payload, auth);
     const isSuperuser =
       auth.user.role === UserRole.SUPERADMIN ||
       auth.user.role === UserRole.SPO ||
       auth.user.role === UserRole.CEO ||
       auth.user.role === UserRole.CHURCH_MINISTRY;
 
-    if (!isSuperuser) {
-      // Non-superusers can only modify goals for their own campus.
-      for (const goal of payload) {
-        if (auth.user.campusId && goal.campusId !== auth.user.campusId) {
-          return NextResponse.json(
-            { success: false, error: "Cannot set goals for a different campus." },
-            { status: 403 },
-          );
-        }
-      }
-    }
-
-    // Expand ALL marker for superuser bulk operations.
-    let expandedPayload = payload;
-    const hasAllMarker = payload.some((goal) =>
-      ["ALL", "*"].includes(goal.campusId?.toUpperCase?.() ?? ""),
-    );
-    if (hasAllMarker) {
-      if (!isSuperuser) {
-        return NextResponse.json(
-          { success: false, error: "Cannot set all campuses unless superuser." },
-          { status: 403 },
-        );
-      }
-
-      const campuses = await db.campus.findMany({ select: { id: true } });
-      const campusIds = campuses.map((c) => c.id);
-
-      expandedPayload = payload.flatMap((goal) => {
-        if (["ALL", "*"].includes(goal.campusId.toUpperCase())) {
-          return campusIds.map((campusId) => ({ ...goal, campusId }));
-        }
-        return [goal];
-      });
-    }
-
     // Deduplicate by unique key to prevent accidental insert/update conflict.
     const makeKey = (goal: z.infer<typeof CreateGoalSchema>) =>
       `${goal.campusId}|${goal.templateMetricId}|${goal.year}|${goal.mode}|${goal.month ?? ""}`;
 
     const uniqueGoalsMap = new Map<string, z.infer<typeof CreateGoalSchema>>();
-    for (const goal of expandedPayload) {
+    for (const goal of payloadToSet) {
       uniqueGoalsMap.set(makeKey(goal), goal);
     }
     const uniqueGoals = Array.from(uniqueGoalsMap.values());

@@ -195,7 +195,7 @@ export function ReportEditPage({ params }: PageProps) {
         </div>
       }
     >
-      <div className="max-w-4xl space-y-6">
+      <div className="max-w-4xl space-y-6 form-scroll-container">
         {/* Header: title + notes */}
         <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6 space-y-4">
           <div>
@@ -234,7 +234,7 @@ export function ReportEditPage({ params }: PageProps) {
         )}
 
         {/* Bottom actions */}
-        <div className="flex justify-end gap-3 pb-6">
+        <div className="form-action-wrapper flex justify-end gap-3">
           <Button onClick={() => router.push(APP_ROUTES.reportDetail(id))}>
             {CONTENT.common.cancel as string}
           </Button>

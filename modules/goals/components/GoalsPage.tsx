@@ -334,36 +334,45 @@ function BulkGoalTable({
         }
       }
 
-      const { ok, queued, response } = await offlineFetch(API_ROUTES.goals.bulk, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payloads),
-        credentials: "include",
-      });
+      // For single-campus bulk editing, save via the non-bulk endpoint to avoid mistaken cross-campus DML semantics.
+      let anyQueued = false;
+      for (const goal of payloads) {
+        const { ok, queued, response } = await offlineFetch(API_ROUTES.goals.list, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(goal),
+          credentials: "include",
+        });
 
-      if (queued) {
+        if (queued) {
+          anyQueued = true;
+          continue;
+        }
+
+        if (!ok) {
+          const json = response ? await response.json().catch(() => ({})) : {};
+          message.error(
+            json?.error ??
+              (CONTENT.errors as Record<string, string>).generic ??
+              "Error saving goals.",
+          );
+          return;
+        }
+
+        const json = response ? await response.json().catch(() => ({})) : {};
+        if (!json?.success) {
+          message.error(
+            json?.error ??
+              (CONTENT.errors as Record<string, string>).generic ??
+              "Error saving goals.",
+          );
+          return;
+        }
+      }
+
+      if (anyQueued) {
         message.success("Changes saved locally and will sync when you're back online.");
         clearDraft();
-        return;
-      }
-
-      if (!ok) {
-        const json = response ? await response.json().catch(() => ({})) : {};
-        message.error(
-          json?.error ??
-            (CONTENT.errors as Record<string, string>).generic ??
-            "Error saving goals.",
-        );
-        return;
-      }
-
-      const json = response ? await response.json().catch(() => ({})) : {};
-      if (!json?.success) {
-        message.error(
-          json?.error ??
-            (CONTENT.errors as Record<string, string>).generic ??
-            "Error saving goals.",
-        );
         return;
       }
 
@@ -514,7 +523,7 @@ function BulkGoalTable({
   }));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 form-scroll-container">
       <Collapse
         items={collapseItems}
         defaultActiveKey={collapseItems.map((i) => i.key)}
@@ -522,7 +531,7 @@ function BulkGoalTable({
       />
 
       {canEdit && (
-        <div className="flex justify-end">
+        <div className="form-action-wrapper flex justify-end">
           <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={handleSaveAll}>
             {g.saveAll as string}
           </Button>
@@ -789,7 +798,7 @@ function AllCampusesMatrix({
       ))}
 
       {canEdit && mode === GoalMode.ANNUAL && (
-        <div className="flex justify-end">
+        <div className="form-action-wrapper flex justify-end">
           <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={handleSaveAll}>
             {g.saveAll as string}
           </Button>
@@ -827,7 +836,9 @@ export function GoalsPage() {
   const isSuperadmin = user.role === UserRole.SUPERADMIN;
 
   const visibleCampuses = seeAllCampuses
-    ? campuses
+    ? user.role === UserRole.GROUP_ADMIN || user.role === UserRole.GROUP_PASTOR
+      ? campuses.filter((c) => c.parentId === user.orgGroupId)
+      : campuses
     : campuses.filter((c) => c.id === user.campusId);
 
   const handleApproveGoalEdit = async (requestId: string) => {
