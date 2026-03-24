@@ -457,11 +457,14 @@ function NotificationsTab() {
     // Check push notification support
     if ("serviceWorker" in navigator && "PushManager" in window) {
       setPushSupported(true);
-      navigator.serviceWorker.ready.then((reg) => {
-        reg.pushManager.getSubscription().then((sub) => {
+      navigator.serviceWorker.ready
+        .then((reg) => reg.pushManager.getSubscription())
+        .then((sub) => {
           setPushEnabled(!!sub);
+        })
+        .catch(() => {
+          setPushEnabled(false);
         });
-      });
     }
   }, []);
 
@@ -487,12 +490,26 @@ function NotificationsTab() {
           message.warning((CONTENT.settings as Record<string, string>).pushPermissionDenied);
           return;
         }
+
+        if (permission !== "granted") {
+          message.warning((CONTENT.settings as Record<string, string>).pushPermissionDenied);
+          return;
+        }
+
         await reg.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
         });
-        setPushEnabled(true);
-        message.success((CONTENT.settings as Record<string, string>).pushEnabled);
+
+        const currentSub = await reg.pushManager.getSubscription();
+        const isEnabled = !!currentSub;
+        setPushEnabled(isEnabled);
+
+        if (isEnabled) {
+          message.success((CONTENT.settings as Record<string, string>).pushEnabled);
+        } else {
+          message.error((CONTENT.errors as Record<string, string>).generic);
+        }
       }
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);

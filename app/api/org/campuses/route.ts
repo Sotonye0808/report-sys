@@ -20,39 +20,49 @@ const CreateCampusSchema = z.object({
 });
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+    try {
+        const auth = await verifyAuth(req);
+        if (!auth.success) {
+            return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+        }
+
+        const cached = await cache.get("org:campuses:list");
+        if (cached) return NextResponse.json(cached);
+
+        const campuses = await db.campus.findMany({ orderBy: { name: "asc" } });
+        const response = { success: true, data: campuses };
+        await cache.set("org:campuses:list", JSON.stringify(response), 120);
+        return NextResponse.json(response);
+    } catch (err) {
+        console.error("[api] Error in GET /api/org/campuses", err);
+        return NextResponse.json({ success: false, error: "Failed to load campuses." }, { status: 500 });
     }
-
-    const cached = await cache.get("org:campuses:list");
-    if (cached) return NextResponse.json(cached);
-
-    const campuses = await db.campus.findMany({ orderBy: { name: "asc" } });
-    const response = { success: true, data: campuses };
-    await cache.set("org:campuses:list", JSON.stringify(response), 120);
-    return NextResponse.json(response);
 }
 
 export async function POST(req: NextRequest) {
-    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+    try {
+        const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+        if (!auth.success) {
+            return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+        }
+
+        const body = CreateCampusSchema.parse(await req.json());
+
+        const campus = await db.campus.create({
+            data: {
+                name: body.name,
+                parentId: body.groupId ?? "",
+                country: body.country ?? "",
+                location: body.location ?? "",
+                adminId: body.adminId,
+                isActive: true,
+            },
+        });
+
+        await cache.invalidatePattern("org:campuses:*");
+        return NextResponse.json({ success: true, data: campus }, { status: 201 });
+    } catch (err) {
+        console.error("[api] Error in POST /api/org/campuses", err);
+        return NextResponse.json({ success: false, error: "Failed to create campus." }, { status: 500 });
     }
-
-    const body = CreateCampusSchema.parse(await req.json());
-
-    const campus = await db.campus.create({
-        data: {
-            name: body.name,
-            parentId: body.groupId ?? "",
-            country: body.country ?? "",
-            location: body.location ?? "",
-            adminId: body.adminId,
-            isActive: true,
-        },
-    });
-
-    await cache.invalidatePattern("org:campuses:*");
-    return NextResponse.json({ success: true, data: campus }, { status: 201 });
 }

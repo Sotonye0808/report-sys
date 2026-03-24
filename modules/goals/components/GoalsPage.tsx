@@ -45,6 +45,7 @@ import { API_ROUTES } from "@/config/routes";
 import { ROLE_CONFIG } from "@/config/roles";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import ScrollArea from "@/components/ui/ScrollArea";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -334,45 +335,25 @@ function BulkGoalTable({
         }
       }
 
-      // For single-campus bulk editing, save via the non-bulk endpoint to avoid mistaken cross-campus DML semantics.
-      let anyQueued = false;
-      for (const goal of payloads) {
-        const { ok, queued, response } = await offlineFetch(API_ROUTES.goals.list, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(goal),
-          credentials: "include",
-        });
+      const { ok, queued, response } = await offlineFetch(API_ROUTES.goals.bulk, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payloads),
+        credentials: "include",
+      });
 
-        if (queued) {
-          anyQueued = true;
-          continue;
-        }
-
-        if (!ok) {
-          const json = response ? await response.json().catch(() => ({})) : {};
-          message.error(
-            json?.error ??
-              (CONTENT.errors as Record<string, string>).generic ??
-              "Error saving goals.",
-          );
-          return;
-        }
-
-        const json = response ? await response.json().catch(() => ({})) : {};
-        if (!json?.success) {
-          message.error(
-            json?.error ??
-              (CONTENT.errors as Record<string, string>).generic ??
-              "Error saving goals.",
-          );
-          return;
-        }
-      }
-
-      if (anyQueued) {
+      if (queued) {
         message.success("Changes saved locally and will sync when you're back online.");
         clearDraft();
+        return;
+      }
+
+      const json = response ? await response.json().catch(() => ({})) : {};
+
+      if (!ok || !json?.success) {
+        message.error(
+          json?.error ?? (CONTENT.errors as Record<string, string>).generic ?? "Error saving goals.",
+        );
         return;
       }
 
@@ -646,6 +627,25 @@ function AllCampusesMatrix({
     });
   };
 
+  const applyAllMetricsAcrossCampuses = () => {
+    setMatrixValues((prev) => {
+      const next = { ...prev };
+      for (const metricId of Object.keys(allMetricValues)) {
+        const value = allMetricValues[metricId];
+        if (value == null) continue;
+
+        for (const campus of campuses) {
+          const existing = goalMap[goalKey(campus.id, metricId, year, GoalMode.ANNUAL)];
+          const isLocked = (existing?.isLocked ?? false) && !isSuperadmin;
+          if (isLocked) continue;
+          next[campus.id] = { ...(next[campus.id] ?? {}), [metricId]: value };
+        }
+      }
+      return next;
+    });
+    message.success("Applied selected metric values to all campuses.");
+  };
+
   const handleSaveAll = async () => {
     if (mode !== GoalMode.ANNUAL) {
       message.info("Use per-campus tabs for monthly goal entry.");
@@ -707,6 +707,19 @@ function AllCampusesMatrix({
   return (
     <div className="space-y-4">
       <p className="text-xs text-ds-text-subtle">{g.bulkNote as string}</p>
+
+      <div className="flex items-center gap-2 mb-2">
+        <Button
+          size="small"
+          onClick={applyAllMetricsAcrossCampuses}
+          disabled={Object.values(allMetricValues).every((v) => v == null)}
+        >
+          Apply all metric values to all campuses
+        </Button>
+        <span className="text-xs text-ds-text-subtle">
+          Set per-metric values first and press this to propagate.
+        </span>
+      </div>
 
       {sections.map(({ section, metrics }) => (
         <div
@@ -985,7 +998,9 @@ export function GoalsPage() {
           description="You must be assigned to a campus to manage goals."
         />
       ) : (
-        <Tabs items={tabItems} className="mt-2" />
+        <ScrollArea className="mt-2">
+          <Tabs items={tabItems} />
+        </ScrollArea>
       )}
     </PageLayout>
   );

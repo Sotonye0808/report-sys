@@ -34,7 +34,9 @@ export function BugReportManagePage() {
     try {
       const res = await fetch(API_ROUTES.bugReports.list);
       const json = await res.json();
-      if (json.success) setBugReports(json.data);
+      if (json.success) {
+        setBugReports(Array.isArray(json.data?.bugReports) ? json.data.bugReports : []);
+      }
     } catch {
       /* no-op */
     } finally {
