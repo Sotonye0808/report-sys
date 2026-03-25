@@ -16,7 +16,6 @@ import {
   DragOutlined,
   TrophyOutlined,
 } from "@ant-design/icons";
-import { useDraftCache } from "@/lib/hooks/useDraftCache";
 import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
 import { offlineFetch } from "@/lib/utils/offlineFetch";
 import { CONTENT } from "@/config/content";
@@ -178,39 +177,28 @@ export function TemplateNewPage() {
   const [goalPromptVisible, setGoalPromptVisible] = useState(false);
   const [createdTemplateId, setCreatedTemplateId] = useState<string | null>(null);
 
-  const {
-    cachedDraft,
-    isLoaded: isDraftLoaded,
-    saveDraft,
-    clearDraft,
-  } = useDraftCache<{ formValues: HeaderFormValues; sections: DraftSection[] }>(
-    "draft:template:new",
-  );
-  const draftRestoredRef = useRef(false);
-  const [draftStatus, setDraftStatus] = useState<"idle" | "saved" | "restored" | "cleared" | "loading" | "error">("loading");
-  const [draftLastSaved, setDraftLastSaved] = useState<Date | null>(null);
+  const draftKey = "draft:template:new";
 
-  useEffect(() => {
-    if (isDraftLoaded && cachedDraft && !draftRestoredRef.current) {
-      draftRestoredRef.current = true;
-      form.setFieldsValue(cachedDraft.formValues);
-      setSections(cachedDraft.sections);
-      setDraftStatus("restored");
-      setDraftLastSaved(new Date());
-    } else if (isDraftLoaded && !cachedDraft) {
-      setDraftStatus("idle");
-    }
-  }, [cachedDraft, isDraftLoaded, form]);
-
-  useEffect(() => {
-    if (!draftRestoredRef.current) return;
-    saveDraft({
-      formValues: form.getFieldsValue(true) as HeaderFormValues,
-      sections,
+  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } =
+    useFormPersistence<{ formValues: HeaderFormValues; sections: DraftSection[] }>({
+      formKey: draftKey,
+      formState: {
+        formValues: form.getFieldsValue(true) as HeaderFormValues,
+        sections,
+      },
+      onRestore: (draft) => {
+        form.setFieldsValue(draft.formValues);
+        setSections(draft.sections);
+      },
+      enabled: true,
     });
-    setDraftStatus("saved");
-    setDraftLastSaved(new Date());
-  }, [form, sections, saveDraft]);
+
+  // Keep first-visit form initialization from empty to default segments.
+  useEffect(() => {
+    if (!sections || sections.length === 0) {
+      setSections([makeEmptySection(1)]);
+    }
+  }, [sections]);
 
   /* ── Section helpers ────────────────────────────────────────── */
   const addSection = () => setSections((prev) => [...prev, makeEmptySection(prev.length + 1)]);
@@ -304,8 +292,6 @@ export function TemplateNewPage() {
       if (queued) {
         message.success("Saved locally and will sync when you're back online.");
         clearDraft();
-        setDraftStatus("cleared");
-        setDraftLastSaved(null);
         router.push(APP_ROUTES.templates);
         return;
       }
@@ -320,8 +306,6 @@ export function TemplateNewPage() {
       // If any metric captures goals, prompt to set goals now
       const hasGoalMetrics = sections.some((s) => s.metrics.some((m) => m.capturesGoal));
       clearDraft();
-      setDraftStatus("cleared");
-      setDraftLastSaved(null);
       if (hasGoalMetrics && json.data?.id) {
         setCreatedTemplateId(json.data.id);
         setGoalPromptVisible(true);
@@ -350,8 +334,6 @@ export function TemplateNewPage() {
       >
         <FormDraftBanner status={draftStatus} lastSavedAt={draftLastSaved} onClear={() => {
           clearDraft();
-          setDraftStatus("cleared");
-          setDraftLastSaved(null);
         }} />
         <Form
           form={form}

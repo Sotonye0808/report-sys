@@ -28,16 +28,20 @@ export function FormDraftBanner({ status, lastSavedAt, onClear }: FormDraftBanne
       <ClockCircleOutlined className="text-ds-status-info" />
     );
 
+  const showClear = status === "saved" || status === "restored" || status === "error";
+
   return (
     <div className="flex items-center justify-between gap-3 rounded-ds-md border border-ds-border-strong bg-ds-surface-sunken p-2 text-xs text-ds-text-secondary">
       <div className="flex items-center gap-2">
         {icon}
         <span>{messages[status]}</span>
-        {lastSavedAt && <span className="text-ds-text-subtle">{`Last saved: ${lastSavedAt.toLocaleTimeString()}`}</span>}
+        {lastSavedAt && <span className="text-ds-text-subtle">{`Last saved: ${lastSavedAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`}</span>}
       </div>
-      <Button size="small" icon={<DeleteOutlined />} onClick={onClear} type="text">
-        Clear draft
-      </Button>
+      {showClear && (
+        <Button size="small" icon={<DeleteOutlined />} onClick={onClear} type="text">
+          Clear draft
+        </Button>
+      )}
     </div>
   );
 }
