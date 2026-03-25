@@ -4,8 +4,9 @@
  * Domain types live exclusively in types/global.d.ts.
  */
 export { ReportDetailPage } from "./components/ReportDetailPage";
-export { ReportsListPage }  from "./components/ReportsListPage";
-export { ReportNewPage }    from "./components/ReportNewPage";
-export { ReportEditPage }   from "./components/ReportEditPage";
+export { ReportsListPage } from "./components/ReportsListPage";
+export { ReportNewPage } from "./components/ReportNewPage";
+export { ReportEditPage } from "./components/ReportEditPage";
+export { ReportAnalyticsPage } from "./components/ReportAnalyticsPage";
 export { ReportSectionsForm, buildSectionsPayload, parseSectionsToMetricValues } from "./components/ReportSectionsForm";
-export { ExportDialog }     from "./components/ExportDialog";
+export { ExportDialog } from "./components/ExportDialog";

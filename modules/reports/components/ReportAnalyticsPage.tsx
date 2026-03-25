@@ -1,0 +1,243 @@
+"use client";
+
+import { useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { useApiData } from "@/lib/hooks/useApiData";
+import { useRole } from "@/lib/hooks/useRole";
+import { APP_ROUTES, API_ROUTES } from "@/config/routes";
+import { CONTENT } from "@/config/content";
+import { ReportStatus, UserRole } from "@/types/global";
+import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Button } from "@/components/ui/Button";
+import { Card, Tag, Divider } from "antd";
+import {
+  ArrowLeftOutlined,
+  BarChartOutlined,
+  AreaChartOutlined,
+  CommentOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  AreaChart,
+  Area,
+} from "recharts";
+
+interface ReportAnalyticsPageProps {
+  reportId: string;
+}
+
+function getMetricInsight(metric: any) {
+  const goal = metric.monthlyGoal ?? 0;
+  const achieved = metric.monthlyAchieved ?? 0;
+  const yoy = metric.yoyGoal;
+  const pct = goal > 0 ? (achieved / goal) * 100 : null;
+  const yoyDelta = yoy ? ((achieved - yoy) / yoy) * 100 : null;
+
+  if (goal === 0) return "No benchmark goal set. Focus on capturing goal values for this metric.";
+  if (pct === null) return "Insufficient data to evaluate growth.";
+  if (pct < 70) return "At risk: metric is below 70% of target. Consider corrective actions.";
+  if (pct < 100) return "On track: metric is below target but within acceptable range.";
+  return "Target met or exceeded: great progress. Share success and best practices.";
+}
+
+function getOverallInsight(overallPct: number | null, yoyDelta: number | null) {
+  if (overallPct === null) return "Report has no goal-driven metrics set yet.";
+  if (overallPct < 70)
+    return "Overall performance is weak; immediate attention required to hit monthly targets.";
+  if (overallPct < 100)
+    return "Overall performance is positive and nearing target; keep the momentum.";
+  if (yoyDelta !== null && yoyDelta > 0)
+    return "Strong YoY growth with target achievement; consolidate what’s working.";
+  return "Great results; maintain performance and look for scalable improvements.";
+}
+
+export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
+  const router = useRouter();
+  const { role } = useRole();
+
+  const { data: report } = useApiData<Report>(API_ROUTES.reports.detail(reportId));
+  const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
+
+  const template = useMemo(
+    () => (templates ?? []).find((t) => t.id === report?.templateId) ?? null,
+    [templates, report?.templateId],
+  );
+
+  const sectionsWithMetrics = useMemo(() => {
+    const secs: (ReportSection & { metrics: ReportMetric[] })[] =
+      (report as Report & { sections?: (ReportSection & { metrics: ReportMetric[] })[] })
+        ?.sections ?? [];
+    return secs;
+  }, [report]);
+
+  const summary = useMemo(() => {
+    let totalGoal = 0;
+    let totalAchieved = 0;
+    let totalYoy = 0;
+    let metricsWithGoal = 0;
+
+    const data: Array<Record<string, any>> = [];
+
+    sectionsWithMetrics.forEach((section) => {
+      section.metrics.forEach((metric) => {
+        const achieved = metric.monthlyAchieved ?? 0;
+        const goal = metric.monthlyGoal ?? 0;
+        const yoy = metric.yoyGoal ?? 0;
+        const percent = goal > 0 ? (achieved / goal) * 100 : 0;
+        const yoyDiff = yoy > 0 ? ((achieved - yoy) / yoy) * 100 : undefined;
+
+        data.push({
+          name: metric.metricName,
+          achieved,
+          goal,
+          yoy,
+          pct: Number.isFinite(percent) ? Math.round(percent) : null,
+          yoyDiff: yoyDiff !== undefined && Number.isFinite(yoyDiff) ? Math.round(yoyDiff) : null,
+          section: section.sectionName,
+          insights: getMetricInsight(metric),
+        });
+
+        if (goal > 0) {
+          totalGoal += goal;
+          totalAchieved += achieved;
+          metricsWithGoal += 1;
+        }
+        totalYoy += yoy;
+      });
+    });
+
+    const overallPct = totalGoal > 0 ? Math.round((totalAchieved / totalGoal) * 100) : null;
+    const yoyDelta =
+      totalYoy > 0 ? Math.round(((totalAchieved - totalYoy) / totalYoy) * 100) : null;
+
+    const comment = getOverallInsight(overallPct, yoyDelta);
+
+    return { data, overallPct, yoyDelta, totalGoal, totalAchieved, metricsWithGoal, comment };
+  }, [sectionsWithMetrics]);
+
+  if (report === undefined || templates === undefined) {
+    return <LoadingSkeleton rows={6} />;
+  }
+
+  if (!report) {
+    return (
+      <PageLayout>
+        <EmptyState title={CONTENT.common.errorNotFound} description="Report not found." />
+      </PageLayout>
+    );
+  }
+
+  const isEmpty = summary.data.length === 0;
+
+  return (
+    <PageLayout>
+      <PageHeader
+        title={`${report.title || "Report"} - Analytics`}
+        subtitle={report.title ? undefined : "Report analytics and insights"}
+        actions={
+          <div className="flex items-center gap-2">
+            <Button
+              icon={<ArrowLeftOutlined />}
+              onClick={() => router.push(APP_ROUTES.reportDetail(reportId))}
+            >
+              Back
+            </Button>
+            <Button icon={<BarChartOutlined />} onClick={() => window.location.reload()}>
+              Refresh
+            </Button>
+          </div>
+        }
+      />
+
+      <div className="space-y-4">
+        <Card title="Overall Summary" bordered>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <div className="text-xs text-ds-text-subtle">Total Goal</div>
+              <div className="text-lg font-semibold">{summary.totalGoal}</div>
+            </div>
+            <div>
+              <div className="text-xs text-ds-text-subtle">Total Achieved</div>
+              <div className="text-lg font-semibold">{summary.totalAchieved}</div>
+            </div>
+            <div>
+              <div className="text-xs text-ds-text-subtle">Overall %</div>
+              <div className="text-lg font-semibold">
+                {summary.overallPct !== null ? `${summary.overallPct}%` : "—"}
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-ds-text-subtle">YoY Delta</div>
+              <div className="text-lg font-semibold">
+                {summary.yoyDelta !== null
+                  ? `${summary.yoyDelta >= 0 ? "+" : ""}${summary.yoyDelta}%`
+                  : "—"}
+              </div>
+            </div>
+          </div>
+          <Divider />
+          <div className="text-sm text-ds-text-secondary">{summary.comment}</div>
+        </Card>
+
+        {isEmpty ? (
+          <Card>
+            <p className="text-sm text-ds-text-subtle">No metrics available for analytics yet.</p>
+          </Card>
+        ) : (
+          <>
+            <Card title="Performance by metric">
+              <div className="h-96">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={summary.data} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="goal" fill="#8884d8" name="Goal" />
+                    <Bar dataKey="achieved" fill="#82ca9d" name="Achieved" />
+                    <Bar dataKey="yoy" fill="#ffc658" name="YoY" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </Card>
+
+            <Card title="Top analytics insights">
+              <div className="space-y-2">
+                {summary.data.slice(0, 5).map((m) => (
+                  <div key={m.name} className="border border-ds-border-subtle rounded-ds-md p-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold">{m.name}</span>
+                      <Tag color={m.pct >= 100 ? "success" : m.pct >= 70 ? "warning" : "error"}>
+                        {m.pct !== null ? `${m.pct}%` : "n/a"}
+                      </Tag>
+                    </div>
+                    <div className="text-xs text-ds-text-subtle mt-1">{m.insights}</div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            <Card title="Intelligent comment on implications">
+              <div className="flex items-center gap-2 mb-2">
+                <CommentOutlined />
+                <span className="text-sm text-ds-text-subtle">Quick AI-style summary</span>
+              </div>
+              <p className="text-sm">{getOverallInsight(summary.overallPct, summary.yoyDelta)}</p>
+            </Card>
+          </>
+        )}
+      </div>
+    </PageLayout>
+  );
+}

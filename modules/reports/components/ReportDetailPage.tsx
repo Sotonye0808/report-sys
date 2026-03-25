@@ -24,6 +24,7 @@ import {
   PlusCircleOutlined,
   SendOutlined,
   ExclamationCircleOutlined,
+  BarChartOutlined,
   ClockCircleOutlined,
   SyncOutlined,
   FileTextOutlined,
@@ -382,6 +383,12 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
           <div className="flex gap-2 flex-wrap">
             <Button icon={<ArrowLeftOutlined />} onClick={() => router.push(backHref)}>
               {CONTENT.common.back ?? "Back"}
+            </Button>
+            <Button
+              icon={<BarChartOutlined />}
+              onClick={() => router.push(APP_ROUTES.reportAnalytics(report.id))}
+            >
+              Analytics
             </Button>
             <Button
               icon={<DownloadOutlined />}
