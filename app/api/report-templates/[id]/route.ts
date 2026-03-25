@@ -186,9 +186,18 @@ export async function PUT(
             /* Replace sections + metrics if provided */
             if (body.sections) {
                 const reportsUsingTemplate = await tx.report.count({ where: { templateId: id } });
+                const goalsUsingTemplate = await tx.goal.count({
+                    where: { templateMetric: { section: { templateId: id } } },
+                });
+                const metricEntriesUsingTemplate = await tx.metricEntry.count({
+                    where: { templateMetric: { section: { templateId: id } } },
+                });
 
-                if (reportsUsingTemplate === 0) {
-                    // Safe full replacement when no existing reports reference this template.
+                const hasExternalDependencies =
+                    reportsUsingTemplate > 0 || goalsUsingTemplate > 0 || metricEntriesUsingTemplate > 0;
+
+                if (!hasExternalDependencies) {
+                    // Safe full replacement when no existing reports/goals/metric entries reference this template.
                     await tx.reportTemplateSection.deleteMany({ where: { templateId: id } });
 
                     for (const section of body.sections) {
@@ -298,7 +307,9 @@ export async function PUT(
             });
 
             return full;
-        });
+        },
+        { timeout: 120000 }
+        );
 
         // Fire-and-forget cache invalidation to avoid blocking the response.
         cache.invalidatePatternAsync(`templates:detail:${id}`);
