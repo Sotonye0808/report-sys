@@ -157,7 +157,7 @@ export function ReportNewPage() {
     };
 
     load();
-  }, [user, form, templates]);
+  }, [user, form]);
 
   /* Load goals whenever campus + period changes */
   useEffect(() => {
@@ -201,9 +201,9 @@ export function ReportNewPage() {
     setPickerValue(value);
   }, []);
 
-  /** When period type changes, reset the picker so the user re-selects. */
+  /** When period type changes, reset the picker to current period (and reload goals). */
   const handlePeriodTypeChange = useCallback(() => {
-    setPickerValue(null);
+    setPickerValue(dayjs());
   }, []);
 
   const handleSubmit = async (values: NewReportFormValues) => {
