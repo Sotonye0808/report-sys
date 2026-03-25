@@ -24,6 +24,7 @@ import {
   PlusCircleOutlined,
   SendOutlined,
   ExclamationCircleOutlined,
+  BarChartOutlined,
   ClockCircleOutlined,
   SyncOutlined,
   FileTextOutlined,
@@ -384,6 +385,12 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
               {CONTENT.common.back ?? "Back"}
             </Button>
             <Button
+              icon={<BarChartOutlined />}
+              onClick={() => router.push(APP_ROUTES.reportAnalytics(report.id))}
+            >
+              Analytics
+            </Button>
+            <Button
               icon={<DownloadOutlined />}
               onClick={() => {
                 const secs = sectionsWithMetrics.map((s) => s.section);
@@ -490,11 +497,50 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
                               </span>
                             )}
                           </p>
-                          {m.computedPercentage !== undefined && (
-                            <p className="text-xs text-ds-text-subtle tabular-nums">
-                              {Math.round(m.computedPercentage)}%
-                            </p>
-                          )}
+
+                          {(() => {
+                            const hasGoal =
+                              m.monthlyGoal !== undefined &&
+                              m.monthlyGoal !== null &&
+                              m.monthlyGoal !== 0;
+                            const livePct = hasGoal
+                              ? Math.round(((m.monthlyAchieved ?? 0) / m.monthlyGoal!) * 100)
+                              : undefined;
+                            const pctToShow =
+                              m.computedPercentage !== undefined && m.computedPercentage !== null
+                                ? Math.round(m.computedPercentage)
+                                : livePct;
+                            const yoyDelta =
+                              m.yoyGoal !== undefined &&
+                              m.yoyGoal !== null &&
+                              m.yoyGoal !== 0 &&
+                              m.monthlyAchieved !== undefined
+                                ? Math.round(((m.monthlyAchieved - m.yoyGoal) / m.yoyGoal) * 100)
+                                : undefined;
+
+                            return (
+                              <>
+                                {pctToShow !== undefined && (
+                                  <p className="text-xs text-ds-text-subtle tabular-nums">
+                                    {pctToShow}%
+                                    {m.computedPercentage === undefined && hasGoal && " (calc)"}
+                                  </p>
+                                )}
+                                {m.yoyGoal !== undefined && m.yoyGoal !== null && (
+                                  <p className="text-xs text-ds-text-subtle tabular-nums">
+                                    <span className="font-semibold">YoY: </span>
+                                    {m.yoyGoal}
+                                    {yoyDelta !== undefined && (
+                                      <span className="ml-1 text-ds-text-secondary">
+                                        ({yoyDelta >= 0 ? "+" : ""}
+                                        {yoyDelta}% vs YoY)
+                                      </span>
+                                    )}
+                                  </p>
+                                )}
+                              </>
+                            );
+                          })()}
                         </div>
                       </div>
                       {m.comment && (

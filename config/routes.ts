@@ -34,6 +34,7 @@ export const APP_ROUTES = {
     reportDetail: (id: string) => `/reports/${id}`,
     reportNew: "/reports/new",
     reportEdit: (id: string) => `/reports/${id}/edit`,
+    reportAnalytics: (id: string) => `/reports/${id}/analytics`,
     analytics: "/analytics",
     inbox: "/inbox",
     settings: "/settings",
