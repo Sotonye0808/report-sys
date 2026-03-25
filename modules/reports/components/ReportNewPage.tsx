@@ -84,6 +84,7 @@ export function ReportNewPage() {
   const [metricValues, setMetricValues] = useState<Record<string, MetricValues>>({});
   const [goalsMap, setGoalsMap] = useState<GoalsForReportMap>({});
   const [goalsLoading, setGoalsLoading] = useState(false);
+  const goalFetchKeyRef = useRef<string | null>(null);
 
   // pickerValue is the single source of truth for the selected period
   const [pickerValue, setPickerValue] = useState<Dayjs | null>(null);
@@ -189,11 +190,14 @@ export function ReportNewPage() {
     if (!resolvedCampusId || !pickerValue) return;
 
     const year = pickerValue.year();
-    let month: number | undefined;
+    const month =
+      resolvedPeriodType === ReportPeriodType.MONTHLY ? pickerValue.month() + 1 : undefined;
 
-    if (resolvedPeriodType === ReportPeriodType.MONTHLY) {
-      month = pickerValue.month() + 1;
+    const nextFetchKey = `${resolvedCampusId}:${year}:${month ?? 0}:${resolvedPeriodType}`;
+    if (goalFetchKeyRef.current === nextFetchKey) {
+      return;
     }
+    goalFetchKeyRef.current = nextFetchKey;
 
     setGoalsLoading(true);
     setGoalsMap({});
@@ -201,9 +205,11 @@ export function ReportNewPage() {
     const params = new URLSearchParams({ campusId: resolvedCampusId, year: String(year) });
     if (month) params.set("month", String(month));
 
+    let active = true;
     fetch(`${API_ROUTES.goals.list.replace("/api/goals", "/api/goals/for-report")}?${params}`)
       .then((r) => r.json())
       .then((json) => {
+        if (!active) return;
         if (json.success) {
           setGoalsMap(json.data as GoalsForReportMap);
         } else {
@@ -211,9 +217,16 @@ export function ReportNewPage() {
         }
       })
       .catch(() => {
+        if (!active) return;
         setGoalsMap({});
       })
-      .finally(() => setGoalsLoading(false));
+      .finally(() => {
+        if (active) setGoalsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, [campusId, user?.campusId, pickerValue, periodType]);
 
   /* When template changes, reset metric values (but keep goals) */

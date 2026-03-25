@@ -31,6 +31,7 @@ export function useFormPersistence<T>({
   const { cachedDraft, isLoaded, saveDraft, clearDraft } = useDraftCache<T>(formKey);
 
   const lastSavedJsonRef = useRef<string | null>(null);
+  const savedToastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!enabled) return;
@@ -68,10 +69,26 @@ export function useFormPersistence<T>({
       saveDraft(formState);
       setStatus("saved");
       setLastSavedAt(new Date());
+
+      if (savedToastTimeoutRef.current) {
+        clearTimeout(savedToastTimeoutRef.current);
+      }
+      savedToastTimeoutRef.current = setTimeout(() => {
+        setStatus("idle");
+      }, 5000);
     } catch {
       setStatus("error");
     }
   }, [enabled, formState, isLoaded, saveDraft]);
+
+  useEffect(() => {
+    return () => {
+      if (savedToastTimeoutRef.current) {
+        clearTimeout(savedToastTimeoutRef.current);
+      }
+    };
+  }, []);
+
 
   const clear = () => {
     clearDraft();
