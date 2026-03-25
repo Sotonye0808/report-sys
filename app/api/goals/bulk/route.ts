@@ -11,6 +11,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db } from "@/lib/data/db";
+import { runBulkTransaction } from "@/lib/data/bulkTransaction";
+import { validateBulkLimit } from "@/app/api/middleware/validate-bulk-limit";
 import { UserRole, GoalMode } from "@/types/global";
 
 const WRITE_ROLES: UserRole[] = [
@@ -159,6 +161,9 @@ export async function POST(req: NextRequest) {
 
   payload = parseResult.data;
 
+  const bulkLimitResponse = validateBulkLimit(payload, 10000);
+  if (bulkLimitResponse) return bulkLimitResponse;
+
   try {
     const payloadToSet = await resolveGoalsPayload(payload, auth);
     const isSuperuser =
@@ -194,55 +199,59 @@ export async function POST(req: NextRequest) {
       g,
     ]));
 
-    const chunkSize = 32;
-    const results: Array<unknown> = [];
+    const { results, metrics } = await runBulkTransaction(
+      uniqueGoals,
+      async (chunk) => {
+        return db.$transaction(
+          async (tx) =>
+            Promise.all(
+              chunk.map(async (goal) => {
+                const key = makeKey(goal);
+                const existingGoal = existingMap.get(key);
 
-    for (let i = 0; i < uniqueGoals.length; i += chunkSize) {
-      const chunk = uniqueGoals.slice(i, i + chunkSize);
-      const chunkResults = await db.$transaction(
-        async (tx) => {
-          return Promise.all(
-            chunk.map(async (goal) => {
-              const key = makeKey(goal);
-              const existingGoal = existingMap.get(key);
+                if (existingGoal && existingGoal.isLocked && !isSuperuser) {
+                  throw new Error("One or more goals are locked. Unlock them before saving.");
+                }
 
-              if (existingGoal && existingGoal.isLocked && !isSuperuser) {
-                throw new Error("One or more goals are locked. Unlock them before saving.");
-              }
+                if (existingGoal) {
+                  return tx.goal.update({
+                    where: { id: existingGoal.id },
+                    data: {
+                      targetValue: goal.targetValue,
+                      metricName: goal.metricName,
+                      mode: goal.mode as GoalMode,
+                      year: goal.year,
+                      month: goal.month,
+                    },
+                  });
+                }
 
-              if (existingGoal) {
-                return tx.goal.update({
-                  where: { id: existingGoal.id },
+                return tx.goal.create({
                   data: {
-                    targetValue: goal.targetValue,
+                    campusId: goal.campusId,
+                    templateMetricId: goal.templateMetricId,
                     metricName: goal.metricName,
                     mode: goal.mode as GoalMode,
                     year: goal.year,
                     month: goal.month,
+                    targetValue: goal.targetValue,
+                    isLocked: false,
+                    createdById: auth.user.id,
                   },
                 });
-              }
+              }),
+            ),
+          { timeout: 15000 },
+        );
+      },
+      {
+        chunkSize: 32,
+        maxItems: 10000,
+        maxRetries: 2,
+      },
+    );
 
-              return tx.goal.create({
-                data: {
-                  campusId: goal.campusId,
-                  templateMetricId: goal.templateMetricId,
-                  metricName: goal.metricName,
-                  mode: goal.mode as GoalMode,
-                  year: goal.year,
-                  month: goal.month,
-                  targetValue: goal.targetValue,
-                  isLocked: false,
-                  createdById: auth.user.id,
-                },
-              });
-            }),
-          );
-        },
-        { timeout: 120000 },
-      );
-      results.push(...chunkResults);
-    }
+    console.info("[api] goals/bulk metrics", { total: results.length, metrics });
 
     return NextResponse.json({ success: true, data: results });
   } catch (err) {

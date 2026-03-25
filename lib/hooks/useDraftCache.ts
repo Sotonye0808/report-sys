@@ -34,7 +34,46 @@ function openDb(): Promise<IDBDatabase> {
     });
 }
 
+function getLocalStorageItem<T>(key: string): T | undefined {
+    if (typeof window === "undefined") return undefined;
+    try {
+        const raw = window.localStorage.getItem(key);
+        if (!raw) return undefined;
+        const record = JSON.parse(raw) as { data: T; updatedAt: number };
+        const sevenDays = 7 * 24 * 60 * 60 * 1000;
+        if (!record || Date.now() - record.updatedAt > sevenDays) {
+            return undefined;
+        }
+        return record.data;
+    } catch {
+        return undefined;
+    }
+}
+
+function setLocalStorageItem<T>(key: string, data: T): void {
+    if (typeof window === "undefined") return;
+    try {
+        window.localStorage.setItem(key, JSON.stringify({ data, updatedAt: Date.now() }));
+    } catch {
+        // ignore localStorage errors (storage full, privacy mode)
+    }
+}
+
+function removeLocalStorageItem(key: string): void {
+    if (typeof window === "undefined") return;
+    try {
+        window.localStorage.removeItem(key);
+    } catch {
+        // ignore
+    }
+}
+
 async function getItem<T>(key: string): Promise<T | undefined> {
+    const localData = getLocalStorageItem<T>(key);
+    if (localData !== undefined) {
+        return localData;
+    }
+
     try {
         const db = await openDb();
         return new Promise((resolve, reject) => {
@@ -47,7 +86,6 @@ async function getItem<T>(key: string): Promise<T | undefined> {
                     resolve(undefined);
                     return;
                 }
-                // Expire drafts older than 7 days
                 const sevenDays = 7 * 24 * 60 * 60 * 1000;
                 if (Date.now() - record.updatedAt > sevenDays) {
                     resolve(undefined);
@@ -64,6 +102,7 @@ async function getItem<T>(key: string): Promise<T | undefined> {
 
 async function setItem<T>(key: string, data: T): Promise<void> {
     try {
+        setLocalStorageItem(key, data);
         const db = await openDb();
         return new Promise((resolve, reject) => {
             const tx = db.transaction(STORE_NAME, "readwrite");
@@ -79,6 +118,7 @@ async function setItem<T>(key: string, data: T): Promise<void> {
 
 async function removeItem(key: string): Promise<void> {
     try {
+        removeLocalStorageItem(key);
         const db = await openDb();
         return new Promise((resolve, reject) => {
             const tx = db.transaction(STORE_NAME, "readwrite");
