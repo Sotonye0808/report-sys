@@ -27,6 +27,8 @@
 - [x] Fix offline/online redirect loop (dashboard loading stuck) by restoring pre-navigation state
 - [x] Implement draft persistence for goals page and templates editing
 - [ ] Implement central audit trail helper (`lib/utils/audit.ts`) and refactor report events + template version snapshots to use it
+- [ ] Fix report form stuck period/template selection (cached state rehydration issue) and repetitive goals loading by stabilizing loader effects and value tracking
+- [ ] Fix router navigation failure where page transitions require reload before working
 - [ ] Wire Resend email service into invite creation, password reset, report workflow events (submission/approval/lock/reminder)
 - [x] Implement missing report workflow endpoints & UI: edit drafts, update requests, and goal unlock requests
 - [x] Update documentation and `.env.example` for Resend and production env variables
