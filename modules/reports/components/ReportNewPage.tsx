@@ -9,7 +9,7 @@
  * pre-populated into the form as read-only goal values.
  */
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Form, message, Select, DatePicker } from "antd";
 import type { Dayjs } from "dayjs";
@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import { SaveOutlined } from "@ant-design/icons";
 import { useDraftCache } from "@/lib/hooks/useDraftCache";
+import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
 import { offlineFetch } from "@/lib/utils/offlineFetch";
 
 dayjs.extend(weekOfYear);
@@ -28,6 +29,7 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { FormDraftBanner } from "@/components/ui/FormDraftBanner";
 import {
   ReportSectionsForm,
   buildSectionsPayload,
@@ -75,14 +77,7 @@ export function ReportNewPage() {
   const [templates, setTemplates] = useState<ReportTemplate[]>([]);
   const [campuses, setCampuses] = useState<Campus[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
-  const {
-    cachedDraft,
-    isLoaded: isDraftLoaded,
-    saveDraft,
-    clearDraft,
-  } = useDraftCache<ReportNewDraft>("draft:report:new");
-
-  const draftRestoredRef = useRef(false);
+  const draftKey = "draft:report:new";
 
   /* Template sections state */
   const [selectedTemplate, setSelectedTemplate] = useState<ReportTemplate | null>(null);
@@ -99,6 +94,38 @@ export function ReportNewPage() {
   const campusId = Form.useWatch("campusId", form) as string | undefined;
   const periodType = Form.useWatch("periodType", form) as ReportPeriodType | undefined;
   const notes = Form.useWatch("notes", form) as string | undefined;
+
+  const formState = useMemo<ReportNewDraft>(
+    () => ({
+      formValues: {
+        title: title ?? "",
+        templateId: templateId ?? "",
+        campusId: campusId ?? "",
+        periodType: periodType ?? ReportPeriodType.MONTHLY,
+        notes: notes ?? "",
+      },
+      pickerValue: pickerValue?.toISOString() ?? null,
+      selectedTemplateId: selectedTemplate?.id,
+      metricValues,
+      goalsMap,
+    }),
+    [title, templateId, campusId, periodType, notes, pickerValue, selectedTemplate, metricValues, goalsMap],
+  );
+
+  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft: clearDraftPersist } =
+    useFormPersistence<ReportNewDraft>({
+      formKey: draftKey,
+      formState,
+      onRestore: (draft) => {
+        form.setFieldsValue(draft.formValues);
+        setPickerValue(draft.pickerValue ? dayjs(draft.pickerValue) : dayjs());
+        setSelectedTemplate(templates.find((t) => t.id === draft.selectedTemplateId) ?? null);
+        setMetricValues(draft.metricValues || {});
+        setGoalsMap(draft.goalsMap || {});
+        message.info("Restored your unsaved draft.");
+      },
+      enabled: true,
+    });
 
   useEffect(() => {
     const load = async () => {
@@ -129,54 +156,9 @@ export function ReportNewPage() {
       setDataLoading(false);
     };
 
-    if (isDraftLoaded && cachedDraft && !draftRestoredRef.current) {
-      draftRestoredRef.current = true;
-      form.setFieldsValue(cachedDraft.formValues);
-      setPickerValue(cachedDraft.pickerValue ? dayjs(cachedDraft.pickerValue) : null);
-      setSelectedTemplate(templates.find((t) => t.id === cachedDraft.selectedTemplateId) ?? null);
-      setMetricValues(cachedDraft.metricValues);
-      setGoalsMap(cachedDraft.goalsMap);
-      message.info("Restored your unsaved draft.");
-      setDataLoading(false);
-      return;
-    }
-
     load();
-  }, [user, form, isDraftLoaded, cachedDraft, templates]);
+  }, [user, form, templates]);
 
-  // Save draft whenever relevant fields change
-  useEffect(() => {
-    if (!draftRestoredRef.current && !isDraftLoaded) return;
-    if (dataLoading) return;
-
-    saveDraft({
-      formValues: {
-        title: title ?? "",
-        templateId: templateId ?? "",
-        campusId: campusId ?? "",
-        periodType: periodType ?? ReportPeriodType.MONTHLY,
-        notes: notes ?? "",
-      },
-      pickerValue: pickerValue?.toISOString() ?? null,
-      selectedTemplateId: selectedTemplate?.id,
-      metricValues,
-      goalsMap,
-    });
-  }, [
-    title,
-    templateId,
-    campusId,
-    periodType,
-    notes,
-    pickerValue,
-    selectedTemplate,
-    metricValues,
-    goalsMap,
-    saveDraft,
-    draftRestoredRef,
-    isDraftLoaded,
-    dataLoading,
-  ]);
   /* Load goals whenever campus + period changes */
   useEffect(() => {
     const resolvedCampusId = campusId ?? user?.campusId;
@@ -261,7 +243,7 @@ export function ReportNewPage() {
 
       if (queued) {
         message.success("Saved locally and will submit when you're back online.");
-        clearDraft();
+        clearDraftPersist();
         router.push(APP_ROUTES.reports);
         return;
       }
@@ -280,7 +262,7 @@ export function ReportNewPage() {
       }
 
       message.success(CONTENT.common.successSave as string);
-      clearDraft();
+      clearDraftPersist();
       router.push(APP_ROUTES.reportDetail(json.data.id));
     } catch {
       message.error(CONTENT.common.errorDefault as string);
@@ -309,6 +291,7 @@ export function ReportNewPage() {
       actions={<Button onClick={() => router.back()}>{CONTENT.common.cancel as string}</Button>}
     >
       <div className="max-w-4xl space-y-6 form-scroll-container">
+        <FormDraftBanner status={draftStatus} lastSavedAt={draftLastSaved} onClear={clearDraftPersist} />
         {/* Meta fields */}
         <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6">
           <Form

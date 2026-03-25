@@ -224,7 +224,7 @@
 
 /* Form scrolling wrapper to keep action bars visible while long forms scroll */
 .form-scroll-container {
-  max-height: calc(100vh - 220px);
+  max-height: calc(100vh - 120px);
   overflow-y: auto;
   min-height: 200px;
   padding-right: 4px;

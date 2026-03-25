@@ -16,6 +16,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { FormDraftBanner } from "@/components/ui/FormDraftBanner";
 import {
   InputNumber,
   Select,
@@ -38,7 +39,7 @@ import {
 
 import { useAuth } from "@/providers/AuthProvider";
 import { useApiData } from "@/lib/hooks/useApiData";
-import { useDraftCache } from "@/lib/hooks/useDraftCache";
+import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
 import { offlineFetch } from "@/lib/utils/offlineFetch";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES } from "@/config/routes";
@@ -250,32 +251,22 @@ function BulkGoalTable({
   });
 
   const draftKey = `draft:goals:campus:${campusId}:${year}:${mode}`;
-  const {
-    cachedDraft,
-    isLoaded: isDraftLoaded,
-    saveDraft,
-    clearDraft,
-  } = useDraftCache<{
+  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } = useFormPersistence<{
     annValues: BulkGoalValues;
     monthValues: Record<string, Record<number, number>>;
-  }>(draftKey);
-  const draftRestoredRef = useRef(false);
+  }>({
+    formKey: draftKey,
+    formState: { annValues, monthValues },
+    onRestore: (draft) => {
+      setAnnValues(draft.annValues);
+      setMonthValues(draft.monthValues);
+    },
+    enabled: true,
+  });
 
   const [saving, setSaving] = useState(false);
   const [unlockGoal, setUnlockGoal] = useState<Goal | undefined>(undefined);
 
-  useEffect(() => {
-    if (isDraftLoaded && cachedDraft && !draftRestoredRef.current) {
-      draftRestoredRef.current = true;
-      setAnnValues(cachedDraft.annValues);
-      setMonthValues(cachedDraft.monthValues);
-    }
-  }, [cachedDraft, isDraftLoaded]);
-
-  useEffect(() => {
-    if (!draftRestoredRef.current) return;
-    saveDraft({ annValues, monthValues });
-  }, [annValues, monthValues, saveDraft]);
 
   /* Collect all goal-capturing metrics across all templates */
   const sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }> =
@@ -555,13 +546,6 @@ function AllCampusesMatrix({
   const goalMap = goalsToMap(goals);
 
   const draftKey = `draft:goals:matrix:${year}:${mode}`;
-  const {
-    cachedDraft,
-    isLoaded: isDraftLoaded,
-    saveDraft,
-    clearDraft,
-  } = useDraftCache<{ matrixValues: MatrixValues }>(draftKey);
-  const draftRestoredRef = useRef(false);
 
   /** campusId -> metricId -> value */
   const [matrixValues, setMatrixValues] = useState<MatrixValues>(() => {
@@ -572,20 +556,20 @@ function AllCampusesMatrix({
     }
     return init;
   });
+
+  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } = useFormPersistence<{
+    matrixValues: MatrixValues;
+  }>({
+    formKey: draftKey,
+    formState: { matrixValues },
+    onRestore: (draft) => {
+      setMatrixValues(draft.matrixValues);
+    },
+    enabled: true,
+  });
+
   const [saving, setSaving] = useState(false);
   const [allMetricValues, setAllMetricValues] = useState<Record<string, number | undefined>>({});
-
-  useEffect(() => {
-    if (isDraftLoaded && cachedDraft && !draftRestoredRef.current) {
-      draftRestoredRef.current = true;
-      setMatrixValues(cachedDraft.matrixValues);
-    }
-  }, [cachedDraft, isDraftLoaded]);
-
-  useEffect(() => {
-    if (!draftRestoredRef.current) return;
-    saveDraft({ matrixValues });
-  }, [matrixValues, saveDraft]);
 
   const sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }> =
     templates.flatMap((tmpl) =>
@@ -706,6 +690,9 @@ function AllCampusesMatrix({
 
   return (
     <div className="space-y-4">
+      <FormDraftBanner status={draftStatus} lastSavedAt={draftLastSaved} onClear={() => {
+        clearDraft();
+      }} />
       <p className="text-xs text-ds-text-subtle">{g.bulkNote as string}</p>
 
       <div className="flex items-center gap-2 mb-2">

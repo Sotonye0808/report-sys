@@ -18,9 +18,11 @@
 - [x] Fix goal save 429s and enforce ACID bulk goal updates (batch endpoint + transaction)
 - [x] Update goal bulk UI to use batch endpoint and handle 429 with retry/backoff
 - [x] Adjust API rate limiter configuration for bulk operations to prevent false-positives
-- [ ] Add regression tests for bulk goal upsert atomicity and rate-limit handling
+- [x] Add regression tests for bulk goal upsert atomicity and rate-limit handling
 - [x] Harden report template API caching to prevent 500s (parse cached payload + improved error logging)
 - [x] Implement offline draft persistence + restore for reports, templates, and goals
+- [x] Implement universal form auto-save + restore for all forms (reports/templates/goals/org/bug reports)
+- [x] Reduce Prisma interactive transaction timeout limit to 15000 for bulk operations and template edits
 - [ ] Add offline sync indicator + retry queue for pending offline submissions
 - [x] Fix offline/online redirect loop (dashboard loading stuck) by restoring pre-navigation state
 - [x] Implement draft persistence for goals page and templates editing

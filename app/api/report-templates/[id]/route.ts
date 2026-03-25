@@ -156,9 +156,10 @@ export async function PUT(
             return NextResponse.json({ success: false, error: "Template not found." }, { status: 404 });
         }
 
-        const updated = await db.$transaction(async (tx) => {
-            // If the template lacks orgGroupId (seeded gap), try to infer and persist one
-            if (!existing.orgGroupId) {
+        const updated = await db.$transaction(
+            async (tx) => {
+                // If the template lacks orgGroupId (seeded gap), try to infer and persist one
+                if (!existing.orgGroupId) {
                 const defaultGroup = await tx.orgGroup.findFirst();
                 if (defaultGroup) {
                     await tx.reportTemplate.update({ where: { id }, data: { orgGroupId: defaultGroup.id } });
@@ -308,7 +309,7 @@ export async function PUT(
 
             return full;
         },
-        { timeout: 120000 }
+        { timeout: 15000 }
         );
 
         // Fire-and-forget cache invalidation to avoid blocking the response.
