@@ -70,7 +70,7 @@ interface ReportNewDraft {
 
 export function ReportNewPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const { can } = useRole();
   const [form] = Form.useForm<NewReportFormValues>();
   const [loading, setLoading] = useState(false);
@@ -109,23 +109,36 @@ export function ReportNewPage() {
       metricValues,
       goalsMap,
     }),
-    [title, templateId, campusId, periodType, notes, pickerValue, selectedTemplate, metricValues, goalsMap],
+    [
+      title,
+      templateId,
+      campusId,
+      periodType,
+      notes,
+      pickerValue,
+      selectedTemplate,
+      metricValues,
+      goalsMap,
+    ],
   );
 
-  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft: clearDraftPersist } =
-    useFormPersistence<ReportNewDraft>({
-      formKey: draftKey,
-      formState,
-      onRestore: (draft) => {
-        form.setFieldsValue(draft.formValues);
-        setPickerValue(draft.pickerValue ? dayjs(draft.pickerValue) : dayjs());
-        setSelectedTemplate(templates.find((t) => t.id === draft.selectedTemplateId) ?? null);
-        setMetricValues(draft.metricValues || {});
-        setGoalsMap(draft.goalsMap || {});
-        message.info("Restored your unsaved draft.");
-      },
-      enabled: true,
-    });
+  const {
+    status: draftStatus,
+    lastSavedAt: draftLastSaved,
+    clearDraft: clearDraftPersist,
+  } = useFormPersistence<ReportNewDraft>({
+    formKey: draftKey,
+    formState,
+    onRestore: (draft) => {
+      form.setFieldsValue(draft.formValues);
+      setPickerValue(draft.pickerValue ? dayjs(draft.pickerValue) : dayjs());
+      setSelectedTemplate(templates.find((t) => t.id === draft.selectedTemplateId) ?? null);
+      setMetricValues(draft.metricValues || {});
+      setGoalsMap(draft.goalsMap || {});
+      message.info("Restored your unsaved draft.");
+    },
+    enabled: true,
+  });
 
   useEffect(() => {
     const load = async () => {
@@ -139,20 +152,30 @@ export function ReportNewPage() {
       setTemplates(ts);
       setCampuses(cs);
 
-      if (user?.campusId) {
+      const existingCampusId = form.getFieldValue("campusId");
+      if (!existingCampusId && user?.campusId) {
         form.setFieldValue("campusId", user.campusId);
       }
 
-      // Default to the current month in the date picker
-      setPickerValue(dayjs());
+      const existingTemplateId = form.getFieldValue("templateId");
+      const resolvedTemplate = existingTemplateId
+        ? ts.find((t) => t.id === existingTemplateId)
+        : null;
 
-      const defaultTemplate = ts.find(
-        (t) => (t as ReportTemplate & { isDefault?: boolean }).isDefault,
-      );
+      const defaultTemplate =
+        resolvedTemplate ??
+        ts.find((t) => (t as ReportTemplate & { isDefault?: boolean }).isDefault) ??
+        null;
+
       if (defaultTemplate) {
         form.setFieldValue("templateId", defaultTemplate.id);
         setSelectedTemplate(defaultTemplate);
       }
+
+      if (!pickerValue) {
+        setPickerValue(dayjs());
+      }
+
       setDataLoading(false);
     };
 
@@ -162,22 +185,33 @@ export function ReportNewPage() {
   /* Load goals whenever campus + period changes */
   useEffect(() => {
     const resolvedCampusId = campusId ?? user?.campusId;
+    const resolvedPeriodType = periodType ?? ReportPeriodType.MONTHLY;
     if (!resolvedCampusId || !pickerValue) return;
 
     const year = pickerValue.year();
-    const month = periodType === ReportPeriodType.MONTHLY ? pickerValue.month() + 1 : undefined;
+    let month: number | undefined;
+
+    if (resolvedPeriodType === ReportPeriodType.MONTHLY) {
+      month = pickerValue.month() + 1;
+    }
 
     setGoalsLoading(true);
+    setGoalsMap({});
+
     const params = new URLSearchParams({ campusId: resolvedCampusId, year: String(year) });
     if (month) params.set("month", String(month));
 
     fetch(`${API_ROUTES.goals.list.replace("/api/goals", "/api/goals/for-report")}?${params}`)
       .then((r) => r.json())
       .then((json) => {
-        if (json.success) setGoalsMap(json.data as GoalsForReportMap);
+        if (json.success) {
+          setGoalsMap(json.data as GoalsForReportMap);
+        } else {
+          setGoalsMap({});
+        }
       })
       .catch(() => {
-        /* non-fatal */
+        setGoalsMap({});
       })
       .finally(() => setGoalsLoading(false));
   }, [campusId, user?.campusId, pickerValue, periodType]);
@@ -272,6 +306,14 @@ export function ReportNewPage() {
     }
   };
 
+  if (authLoading) {
+    return (
+      <PageLayout title={CONTENT.reports.newReport as string}>
+        <LoadingSkeleton rows={6} />
+      </PageLayout>
+    );
+  }
+
   if (!can.createReports) {
     router.replace(APP_ROUTES.reports);
     return null;
@@ -291,7 +333,11 @@ export function ReportNewPage() {
       actions={<Button onClick={() => router.back()}>{CONTENT.common.cancel as string}</Button>}
     >
       <div className="max-w-4xl space-y-6 form-scroll-container">
-        <FormDraftBanner status={draftStatus} lastSavedAt={draftLastSaved} onClear={clearDraftPersist} />
+        <FormDraftBanner
+          status={draftStatus}
+          lastSavedAt={draftLastSaved}
+          onClear={clearDraftPersist}
+        />
         {/* Meta fields */}
         <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6">
           <Form

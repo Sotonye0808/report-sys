@@ -28,17 +28,18 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 
 > **Section summary:** Each module listed here has a single defined responsibility. Agents should not modify a module's scope without updating this document.
 
-| Module           | Responsibility                                                                       | Key Files                                                                                 | Dependencies                           |
-| ---------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- | -------------------------------------- |
-| `app/`           | Next.js App Router routes + layouts + global error handling                          | `app/layout.tsx`, `app/page.tsx`, `app/(dashboard)/`                                      | `providers/*`, `modules/*`, `config/*` |
-| `components/ui/` | Shared UI primitives and design system components                                    | `components/ui/*`                                                                         | `antd`, config tokens                  |
-| `providers/`     | React context providers for theme, Ant Design, and auth                              | `providers/ThemeProvider.tsx`, `providers/AntdProvider.tsx`, `providers/AuthProvider.tsx` | `next-themes`, `antd`, `lib/utils/api` |
-| `config/`        | Business configuration and content definition (routes, roles, templates)             | `config/routes.ts`, `config/roles.ts`, `config/reports.ts`                                | Types, constants                       |
-| `modules/`       | Feature modules that implement UI + domain logic for reports, analytics, users, etc. | `modules/reports/*`, `modules/analytics/*`                                                | `lib/hooks`, `lib/utils`, `config/*`   |
-| `lib/data/`      | Data access layer with Prisma, Redis, and mock DB adapters                           | `lib/data/prisma.ts`, `lib/data/redis.ts`, `lib/data/db.ts`                               | `prisma`, `@upstash/redis`             |
-| `lib/email/`     | Email delivery via Resend                                                            | `lib/email/resend.ts`                                                                     | `resend`                               |
-| `lib/hooks/`     | Shared React hooks (auth, offline sync, data fetching)                               | `lib/hooks/*`                                                                             | `lib/utils/*`                          |
-| `prisma/`        | Database schema, migrations, and seed data                                           | `prisma/schema.prisma`, `prisma/seed.ts`                                                  | `@prisma/client`                       |
+| Module           | Responsibility                                                                         | Key Files                                                                                 | Dependencies                           |
+| ---------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------- |
+| `app/`           | Next.js App Router routes + layouts + global error handling                            | `app/layout.tsx`, `app/page.tsx`, `app/(dashboard)/`                                      | `providers/*`, `modules/*`, `config/*` |
+| `components/ui/` | Shared UI primitives and design system components                                      | `components/ui/*`                                                                         | `antd`, config tokens                  |
+| `providers/`     | React context providers for theme, Ant Design, and auth                                | `providers/ThemeProvider.tsx`, `providers/AntdProvider.tsx`, `providers/AuthProvider.tsx` | `next-themes`, `antd`, `lib/utils/api` |
+| `config/`        | Business configuration and content definition (routes, roles, templates)               | `config/routes.ts`, `config/roles.ts`, `config/reports.ts`                                | Types, constants                       |
+| `modules/`       | Feature modules that implement UI + domain logic for reports, analytics, users, etc.   | `modules/reports/*`, `modules/analytics/*`                                                | `lib/hooks`, `lib/utils`, `config/*`   |
+| `modules/org/`   | Organization hierarchy management (groups, campuses, future multi-level org structure) | `modules/org/*`                                                                           | `lib/data`, `config/*`, `lib/hooks/*`  |
+| `lib/data/`      | Data access layer with Prisma, Redis, and mock DB adapters                             | `lib/data/prisma.ts`, `lib/data/redis.ts`, `lib/data/db.ts`                               | `prisma`, `@upstash/redis`             |
+| `lib/email/`     | Email delivery via Resend                                                              | `lib/email/resend.ts`                                                                     | `resend`                               |
+| `lib/hooks/`     | Shared React hooks (auth, offline sync, data fetching)                                 | `lib/hooks/*`                                                                             | `lib/utils/*`                          |
+| `prisma/`        | Database schema, migrations, and seed data                                             | `prisma/schema.prisma`, `prisma/seed.ts`                                                  | `@prisma/client`                       |
 
 ---
 

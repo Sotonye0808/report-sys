@@ -23,6 +23,8 @@
 - [ ] [Feature 1]
 - [ ] [Feature 2]
 - [ ] [Feature 3]
+- [ ] Dynamic org hierarchy (group+campus) with editable tree and modal form
+- [ ] Strong form persistence behavior with config-driven override and rehydration guard (report forms)
 
 ---
 
