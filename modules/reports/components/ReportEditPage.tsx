@@ -11,6 +11,7 @@
 import { useState, use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { message } from "antd";
+import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
 import { SaveOutlined, ArrowLeftOutlined, LockOutlined, SendOutlined } from "@ant-design/icons";
 import { useRole } from "@/lib/hooks/useRole";
 import { UserRole, ReportStatus } from "@/types/global";
@@ -21,6 +22,8 @@ import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { FormDraftBanner } from "@/components/ui/FormDraftBanner";
+
 import { EmptyState } from "@/components/ui/EmptyState";
 import {
   ReportSectionsForm,
@@ -49,6 +52,24 @@ export function ReportEditPage({ params }: PageProps) {
   const [goalsMap, setGoalsMap] = useState<GoalsForReportMap>({});
   const [initialized, setInitialized] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } = useFormPersistence<{
+    title: string;
+    notes: string;
+    metricValues: Record<string, MetricValues>;
+    goalsMap: GoalsForReportMap;
+  }>({
+    formKey: `draft:report:edit:${id}`,
+    formState: { title, notes, metricValues, goalsMap },
+    onRestore: (draft) => {
+      setTitle(draft.title);
+      setNotes(draft.notes);
+      setMetricValues(draft.metricValues);
+      setGoalsMap(draft.goalsMap);
+      setInitialized(true);
+    },
+    enabled: true,
+  });
 
   const { data: report } = useApiData<Report>(API_ROUTES.reports.detail(id));
 
@@ -195,6 +216,7 @@ export function ReportEditPage({ params }: PageProps) {
         </div>
       }
     >
+      <FormDraftBanner status={draftStatus} lastSavedAt={draftLastSaved} onClear={clearDraft} />
       <div className="max-w-4xl space-y-6 form-scroll-container">
         {/* Header: title + notes */}
         <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6 space-y-4">

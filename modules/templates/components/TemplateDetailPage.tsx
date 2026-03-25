@@ -19,7 +19,7 @@ import {
   TrophyOutlined,
 } from "@ant-design/icons";
 import { useApiData } from "@/lib/hooks/useApiData";
-import { useDraftCache } from "@/lib/hooks/useDraftCache";
+import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
 import { offlineFetch } from "@/lib/utils/offlineFetch";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
@@ -152,58 +152,68 @@ export function TemplateDetailPage({ params }: PageProps) {
   const [saving, setSaving] = useState(false);
   const [goalPromptVisible, setGoalPromptVisible] = useState(false);
   const [initialized, setInitialized] = useState(false);
-  const {
-    cachedDraft,
-    isLoaded: isDraftLoaded,
-    saveDraft,
-    clearDraft,
-  } = useDraftCache<{ formValues: any; sections: DraftSection[] }>(`draft:template:${id}`);
-  const draftRestoredRef = useRef(false);
+  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } = useFormPersistence<{
+    formValues: any;
+    sections: DraftSection[];
+  }>({
+    formKey: `draft:template:${id}`,
+    formState: {
+      formValues: form.getFieldsValue(true),
+      sections: sections ?? [],
+    },
+    onRestore: (draft) => {
+      form.setFieldsValue(draft.formValues);
+      setSections(draft.sections);
+      setInitialized(true);
+    },
+    enabled: true,
+  });
 
   const { data: template } = useApiData<TemplateWithMeta>(API_ROUTES.reportTemplates.detail(id));
 
-  if (!initialized) {
-    if (isDraftLoaded && cachedDraft && !draftRestoredRef.current) {
-      draftRestoredRef.current = true;
-      form.setFieldsValue(cachedDraft.formValues);
-      setSections(cachedDraft.sections);
-      setInitialized(true);
-    } else if (template) {
-      form.setFieldsValue({
-        name: template.name,
-        description: template.description ?? "",
-        isDefault: template.isDefault ?? false,
-        isArchived: template.isArchived ?? false,
-      });
-      const rawSections = (template.sections ?? []) as ReportTemplateSection[];
-      setSections(
-        rawSections
-          .sort((a, b) => a.order - b.order)
-          .map((s) => ({
-            id: s.id,
-            name: s.name,
-            description: s.description ?? "",
-            isRequired: s.isRequired,
-            order: s.order,
-            metrics: (s.metrics ?? [])
-              .sort((a, b) => a.order - b.order)
-              .map((m) => ({
-                id: m.id,
-                name: m.name,
-                description: m.description ?? "",
-                fieldType: m.fieldType,
-                calculationType: m.calculationType,
-                isRequired: m.isRequired,
-                capturesGoal: m.capturesGoal,
-                capturesAchieved: m.capturesAchieved,
-                capturesYoY: m.capturesYoY,
-                order: m.order,
-              })),
-          })),
-      );
-      setInitialized(true);
-    }
-  }
+  // This is intentionally empty here: form persistence is now handled via useFormPersistence and the local template restore.
+
+
+  useEffect(() => {
+    if (initialized) return;
+    if (!template) return;
+
+    form.setFieldsValue({
+      name: template.name,
+      description: template.description ?? "",
+      isDefault: template.isDefault ?? false,
+      isArchived: template.isArchived ?? false,
+    });
+
+    const rawSections = (template.sections ?? []) as ReportTemplateSection[];
+    setSections(
+      rawSections
+        .sort((a, b) => a.order - b.order)
+        .map((s) => ({
+          id: s.id,
+          name: s.name,
+          description: s.description ?? "",
+          isRequired: s.isRequired,
+          order: s.order,
+          metrics: (s.metrics ?? [])
+            .sort((a, b) => a.order - b.order)
+            .map((m) => ({
+              id: m.id,
+              name: m.name,
+              description: m.description ?? "",
+              fieldType: m.fieldType,
+              calculationType: m.calculationType,
+              isRequired: m.isRequired,
+              capturesGoal: m.capturesGoal,
+              capturesAchieved: m.capturesAchieved,
+              capturesYoY: m.capturesYoY,
+              order: m.order,
+            })),
+        })),
+    );
+
+    setInitialized(true);
+  }, [initialized, template, form]);
 
   const updateSection = (sId: string, patch: Partial<DraftSection>) =>
     setSections((prev) => (prev ?? []).map((s) => (s.id === sId ? { ...s, ...patch } : s)));
@@ -260,14 +270,6 @@ export function TemplateDetailPage({ params }: PageProps) {
         };
       }),
     );
-
-  useEffect(() => {
-    if (!draftRestoredRef.current) return;
-    saveDraft({
-      formValues: form.getFieldsValue(true) as any,
-      sections: sections ?? [],
-    });
-  }, [form, sections, saveDraft]);
 
   const handleSave = async (values: {
     name: string;

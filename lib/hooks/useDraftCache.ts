@@ -139,21 +139,48 @@ export function useDraftCache<T>(draftKey: string) {
     const [isLoaded, setIsLoaded] = useState(false);
     const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // Load cached draft on mount
+    // Load cached draft on mount and update across tabs via localStorage events.
     useEffect(() => {
+        let active = true;
+
         getItem<T>(draftKey).then((data) => {
+            if (!active) return;
             if (data) setCachedDraft(data);
             setIsLoaded(true);
         });
+
+        const onStorage = (event: StorageEvent) => {
+            if (event.key !== draftKey || event.storageArea !== window.localStorage) return;
+            try {
+                if (!event.newValue) {
+                    setCachedDraft(undefined);
+                    return;
+                }
+                const parsed = JSON.parse(event.newValue) as { data: T; updatedAt: number };
+                if (parsed?.data !== undefined) {
+                    setCachedDraft(parsed.data);
+                }
+            } catch {
+                // ignore invalid localStorage values
+            }
+        };
+
+        window.addEventListener("storage", onStorage);
+
+        return () => {
+            active = false;
+            window.removeEventListener("storage", onStorage);
+        };
     }, [draftKey]);
 
-    // Debounced save (300ms)
+    // Debounced save with a cache-respectful interval (3s)
     const saveDraft = useCallback(
         (data: T) => {
             if (saveTimer.current) clearTimeout(saveTimer.current);
             saveTimer.current = setTimeout(() => {
                 setItem(draftKey, data);
-            }, 300);
+                setCachedDraft(data);
+            }, 3000);
         },
         [draftKey],
     );
