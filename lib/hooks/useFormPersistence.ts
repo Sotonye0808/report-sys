@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useDraftCache } from "@/lib/hooks/useDraftCache";
 
 type FormStatus = "idle" | "saved" | "restored" | "cleared" | "loading" | "error";
@@ -30,6 +30,8 @@ export function useFormPersistence<T>({
 
   const { cachedDraft, isLoaded, saveDraft, clearDraft } = useDraftCache<T>(formKey);
 
+  const lastSavedJsonRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (!enabled) return;
     if (!isLoaded) {
@@ -48,6 +50,20 @@ export function useFormPersistence<T>({
 
   useEffect(() => {
     if (!enabled || !isLoaded) return;
+
+    let nextStateJson: string;
+    try {
+      nextStateJson = JSON.stringify(formState);
+    } catch {
+      nextStateJson = String(formState);
+    }
+
+    if (nextStateJson === lastSavedJsonRef.current) {
+      return;
+    }
+
+    lastSavedJsonRef.current = nextStateJson;
+
     try {
       saveDraft(formState);
       setStatus("saved");
