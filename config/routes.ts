@@ -129,6 +129,7 @@ export const API_ROUTES = {
         campuses: "/api/org/campuses",
         campus: (id: string) => `/api/org/campuses/${id}`,
         hierarchy: "/api/org/hierarchy",
+        hierarchyBulk: "/api/org/hierarchy/bulk",
     },
     analytics: {
         overview: "/api/analytics/overview",
