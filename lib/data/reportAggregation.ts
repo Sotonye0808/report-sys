@@ -1,0 +1,348 @@
+import { db } from "@/lib/data/db";
+import { UserRole, ReportStatus, ReportPeriodType, MetricCalculationType } from "@/types/global";
+
+export type AggregationScope = "campus" | "group" | "all";
+
+export interface AggregationCriteria {
+    scopeType: AggregationScope;
+    scopeId?: string;
+    periodType: ReportPeriodType;
+    periodYear: number;
+    periodMonth?: number;
+    periodWeek?: number;
+    templateId?: string;
+    includeStatuses?: ReportStatus[];
+    metricIds?: string[];
+    action?: "preview" | "generate";
+}
+
+type ReportWithSections = import("@prisma/client").Report & {
+    sections: (import("@prisma/client").ReportSection & { metrics: import("@prisma/client").ReportMetric[] })[];
+};
+
+export interface AggregatedMetricValue {
+    templateMetricId: string;
+    metricName: string;
+    calculationType: MetricCalculationType;
+    monthlyGoal: number;
+    monthlyAchieved: number;
+    yoyGoal: number;
+    sourceCount: number;
+    selectedFromReportId?: string;
+}
+
+export interface AggregatedSectionValue {
+    templateSectionId: string;
+    sectionName: string;
+    metrics: AggregatedMetricValue[];
+}
+
+export interface AggregationResult {
+    sourceReports: ReportWithSections[];
+    aggregatedSections: AggregatedSectionValue[];
+    templateId: string;
+    templateVersionId?: string;
+    scopeType: AggregationScope;
+    scopeId?: string;
+    periodType: ReportPeriodType;
+    periodYear: number;
+    periodMonth?: number;
+    periodWeek?: number;
+}
+
+/** Determine campus IDs available for user scope. */
+export async function resolveScopeCampusIds(user: AuthUser): Promise<string[] | null> {
+    if (!user || !user.role) return null;
+
+    if (user.role === UserRole.CAMPUS_ADMIN || user.role === UserRole.CAMPUS_PASTOR) {
+        return user.campusId ? [user.campusId] : [];
+    }
+
+    if (user.role === UserRole.GROUP_ADMIN || user.role === UserRole.GROUP_PASTOR) {
+        if (!user.orgGroupId) return [];
+        const group = await db.orgGroup.findUnique({
+            where: { id: user.orgGroupId },
+            include: { campuses: true },
+        });
+        if (!group) return [];
+        return group.campuses.map((campus) => campus.id);
+    }
+
+    return null;
+}
+
+export function enforceScope(criteria: AggregationCriteria, user: AuthUser) {
+    if (!user || !user.role) throw new Error("Unauthorized");
+
+    if (user.role === UserRole.CAMPUS_ADMIN || user.role === UserRole.CAMPUS_PASTOR) {
+        if (criteria.scopeType !== "campus" || criteria.scopeId !== user.campusId) {
+            throw new Error("Campus roles can only aggregate their own campus.");
+        }
+    }
+    if ((user.role === UserRole.GROUP_ADMIN || user.role === UserRole.GROUP_PASTOR) && criteria.scopeType === "group") {
+        if (criteria.scopeId !== user.orgGroupId) {
+            throw new Error("Group roles can only aggregate their own group.");
+        }
+    }
+}
+
+export async function buildReportQuery(criteria: AggregationCriteria, user: AuthUser) {
+    const campusScope = await resolveScopeCampusIds(user);
+
+    const where: any = {
+        periodType: criteria.periodType,
+        periodYear: criteria.periodYear,
+        status: { in: criteria.includeStatuses ?? [ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.SUBMITTED] },
+    };
+
+    if (criteria.periodType === ReportPeriodType.MONTHLY && criteria.periodMonth != null) {
+        where.periodMonth = criteria.periodMonth;
+    }
+    if (criteria.periodType === ReportPeriodType.WEEKLY && criteria.periodWeek != null) {
+        where.periodWeek = criteria.periodWeek;
+    }
+    if (criteria.templateId) where.templateId = criteria.templateId;
+
+    if (criteria.scopeType === "campus" && criteria.scopeId) {
+        where.campusId = criteria.scopeId;
+    } else if (criteria.scopeType === "group" && criteria.scopeId) {
+        where.orgGroupId = criteria.scopeId;
+    } else if (campusScope && campusScope.length > 0) {
+        where.campusId = { in: campusScope };
+    }
+
+    return where;
+}
+
+export async function calculateAggregation(
+    criteria: AggregationCriteria,
+    user: AuthUser,
+): Promise<AggregationResult> {
+    enforceScope(criteria, user);
+
+    const where = await buildReportQuery(criteria, user);
+    const reports = await db.report.findMany({
+        where,
+        include: {
+            sections: {
+                include: {
+                    metrics: true,
+                },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+
+    if (reports.length === 0) {
+        throw new Error("No reports found for the selected scope and period.");
+    }
+
+    const templateIds = Array.from(new Set(reports.map((r) => r.templateId)));
+    if (templateIds.length > 1) {
+        throw new Error("Selected reports use multiple templates - aggregation requires one template.");
+    }
+
+    const templateId = templateIds[0];
+    const template = await db.reportTemplate.findUnique({ where: { id: templateId } });
+    if (!template) throw new Error("Template not found for aggregated reports.");
+
+    const allMetricCumulative = new Map<string, {
+        templateMetricId: string;
+        metricName: string;
+        calculationType: MetricCalculationType;
+        goalSum: number;
+        achievedSum: number;
+        yoySum: number;
+        count: number;
+        snapshot: { reportId: string; createdAt: Date; monthlyGoal: number; monthlyAchieved: number; yoyGoal: number } | null;
+    }>();
+
+    for (const report of reports) {
+        for (const section of report.sections) {
+            for (const metric of section.metrics) {
+                if (criteria.metricIds && !criteria.metricIds.includes(metric.templateMetricId)) continue;
+                const key = metric.templateMetricId;
+                const existing = allMetricCumulative.get(key);
+                const calcType = (metric.calculationType ?? MetricCalculationType.SUM) as MetricCalculationType;
+
+                if (!existing) {
+                    allMetricCumulative.set(key, {
+                        templateMetricId: key,
+                        metricName: metric.metricName,
+                        calculationType: calcType as MetricCalculationType,
+                        goalSum: metric.monthlyGoal ?? 0,
+                        achievedSum: metric.monthlyAchieved ?? 0,
+                        yoySum: metric.yoyGoal ?? 0,
+                        count: 1,
+                        snapshot: {
+                            reportId: report.id,
+                            createdAt: report.createdAt,
+                            monthlyGoal: metric.monthlyGoal ?? 0,
+                            monthlyAchieved: metric.monthlyAchieved ?? 0,
+                            yoyGoal: metric.yoyGoal ?? 0,
+                        },
+                    });
+                    continue;
+                }
+
+                existing.goalSum += metric.monthlyGoal ?? 0;
+                existing.achievedSum += metric.monthlyAchieved ?? 0;
+                existing.yoySum += metric.yoyGoal ?? 0;
+                existing.count += 1;
+
+                if (existing.snapshot) {
+                    if (report.createdAt > existing.snapshot.createdAt) {
+                        existing.snapshot = {
+                            reportId: report.id,
+                            createdAt: report.createdAt,
+                            monthlyGoal: metric.monthlyGoal ?? 0,
+                            monthlyAchieved: metric.monthlyAchieved ?? 0,
+                            yoyGoal: metric.yoyGoal ?? 0,
+                        };
+                    }
+                }
+            }
+        }
+    }
+
+    const sectionsByTemplate = await db.reportTemplateSection.findMany({
+        where: { templateId },
+        orderBy: { order: "asc" },
+        include: { metrics: { orderBy: { order: "asc" } } },
+    });
+
+    const aggregatedSections: AggregatedSectionValue[] = sectionsByTemplate.map((section) => ({
+        templateSectionId: section.id,
+        sectionName: section.name,
+        metrics: section.metrics
+            .filter((m) => !criteria.metricIds || criteria.metricIds.includes(m.id))
+            .map((metric) => {
+                const stored = allMetricCumulative.get(metric.id);
+                const existing = stored ?? {
+                    templateMetricId: metric.id,
+                    metricName: metric.name,
+                    calculationType: metric.calculationType,
+                    goalSum: 0,
+                    achievedSum: 0,
+                    yoySum: 0,
+                    count: 0,
+                    snapshot: null,
+                };
+
+                let monthlyGoal = 0;
+                let monthlyAchieved = 0;
+                let yoyGoal = 0;
+
+                if (existing.count === 0) {
+                    monthlyGoal = 0;
+                    monthlyAchieved = 0;
+                    yoyGoal = 0;
+                } else if (existing.calculationType === MetricCalculationType.AVERAGE) {
+                    monthlyGoal = existing.goalSum / existing.count;
+                    monthlyAchieved = existing.achievedSum / existing.count;
+                    yoyGoal = existing.yoySum / existing.count;
+                } else if (existing.calculationType === MetricCalculationType.SNAPSHOT) {
+                    monthlyGoal = existing.snapshot?.monthlyGoal ?? 0;
+                    monthlyAchieved = existing.snapshot?.monthlyAchieved ?? 0;
+                    yoyGoal = existing.snapshot?.yoyGoal ?? 0;
+                } else {
+                    monthlyGoal = existing.goalSum;
+                    monthlyAchieved = existing.achievedSum;
+                    yoyGoal = existing.yoySum;
+                }
+
+                return {
+                    templateMetricId: metric.id,
+                    metricName: metric.name,
+                    calculationType: metric.calculationType as MetricCalculationType,
+                    monthlyGoal,
+                    monthlyAchieved,
+                    yoyGoal,
+                    sourceCount: existing.count,
+                    selectedFromReportId: existing.snapshot?.reportId,
+                };
+            }),
+    }));
+
+    return {
+        sourceReports: reports,
+        aggregatedSections,
+        templateId,
+        templateVersionId: reports[0].templateVersionId ?? undefined,
+        scopeType: criteria.scopeType,
+        scopeId: criteria.scopeId,
+        periodType: criteria.periodType,
+        periodYear: criteria.periodYear,
+        periodMonth: criteria.periodMonth,
+        periodWeek: criteria.periodWeek,
+    };
+}
+
+export async function persistAggregatedReport(
+    result: AggregationResult,
+    user: AuthUser,
+): Promise<import("@prisma/client").Report> {
+    const title = `Aggregated ${result.scopeType} ${result.periodType} ${result.scopeId ?? "all"} ${result.periodYear}`;
+    const firstCampusId = result.sourceReports?.[0]?.campusId ?? "";
+    const firstOrgGroupId = result.sourceReports?.[0]?.orgGroupId ?? "";
+
+    const report = await db.$transaction(async (tx) => {
+        const created = await tx.report.create({
+            data: {
+                organisationId: process.env.NEXT_PUBLIC_ORG_ID ?? "harvesters",
+                title,
+                templateId: result.templateId,
+                templateVersionId: result.templateVersionId,
+                campusId: firstCampusId,
+                orgGroupId: firstOrgGroupId,
+                period: `${result.periodType}/${result.periodYear}`,
+                periodType: result.periodType,
+                periodYear: result.periodYear,
+                periodMonth: result.periodMonth,
+                periodWeek: result.periodWeek,
+                status: ReportStatus.DRAFT,
+                createdById: user.id,
+                notes: "Aggregated report generated from multiple source reports",
+                isDataEntry: false,
+            },
+        });
+
+        for (const section of result.aggregatedSections) {
+            const sectionRec = await tx.reportSection.create({
+                data: {
+                    reportId: created.id,
+                    templateSectionId: section.templateSectionId,
+                    sectionName: section.sectionName,
+                },
+            });
+
+            for (const metric of section.metrics) {
+                await tx.reportMetric.create({
+                    data: {
+                        reportSectionId: sectionRec.id,
+                        templateMetricId: metric.templateMetricId,
+                        metricName: metric.metricName,
+                        calculationType: metric.calculationType,
+                        monthlyGoal: metric.monthlyGoal,
+                        monthlyAchieved: metric.monthlyAchieved,
+                        yoyGoal: metric.yoyGoal,
+                        isLocked: false,
+                    },
+                });
+            }
+        }
+
+        await tx.reportEvent.create({
+            data: {
+                reportId: created.id,
+                eventType: "CREATED",
+                actorId: user.id,
+                timestamp: new Date(),
+            },
+        });
+
+        return created;
+    });
+
+    return report;
+}

@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { db, cache } from "@/lib/data/db";
+import { db, cache, invalidateCache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const UpdateCampusSchema = z.object({
@@ -62,6 +62,8 @@ export async function PUT(
     },
   });
 
-  await cache.invalidatePattern("org:campuses:*");
+  await invalidateCache("org:campuses:*");
+  await invalidateCache("org:groups:*");
+  await invalidateCache("org:hierarchy");
   return NextResponse.json({ success: true, data: updated });
 }

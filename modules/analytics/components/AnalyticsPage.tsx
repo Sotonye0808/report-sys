@@ -34,6 +34,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { utils, writeFile } from "xlsx";
+import {
+  MetricChartType,
+  METRIC_CHART_TYPE_OPTIONS,
+  renderMetricChart,
+} from "@/modules/analytics/chartUtils";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
 import { useApiData } from "@/lib/hooks/useApiData";
@@ -303,6 +308,7 @@ export function AnalyticsPage() {
   const [selectedMetricId, setSelectedMetricId] = useState<string | undefined>();
   const [granularity, setGranularity] = useState<"weekly" | "monthly" | "quarterly">("monthly");
   const [compareYear, setCompareYear] = useState<number>(CURRENT_YEAR - 1);
+  const [chartType, setChartType] = useState<MetricChartType>("bar");
   const [metricsData, setMetricsData] = useState<MetricAnalyticsData | null>(null);
   const [metricsLoading, setMetricsLoading] = useState(false);
   const [availableMetrics, setAvailableMetrics] = useState<AvailableMetric[]>([]);
@@ -353,6 +359,16 @@ export function AnalyticsPage() {
       "_",
     );
 
+    const getStatusPieData = (overview: AnalyticsOverview) =>
+      [
+        { status: "Submitted", value: overview.totals.submitted },
+        { status: "Approved", value: overview.totals.approved },
+        { status: "Reviewed", value: overview.totals.reviewed },
+        { status: "Locked", value: overview.totals.locked },
+        { status: "Draft", value: overview.totals.draft },
+        { status: "Requires Edits", value: overview.totals.requiresEdits },
+      ].filter((row) => row.value > 0);
+
     if (activeTab === "overview" && overview) {
       exportToXlsx(
         [
@@ -363,10 +379,17 @@ export function AnalyticsPage() {
               { metric: "Submitted", value: overview.totals.submitted },
               { metric: "Approved", value: overview.totals.approved },
               { metric: "Compliance", value: overview.compliance },
+              { metric: "Reviewed", value: overview.totals.reviewed },
+              { metric: "Locked", value: overview.totals.locked },
+              { metric: "Draft", value: overview.totals.draft },
+              { metric: "Requires Edits", value: overview.totals.requiresEdits },
             ],
           },
+          { name: "Submission Trend", data: overview.submissionTrend },
           { name: "Campus Breakdown", data: overview.campusBreakdown },
           { name: "Status Trend", data: overview.statusTrend },
+          { name: "Quarterly Trend", data: overview.quarterlyTrend },
+          { name: "Status Pie", data: getStatusPieData(overview) },
         ],
         `${baseFilename}.xlsx`,
       );
@@ -374,6 +397,17 @@ export function AnalyticsPage() {
     }
 
     if (activeTab === "metrics" && metricsData) {
+      const campusComparison = campusComparisonData;
+      const cumulativeTrend =
+        metricsData.calculationType === MetricCalculationType.SUM
+          ? metricsData.aggregate.map((row) => ({
+              period: row.period,
+              periodLabel: row.periodLabel,
+              achieved: row.achieved,
+              cumulativeAchieved: Number(row.achieved ?? 0) + 0, // already in curve
+            }))
+          : [];
+
       exportToXlsx(
         [
           { name: "Metric Aggregate", data: metricsData.aggregate },
@@ -383,6 +417,10 @@ export function AnalyticsPage() {
               c.series.map((p) => ({ campus: c.campusName, ...p })),
             ),
           },
+          { name: "Campus Comparison", data: campusComparison },
+          ...(cumulativeTrend.length > 0
+            ? [{ name: "Cumulative Trend", data: cumulativeTrend }]
+            : []),
         ],
         `${baseFilename}.xlsx`,
       );
@@ -392,6 +430,7 @@ export function AnalyticsPage() {
     if (activeTab === "trends" && overview) {
       exportToXlsx(
         [
+          { name: "Submission Trend", data: overview.submissionTrend },
           { name: "Status Trend", data: overview.statusTrend },
           { name: "Quarterly Trend", data: overview.quarterlyTrend },
         ],
@@ -402,18 +441,31 @@ export function AnalyticsPage() {
 
     if (activeTab === "compliance" && overview) {
       exportToXlsx(
-        [{ name: "Campus Breakdown", data: overview.campusBreakdown }],
+        [
+          { name: "Campus Breakdown", data: campusBreakdownNamed },
+          { name: "Status Pie", data: getStatusPieData(overview) },
+          { name: "Overall Compliance", data: [overview] },
+        ],
         `${baseFilename}.xlsx`,
       );
       return;
     }
 
     if (activeTab === "quarterly" && quarterlyData) {
+      const topCampuses = (quarterlyData.campusBreakdown ?? [])
+        .map((row) => ({
+          ...row,
+          name: allCampuses?.find((c) => c.id === row.campusId)?.name ?? row.campusId,
+        }))
+        .sort((a, b) => b.complianceRate - a.complianceRate)
+        .slice(0, 10);
+
       exportToXlsx(
         [
           { name: "Quarterly Summary", data: [quarterlyData] },
           { name: "Campus Breakdown", data: quarterlyData.campusBreakdown },
           { name: "Monthly Breakdown", data: quarterlyData.monthlyBreakdown },
+          { name: "Top Campuses", data: topCampuses },
         ],
         `${baseFilename}.xlsx`,
       );
@@ -426,6 +478,8 @@ export function AnalyticsPage() {
         [
           { name: "Summary", data: [overview.totals] },
           { name: "Campus Breakdown", data: overview.campusBreakdown },
+          { name: "Submission Trend", data: overview.submissionTrend },
+          { name: "Status Trend", data: overview.statusTrend },
         ],
         `${baseFilename}.xlsx`,
       );
@@ -811,6 +865,11 @@ export function AnalyticsPage() {
             { label: CONTENT.analytics.granularity.weekly as string, value: "weekly" },
           ]}
         />
+        <Segmented
+          value={chartType}
+          onChange={(v) => setChartType(v as MetricChartType)}
+          options={METRIC_CHART_TYPE_OPTIONS.map((opt) => ({ label: opt.label, value: opt.value }))}
+        />
       </div>
 
       {!selectedMetricId ? (
@@ -823,46 +882,12 @@ export function AnalyticsPage() {
         <>
           {/* Goal vs Achieved */}
           <ChartCard title={CONTENT.analytics.goalVsAchievedTitle as string}>
-            <ResponsiveContainer width="100%" height={280}>
-              <ComposedChart data={metricsData.aggregate}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                <XAxis
-                  dataKey="periodLabel"
-                  tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
-                />
-                <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
-                <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Legend />
-                <Bar
-                  dataKey="achieved"
-                  name={CONTENT.analytics.chartLabels.achieved as string}
-                  fill="var(--ds-chart-1)"
-                  radius={[4, 4, 0, 0]}
-                  maxBarSize={48}
-                />
-                {metricsData.calculationType !== MetricCalculationType.SNAPSHOT && (
-                  <Line
-                    type="monotone"
-                    dataKey="goal"
-                    name={CONTENT.analytics.chartLabels.goal as string}
-                    stroke="var(--ds-chart-3)"
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                    dot={false}
-                  />
-                )}
-                {metricsData.aggregate.some((p) => p.yoy != null) && (
-                  <Line
-                    type="monotone"
-                    dataKey="yoy"
-                    name={CONTENT.analytics.chartLabels.yoy as string}
-                    stroke="var(--ds-chart-4)"
-                    strokeWidth={1.5}
-                    dot={false}
-                  />
-                )}
-              </ComposedChart>
-            </ResponsiveContainer>
+            {renderMetricChart({
+              chartType,
+              data: metricsData.aggregate,
+              tooltipStyle: TOOLTIP_STYLE,
+              metricCalculationType: metricsData.calculationType,
+            })}
           </ChartCard>
 
           {/* Campus comparison â€” cross-campus roles only */}

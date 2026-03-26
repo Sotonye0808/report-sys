@@ -39,8 +39,10 @@
 
 > **Section summary:** Tasks planned for the next sprint. Not yet started.
 
-- [ ] [Queued task 1]
-- [ ] [Queued task 2]
+- [x] Enhance visual analytics to support user-selectable chart types (bar, line, pie, area) in `modules/analytics/components/AnalyticsPage.tsx`.
+- [x] Implement template version sync in report rendering: load metric name from template version by metric ID, and keep existing reports backwards-compatible.
+- [x] Add UI feedback for template upgrade mismatch and migration path in `modules/reports/components/ReportDetailPage.tsx` and `modules/reports/components/ReportEditPage.tsx`.
+- [x] Refactor chart-code paths and common helpers into a shared `modules/analytics/chartUtils.ts` to avoid duplication and improve maintainability.
 
 ---
 
@@ -67,5 +69,27 @@
 ---
 
 ## Notes
+
+- New feature request: aggregated report generation (weekly/monthly/quarterly/yearly) with template/version compatibility, group/campus hierarchy, metric-level include/exclude, and aggregated analytics+chart export.
+- Keep ACL: users can only aggregate data they are authorized to see (campus/group scope, CEO, SUPERADMIN, etc.).
+
+## Pending tasks (added for aggregated rollup feature)
+
+- [ ] Add report aggregation API kernel decorators and zod schemas in `app/api/reports/aggregate`.
+- [ ] Extend report data model / response types in `types/global.d.ts` to carry `aggregationSource` and `aggregatedFrom` metadata.
+- [ ] Implement `lib/data/reportAggregation.ts` service to create/validate aggregated reports by template, version, campus/group, status, and metric calculations.
+- [ ] Add org hierarchy context helper in `modules/org` to resolve parent group/campus rollup sets in aggregation UI.
+- [ ] Add `modules/reports/components/ReportAggregationPage.tsx` with interactive stepper: choose scope (campus/group/CEO), date range, template/version, status filter, metric selector/deselector, and preview metrics.
+- [ ] Add data visualization embedding to export (spreadsheet charts/worksheet summary) in `modules/analytics/components/AnalyticsPage.tsx`/export utility.
+- [ ] Add automated tests for aggregation correctness (sum/average/snapshot logic, mismatch template versions fallback strategy) in `test/aggregation.test.ts`.
+- [ ] Update `config/routes.ts` nav to include Aggregated reports route; update breadcrumbs in `modules/reports`.
+- [ ] Document aggregation behavior in `docs/` and `hypersystem` architecture notes.
+
+## Next dev steps
+
+1. Code implementation plan validation with product stakeholder.
+2. Implement API contracts and schema updates.
+3. Build frontend wizard and tie to service layer.
+4. Add tests, then run `npm run build` + user flow QA.
 
 [Any context agents need to know about current sprint constraints, blockers, or priorities]

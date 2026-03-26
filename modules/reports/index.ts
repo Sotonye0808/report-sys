@@ -8,5 +8,6 @@ export { ReportsListPage } from "./components/ReportsListPage";
 export { ReportNewPage } from "./components/ReportNewPage";
 export { ReportEditPage } from "./components/ReportEditPage";
 export { ReportAnalyticsPage } from "./components/ReportAnalyticsPage";
+export { ReportAggregationPage } from "./components/ReportAggregationPage";
 export { ReportSectionsForm, buildSectionsPayload, parseSectionsToMetricValues } from "./components/ReportSectionsForm";
 export { ExportDialog } from "./components/ExportDialog";
