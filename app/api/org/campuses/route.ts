@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { db, cache } from "@/lib/data/db";
+import { db, cache, invalidateCache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const CreateCampusSchema = z.object({
@@ -59,7 +59,9 @@ export async function POST(req: NextRequest) {
             },
         });
 
-        await cache.invalidatePattern("org:campuses:*");
+        await invalidateCache("org:campuses:*");
+        await invalidateCache("org:groups:*");
+        await invalidateCache("org:hierarchy");
         return NextResponse.json({ success: true, data: campus }, { status: 201 });
     } catch (err) {
         console.error("[api] Error in POST /api/org/campuses", err);

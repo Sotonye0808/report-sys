@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { db, cache } from "@/lib/data/db";
+import { db, cache, invalidateCache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 
 const CreateGroupSchema = z.object({
@@ -54,7 +54,9 @@ export async function POST(req: NextRequest) {
             },
         });
 
-        await cache.invalidatePattern("org:groups:*");
+        await invalidateCache("org:campuses:*");
+        await invalidateCache("org:groups:*");
+        await invalidateCache("org:hierarchy");
         return NextResponse.json({ success: true, data: group }, { status: 201 });
     } catch (err) {
         console.error("[api] Error in POST /api/org/groups", err);

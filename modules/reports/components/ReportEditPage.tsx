@@ -84,9 +84,28 @@ export function ReportEditPage({ params }: PageProps) {
     [report?.templateId],
   );
 
+  const { data: templateVersion } = useApiData<ReportTemplateVersion>(
+    report?.templateVersionId
+      ? API_ROUTES.reportTemplates.versionDetail(report.templateId, report.templateVersionId)
+      : null,
+    [report?.templateVersionId],
+  );
+
+  const templateToUse =
+    templateVersion?.snapshot && templateVersion.snapshot !== undefined
+      ? templateVersion.snapshot
+      : template;
+
+  const isTemplateVersionMismatch = Boolean(
+    report?.templateVersionId &&
+    template &&
+    templateToUse &&
+    template.version !== templateToUse.version,
+  );
+
   /* Initialise form values + load goals once report + template are available */
   useEffect(() => {
-    if (!report || !template || initialized) return;
+    if (!report || !templateToUse || !initialized) return;
     setTitle(report.title ?? "");
     setNotes(report.notes ?? "");
     setMetricValues(parseSectionsToMetricValues((report.sections ?? []) as unknown[]));
@@ -117,7 +136,8 @@ export function ReportEditPage({ params }: PageProps) {
   const handleSave = async () => {
     setSaving(true);
     try {
-      if (!report || !template) {
+      if (!report || !templateToUse) {
+        message.error("Unable to save: template data is not loaded yet.");
         setSaving(false);
         return;
       }
@@ -127,7 +147,7 @@ export function ReportEditPage({ params }: PageProps) {
         body: JSON.stringify({
           title,
           notes,
-          sections: buildSectionsPayload(template, metricValues, goalsMap),
+          sections: buildSectionsPayload(templateToUse, metricValues, goalsMap),
         }),
         credentials: "include",
       });
@@ -185,14 +205,14 @@ export function ReportEditPage({ params }: PageProps) {
   }
 
   const computedDeadline =
-    report && template
+    report && templateToUse
       ? calculateReportDeadline(
           report.periodType,
           report.periodYear,
           report.periodMonth ?? undefined,
           report.periodWeek ?? undefined,
-          template.deadlinePolicy ?? undefined,
-          template.deadlineOffsetHours ?? undefined,
+          templateToUse.deadlinePolicy ?? undefined,
+          templateToUse.deadlineOffsetHours ?? undefined,
         )
       : undefined;
   const isDataEntryReport = report
@@ -238,9 +258,18 @@ export function ReportEditPage({ params }: PageProps) {
       }
     >
       <FormDraftBanner status={draftStatus} lastSavedAt={draftLastSaved} onClear={clearDraft} />
-      {template && report && (
+      {isTemplateVersionMismatch && (
+        <div className="mb-4 px-4 py-3 rounded-ds-md border border-ds-state-warning bg-ds-surface-elevated">
+          <p className="text-sm font-semibold text-ds-state-warning">Template version warning</p>
+          <p className="text-xs text-ds-text-secondary">
+            This report is linked to template version {report?.templateVersionId ?? "unknown"} and
+            may not match the active template.
+          </p>
+        </div>
+      )}
+      {templateToUse && report && (
         <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-4 mb-4">
-          <p className="text-xs text-ds-text-secondary">{formattedDeadlinePolicy(template)}</p>
+          <p className="text-xs text-ds-text-secondary">{formattedDeadlinePolicy(templateToUse)}</p>
           <p className="text-xs text-ds-text-secondary">
             Computed deadline:{" "}
             {computedDeadline ? new Date(computedDeadline).toLocaleString() : "n/a"}
@@ -279,9 +308,9 @@ export function ReportEditPage({ params }: PageProps) {
         </div>
 
         {/* Template sections form (shared component) */}
-        {template && (
+        {templateToUse && (
           <ReportSectionsForm
-            template={template}
+            template={templateToUse}
             metricValues={metricValues}
             goalsMap={goalsMap}
             onMetricChange={handleMetricChange}

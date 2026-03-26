@@ -39,7 +39,7 @@ import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
 import { fmtDate, fmtDateTime } from "@/lib/utils/formatDate";
-import { formattedDeadlinePolicy } from "@/lib/utils/deadline";
+import { calculateReportDeadline, formattedDeadlinePolicy } from "@/lib/utils/deadline";
 import { exportReportDetail } from "@/lib/utils/exportReports";
 import Button from "@/components/ui/Button";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -282,6 +282,12 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
 
   const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
 
+  const { data: templateVersion } = useApiData<ReportTemplateVersion>(
+    report?.templateVersionId
+      ? API_ROUTES.reportTemplates.versionDetail(report.templateId, report.templateVersionId)
+      : null,
+  );
+
   const { data: events } = useApiData<ReportEvent[]>(API_ROUTES.reports.history(reportId));
 
   const { data: campuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
@@ -311,6 +317,20 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
   const template = useMemo(
     () => (templates ?? []).find((t) => t.id === report?.templateId) ?? null,
     [templates, report?.templateId],
+  );
+
+  const effectiveTemplate = useMemo<ReportTemplate | null>(() => {
+    if (templateVersion?.snapshot) {
+      return templateVersion.snapshot;
+    }
+    return template;
+  }, [templateVersion, template]);
+
+  const isTemplateVersionMismatch = Boolean(
+    report?.templateVersionId &&
+    effectiveTemplate &&
+    template &&
+    effectiveTemplate.version !== template.version,
   );
 
   // Report detail API returns sections with nested metrics
@@ -437,6 +457,17 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
         <ReportStatusBadge status={report.status} />
       </div>
 
+      {isTemplateVersionMismatch && (
+        <div className="mb-6 px-4 py-3 rounded-ds-md border border-ds-state-warning bg-ds-surface-elevated">
+          <p className="text-sm font-semibold text-ds-state-warning">Template version mismatch</p>
+          <p className="text-xs text-ds-text-secondary">
+            This report is stored with template version {effectiveTemplate?.version} but the current
+            template version is {template?.version}. The displayed values use the historic template
+            snapshot from the report to preserve data fidelity.
+          </p>
+        </div>
+      )}
+
       {/* Metadata */}
       <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-5 mb-6">
         <h2 className="text-sm font-semibold text-ds-text-primary mb-3">
@@ -450,10 +481,23 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
             {formatReportPeriod(report)}
           </Descriptions.Item>
           <Descriptions.Item label={CONTENT.reports.columnLabels?.deadline ?? "Deadline"}>
-            {fmtDate(report.deadline)}
+            {report.deadline
+              ? fmtDate(report.deadline)
+              : effectiveTemplate
+                ? fmtDate(
+                    calculateReportDeadline(
+                      report.periodType,
+                      report.periodYear,
+                      report.periodMonth ?? undefined,
+                      report.periodWeek ?? undefined,
+                      effectiveTemplate.deadlinePolicy,
+                      effectiveTemplate.deadlineOffsetHours ?? undefined,
+                    ),
+                  )
+                : "—"}
           </Descriptions.Item>
           <Descriptions.Item label="Deadline policy">
-            {template ? formattedDeadlinePolicy(template) : "—"}
+            {effectiveTemplate ? formattedDeadlinePolicy(effectiveTemplate) : "—"}
           </Descriptions.Item>
           <Descriptions.Item label="Data Entry Report">
             {report.isDataEntry ? "Yes" : "No"}
@@ -564,9 +608,9 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
 
         {/* Case B: no saved section data — render the template structure as a read-only skeleton */}
         {sectionsWithMetrics.length === 0 &&
-          template &&
-          template.sections.length > 0 &&
-          [...template.sections]
+          effectiveTemplate &&
+          effectiveTemplate.sections.length > 0 &&
+          [...effectiveTemplate.sections]
             .sort((a, b) => a.order - b.order)
             .map((section) => (
               <div

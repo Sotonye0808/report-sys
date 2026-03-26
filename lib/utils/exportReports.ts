@@ -14,6 +14,17 @@ import { fmtDate } from "./formatDate";
 import { getReportLabel, formatReportPeriod } from "./reportUtils";
 import { CONTENT } from "@/config/content";
 
+interface AggregatedMetricValue {
+    templateMetricId: string;
+    metricName: string;
+    calculationType: string;
+    monthlyGoal: number;
+    monthlyAchieved: number;
+    yoyGoal: number;
+    sourceCount: number;
+    selectedFromReportId?: string;
+}
+
 const ec = (CONTENT.reports as Record<string, unknown>).export as Record<string, string>;
 
 /* ── helpers ────────────────────────────────────────────────────────────── */
@@ -200,6 +211,76 @@ export function exportReportDetail(
     const safeName = getReportLabel(report, templates)
         .replace(/[/\\?*[\]]/g, "-")
         .slice(0, 50);
+    XLSX.writeFile(wb, `${safeName}.xlsx`);
+}
+
+/**
+ * Aggregated report export with chart-friendly sheet payloads.
+ */
+export function exportAggregatedReport(
+    report: Report,
+    aggregatedSections: { sectionName: string; metrics: AggregatedMetricValue[] }[],
+    sourceReports: Report[],
+    templates: ReportTemplate[],
+    campuses: Campus[],
+): void {
+    const campusName = campuses.find((c) => c.id === report.campusId)?.name ?? report.campusId;
+    const template = templates.find((t) => t.id === report.templateId);
+
+    const overviewRows = [
+        ["Title", report.title ?? ""],
+        ["Campus", campusName],
+        ["Period", report.period ?? ""],
+        ["Status", report.status],
+        ["Template", template?.name ?? ""],
+        ["Created", fmtDate(report.createdAt)],
+        ["Notes", report.notes ?? ""],
+    ];
+
+    const wsOverview = XLSX.utils.aoa_to_sheet(overviewRows);
+    const wsMetrics = XLSX.utils.json_to_sheet(
+        aggregatedSections.flatMap((section) =>
+            section.metrics.map((m) => ({
+                Section: section.sectionName,
+                Metric: m.metricName,
+                CalculationType: m.calculationType,
+                Goal: m.monthlyGoal,
+                Achieved: m.monthlyAchieved,
+                YoY: m.yoyGoal,
+                SourceCount: m.sourceCount,
+            })),
+        ),
+    );
+
+    const wsSources = XLSX.utils.json_to_sheet(
+        sourceReports.map((r) => ({
+            id: r.id,
+            title: r.title,
+            campusId: r.campusId,
+            period: r.period,
+            status: r.status,
+            updatedAt: fmtDate(r.updatedAt),
+        })),
+    );
+
+    const chartData = aggregatedSections.flatMap((section) =>
+        section.metrics.map((m) => ({
+            section: section.sectionName,
+            metric: m.metricName,
+            achieved: m.monthlyAchieved,
+            goal: m.monthlyGoal,
+            yoy: m.yoyGoal,
+        })),
+    );
+    const wsChart = XLSX.utils.json_to_sheet(chartData);
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, wsOverview, "Overview");
+    XLSX.utils.book_append_sheet(wb, wsMetrics, "Metrics");
+    XLSX.utils.book_append_sheet(wb, wsSources, "Source Reports");
+    XLSX.utils.book_append_sheet(wb, wsChart, "Chart Data");
+
+    const safeName = (report.title ?? "aggregated-report").replace(/[/\\?*[\]]/g, "-").slice(0, 50);
     XLSX.writeFile(wb, `${safeName}.xlsx`);
 }
 

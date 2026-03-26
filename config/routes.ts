@@ -35,6 +35,7 @@ export const APP_ROUTES = {
     reportNew: "/reports/new",
     reportEdit: (id: string) => `/reports/${id}/edit`,
     reportAnalytics: (id: string) => `/reports/${id}/analytics`,
+    reportAggregate: "/reports/aggregate",
     analytics: "/analytics",
     inbox: "/inbox",
     settings: "/settings",
@@ -103,11 +104,13 @@ export const API_ROUTES = {
         editsApprove: (id: string, editId: string) => `/api/reports/${id}/edits/${editId}/approve`,
         editsReject: (id: string, editId: string) => `/api/reports/${id}/edits/${editId}/reject`,
         history: (id: string) => `/api/reports/${id}/history`,
+        aggregate: "/api/reports/aggregate",
     },
     reportTemplates: {
         list: "/api/report-templates",
         detail: (id: string) => `/api/report-templates/${id}`,
         versions: (id: string) => `/api/report-templates/${id}/versions`,
+        versionDetail: (id: string, versionId: string) => `/api/report-templates/${id}/versions/${versionId}`,
     },
     reportUpdateRequests: {
         list: "/api/report-update-requests",
@@ -125,6 +128,7 @@ export const API_ROUTES = {
         group: (id: string) => `/api/org/groups/${id}`,
         campuses: "/api/org/campuses",
         campus: (id: string) => `/api/org/campuses/${id}`,
+        hierarchy: "/api/org/hierarchy",
     },
     analytics: {
         overview: "/api/analytics/overview",

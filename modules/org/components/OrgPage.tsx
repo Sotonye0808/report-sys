@@ -15,6 +15,7 @@ import { API_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { PageLayout } from "@/components/ui/PageLayout";
+import Card from "@/components/ui/Card";
 import Table from "@/components/ui/Table";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -422,6 +423,80 @@ function GroupsTab() {
   );
 }
 
+/* ── Hierarchy tab ─────────────────────────────────────────────────────────── */
+
+function HierarchyTab() {
+  const {
+    data: hierarchy,
+    loading: hierarchyLoading,
+    error: hierarchyError,
+    refetch: refetchHierarchy,
+  } = useApiData<OrgGroupWithDetails[]>(API_ROUTES.org.hierarchy);
+
+  if (hierarchyLoading) {
+    return <LoadingSkeleton rows={6} />;
+  }
+
+  if (hierarchyError) {
+    return (
+      <EmptyState
+        icon={<ClusterOutlined />}
+        title="Unable to load hierarchy"
+        description={hierarchyError}
+        action={
+          <Button type="primary" onClick={refetchHierarchy}>
+            Retry
+          </Button>
+        }
+      />
+    );
+  }
+
+  if (!hierarchy || hierarchy.length === 0) {
+    return (
+      <EmptyState
+        icon={<ClusterOutlined />}
+        title="No hierarchy data"
+        description="No groups and campuses found yet."
+      />
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {hierarchy.map((group) => (
+        <Card key={group.id} className="p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h3 className="text-lg font-semibold">{group.name}</h3>
+              <p className="text-xs text-ds-text-subtle">
+                {group.country || "Country not set"} • {group.isActive ? "Active" : "Inactive"}
+              </p>
+            </div>
+            <span className="text-xs text-ds-text-secondary">{group.campuses.length} campuses</span>
+          </div>
+
+          {group.campuses.length ? (
+            <ul className="space-y-2">
+              {group.campuses.map((campus) => (
+                <li key={campus.id} className="flex items-center gap-2">
+                  <BankOutlined />
+                  <span className="font-medium">{campus.name}</span>
+                  <span className="text-xs text-ds-text-subtle">
+                    {campus.location || "Location n/a"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-ds-text-subtle">No campuses in this group.</p>
+          )}
+        </Card>
+      ))}
+    </div>
+  );
+}
+
 /* ── Tab config ───────────────────────────────────────────────────────────── */
 
 const TAB_ITEMS = [
@@ -434,6 +509,11 @@ const TAB_ITEMS = [
     key: "groups",
     label: "Groups",
     children: <GroupsTab />,
+  },
+  {
+    key: "hierarchy",
+    label: "Hierarchy",
+    children: <HierarchyTab />,
   },
 ];
 

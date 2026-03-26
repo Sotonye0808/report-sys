@@ -15,6 +15,7 @@ import {
   EyeOutlined,
   EditOutlined,
   DownloadOutlined,
+  DatabaseOutlined,
 } from "@ant-design/icons";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
@@ -328,6 +329,12 @@ export function ReportsListPage() {
                 {CONTENT.reports.newReport}
               </Button>
             )}
+            <Button
+              icon={<DatabaseOutlined />}
+              onClick={() => router.push(APP_ROUTES.reportAggregate)}
+            >
+              Aggregate
+            </Button>
             <Button
               icon={<DownloadOutlined />}
               onClick={() => setExportOpen(true)}
