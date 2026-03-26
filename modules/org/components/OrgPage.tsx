@@ -7,8 +7,14 @@
  */
 
 import { useState } from "react";
-import { Tabs, Modal, Form, message } from "antd";
-import { PlusOutlined, EditOutlined, BankOutlined, ClusterOutlined } from "@ant-design/icons";
+import { Tabs, Modal, Form, message, Checkbox } from "antd";
+import {
+  PlusOutlined,
+  EditOutlined,
+  BankOutlined,
+  ClusterOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES } from "@/config/routes";
@@ -426,12 +432,92 @@ function GroupsTab() {
 /* ── Hierarchy tab ─────────────────────────────────────────────────────────── */
 
 function HierarchyTab() {
+  const [editEntity, setEditEntity] = useState<"group" | "campus" | null>(null);
+  const [editTarget, setEditTarget] = useState<OrgGroup | Campus | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form] = Form.useForm();
+
+  const [bulkModalOpen, setBulkModalOpen] = useState(false);
+  const [bulkText, setBulkText] = useState<string>("[");
+  const [bulkDryRun, setBulkDryRun] = useState(true);
+  const [bulkResult, setBulkResult] = useState<any>(null);
+  const [bulkError, setBulkError] = useState<string | null>(null);
+  const [bulkLoading, setBulkLoading] = useState(false);
+
   const {
     data: hierarchy,
     loading: hierarchyLoading,
     error: hierarchyError,
     refetch: refetchHierarchy,
   } = useApiData<OrgGroupWithDetails[]>(API_ROUTES.org.hierarchy);
+
+  const handleBulkSend = async (isDryRun: boolean) => {
+    try {
+      setBulkLoading(true);
+      setBulkError(null);
+      setBulkResult(null);
+      const ops = JSON.parse(bulkText);
+
+      const res = await fetch(API_ROUTES.org.hierarchyBulk, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ops, dryRun: isDryRun }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setBulkError(data.error || "Bulk operation failed");
+      } else {
+        setBulkResult(data);
+        if (!isDryRun && data.success) await refetchHierarchy();
+      }
+    } catch (err: any) {
+      setBulkError(err?.message ?? "Bulk parse/submit error");
+    } finally {
+      setBulkLoading(false);
+    }
+  };
+
+  const handleSave = async (values: { name: string; country?: string; location?: string }) => {
+    if (!editEntity || !editTarget) return;
+    setSaving(true);
+    try {
+      let url = "";
+      let body: Record<string, any> = { name: values.name };
+
+      if (editEntity === "group") {
+        url = API_ROUTES.org.group((editTarget as OrgGroup).id);
+        if (values.country !== undefined) body.country = values.country;
+      } else {
+        url = API_ROUTES.org.campus((editTarget as Campus).id);
+        if (values.country !== undefined) body.country = values.country;
+        if (values.location !== undefined) body.location = values.location;
+      }
+
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const j = await res.json();
+        message.error(j.error || "Save failed");
+        return;
+      }
+
+      message.success(CONTENT.common.successSave as string);
+      setIsModalOpen(false);
+      setEditTarget(null);
+      setEditEntity(null);
+      form.resetFields();
+      refetchHierarchy();
+    } catch {
+      message.error((CONTENT.errors as Record<string, string>).generic);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   if (hierarchyLoading) {
     return <LoadingSkeleton rows={6} />;
@@ -464,6 +550,21 @@ function HierarchyTab() {
 
   return (
     <div className="space-y-4">
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          icon={<UploadOutlined />}
+          onClick={() => {
+            setBulkModalOpen(true);
+            setBulkText(
+              '[\n  {"type":"group","action":"create","data":{"name":"New Group","country":""}}\n]',
+            );
+            setBulkResult(null);
+            setBulkError(null);
+          }}
+        >
+          Bulk hierarchy ops
+        </Button>
+      </div>
       {hierarchy.map((group) => (
         <Card key={group.id} className="p-4">
           <div className="flex items-center justify-between mb-3">
@@ -473,7 +574,23 @@ function HierarchyTab() {
                 {group.country || "Country not set"} • {group.isActive ? "Active" : "Inactive"}
               </p>
             </div>
-            <span className="text-xs text-ds-text-secondary">{group.campuses.length} campuses</span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-ds-text-secondary">
+                {group.campuses.length} campuses
+              </span>
+              <Button
+                size="small"
+                icon={<EditOutlined />}
+                onClick={() => {
+                  setEditEntity("group");
+                  setEditTarget(group);
+                  setIsModalOpen(true);
+                  form.setFieldsValue({ name: group.name, country: group.country ?? "" });
+                }}
+              >
+                Edit
+              </Button>
+            </div>
           </div>
 
           {group.campuses.length ? (
@@ -485,6 +602,23 @@ function HierarchyTab() {
                   <span className="text-xs text-ds-text-subtle">
                     {campus.location || "Location n/a"}
                   </span>
+                  <Button
+                    size="small"
+                    type="text"
+                    icon={<EditOutlined />}
+                    onClick={() => {
+                      setEditEntity("campus");
+                      setEditTarget(campus);
+                      setIsModalOpen(true);
+                      form.setFieldsValue({
+                        name: campus.name,
+                        location: campus.location ?? "",
+                        country: campus.country ?? "",
+                      });
+                    }}
+                  >
+                    Edit
+                  </Button>
                 </li>
               ))}
             </ul>
@@ -493,6 +627,89 @@ function HierarchyTab() {
           )}
         </Card>
       ))}
+
+      <Modal
+        open={isModalOpen}
+        title={editEntity === "group" ? CONTENT.org.editGroup : CONTENT.org.editCampus}
+        onCancel={() => {
+          setIsModalOpen(false);
+          setEditTarget(null);
+          setEditEntity(null);
+          form.resetFields();
+        }}
+        onOk={() => form.submit()}
+        okText={CONTENT.common.save as string}
+        confirmLoading={saving}
+        destroyOnClose
+      >
+        <Form form={form} layout="vertical" onFinish={handleSave} requiredMark={false}>
+          <Form.Item
+            name="name"
+            label={
+              editEntity === "group"
+                ? (CONTENT.org.groupNameLabel as string)
+                : (CONTENT.org.campusNameLabel as string)
+            }
+            rules={[{ required: true }]}
+          >
+            <Input size="large" />
+          </Form.Item>
+          <Form.Item name="country" label={CONTENT.org.countryLabel as string}>
+            <Input size="large" />
+          </Form.Item>
+          {editEntity === "campus" && (
+            <Form.Item name="location" label={CONTENT.org.locationLabel as string}>
+              <Input size="large" />
+            </Form.Item>
+          )}
+        </Form>
+      </Modal>
+
+      <Modal
+        open={bulkModalOpen}
+        title="Bulk hierarchy operations"
+        onCancel={() => setBulkModalOpen(false)}
+        footer={null}
+        width={800}
+        destroyOnClose
+      >
+        <div className="space-y-3">
+          <p className="text-sm text-ds-text-subtle">
+            Provide a JSON array of operations. Example:
+          </p>
+          <pre className="p-2 bg-ds-surface-sunken border border-ds-border-strong rounded-ds-md text-xs overflow-auto">
+            [{'{"type":"group","action":"create","data":{"name":"New Group","country":""}}'},
+            {
+              '{"type":"campus","action":"create","data":{"name":"New Campus","groupId":"<groupId>"}}'
+            }
+            ]
+          </pre>
+          <textarea
+            rows={10}
+            className="w-full p-2 border border-ds-border-strong rounded-ds-md font-mono text-xs"
+            value={bulkText}
+            onChange={(e) => setBulkText(e.target.value)}
+          />
+          <div className="flex items-center gap-2">
+            <Button onClick={() => handleBulkSend(true)} disabled={bulkLoading}>
+              Dry run
+            </Button>
+            <Button type="primary" onClick={() => handleBulkSend(false)} disabled={bulkLoading}>
+              Apply changes
+            </Button>
+            <Checkbox checked={bulkDryRun} onChange={(e) => setBulkDryRun(e.target.checked)}>
+              Dry run
+            </Checkbox>
+          </div>
+          {bulkLoading && <p>Processing...</p>}
+          {bulkError && <p className="text-danger">{bulkError}</p>}
+          {bulkResult && (
+            <pre className="p-2 bg-ds-surface-sunken border border-ds-border-strong rounded-ds-md overflow-auto text-xs">
+              {JSON.stringify(bulkResult, null, 2)}
+            </pre>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 }
