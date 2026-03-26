@@ -202,11 +202,23 @@ export function exportReportDetail(
         { wch: 40 }, // comment
     ];
 
+    /* ── Sheet 3: Chart data (performance-by-metric) ────────────────── */
+    const chartData = metricRows.map((row) => ({
+        Section: row[0],
+        Metric: row[1],
+        Achieved: row[2],
+        Goal: row[3],
+        Percentage: row[4],
+        Comment: row[5],
+    }));
+    const wsChart = XLSX.utils.json_to_sheet(chartData);
+
     /* ── Assemble workbook ─────────────────────────────────────────────── */
 
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, wsOverview, ec.sheetMeta);
     XLSX.utils.book_append_sheet(wb, wsMetrics, ec.sheetMetrics);
+    XLSX.utils.book_append_sheet(wb, wsChart, "Chart Data");
 
     const safeName = getReportLabel(report, templates)
         .replace(/[/\\?*[\]]/g, "-")
@@ -411,6 +423,22 @@ export function exportReportsWithOptions(opts: ExportDialogOptions): void {
                 XLSX.utils.book_append_sheet(wb, buildSheet(groupReports), sheetName);
             }
         }
+    }
+
+    if (sections.length > 0 && metrics.length > 0) {
+        const chartDataRows = metrics.map((m) => {
+            const section = sections.find((s) => s.id === m.reportSectionId);
+            return {
+                Section: section?.sectionName ?? "",
+                Metric: m.metricName,
+                Achieved: m.monthlyAchieved ?? "",
+                Goal: m.monthlyGoal ?? "",
+                Percentage: pct(m.monthlyAchieved, m.monthlyGoal),
+                Comment: safeStr(m.comment),
+            };
+        });
+        const wsChart = XLSX.utils.json_to_sheet(chartDataRows);
+        XLSX.utils.book_append_sheet(wb, wsChart, "Chart Data");
     }
 
     XLSX.writeFile(wb, `${ec.listFilename}-${timestamp}.xlsx`);
