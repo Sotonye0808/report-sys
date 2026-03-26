@@ -29,6 +29,32 @@ import { FilterToolbar } from "@/components/ui/FilterToolbar";
 
 const ORG_ID = process.env.NEXT_PUBLIC_ORG_ID ?? "harvesters";
 
+type OrgBulkAction = "create" | "update" | "delete";
+type InteractiveCampus = {
+  id: string;
+  statusId?: string;
+  name: string;
+  country: string;
+  location: string;
+  isActive: boolean;
+  action: OrgBulkAction;
+};
+type InteractiveGroup = {
+  id: string;
+  name: string;
+  country: string;
+  isActive: boolean;
+  leaderId?: string;
+  action: OrgBulkAction;
+  campuses: InteractiveCampus[];
+};
+
+type OrgBulkOp = {
+  type: "group" | "campus";
+  action: OrgBulkAction;
+  data: Record<string, any>;
+};
+
 /* ── Campus tab ─────────────────────────────────────────────────────────── */
 
 function CampusesTab() {
@@ -439,6 +465,9 @@ function HierarchyTab() {
   const [form] = Form.useForm();
 
   const [bulkModalOpen, setBulkModalOpen] = useState(false);
+  const [interactiveBulk, setInteractiveBulk] = useState(true);
+  const [interactiveGroups, setInteractiveGroups] = useState<InteractiveGroup[]>([]);
+
   const [bulkText, setBulkText] = useState<string>("[");
   const [bulkDryRun, setBulkDryRun] = useState(true);
   const [bulkResult, setBulkResult] = useState<any>(null);
@@ -452,12 +481,53 @@ function HierarchyTab() {
     refetch: refetchHierarchy,
   } = useApiData<OrgGroupWithDetails[]>(API_ROUTES.org.hierarchy);
 
+  const buildOpsFromInteractive = (): OrgBulkOp[] => {
+    const ops: OrgBulkOp[] = [];
+
+    interactiveGroups.forEach((group) => {
+      if (group.action === "create" || group.action === "update" || group.action === "delete") {
+        const groupData: Record<string, any> = {
+          name: group.name,
+          country: group.country,
+          isActive: group.isActive,
+          leaderId: group.leaderId || null,
+        };
+        if (group.action !== "create") groupData.id = group.id;
+
+        ops.push({ type: "group", action: group.action, data: groupData });
+      }
+
+      group.campuses.forEach((campus) => {
+        if (
+          campus.action === "create" ||
+          campus.action === "update" ||
+          campus.action === "delete"
+        ) {
+          const campusData: Record<string, any> = {
+            name: campus.name,
+            country: campus.country,
+            location: campus.location,
+            isActive: campus.isActive,
+            groupId: group.id,
+          };
+          if (campus.action !== "create") campusData.id = campus.id;
+          if (campus.action === "create") delete campusData.id;
+
+          ops.push({ type: "campus", action: campus.action, data: campusData });
+        }
+      });
+    });
+
+    return ops;
+  };
+
   const handleBulkSend = async (isDryRun: boolean) => {
     try {
       setBulkLoading(true);
       setBulkError(null);
       setBulkResult(null);
-      const ops = JSON.parse(bulkText);
+
+      const ops = interactiveBulk ? buildOpsFromInteractive() : JSON.parse(bulkText);
 
       const res = await fetch(API_ROUTES.org.hierarchyBulk, {
         method: "POST",
@@ -469,7 +539,28 @@ function HierarchyTab() {
         setBulkError(data.error || "Bulk operation failed");
       } else {
         setBulkResult(data);
-        if (!isDryRun && data.success) await refetchHierarchy();
+        if (!isDryRun && data.success) {
+          await refetchHierarchy();
+          setInteractiveGroups(
+            (hierarchy ?? []).map((group) => ({
+              id: group.id,
+              name: group.name,
+              country: group.country || "",
+              isActive: group.isActive,
+              leaderId: group.leaderId || "",
+              action: "update",
+              campuses: group.campuses.map((campus) => ({
+                id: campus.id,
+                statusId: campus.id,
+                name: campus.name,
+                country: campus.country || "",
+                location: campus.location || "",
+                isActive: campus.isActive,
+                action: "update",
+              })),
+            })),
+          );
+        }
       }
     } catch (err: any) {
       setBulkError(err?.message ?? "Bulk parse/submit error");
@@ -555,6 +646,26 @@ function HierarchyTab() {
           icon={<UploadOutlined />}
           onClick={() => {
             setBulkModalOpen(true);
+            setInteractiveBulk(true);
+            setInteractiveGroups(
+              (hierarchy ?? []).map((group) => ({
+                id: group.id,
+                name: group.name,
+                country: group.country || "",
+                isActive: group.isActive,
+                leaderId: group.leaderId || "",
+                action: "update" as OrgBulkAction,
+                campuses: group.campuses.map((campus) => ({
+                  id: campus.id,
+                  statusId: campus.id,
+                  name: campus.name,
+                  country: campus.country || "",
+                  location: campus.location || "",
+                  isActive: campus.isActive,
+                  action: "update" as OrgBulkAction,
+                })),
+              })),
+            );
             setBulkText(
               '[\n  {"type":"group","action":"create","data":{"name":"New Group","country":""}}\n]',
             );
@@ -670,26 +781,226 @@ function HierarchyTab() {
         title="Bulk hierarchy operations"
         onCancel={() => setBulkModalOpen(false)}
         footer={null}
-        width={800}
+        width={900}
         destroyOnClose
       >
         <div className="space-y-3">
-          <p className="text-sm text-ds-text-subtle">
-            Provide a JSON array of operations. Example:
-          </p>
-          <pre className="p-2 bg-ds-surface-sunken border border-ds-border-strong rounded-ds-md text-xs overflow-auto">
-            [{'{"type":"group","action":"create","data":{"name":"New Group","country":""}}'},
-            {
-              '{"type":"campus","action":"create","data":{"name":"New Campus","groupId":"<groupId>"}}'
-            }
-            ]
-          </pre>
-          <textarea
-            rows={10}
-            className="w-full p-2 border border-ds-border-strong rounded-ds-md font-mono text-xs"
-            value={bulkText}
-            onChange={(e) => setBulkText(e.target.value)}
+          <Tabs
+            activeKey={interactiveBulk ? "interactive" : "json"}
+            onChange={(key) => setInteractiveBulk(key === "interactive")}
+            items={[
+              {
+                key: "interactive",
+                label: "Visual builder",
+                children: (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="dashed"
+                        onClick={() => {
+                          setInteractiveGroups((groups) => [
+                            ...groups,
+                            {
+                              id: crypto.randomUUID(),
+                              name: "",
+                              country: "",
+                              isActive: true,
+                              leaderId: "",
+                              action: "create",
+                              campuses: [],
+                            },
+                          ]);
+                        }}
+                      >
+                        Add group
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setBulkText(JSON.stringify(buildOpsFromInteractive(), null, 2));
+                          setInteractiveBulk(false);
+                        }}
+                      >
+                        Switch to JSON
+                      </Button>
+                    </div>
+
+                    {interactiveGroups.length === 0 ? (
+                      <p className="text-sm text-ds-text-subtle">No operations defined yet.</p>
+                    ) : (
+                      <div className="space-y-4">
+                        {interactiveGroups.map((group, gi) => (
+                          <div
+                            key={group.id}
+                            className="p-3 border border-ds-border-strong rounded-ds-md"
+                          >
+                            <div className="flex items-start gap-2">
+                              <div className="flex-1 space-y-2">
+                                <div className="grid grid-cols-2 gap-2">
+                                  <Input
+                                    value={group.name}
+                                    onChange={(e) => {
+                                      const next = [...interactiveGroups];
+                                      next[gi].name = e.target.value;
+                                      setInteractiveGroups(next);
+                                    }}
+                                    placeholder="Group name"
+                                  />
+                                  <Input
+                                    value={group.country}
+                                    onChange={(e) => {
+                                      const next = [...interactiveGroups];
+                                      next[gi].country = e.target.value;
+                                      setInteractiveGroups(next);
+                                    }}
+                                    placeholder="Country"
+                                  />
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Checkbox
+                                    checked={group.isActive}
+                                    onChange={(e) => {
+                                      const next = [...interactiveGroups];
+                                      next[gi].isActive = e.target.checked;
+                                      setInteractiveGroups(next);
+                                    }}
+                                  >
+                                    Active
+                                  </Checkbox>
+                                  <Button
+                                    size="small"
+                                    onClick={() => {
+                                      const next = [...interactiveGroups];
+                                      next[gi].action =
+                                        next[gi].action === "create" ? "update" : "create";
+                                      setInteractiveGroups(next);
+                                    }}
+                                  >
+                                    {group.action === "create" ? "Create" : "Update"}
+                                  </Button>
+                                  <Button
+                                    type="link"
+                                    danger
+                                    onClick={() =>
+                                      setInteractiveGroups((g) => g.filter((_, i) => i !== gi))
+                                    }
+                                  >
+                                    Remove group
+                                  </Button>
+                                </div>
+                              </div>
+                              <Button
+                                size="small"
+                                onClick={() => {
+                                  const next = [...interactiveGroups];
+                                  next[gi].campuses.push({
+                                    id: crypto.randomUUID(),
+                                    name: "",
+                                    country: "",
+                                    location: "",
+                                    isActive: true,
+                                    action: "create",
+                                  });
+                                  setInteractiveGroups(next);
+                                }}
+                              >
+                                Add campus
+                              </Button>
+                            </div>
+
+                            {group.campuses.length > 0 && (
+                              <div className="mt-3 space-y-2">
+                                {group.campuses.map((campus, ci) => (
+                                  <div
+                                    key={campus.id}
+                                    className="p-2 border border-ds-border-weak rounded-ds-sm"
+                                  >
+                                    <div className="grid grid-cols-2 gap-2">
+                                      <Input
+                                        value={campus.name}
+                                        onChange={(e) => {
+                                          const next = [...interactiveGroups];
+                                          next[gi].campuses[ci].name = e.target.value;
+                                          setInteractiveGroups(next);
+                                        }}
+                                        placeholder="Campus name"
+                                      />
+                                      <Input
+                                        value={campus.location}
+                                        onChange={(e) => {
+                                          const next = [...interactiveGroups];
+                                          next[gi].campuses[ci].location = e.target.value;
+                                          setInteractiveGroups(next);
+                                        }}
+                                        placeholder="Location"
+                                      />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 mt-2">
+                                      <Input
+                                        value={campus.country}
+                                        onChange={(e) => {
+                                          const next = [...interactiveGroups];
+                                          next[gi].campuses[ci].country = e.target.value;
+                                          setInteractiveGroups(next);
+                                        }}
+                                        placeholder="Country"
+                                      />
+                                      <div className="flex items-center gap-2">
+                                        <Checkbox
+                                          checked={campus.isActive}
+                                          onChange={(e) => {
+                                            const next = [...interactiveGroups];
+                                            next[gi].campuses[ci].isActive = e.target.checked;
+                                            setInteractiveGroups(next);
+                                          }}
+                                        >
+                                          Active
+                                        </Checkbox>
+                                        <Button
+                                          type="link"
+                                          danger
+                                          onClick={() => {
+                                            const next = [...interactiveGroups];
+                                            next[gi].campuses = next[gi].campuses.filter(
+                                              (_, i) => i !== ci,
+                                            );
+                                            setInteractiveGroups(next);
+                                          }}
+                                        >
+                                          Remove
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ),
+              },
+              {
+                key: "json",
+                label: "JSON payload",
+                children: (
+                  <div className="space-y-3">
+                    <p className="text-sm text-ds-text-subtle">
+                      Provide a JSON array of operations manually.
+                    </p>
+                    <textarea
+                      rows={10}
+                      className="w-full p-2 border border-ds-border-strong rounded-ds-md font-mono text-xs"
+                      value={bulkText}
+                      onChange={(e) => setBulkText(e.target.value)}
+                    />
+                  </div>
+                ),
+              },
+            ]}
           />
+
           <div className="flex items-center gap-2">
             <Button onClick={() => handleBulkSend(true)} disabled={bulkLoading}>
               Dry run
