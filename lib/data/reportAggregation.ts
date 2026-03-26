@@ -284,7 +284,7 @@ export async function calculateAggregation(
 export async function persistAggregatedReport(
     result: AggregationResult,
     user: AuthUser,
-): Promise<import("@prisma/client").Report> {
+): Promise<import("../../prisma/generated").Report> {
     const title = `Aggregated ${result.scopeType} ${result.periodType} ${result.scopeId ?? "all"} ${result.periodYear}`;
     const firstCampusId = result.sourceReports?.[0]?.campusId ?? "";
     const firstOrgGroupId = result.sourceReports?.[0]?.orgGroupId ?? "";
