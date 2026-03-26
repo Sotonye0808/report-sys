@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
-import { UserRole, MetricFieldType, MetricCalculationType } from "@/types/global";
+import { UserRole, MetricFieldType, MetricCalculationType, ReportDeadlinePolicy } from "@/types/global";
 
 /* ── Schemas ──────────────────────────────────────────────────────────────── */
 
@@ -40,6 +40,8 @@ const UpdateTemplateSchema = z.object({
     description: z.string().max(1000).optional(),
     isDefault: z.boolean().optional(),
     isArchived: z.boolean().optional(),
+    deadlinePolicy: z.nativeEnum(ReportDeadlinePolicy).optional(),
+    deadlineOffsetHours: z.number().int().min(1).max(168).optional(),
     sections: z.array(SectionSchema).optional(),
 });
 
@@ -160,91 +162,51 @@ export async function PUT(
             async (tx) => {
                 // If the template lacks orgGroupId (seeded gap), try to infer and persist one
                 if (!existing.orgGroupId) {
-                const defaultGroup = await tx.orgGroup.findFirst();
-                if (defaultGroup) {
-                    await tx.reportTemplate.update({ where: { id }, data: { orgGroupId: defaultGroup.id } });
-                }
-            }
-
-            if (body.isDefault) {
-                await tx.reportTemplate.updateMany({
-                    where: { id: { not: id }, isDefault: true },
-                    data: { isDefault: false },
-                });
-            }
-
-            await tx.reportTemplate.update({
-                where: { id },
-                data: {
-                    ...(body.name !== undefined && { name: body.name }),
-                    ...(body.description !== undefined && { description: body.description }),
-                    ...(body.isDefault !== undefined && { isDefault: body.isDefault }),
-                    ...(body.isArchived !== undefined && { isActive: !body.isArchived }),
-                    version: { increment: 1 },
-                },
-            });
-
-            /* Replace sections + metrics if provided */
-            if (body.sections) {
-                const reportsUsingTemplate = await tx.report.count({ where: { templateId: id } });
-                const goalsUsingTemplate = await tx.goal.count({
-                    where: { templateMetric: { section: { templateId: id } } },
-                });
-                const metricEntriesUsingTemplate = await tx.metricEntry.count({
-                    where: { templateMetric: { section: { templateId: id } } },
-                });
-
-                const hasExternalDependencies =
-                    reportsUsingTemplate > 0 || goalsUsingTemplate > 0 || metricEntriesUsingTemplate > 0;
-
-                if (!hasExternalDependencies) {
-                    // Safe full replacement when no existing reports/goals/metric entries reference this template.
-                    await tx.reportTemplateSection.deleteMany({ where: { templateId: id } });
-
-                    for (const section of body.sections) {
-                        const sec = await tx.reportTemplateSection.create({
-                            data: {
-                                templateId: id,
-                                name: section.name,
-                                description: section.description,
-                                order: section.order,
-                                isRequired: section.isRequired,
-                            },
-                        });
-                        for (const metric of section.metrics) {
-                            await tx.reportTemplateMetric.create({
-                                data: {
-                                    sectionId: sec.id,
-                                    name: metric.name,
-                                    description: metric.description,
-                                    fieldType: metric.fieldType,
-                                    calculationType: metric.calculationType,
-                                    isRequired: metric.isRequired,
-                                    capturesGoal: metric.capturesGoal,
-                                    capturesAchieved: metric.capturesAchieved,
-                                    capturesYoY: metric.capturesYoY,
-                                    order: metric.order,
-                                },
-                            });
-                        }
+                    const defaultGroup = await tx.orgGroup.findFirst();
+                    if (defaultGroup) {
+                        await tx.reportTemplate.update({ where: { id }, data: { orgGroupId: defaultGroup.id } });
                     }
-                } else {
-                    // Protect existing report history by avoiding destructive deletion of metrics tied to reports.
-                    for (const section of body.sections) {
-                        let sectionId = section.id;
+                }
 
-                        if (sectionId) {
-                            await tx.reportTemplateSection.update({
-                                where: { id: sectionId },
-                                data: {
-                                    name: section.name,
-                                    description: section.description,
-                                    order: section.order,
-                                    isRequired: section.isRequired,
-                                },
-                            });
-                        } else {
-                            const createdSection = await tx.reportTemplateSection.create({
+                if (body.isDefault) {
+                    await tx.reportTemplate.updateMany({
+                        where: { id: { not: id }, isDefault: true },
+                        data: { isDefault: false },
+                    });
+                }
+
+                await tx.reportTemplate.update({
+                    where: { id },
+                    data: {
+                        ...(body.name !== undefined && { name: body.name }),
+                        ...(body.description !== undefined && { description: body.description }),
+                        ...(body.isDefault !== undefined && { isDefault: body.isDefault }),
+                        ...(body.isArchived !== undefined && { isActive: !body.isArchived }),
+                        ...(body.deadlinePolicy !== undefined && { deadlinePolicy: body.deadlinePolicy }),
+                        ...(body.deadlineOffsetHours !== undefined && { deadlineOffsetHours: body.deadlineOffsetHours }),
+                        version: { increment: 1 },
+                    },
+                });
+
+                /* Replace sections + metrics if provided */
+                if (body.sections) {
+                    const reportsUsingTemplate = await tx.report.count({ where: { templateId: id } });
+                    const goalsUsingTemplate = await tx.goal.count({
+                        where: { templateMetric: { section: { templateId: id } } },
+                    });
+                    const metricEntriesUsingTemplate = await tx.metricEntry.count({
+                        where: { templateMetric: { section: { templateId: id } } },
+                    });
+
+                    const hasExternalDependencies =
+                        reportsUsingTemplate > 0 || goalsUsingTemplate > 0 || metricEntriesUsingTemplate > 0;
+
+                    if (!hasExternalDependencies) {
+                        // Safe full replacement when no existing reports/goals/metric entries reference this template.
+                        await tx.reportTemplateSection.deleteMany({ where: { templateId: id } });
+
+                        for (const section of body.sections) {
+                            const sec = await tx.reportTemplateSection.create({
                                 data: {
                                     templateId: id,
                                     name: section.name,
@@ -253,29 +215,10 @@ export async function PUT(
                                     isRequired: section.isRequired,
                                 },
                             });
-                            sectionId = createdSection.id;
-                        }
-
-                        for (const metric of section.metrics) {
-                            if (metric.id) {
-                                await tx.reportTemplateMetric.update({
-                                    where: { id: metric.id },
-                                    data: {
-                                        name: metric.name,
-                                        description: metric.description,
-                                        fieldType: metric.fieldType,
-                                        calculationType: metric.calculationType,
-                                        isRequired: metric.isRequired,
-                                        capturesGoal: metric.capturesGoal,
-                                        capturesAchieved: metric.capturesAchieved,
-                                        capturesYoY: metric.capturesYoY,
-                                        order: metric.order,
-                                    },
-                                });
-                            } else {
+                            for (const metric of section.metrics) {
                                 await tx.reportTemplateMetric.create({
                                     data: {
-                                        sectionId: sectionId!,
+                                        sectionId: sec.id,
                                         name: metric.name,
                                         description: metric.description,
                                         fieldType: metric.fieldType,
@@ -289,27 +232,88 @@ export async function PUT(
                                 });
                             }
                         }
+                    } else {
+                        // Protect existing report history by avoiding destructive deletion of metrics tied to reports.
+                        for (const section of body.sections) {
+                            let sectionId = section.id;
+
+                            if (sectionId) {
+                                await tx.reportTemplateSection.update({
+                                    where: { id: sectionId },
+                                    data: {
+                                        name: section.name,
+                                        description: section.description,
+                                        order: section.order,
+                                        isRequired: section.isRequired,
+                                    },
+                                });
+                            } else {
+                                const createdSection = await tx.reportTemplateSection.create({
+                                    data: {
+                                        templateId: id,
+                                        name: section.name,
+                                        description: section.description,
+                                        order: section.order,
+                                        isRequired: section.isRequired,
+                                    },
+                                });
+                                sectionId = createdSection.id;
+                            }
+
+                            for (const metric of section.metrics) {
+                                if (metric.id) {
+                                    await tx.reportTemplateMetric.update({
+                                        where: { id: metric.id },
+                                        data: {
+                                            name: metric.name,
+                                            description: metric.description,
+                                            fieldType: metric.fieldType,
+                                            calculationType: metric.calculationType,
+                                            isRequired: metric.isRequired,
+                                            capturesGoal: metric.capturesGoal,
+                                            capturesAchieved: metric.capturesAchieved,
+                                            capturesYoY: metric.capturesYoY,
+                                            order: metric.order,
+                                        },
+                                    });
+                                } else {
+                                    await tx.reportTemplateMetric.create({
+                                        data: {
+                                            sectionId: sectionId!,
+                                            name: metric.name,
+                                            description: metric.description,
+                                            fieldType: metric.fieldType,
+                                            calculationType: metric.calculationType,
+                                            isRequired: metric.isRequired,
+                                            capturesGoal: metric.capturesGoal,
+                                            capturesAchieved: metric.capturesAchieved,
+                                            capturesYoY: metric.capturesYoY,
+                                            order: metric.order,
+                                        },
+                                    });
+                                }
+                            }
+                        }
                     }
                 }
-            }
 
-            const full = await tx.reportTemplate.findUnique({
-                where: { id },
-                include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
-            });
-            if (!full) throw new Error("Failed to load updated template for snapshot");
-            await tx.reportTemplateVersion.create({
-                data: {
-                    templateId: id,
-                    versionNumber: full.version,
-                    snapshot: JSON.parse(JSON.stringify(full)),
-                    createdById: auth.user.id,
-                },
-            });
+                const full = await tx.reportTemplate.findUnique({
+                    where: { id },
+                    include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
+                });
+                if (!full) throw new Error("Failed to load updated template for snapshot");
+                await tx.reportTemplateVersion.create({
+                    data: {
+                        templateId: id,
+                        versionNumber: full.version,
+                        snapshot: JSON.parse(JSON.stringify(full)),
+                        createdById: auth.user.id,
+                    },
+                });
 
-            return full;
-        },
-        { timeout: 15000 }
+                return full;
+            },
+            { timeout: 15000 }
         );
 
         // Fire-and-forget cache invalidation to avoid blocking the response.

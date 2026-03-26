@@ -12,6 +12,7 @@ import { useState, use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { message } from "antd";
 import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
+import { calculateReportDeadline, formattedDeadlinePolicy } from "@/lib/utils/deadline";
 import { SaveOutlined, ArrowLeftOutlined, LockOutlined, SendOutlined } from "@ant-design/icons";
 import { useRole } from "@/lib/hooks/useRole";
 import { UserRole, ReportStatus } from "@/types/global";
@@ -53,7 +54,11 @@ export function ReportEditPage({ params }: PageProps) {
   const [initialized, setInitialized] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } = useFormPersistence<{
+  const {
+    status: draftStatus,
+    lastSavedAt: draftLastSaved,
+    clearDraft,
+  } = useFormPersistence<{
     title: string;
     notes: string;
     metricValues: Record<string, MetricValues>;
@@ -139,6 +144,7 @@ export function ReportEditPage({ params }: PageProps) {
         return;
       }
       message.success(CONTENT.common.successSave as string);
+      clearDraft();
       router.push(APP_ROUTES.reportDetail(id));
     } catch {
       message.error(CONTENT.common.errorDefault as string);
@@ -177,6 +183,21 @@ export function ReportEditPage({ params }: PageProps) {
       </PageLayout>
     );
   }
+
+  const computedDeadline =
+    report && template
+      ? calculateReportDeadline(
+          report.periodType,
+          report.periodYear,
+          report.periodMonth ?? undefined,
+          report.periodWeek ?? undefined,
+          template.deadlinePolicy ?? undefined,
+          template.deadlineOffsetHours ?? undefined,
+        )
+      : undefined;
+  const isDataEntryReport = report
+    ? report.isDataEntry || report.periodYear < new Date().getFullYear()
+    : false;
 
   const isEditable =
     report.status === ReportStatus.DRAFT ||
@@ -217,6 +238,18 @@ export function ReportEditPage({ params }: PageProps) {
       }
     >
       <FormDraftBanner status={draftStatus} lastSavedAt={draftLastSaved} onClear={clearDraft} />
+      {template && report && (
+        <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-4 mb-4">
+          <p className="text-xs text-ds-text-secondary">{formattedDeadlinePolicy(template)}</p>
+          <p className="text-xs text-ds-text-secondary">
+            Computed deadline:{" "}
+            {computedDeadline ? new Date(computedDeadline).toLocaleString() : "n/a"}
+          </p>
+          <p className="text-xs text-ds-text-secondary">
+            Data entry report: {isDataEntryReport ? "Yes" : "No"}
+          </p>
+        </div>
+      )}
       <div className="max-w-4xl space-y-6 form-scroll-container">
         {/* Header: title + notes */}
         <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-6 space-y-4">
@@ -270,10 +303,13 @@ export function ReportEditPage({ params }: PageProps) {
                 onClick={async () => {
                   setSaving(true);
                   try {
-                    const { ok, queued, response } = await offlineFetch(API_ROUTES.reports.submit(id), {
-                      method: "POST",
-                      credentials: "include",
-                    });
+                    const { ok, queued, response } = await offlineFetch(
+                      API_ROUTES.reports.submit(id),
+                      {
+                        method: "POST",
+                        credentials: "include",
+                      },
+                    );
 
                     if (queued) {
                       message.success("Submit queued and will be retried when you're back online.");

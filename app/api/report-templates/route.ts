@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
-import { UserRole, MetricFieldType, MetricCalculationType } from "@/types/global";
+import { UserRole, MetricFieldType, MetricCalculationType, ReportDeadlinePolicy } from "@/types/global";
 
 /* ── Schemas ──────────────────────────────────────────────────────────────── */
 
@@ -40,6 +40,8 @@ const CreateTemplateSchema = z.object({
     organisationId: z.string().min(1),
     sections: z.array(SectionSchema).min(1),
     isDefault: z.boolean().optional().default(false),
+    deadlinePolicy: z.nativeEnum(ReportDeadlinePolicy).optional().default(ReportDeadlinePolicy.PERIOD_END),
+    deadlineOffsetHours: z.number().int().min(1).max(168).optional().default(48),
 });
 
 const TEMPLATE_MANAGE_ROLES: UserRole[] = [
@@ -157,6 +159,8 @@ export async function POST(req: NextRequest) {
                     createdById: auth.user.id,
                     isActive: true,
                     isDefault: body.isDefault ?? false,
+                    deadlinePolicy: body.deadlinePolicy,
+                    deadlineOffsetHours: body.deadlineOffsetHours,
                 },
             });
 

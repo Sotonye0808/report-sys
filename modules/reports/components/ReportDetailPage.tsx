@@ -39,6 +39,7 @@ import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
 import { fmtDate, fmtDateTime } from "@/lib/utils/formatDate";
+import { formattedDeadlinePolicy } from "@/lib/utils/deadline";
 import { exportReportDetail } from "@/lib/utils/exportReports";
 import Button from "@/components/ui/Button";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -450,6 +451,12 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
           </Descriptions.Item>
           <Descriptions.Item label={CONTENT.reports.columnLabels?.deadline ?? "Deadline"}>
             {fmtDate(report.deadline)}
+          </Descriptions.Item>
+          <Descriptions.Item label="Deadline policy">
+            {template ? formattedDeadlinePolicy(template) : "—"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Data Entry Report">
+            {report.isDataEntry ? "Yes" : "No"}
           </Descriptions.Item>
           <Descriptions.Item label={CONTENT.reports.columnLabels?.status ?? "Status"}>
             <ReportStatusBadge status={report.status} />

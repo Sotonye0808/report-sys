@@ -37,6 +37,7 @@ import {
   type GoalsForReportMap,
 } from "./ReportSectionsForm";
 import { ReportPeriodType } from "@/types/global";
+import { calculateReportDeadline, formattedDeadlinePolicy } from "@/lib/utils/deadline";
 
 /* ---- Period type options ---- */
 
@@ -394,7 +395,13 @@ export function ReportNewPage() {
                 onChange={handleTemplateChange}
               />
             </Form.Item>
-
+            {selectedTemplate && (
+              <div className="mb-4 p-3 rounded-ds-lg border border-ds-border-subtle bg-ds-surface-primary">
+                <p className="text-xs text-ds-text-secondary">
+                  {formattedDeadlinePolicy(selectedTemplate)}
+                </p>
+              </div>
+            )}
             <Form.Item
               name="campusId"
               label={CONTENT.reports.campusLabel as string}

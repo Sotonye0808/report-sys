@@ -308,12 +308,27 @@ export function AnalyticsPage() {
   const [availableMetrics, setAvailableMetrics] = useState<AvailableMetric[]>([]);
 
   /* Quarterly tab state */
-  const [selectedQuarter, setSelectedQuarter] = useState<number>(Math.ceil((new Date().getMonth() + 1) / 3));
+  const [selectedQuarter, setSelectedQuarter] = useState<number>(
+    Math.ceil((new Date().getMonth() + 1) / 3),
+  );
   const [quarterlyData, setQuarterlyData] = useState<QuarterlySummaryData | null>(null);
   const [quarterlyLoading, setQuarterlyLoading] = useState(false);
 
   const isSuperadmin = role === UserRole.SUPERADMIN;
   const canSeeCrossCampus = CHART_ROLES.includes(role as UserRole);
+
+  /* Report-driven analytics modifiers */
+  const [selectedReportId, setSelectedReportId] = useState<string | undefined>(undefined);
+  const [compareReportId, setCompareReportId] = useState<string | undefined>(undefined);
+  const { data: reportListData } = useApiData<{ reports: Report[]; total: number }>(
+    `${API_ROUTES.reports.list}?page=1&pageSize=500`,
+  );
+  const { data: selectedReport } = useApiData<Report>(
+    selectedReportId ? API_ROUTES.reports.detail(selectedReportId) : null,
+  );
+  const { data: compareReport } = useApiData<Report>(
+    compareReportId ? API_ROUTES.reports.detail(compareReportId) : null,
+  );
 
   /* Campus + user counts */
   const { data: allCampuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
@@ -333,7 +348,10 @@ export function AnalyticsPage() {
 
   const handleExport = () => {
     const campusLabel = allCampuses?.find((c) => c.id === effectiveCampusId)?.name ?? "all";
-    const baseFilename = `analytics-${activeTab}-${year}-${campusLabel}`.replace(/[^a-zA-Z0-9-_\.]/g, "_");
+    const baseFilename = `analytics-${activeTab}-${year}-${campusLabel}`.replace(
+      /[^a-zA-Z0-9-_\.]/g,
+      "_",
+    );
 
     if (activeTab === "overview" && overview) {
       exportToXlsx(
@@ -359,7 +377,9 @@ export function AnalyticsPage() {
       exportToXlsx(
         [
           { name: "Metric Aggregate", data: metricsData.aggregate },
-          { name: "By Campus", data: metricsData.byCampus.flatMap((c) =>
+          {
+            name: "By Campus",
+            data: metricsData.byCampus.flatMap((c) =>
               c.series.map((p) => ({ campus: c.campusName, ...p })),
             ),
           },
@@ -410,6 +430,35 @@ export function AnalyticsPage() {
         `${baseFilename}.xlsx`,
       );
     }
+  };
+
+  const summarizeReport = (report?: Report | null) => {
+    if (!report || !Array.isArray(report.sections) || report.sections.length === 0) {
+      return { totalGoal: 0, totalAchieved: 0, totalYoY: 0, targetPct: null, metricCount: 0 };
+    }
+
+    const sections = report.sections as ReportSection[];
+    let totalGoal = 0;
+    let totalAchieved = 0;
+    let totalYoY = 0;
+    let metricCount = 0;
+
+    for (const section of sections) {
+      for (const metric of section.metrics ?? []) {
+        metricCount += 1;
+        totalGoal += metric.monthlyGoal ?? 0;
+        totalAchieved += metric.monthlyAchieved ?? 0;
+        totalYoY += metric.yoyGoal ?? 0;
+      }
+    }
+
+    return {
+      totalGoal,
+      totalAchieved,
+      totalYoY,
+      targetPct: totalGoal > 0 ? Math.round((totalAchieved / totalGoal) * 100) : null,
+      metricCount,
+    };
   };
 
   /* â”€â”€ Fetch overview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -588,12 +637,7 @@ export function AnalyticsPage() {
         size="middle"
         style={{ width: 100 }}
       />
-      <Button
-        icon={<DownloadOutlined />}
-        onClick={handleExport}
-        type="default"
-        size="middle"
-      >
+      <Button icon={<DownloadOutlined />} onClick={handleExport} type="default" size="middle">
         Export
       </Button>
     </div>
@@ -617,6 +661,67 @@ export function AnalyticsPage() {
             </Card>
           ))}
         </div>
+
+        {/* Report selection and compare panel */}
+        <ChartCard title="Report Drilldown & Comparison">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-4">
+            <Select
+              placeholder="Select report for analytics"
+              options={
+                reportListData?.reports.map((r) => ({
+                  label: `${r.title ?? "(untitled)"} (${r.period})`,
+                  value: r.id,
+                })) ?? []
+              }
+              value={selectedReportId}
+              onChange={(value) => setSelectedReportId(value)}
+              allowClear
+            />
+            <Select
+              placeholder="Select second report for comparison"
+              options={
+                reportListData?.reports
+                  .filter((r) => r.id !== selectedReportId)
+                  .map((r) => ({
+                    label: `${r.title ?? "(untitled)"} (${r.period})`,
+                    value: r.id,
+                  })) ?? []
+              }
+              value={compareReportId}
+              onChange={(value) => setCompareReportId(value)}
+              allowClear
+            />
+            <div className="flex items-center gap-2">
+              <Button onClick={() => setSelectedReportId(undefined)}>Clear</Button>
+              <Button onClick={() => setCompareReportId(undefined)}>{"Clear Compare"}</Button>
+            </div>
+          </div>
+
+          {selectedReport && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { report: selectedReport, label: "Selected report" },
+                { report: compareReport, label: "Compared report" },
+              ]
+                .filter((x) => x.report)
+                .map((entry) => {
+                  const summary = summarizeReport(entry.report as Report);
+                  return (
+                    <div key={entry.label} className="bg-ds-surface-base p-3 rounded-ds-md">
+                      <p className="text-xs text-ds-text-subtle mb-1">{entry.label}</p>
+                      <p className="text-sm font-semibold">Total Goal: {summary.totalGoal}</p>
+                      <p className="text-sm font-semibold">
+                        Total Achieved: {summary.totalAchieved}
+                      </p>
+                      <p className="text-sm font-semibold">
+                        Target %: {summary.targetPct ?? "n/a"}
+                      </p>
+                    </div>
+                  );
+                })}
+            </div>
+          )}
+        </ChartCard>
 
         {/* Submission trend */}
         {overview.submissionTrend.length > 0 && (
@@ -827,7 +932,7 @@ export function AnalyticsPage() {
     ) : (
       <div className="space-y-6">
         {/* Status stacked bar over time */}
-        {overview.statusTrend.length > 0 && (
+        {overview.statusTrend.length > 0 ? (
           <ChartCard title={CONTENT.analytics.statusBreakdownTitle as string}>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={overview.statusTrend as Record<string, unknown>[]}>
@@ -856,10 +961,16 @@ export function AnalyticsPage() {
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
+        ) : (
+          <Card>
+            <div className="text-sm text-ds-text-subtle">
+              No status trend data available for the selected filters.
+            </div>
+          </Card>
         )}
 
         {/* Quarterly compliance trend */}
-        {overview.quarterlyTrend.length > 0 && (
+        {overview.quarterlyTrend.length > 0 ? (
           <ChartCard title="Quarterly Compliance Rate">
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={overview.quarterlyTrend}>
@@ -883,6 +994,12 @@ export function AnalyticsPage() {
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
+        ) : (
+          <Card>
+            <div className="text-sm text-ds-text-subtle">
+              No quarterly trend data available for the selected filters.
+            </div>
+          </Card>
         )}
       </div>
     );
@@ -977,9 +1094,20 @@ export function AnalyticsPage() {
   const QUARTER_OPTIONS = [1, 2, 3, 4].map((q) => ({ value: q, label: `Q${q}` }));
 
   function DeltaBadge({ value, suffix = "" }: { value: number; suffix?: string }) {
-    const color = value > 0 ? "text-ds-state-success" : value < 0 ? "text-ds-state-error" : "text-ds-text-subtle";
+    const color =
+      value > 0
+        ? "text-ds-state-success"
+        : value < 0
+          ? "text-ds-state-error"
+          : "text-ds-text-subtle";
     const prefix = value > 0 ? "+" : "";
-    return <span className={`text-xs font-semibold ${color}`}>{prefix}{value}{suffix}</span>;
+    return (
+      <span className={`text-xs font-semibold ${color}`}>
+        {prefix}
+        {value}
+        {suffix}
+      </span>
+    );
   }
 
   const quarterlyTab =
@@ -1001,19 +1129,39 @@ export function AnalyticsPage() {
         {/* Quarterly KPIs with QoQ delta */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: CONTENT.analytics.quarterlySubmittedLabel as string, cur: quarterlyData.current.submitted, delta: quarterlyData.qoqDelta.submitted },
-            { label: CONTENT.analytics.quarterlyApprovedLabel as string, cur: quarterlyData.current.approved, delta: quarterlyData.qoqDelta.approved },
-            { label: CONTENT.analytics.quarterlyComplianceLabel as string, cur: quarterlyData.current.compliance, delta: quarterlyData.qoqDelta.compliance, suffix: "%" },
-            { label: CONTENT.dashboard.kpi.totalReports as string, cur: quarterlyData.current.total, delta: quarterlyData.qoqDelta.total },
+            {
+              label: CONTENT.analytics.quarterlySubmittedLabel as string,
+              cur: quarterlyData.current.submitted,
+              delta: quarterlyData.qoqDelta.submitted,
+            },
+            {
+              label: CONTENT.analytics.quarterlyApprovedLabel as string,
+              cur: quarterlyData.current.approved,
+              delta: quarterlyData.qoqDelta.approved,
+            },
+            {
+              label: CONTENT.analytics.quarterlyComplianceLabel as string,
+              cur: quarterlyData.current.compliance,
+              delta: quarterlyData.qoqDelta.compliance,
+              suffix: "%",
+            },
+            {
+              label: CONTENT.dashboard.kpi.totalReports as string,
+              cur: quarterlyData.current.total,
+              delta: quarterlyData.qoqDelta.total,
+            },
           ].map((item) => (
             <Card key={item.label} className="!p-5">
               <p className="text-xs font-medium text-ds-text-subtle mb-1">{item.label}</p>
               <p className="text-3xl font-bold text-ds-text-primary tracking-tight">
-                {item.cur}{item.suffix ?? ""}
+                {item.cur}
+                {item.suffix ?? ""}
               </p>
               <div className="mt-1 flex items-center gap-1">
                 <DeltaBadge value={item.delta} suffix={item.suffix === "%" ? "pp" : ""} />
-                <span className="text-xs text-ds-text-subtle">{CONTENT.analytics.quarterlyQoqLabel as string}</span>
+                <span className="text-xs text-ds-text-subtle">
+                  {CONTENT.analytics.quarterlyQoqLabel as string}
+                </span>
               </div>
             </Card>
           ))}
@@ -1029,8 +1177,18 @@ export function AnalyticsPage() {
                 <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
                 <Tooltip contentStyle={TOOLTIP_STYLE} />
                 <Legend />
-                <Bar dataKey="submitted" name={CONTENT.analytics.chartLabels.submitted as string} fill="var(--ds-chart-1)" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="approved" name={CONTENT.analytics.chartLabels.approved as string} fill="var(--ds-chart-2)" radius={[4, 4, 0, 0]} />
+                <Bar
+                  dataKey="submitted"
+                  name={CONTENT.analytics.chartLabels.submitted as string}
+                  fill="var(--ds-chart-1)"
+                  radius={[4, 4, 0, 0]}
+                />
+                <Bar
+                  dataKey="approved"
+                  name={CONTENT.analytics.chartLabels.approved as string}
+                  fill="var(--ds-chart-2)"
+                  radius={[4, 4, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>

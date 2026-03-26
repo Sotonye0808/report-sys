@@ -20,7 +20,7 @@ import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
 import { offlineFetch } from "@/lib/utils/offlineFetch";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
-import { MetricFieldType, MetricCalculationType } from "@/types/global";
+import { MetricFieldType, MetricCalculationType, ReportDeadlinePolicy } from "@/types/global";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { PageLayout } from "@/components/ui/PageLayout";
@@ -39,6 +39,13 @@ const CALC_TYPE_OPTIONS = [
   { value: MetricCalculationType.SUM, label: "Sum (cumulative)" },
   { value: MetricCalculationType.AVERAGE, label: "Average (rolling mean)" },
   { value: MetricCalculationType.SNAPSHOT, label: "Snapshot (last value)" },
+];
+
+const DEADLINE_POLICY_OPTIONS = [
+  { value: ReportDeadlinePolicy.PERIOD_START, label: "Beginning of period" },
+  { value: ReportDeadlinePolicy.PERIOD_MIDDLE, label: "Middle of period" },
+  { value: ReportDeadlinePolicy.PERIOD_END, label: "End of period" },
+  { value: ReportDeadlinePolicy.AFTER_PERIOD_HOURS, label: "Fixed hours after period end" },
 ];
 
 interface DraftMetric {
@@ -167,6 +174,8 @@ interface HeaderFormValues {
   name: string;
   description: string;
   isDefault: boolean;
+  deadlinePolicy: ReportDeadlinePolicy;
+  deadlineOffsetHours?: number;
 }
 
 export function TemplateNewPage() {
@@ -179,19 +188,22 @@ export function TemplateNewPage() {
 
   const draftKey = "draft:template:new";
 
-  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } =
-    useFormPersistence<{ formValues: HeaderFormValues; sections: DraftSection[] }>({
-      formKey: draftKey,
-      formState: {
-        formValues: form.getFieldsValue(true) as HeaderFormValues,
-        sections,
-      },
-      onRestore: (draft) => {
-        form.setFieldsValue(draft.formValues);
-        setSections(draft.sections);
-      },
-      enabled: true,
-    });
+  const {
+    status: draftStatus,
+    lastSavedAt: draftLastSaved,
+    clearDraft,
+  } = useFormPersistence<{ formValues: HeaderFormValues; sections: DraftSection[] }>({
+    formKey: draftKey,
+    formState: {
+      formValues: form.getFieldsValue(true) as HeaderFormValues,
+      sections,
+    },
+    onRestore: (draft) => {
+      form.setFieldsValue(draft.formValues);
+      setSections(draft.sections);
+    },
+    enabled: true,
+  });
 
   // Keep first-visit form initialization from empty to default segments.
   useEffect(() => {
@@ -259,6 +271,8 @@ export function TemplateNewPage() {
         name: values.name.trim(),
         description: values.description || undefined,
         isDefault: values.isDefault,
+        deadlinePolicy: values.deadlinePolicy ?? ReportDeadlinePolicy.PERIOD_END,
+        deadlineOffsetHours: values.deadlineOffsetHours ?? 48,
         organisationId: ORG_ID,
         sections: sections.map((s, si) => ({
           id: s.id,
@@ -332,15 +346,23 @@ export function TemplateNewPage() {
           </Button>
         }
       >
-        <FormDraftBanner status={draftStatus} lastSavedAt={draftLastSaved} onClear={() => {
-          clearDraft();
-        }} />
+        <FormDraftBanner
+          status={draftStatus}
+          lastSavedAt={draftLastSaved}
+          onClear={() => {
+            clearDraft();
+          }}
+        />
         <Form
           form={form}
           layout="vertical"
           onFinish={handleSubmit}
           requiredMark={false}
-          initialValues={{ isDefault: false }}
+          initialValues={{
+            isDefault: false,
+            deadlinePolicy: ReportDeadlinePolicy.PERIOD_END,
+            deadlineOffsetHours: 48,
+          }}
         >
           <div className="max-w-4xl space-y-6 form-scroll-container">
             {/* Metadata card */}
@@ -357,6 +379,20 @@ export function TemplateNewPage() {
                   rows={2}
                   placeholder={CONTENT.templates.descriptionPlaceholder as string}
                 />
+              </Form.Item>
+              <Form.Item
+                name="deadlinePolicy"
+                label="Report deadline policy"
+                initialValue={ReportDeadlinePolicy.PERIOD_END}
+              >
+                <Select size="large" options={DEADLINE_POLICY_OPTIONS} />
+              </Form.Item>
+              <Form.Item
+                name="deadlineOffsetHours"
+                label="Deadline offset (hours, for fixed hours policy)"
+                initialValue={48}
+              >
+                <Input type="number" min={1} max={168} />
               </Form.Item>
               <div className="flex items-center gap-2">
                 <Form.Item name="isDefault" valuePropName="checked" noStyle>

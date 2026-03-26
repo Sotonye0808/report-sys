@@ -16,7 +16,7 @@ import {
     handleApiError,
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
-import { UserRole, ReportStatus, ReportEventType } from "@/types/global";
+import { UserRole, ReportStatus, ReportEventType, MetricCalculationType } from "@/types/global";
 
 /* ── Update schema ─────────────────────────────────────────────────────────── */
 
@@ -95,6 +95,49 @@ export async function PUT(
                     ...(body.notes !== undefined && { notes: body.notes }),
                 },
             });
+
+            if (body.sections) {
+                // Reset to new section/metric payload to avoid stale data issues.
+                await tx.reportSection.deleteMany({ where: { reportId: id } });
+
+                const sections = body.sections as Array<{
+                    templateSectionId: string;
+                    sectionName: string;
+                    metrics: Array<{
+                        templateMetricId: string;
+                        metricName: string;
+                        calculationType?: MetricCalculationType;
+                        isLocked?: boolean;
+                        monthlyGoal?: number;
+                        monthlyAchieved?: number;
+                        yoyGoal?: number;
+                        comment?: string;
+                    }>;
+                }>;
+
+                for (const section of sections) {
+                    await tx.reportSection.create({
+                        data: {
+                            reportId: id,
+                            templateSectionId: section.templateSectionId,
+                            sectionName: section.sectionName,
+                            metrics: {
+                                create: (section.metrics ?? []).map((metric) => ({
+                                    templateMetricId: metric.templateMetricId,
+                                    metricName: metric.metricName,
+                                    calculationType:
+                                        metric.calculationType ?? MetricCalculationType.SUM,
+                                    monthlyGoal: metric.monthlyGoal,
+                                    monthlyAchieved: metric.monthlyAchieved,
+                                    yoyGoal: metric.yoyGoal,
+                                    comment: metric.comment,
+                                    isLocked: metric.isLocked ?? false,
+                                })),
+                            },
+                        },
+                    });
+                }
+            }
 
             await tx.reportEvent.create({
                 data: {

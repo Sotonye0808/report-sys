@@ -6,6 +6,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod/v4";
+import dayjs from "dayjs";
+import weekOfYear from "dayjs/plugin/weekOfYear";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import {
@@ -15,7 +17,10 @@ import {
     handleApiError,
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
-import { UserRole, ReportStatus, ReportPeriodType, ReportEventType, MetricCalculationType } from "@/types/global";
+import { DEADLINE_CONFIG } from "@/config/reports";
+import { UserRole, ReportStatus, ReportPeriodType, ReportDeadlinePolicy, ReportEventType, MetricCalculationType } from "@/types/global";
+
+dayjs.extend(weekOfYear);
 
 /* ── Query schema ──────────────────────────────────────────────────────────── */
 
@@ -37,6 +42,9 @@ const CreateReportSchema = z.object({
     campusId: z.string().uuid(),
     period: z.string().min(1),
     periodType: z.nativeEnum(ReportPeriodType),
+    periodYear: z.number().int().min(1900).max(2100),
+    periodMonth: z.number().int().min(1).max(12).optional(),
+    periodWeek: z.number().int().min(1).max(53).optional(),
     notes: z.string().optional(),
     sections: z.array(z.object({
         templateSectionId: z.string(),
@@ -52,6 +60,43 @@ const CreateReportSchema = z.object({
         })),
     })).optional(),
 });
+
+function computeReportDeadline(
+    periodType: ReportPeriodType,
+    periodYear: number,
+    periodMonth?: number,
+    periodWeek?: number,
+    policy: ReportDeadlinePolicy = ReportDeadlinePolicy.PERIOD_END,
+    offsetHours: number = DEADLINE_CONFIG.reportDeadlineHours,
+): Date {
+    let start: dayjs.Dayjs;
+    let end: dayjs.Dayjs;
+
+    if (periodType === ReportPeriodType.WEEKLY) {
+        const weekNumber = periodWeek ?? 1;
+        start = dayjs().year(periodYear).week(weekNumber).startOf("week");
+        end = start.endOf("week");
+    } else if (periodType === ReportPeriodType.YEARLY) {
+        start = dayjs(`${periodYear}-01-01`).startOf("day");
+        end = dayjs(`${periodYear}-12-31`).endOf("day");
+    } else {
+        const month = periodMonth ?? 1;
+        start = dayjs(`${periodYear}-${String(month).padStart(2, "0")}-01`).startOf("day");
+        end = start.endOf("month");
+    }
+
+    switch (policy) {
+        case ReportDeadlinePolicy.PERIOD_START:
+            return start.toDate();
+        case ReportDeadlinePolicy.PERIOD_MIDDLE:
+            return start.add(end.diff(start) / 2, "millisecond").toDate();
+        case ReportDeadlinePolicy.AFTER_PERIOD_HOURS:
+            return end.add(offsetHours, "hour").toDate();
+        case ReportDeadlinePolicy.PERIOD_END:
+        default:
+            return end.toDate();
+    }
+}
 
 /* ── GET ───────────────────────────────────────────────────────────────────── */
 
@@ -133,6 +178,16 @@ export async function POST(req: NextRequest) {
         }
 
         const report = await db.$transaction(async (tx) => {
+            const deadline = computeReportDeadline(
+                body.periodType,
+                body.periodYear,
+                body.periodMonth,
+                body.periodWeek,
+                (template as any)?.deadlinePolicy ?? ReportDeadlinePolicy.PERIOD_END,
+                (template as any)?.deadlineOffsetHours ?? DEADLINE_CONFIG.reportDeadlineHours,
+            );
+            const isDataEntry = body.periodYear < new Date().getFullYear();
+
             const newReport = await tx.report.create({
                 data: {
                     organisationId: process.env.NEXT_PUBLIC_ORG_ID ?? "harvesters",
@@ -144,10 +199,14 @@ export async function POST(req: NextRequest) {
                     orgGroupId: template.orgGroupId ?? campus.parentId,
                     period: body.period,
                     periodType: body.periodType,
-                    periodYear: new Date().getFullYear(),
+                    periodYear: body.periodYear,
+                    periodMonth: body.periodMonth,
+                    periodWeek: body.periodWeek,
                     status: ReportStatus.DRAFT,
                     createdById: auth.user.id,
                     notes: body.notes ?? null,
+                    deadline,
+                    isDataEntry,
                     sections: body.sections ? {
                         create: body.sections.map((sec) => ({
                             templateSectionId: sec.templateSectionId,

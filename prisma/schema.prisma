@@ -49,6 +49,13 @@ enum ReportPeriodType {
   YEARLY
 }
 
+enum ReportDeadlinePolicy {
+  PERIOD_START
+  PERIOD_MIDDLE
+  PERIOD_END
+  AFTER_PERIOD_HOURS
+}
+
 enum MetricFieldType {
   NUMBER
   PERCENTAGE
@@ -240,18 +247,20 @@ model Campus {
 // ─── Report Templates ────────────────────────────────────────────────────────
 
 model ReportTemplate {
-  id             String   @id @default(uuid())
-  organisationId String
-  name           String
-  description    String?
-  version        Int      @default(1)
-  isActive       Boolean  @default(true)
-  isDefault      Boolean  @default(false)
-  createdById    String
-  campusId       String?
-  orgGroupId     String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                  String                @id @default(uuid())
+  organisationId      String
+  name                String
+  description         String?
+  version             Int                   @default(1)
+  isActive            Boolean               @default(true)
+  isDefault           Boolean               @default(false)
+  deadlinePolicy      ReportDeadlinePolicy? @default(PERIOD_END)
+  deadlineOffsetHours Int?                  @default(48)
+  createdById         String
+  campusId            String?
+  orgGroupId          String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
 
   // Relations
   createdBy User                    @relation("TemplateCreator", fields: [createdById], references: [id])
