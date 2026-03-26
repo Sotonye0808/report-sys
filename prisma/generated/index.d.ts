@@ -165,6 +165,16 @@ export const ReportPeriodType: {
 export type ReportPeriodType = (typeof ReportPeriodType)[keyof typeof ReportPeriodType]
 
 
+export const ReportDeadlinePolicy: {
+  PERIOD_START: 'PERIOD_START',
+  PERIOD_MIDDLE: 'PERIOD_MIDDLE',
+  PERIOD_END: 'PERIOD_END',
+  AFTER_PERIOD_HOURS: 'AFTER_PERIOD_HOURS'
+};
+
+export type ReportDeadlinePolicy = (typeof ReportDeadlinePolicy)[keyof typeof ReportDeadlinePolicy]
+
+
 export const MetricFieldType: {
   NUMBER: 'NUMBER',
   PERCENTAGE: 'PERCENTAGE',
@@ -316,6 +326,10 @@ export const ReportStatus: typeof $Enums.ReportStatus
 export type ReportPeriodType = $Enums.ReportPeriodType
 
 export const ReportPeriodType: typeof $Enums.ReportPeriodType
+
+export type ReportDeadlinePolicy = $Enums.ReportDeadlinePolicy
+
+export const ReportDeadlinePolicy: typeof $Enums.ReportDeadlinePolicy
 
 export type MetricFieldType = $Enums.MetricFieldType
 
@@ -7940,10 +7954,12 @@ export namespace Prisma {
 
   export type ReportTemplateAvgAggregateOutputType = {
     version: number | null
+    deadlineOffsetHours: number | null
   }
 
   export type ReportTemplateSumAggregateOutputType = {
     version: number | null
+    deadlineOffsetHours: number | null
   }
 
   export type ReportTemplateMinAggregateOutputType = {
@@ -7954,6 +7970,8 @@ export namespace Prisma {
     version: number | null
     isActive: boolean | null
     isDefault: boolean | null
+    deadlinePolicy: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours: number | null
     createdById: string | null
     campusId: string | null
     orgGroupId: string | null
@@ -7969,6 +7987,8 @@ export namespace Prisma {
     version: number | null
     isActive: boolean | null
     isDefault: boolean | null
+    deadlinePolicy: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours: number | null
     createdById: string | null
     campusId: string | null
     orgGroupId: string | null
@@ -7984,6 +8004,8 @@ export namespace Prisma {
     version: number
     isActive: number
     isDefault: number
+    deadlinePolicy: number
+    deadlineOffsetHours: number
     createdById: number
     campusId: number
     orgGroupId: number
@@ -7995,10 +8017,12 @@ export namespace Prisma {
 
   export type ReportTemplateAvgAggregateInputType = {
     version?: true
+    deadlineOffsetHours?: true
   }
 
   export type ReportTemplateSumAggregateInputType = {
     version?: true
+    deadlineOffsetHours?: true
   }
 
   export type ReportTemplateMinAggregateInputType = {
@@ -8009,6 +8033,8 @@ export namespace Prisma {
     version?: true
     isActive?: true
     isDefault?: true
+    deadlinePolicy?: true
+    deadlineOffsetHours?: true
     createdById?: true
     campusId?: true
     orgGroupId?: true
@@ -8024,6 +8050,8 @@ export namespace Prisma {
     version?: true
     isActive?: true
     isDefault?: true
+    deadlinePolicy?: true
+    deadlineOffsetHours?: true
     createdById?: true
     campusId?: true
     orgGroupId?: true
@@ -8039,6 +8067,8 @@ export namespace Prisma {
     version?: true
     isActive?: true
     isDefault?: true
+    deadlinePolicy?: true
+    deadlineOffsetHours?: true
     createdById?: true
     campusId?: true
     orgGroupId?: true
@@ -8141,6 +8171,8 @@ export namespace Prisma {
     version: number
     isActive: boolean
     isDefault: boolean
+    deadlinePolicy: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours: number | null
     createdById: string
     campusId: string | null
     orgGroupId: string | null
@@ -8175,6 +8207,8 @@ export namespace Prisma {
     version?: boolean
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: boolean
+    deadlineOffsetHours?: boolean
     createdById?: boolean
     campusId?: boolean
     orgGroupId?: boolean
@@ -8196,6 +8230,8 @@ export namespace Prisma {
     version?: boolean
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: boolean
+    deadlineOffsetHours?: boolean
     createdById?: boolean
     campusId?: boolean
     orgGroupId?: boolean
@@ -8212,6 +8248,8 @@ export namespace Prisma {
     version?: boolean
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: boolean
+    deadlineOffsetHours?: boolean
     createdById?: boolean
     campusId?: boolean
     orgGroupId?: boolean
@@ -8228,6 +8266,8 @@ export namespace Prisma {
     version?: boolean
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: boolean
+    deadlineOffsetHours?: boolean
     createdById?: boolean
     campusId?: boolean
     orgGroupId?: boolean
@@ -8235,7 +8275,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ReportTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organisationId" | "name" | "description" | "version" | "isActive" | "isDefault" | "createdById" | "campusId" | "orgGroupId" | "createdAt" | "updatedAt", ExtArgs["result"]["reportTemplate"]>
+  export type ReportTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organisationId" | "name" | "description" | "version" | "isActive" | "isDefault" | "deadlinePolicy" | "deadlineOffsetHours" | "createdById" | "campusId" | "orgGroupId" | "createdAt" | "updatedAt", ExtArgs["result"]["reportTemplate"]>
   export type ReportTemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
     sections?: boolean | ReportTemplate$sectionsArgs<ExtArgs>
@@ -8268,6 +8308,8 @@ export namespace Prisma {
       version: number
       isActive: boolean
       isDefault: boolean
+      deadlinePolicy: $Enums.ReportDeadlinePolicy | null
+      deadlineOffsetHours: number | null
       createdById: string
       campusId: string | null
       orgGroupId: string | null
@@ -8708,6 +8750,8 @@ export namespace Prisma {
     readonly version: FieldRef<"ReportTemplate", 'Int'>
     readonly isActive: FieldRef<"ReportTemplate", 'Boolean'>
     readonly isDefault: FieldRef<"ReportTemplate", 'Boolean'>
+    readonly deadlinePolicy: FieldRef<"ReportTemplate", 'ReportDeadlinePolicy'>
+    readonly deadlineOffsetHours: FieldRef<"ReportTemplate", 'Int'>
     readonly createdById: FieldRef<"ReportTemplate", 'String'>
     readonly campusId: FieldRef<"ReportTemplate", 'String'>
     readonly orgGroupId: FieldRef<"ReportTemplate", 'String'>
@@ -28518,6 +28562,8 @@ export namespace Prisma {
     version: 'version',
     isActive: 'isActive',
     isDefault: 'isDefault',
+    deadlinePolicy: 'deadlinePolicy',
+    deadlineOffsetHours: 'deadlineOffsetHours',
     createdById: 'createdById',
     campusId: 'campusId',
     orgGroupId: 'orgGroupId',
@@ -28916,6 +28962,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReportDeadlinePolicy'
+   */
+  export type EnumReportDeadlinePolicyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportDeadlinePolicy'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReportDeadlinePolicy[]'
+   */
+  export type ListEnumReportDeadlinePolicyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportDeadlinePolicy[]'>
     
 
 
@@ -29524,6 +29584,8 @@ export namespace Prisma {
     version?: IntFilter<"ReportTemplate"> | number
     isActive?: BoolFilter<"ReportTemplate"> | boolean
     isDefault?: BoolFilter<"ReportTemplate"> | boolean
+    deadlinePolicy?: EnumReportDeadlinePolicyNullableFilter<"ReportTemplate"> | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: IntNullableFilter<"ReportTemplate"> | number | null
     createdById?: StringFilter<"ReportTemplate"> | string
     campusId?: StringNullableFilter<"ReportTemplate"> | string | null
     orgGroupId?: StringNullableFilter<"ReportTemplate"> | string | null
@@ -29544,6 +29606,8 @@ export namespace Prisma {
     version?: SortOrder
     isActive?: SortOrder
     isDefault?: SortOrder
+    deadlinePolicy?: SortOrderInput | SortOrder
+    deadlineOffsetHours?: SortOrderInput | SortOrder
     createdById?: SortOrder
     campusId?: SortOrderInput | SortOrder
     orgGroupId?: SortOrderInput | SortOrder
@@ -29567,6 +29631,8 @@ export namespace Prisma {
     version?: IntFilter<"ReportTemplate"> | number
     isActive?: BoolFilter<"ReportTemplate"> | boolean
     isDefault?: BoolFilter<"ReportTemplate"> | boolean
+    deadlinePolicy?: EnumReportDeadlinePolicyNullableFilter<"ReportTemplate"> | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: IntNullableFilter<"ReportTemplate"> | number | null
     createdById?: StringFilter<"ReportTemplate"> | string
     campusId?: StringNullableFilter<"ReportTemplate"> | string | null
     orgGroupId?: StringNullableFilter<"ReportTemplate"> | string | null
@@ -29587,6 +29653,8 @@ export namespace Prisma {
     version?: SortOrder
     isActive?: SortOrder
     isDefault?: SortOrder
+    deadlinePolicy?: SortOrderInput | SortOrder
+    deadlineOffsetHours?: SortOrderInput | SortOrder
     createdById?: SortOrder
     campusId?: SortOrderInput | SortOrder
     orgGroupId?: SortOrderInput | SortOrder
@@ -29610,6 +29678,8 @@ export namespace Prisma {
     version?: IntWithAggregatesFilter<"ReportTemplate"> | number
     isActive?: BoolWithAggregatesFilter<"ReportTemplate"> | boolean
     isDefault?: BoolWithAggregatesFilter<"ReportTemplate"> | boolean
+    deadlinePolicy?: EnumReportDeadlinePolicyNullableWithAggregatesFilter<"ReportTemplate"> | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: IntNullableWithAggregatesFilter<"ReportTemplate"> | number | null
     createdById?: StringWithAggregatesFilter<"ReportTemplate"> | string
     campusId?: StringNullableWithAggregatesFilter<"ReportTemplate"> | string | null
     orgGroupId?: StringNullableWithAggregatesFilter<"ReportTemplate"> | string | null
@@ -31542,6 +31612,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     campusId?: string | null
     orgGroupId?: string | null
     createdAt?: Date | string
@@ -31561,6 +31633,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     createdById: string
     campusId?: string | null
     orgGroupId?: string | null
@@ -31580,6 +31654,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31599,6 +31675,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     createdById?: StringFieldUpdateOperationsInput | string
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31618,6 +31696,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     createdById: string
     campusId?: string | null
     orgGroupId?: string | null
@@ -31633,6 +31713,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31647,6 +31729,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     createdById?: StringFieldUpdateOperationsInput | string
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33725,6 +33809,13 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type EnumReportDeadlinePolicyNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReportDeadlinePolicy | EnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReportDeadlinePolicy[] | ListEnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReportDeadlinePolicy[] | ListEnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel> | $Enums.ReportDeadlinePolicy | null
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -33748,6 +33839,8 @@ export namespace Prisma {
     version?: SortOrder
     isActive?: SortOrder
     isDefault?: SortOrder
+    deadlinePolicy?: SortOrder
+    deadlineOffsetHours?: SortOrder
     createdById?: SortOrder
     campusId?: SortOrder
     orgGroupId?: SortOrder
@@ -33757,6 +33850,7 @@ export namespace Prisma {
 
   export type ReportTemplateAvgOrderByAggregateInput = {
     version?: SortOrder
+    deadlineOffsetHours?: SortOrder
   }
 
   export type ReportTemplateMaxOrderByAggregateInput = {
@@ -33767,6 +33861,8 @@ export namespace Prisma {
     version?: SortOrder
     isActive?: SortOrder
     isDefault?: SortOrder
+    deadlinePolicy?: SortOrder
+    deadlineOffsetHours?: SortOrder
     createdById?: SortOrder
     campusId?: SortOrder
     orgGroupId?: SortOrder
@@ -33782,6 +33878,8 @@ export namespace Prisma {
     version?: SortOrder
     isActive?: SortOrder
     isDefault?: SortOrder
+    deadlinePolicy?: SortOrder
+    deadlineOffsetHours?: SortOrder
     createdById?: SortOrder
     campusId?: SortOrder
     orgGroupId?: SortOrder
@@ -33791,6 +33889,7 @@ export namespace Prisma {
 
   export type ReportTemplateSumOrderByAggregateInput = {
     version?: SortOrder
+    deadlineOffsetHours?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -33807,6 +33906,16 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type EnumReportDeadlinePolicyNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReportDeadlinePolicy | EnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReportDeadlinePolicy[] | ListEnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReportDeadlinePolicy[] | ListEnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReportDeadlinePolicyNullableWithAggregatesFilter<$PrismaModel> | $Enums.ReportDeadlinePolicy | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel>
+    _max?: NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel>
   }
 
   export type ReportTemplateScalarRelationFilter = {
@@ -36495,6 +36604,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput = {
+    set?: $Enums.ReportDeadlinePolicy | null
+  }
+
   export type UserUpdateOneRequiredWithoutCreatedTemplatesNestedInput = {
     create?: XOR<UserCreateWithoutCreatedTemplatesInput, UserUncheckedCreateWithoutCreatedTemplatesInput>
     connectOrCreate?: UserCreateOrConnectWithoutCreatedTemplatesInput
@@ -37924,6 +38037,13 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReportDeadlinePolicy | EnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReportDeadlinePolicy[] | ListEnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReportDeadlinePolicy[] | ListEnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel> | $Enums.ReportDeadlinePolicy | null
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -37949,6 +38069,16 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumReportDeadlinePolicyNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReportDeadlinePolicy | EnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReportDeadlinePolicy[] | ListEnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReportDeadlinePolicy[] | ListEnumReportDeadlinePolicyFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReportDeadlinePolicyNullableWithAggregatesFilter<$PrismaModel> | $Enums.ReportDeadlinePolicy | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel>
+    _max?: NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumMetricFieldTypeFilter<$PrismaModel = never> = {
@@ -38372,6 +38502,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     campusId?: string | null
     orgGroupId?: string | null
     createdAt?: Date | string
@@ -38390,6 +38522,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     campusId?: string | null
     orgGroupId?: string | null
     createdAt?: Date | string
@@ -39519,6 +39653,8 @@ export namespace Prisma {
     version?: IntFilter<"ReportTemplate"> | number
     isActive?: BoolFilter<"ReportTemplate"> | boolean
     isDefault?: BoolFilter<"ReportTemplate"> | boolean
+    deadlinePolicy?: EnumReportDeadlinePolicyNullableFilter<"ReportTemplate"> | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: IntNullableFilter<"ReportTemplate"> | number | null
     createdById?: StringFilter<"ReportTemplate"> | string
     campusId?: StringNullableFilter<"ReportTemplate"> | string | null
     orgGroupId?: StringNullableFilter<"ReportTemplate"> | string | null
@@ -41676,6 +41812,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     campusId?: string | null
     orgGroupId?: string | null
     createdAt?: Date | string
@@ -41694,6 +41832,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     createdById: string
     campusId?: string | null
     orgGroupId?: string | null
@@ -41774,6 +41914,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41792,6 +41934,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     createdById?: StringFieldUpdateOperationsInput | string
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42069,6 +42213,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     campusId?: string | null
     orgGroupId?: string | null
     createdAt?: Date | string
@@ -42087,6 +42233,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     createdById: string
     campusId?: string | null
     orgGroupId?: string | null
@@ -42208,6 +42356,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42226,6 +42376,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     createdById?: StringFieldUpdateOperationsInput | string
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42337,6 +42489,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     campusId?: string | null
     orgGroupId?: string | null
     createdAt?: Date | string
@@ -42355,6 +42509,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     createdById: string
     campusId?: string | null
     orgGroupId?: string | null
@@ -43054,6 +43210,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43072,6 +43230,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     createdById?: StringFieldUpdateOperationsInput | string
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45981,6 +46141,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     campusId?: string | null
     orgGroupId?: string | null
     createdAt?: Date | string
@@ -45999,6 +46161,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     createdById: string
     campusId?: string | null
     orgGroupId?: string | null
@@ -46372,6 +46536,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -46390,6 +46556,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     createdById?: StringFieldUpdateOperationsInput | string
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47833,6 +48001,8 @@ export namespace Prisma {
     version?: number
     isActive?: boolean
     isDefault?: boolean
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: number | null
     campusId?: string | null
     orgGroupId?: string | null
     createdAt?: Date | string
@@ -48198,6 +48368,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48216,6 +48388,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48234,6 +48408,8 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     isDefault?: BoolFieldUpdateOperationsInput | boolean
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

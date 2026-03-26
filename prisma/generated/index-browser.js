@@ -175,6 +175,8 @@ exports.Prisma.ReportTemplateScalarFieldEnum = {
   version: 'version',
   isActive: 'isActive',
   isDefault: 'isDefault',
+  deadlinePolicy: 'deadlinePolicy',
+  deadlineOffsetHours: 'deadlineOffsetHours',
   createdById: 'createdById',
   campusId: 'campusId',
   orgGroupId: 'orgGroupId',
@@ -445,6 +447,13 @@ exports.UserRole = exports.$Enums.UserRole = {
   CAMPUS_ADMIN: 'CAMPUS_ADMIN',
   DATA_ENTRY: 'DATA_ENTRY',
   MEMBER: 'MEMBER'
+};
+
+exports.ReportDeadlinePolicy = exports.$Enums.ReportDeadlinePolicy = {
+  PERIOD_START: 'PERIOD_START',
+  PERIOD_MIDDLE: 'PERIOD_MIDDLE',
+  PERIOD_END: 'PERIOD_END',
+  AFTER_PERIOD_HOURS: 'AFTER_PERIOD_HOURS'
 };
 
 exports.MetricFieldType = exports.$Enums.MetricFieldType = {

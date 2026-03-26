@@ -61,6 +61,13 @@ export enum ReportPeriodType {
     YEARLY = "YEARLY",
 }
 
+export enum ReportDeadlinePolicy {
+    PERIOD_START = "PERIOD_START",
+    PERIOD_MIDDLE = "PERIOD_MIDDLE",
+    PERIOD_END = "PERIOD_END",
+    AFTER_PERIOD_HOURS = "AFTER_PERIOD_HOURS",
+}
+
 export enum MetricFieldType {
     NUMBER = "NUMBER",
     PERCENTAGE = "PERCENTAGE",
@@ -309,6 +316,8 @@ declare global {
         sections: ReportTemplateSection[];
         isActive: boolean;
         isDefault: boolean;
+        deadlinePolicy?: ReportDeadlinePolicy;
+        deadlineOffsetHours?: number;
         createdById: string;
         campusId?: string;
         orgGroupId?: string;
@@ -357,6 +366,8 @@ declare global {
         sections: CreateTemplateSectionInput[];
         campusId?: string;
         orgGroupId?: string;
+        deadlinePolicy?: ReportDeadlinePolicy;
+        deadlineOffsetHours?: number;
     }
 
     interface CreateTemplateSectionInput {

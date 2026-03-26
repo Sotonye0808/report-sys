@@ -31,8 +31,18 @@ function CampusesTab() {
   const [saving, setSaving] = useState(false);
   const [form] = Form.useForm();
 
-  const { data: campuses, refetch } = useApiData<Campus[]>(API_ROUTES.org.campuses);
-  const { data: groups } = useApiData<OrgGroup[]>(API_ROUTES.org.groups);
+  const {
+    data: campuses,
+    loading: campusesLoading,
+    error: campusesError,
+    refetch,
+  } = useApiData<Campus[]>(API_ROUTES.org.campuses);
+  const {
+    data: groups,
+    loading: groupsLoading,
+    error: groupsError,
+    refetch: refetchGroups,
+  } = useApiData<OrgGroup[]>(API_ROUTES.org.groups);
 
   const filtered = (campuses ?? []).filter(
     (c) => !search || c.name.toLowerCase().includes(search.toLowerCase()),
@@ -90,7 +100,12 @@ function CampusesTab() {
     },
   ];
 
-  const handleSave = async (values: { name: string; location: string; country: string; groupId?: string | null }) => {
+  const handleSave = async (values: {
+    name: string;
+    location: string;
+    country: string;
+    groupId?: string | null;
+  }) => {
     setSaving(true);
     try {
       if (editTarget) {
@@ -158,8 +173,19 @@ function CampusesTab() {
         </Button>
       </div>
 
-      {campuses === undefined ? (
+      {campusesLoading ? (
         <LoadingSkeleton rows={4} />
+      ) : campusesError ? (
+        <EmptyState
+          icon={<BankOutlined />}
+          title="Unable to load campuses"
+          description={campusesError}
+          action={
+            <Button type="primary" onClick={refetch}>
+              Retry
+            </Button>
+          }
+        />
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={<BankOutlined />}
@@ -196,7 +222,11 @@ function CampusesTab() {
             <Input size="large" />
           </Form.Item>
           <Form.Item name="groupId" label={CONTENT.org.groupNameLabel as string}>
-            <select className="w-full p-2 border border-ds-border-base rounded-ds-lg" value={form.getFieldValue("groupId") ?? ""} onChange={(e) => form.setFieldsValue({ groupId: e.target.value || null })}>
+            <select
+              className="w-full p-2 border border-ds-border-base rounded-ds-lg"
+              value={form.getFieldValue("groupId") ?? ""}
+              onChange={(e) => form.setFieldsValue({ groupId: e.target.value || null })}
+            >
               <option value="">(No group)</option>
               {groups?.map((group) => (
                 <option key={group.id} value={group.id}>
@@ -226,7 +256,12 @@ function GroupsTab() {
   const [saving, setSaving] = useState(false);
   const [form] = Form.useForm();
 
-  const { data: groups, refetch: refetchGroups } = useApiData<OrgGroup[]>(API_ROUTES.org.groups);
+  const {
+    data: groups,
+    loading: groupsLoading,
+    error: groupsError,
+    refetch: refetchGroups,
+  } = useApiData<OrgGroup[]>(API_ROUTES.org.groups);
 
   const filtered = (groups ?? []).filter(
     (g) => !search || g.name.toLowerCase().includes(search.toLowerCase()),
@@ -330,8 +365,19 @@ function GroupsTab() {
         </Button>
       </div>
 
-      {groups === undefined ? (
+      {groupsLoading ? (
         <LoadingSkeleton rows={4} />
+      ) : groupsError ? (
+        <EmptyState
+          icon={<ClusterOutlined />}
+          title="Unable to load groups"
+          description={groupsError}
+          action={
+            <Button type="primary" onClick={refetchGroups}>
+              Retry
+            </Button>
+          }
+        />
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={<ClusterOutlined />}

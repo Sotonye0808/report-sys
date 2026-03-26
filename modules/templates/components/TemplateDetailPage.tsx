@@ -23,7 +23,7 @@ import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
 import { offlineFetch } from "@/lib/utils/offlineFetch";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
-import { MetricFieldType, MetricCalculationType } from "@/types/global";
+import { MetricFieldType, MetricCalculationType, ReportDeadlinePolicy } from "@/types/global";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { PageLayout } from "@/components/ui/PageLayout";
@@ -40,6 +40,13 @@ const CALC_TYPE_OPTIONS = [
   { value: MetricCalculationType.SUM, label: "Sum (cumulative)" },
   { value: MetricCalculationType.AVERAGE, label: "Average (rolling mean)" },
   { value: MetricCalculationType.SNAPSHOT, label: "Snapshot (last value)" },
+];
+
+const DEADLINE_POLICY_OPTIONS = [
+  { value: ReportDeadlinePolicy.PERIOD_START, label: "Beginning of period" },
+  { value: ReportDeadlinePolicy.PERIOD_MIDDLE, label: "Middle of period" },
+  { value: ReportDeadlinePolicy.PERIOD_END, label: "End of period" },
+  { value: ReportDeadlinePolicy.AFTER_PERIOD_HOURS, label: "Fixed hours after period end" },
 ];
 
 interface DraftMetric {
@@ -152,7 +159,11 @@ export function TemplateDetailPage({ params }: PageProps) {
   const [saving, setSaving] = useState(false);
   const [goalPromptVisible, setGoalPromptVisible] = useState(false);
   const [initialized, setInitialized] = useState(false);
-  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } = useFormPersistence<{
+  const {
+    status: draftStatus,
+    lastSavedAt: draftLastSaved,
+    clearDraft,
+  } = useFormPersistence<{
     formValues: any;
     sections: DraftSection[];
   }>({
@@ -173,7 +184,6 @@ export function TemplateDetailPage({ params }: PageProps) {
 
   // This is intentionally empty here: form persistence is now handled via useFormPersistence and the local template restore.
 
-
   useEffect(() => {
     if (initialized) return;
     if (!template) return;
@@ -183,6 +193,8 @@ export function TemplateDetailPage({ params }: PageProps) {
       description: template.description ?? "",
       isDefault: template.isDefault ?? false,
       isArchived: template.isArchived ?? false,
+      deadlinePolicy: template.deadlinePolicy ?? ReportDeadlinePolicy.PERIOD_END,
+      deadlineOffsetHours: template.deadlineOffsetHours ?? 48,
     });
 
     const rawSections = (template.sections ?? []) as ReportTemplateSection[];
@@ -276,6 +288,8 @@ export function TemplateDetailPage({ params }: PageProps) {
     description: string;
     isDefault: boolean;
     isArchived: boolean;
+    deadlinePolicy?: ReportDeadlinePolicy;
+    deadlineOffsetHours?: number;
   }) => {
     const draft = sections ?? [];
     if (draft.find((s) => !s.name.trim())) {
@@ -292,6 +306,8 @@ export function TemplateDetailPage({ params }: PageProps) {
     try {
       const payload = {
         ...values,
+        deadlinePolicy: values.deadlinePolicy ?? ReportDeadlinePolicy.PERIOD_END,
+        deadlineOffsetHours: values.deadlineOffsetHours ?? 48,
         sections: draft.map((s, si) => ({
           id: s.id,
           templateId: id,
@@ -399,6 +415,14 @@ export function TemplateDetailPage({ params }: PageProps) {
                   placeholder={CONTENT.templates.descriptionPlaceholder as string}
                 />
               </Form.Item>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Form.Item name="deadlinePolicy" label="Report deadline policy">
+                  <Select size="large" options={DEADLINE_POLICY_OPTIONS} />
+                </Form.Item>
+                <Form.Item name="deadlineOffsetHours" label="Deadline offset (hours)">
+                  <Input type="number" min={1} max={168} />
+                </Form.Item>
+              </div>
               <div className="flex flex-wrap gap-6">
                 {(["isDefault", "isArchived"] as const).map((key) => (
                   <div key={key} className="flex items-center gap-2">
