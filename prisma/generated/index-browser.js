@@ -175,13 +175,13 @@ exports.Prisma.ReportTemplateScalarFieldEnum = {
   version: 'version',
   isActive: 'isActive',
   isDefault: 'isDefault',
-  deadlinePolicy: 'deadlinePolicy',
-  deadlineOffsetHours: 'deadlineOffsetHours',
   createdById: 'createdById',
   campusId: 'campusId',
   orgGroupId: 'orgGroupId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deadlineOffsetHours: 'deadlineOffsetHours',
+  deadlinePolicy: 'deadlinePolicy'
 };
 
 exports.Prisma.ReportTemplateSectionScalarFieldEnum = {
@@ -439,14 +439,14 @@ exports.UserRole = exports.$Enums.UserRole = {
   SUPERADMIN: 'SUPERADMIN',
   SPO: 'SPO',
   CEO: 'CEO',
-  OFFICE_OF_CEO: 'OFFICE_OF_CEO',
   CHURCH_MINISTRY: 'CHURCH_MINISTRY',
   GROUP_PASTOR: 'GROUP_PASTOR',
   GROUP_ADMIN: 'GROUP_ADMIN',
   CAMPUS_PASTOR: 'CAMPUS_PASTOR',
   CAMPUS_ADMIN: 'CAMPUS_ADMIN',
   DATA_ENTRY: 'DATA_ENTRY',
-  MEMBER: 'MEMBER'
+  MEMBER: 'MEMBER',
+  OFFICE_OF_CEO: 'OFFICE_OF_CEO'
 };
 
 exports.ReportDeadlinePolicy = exports.$Enums.ReportDeadlinePolicy = {
@@ -505,7 +505,6 @@ exports.ReportEventType = exports.$Enums.ReportEventType = {
   EDIT_APPROVED: 'EDIT_APPROVED',
   EDIT_REJECTED: 'EDIT_REJECTED',
   EDIT_APPLIED: 'EDIT_APPLIED',
-  UNLOCKED: 'UNLOCKED',
   APPROVED: 'APPROVED',
   REVIEWED: 'REVIEWED',
   LOCKED: 'LOCKED',
@@ -515,7 +514,8 @@ exports.ReportEventType = exports.$Enums.ReportEventType = {
   UPDATE_REJECTED: 'UPDATE_REJECTED',
   DATA_ENTRY_CREATED: 'DATA_ENTRY_CREATED',
   TEMPLATE_VERSION_NOTE: 'TEMPLATE_VERSION_NOTE',
-  AUTO_APPROVED: 'AUTO_APPROVED'
+  AUTO_APPROVED: 'AUTO_APPROVED',
+  UNLOCKED: 'UNLOCKED'
 };
 
 exports.GoalMode = exports.$Enums.GoalMode = {
@@ -536,7 +536,6 @@ exports.NotificationType = exports.$Enums.NotificationType = {
   REPORT_APPROVED: 'REPORT_APPROVED',
   REPORT_REVIEWED: 'REPORT_REVIEWED',
   REPORT_LOCKED: 'REPORT_LOCKED',
-  REPORT_UNLOCKED: 'REPORT_UNLOCKED',
   REPORT_EDIT_SUBMITTED: 'REPORT_EDIT_SUBMITTED',
   REPORT_EDIT_APPROVED: 'REPORT_EDIT_APPROVED',
   REPORT_EDIT_REJECTED: 'REPORT_EDIT_REJECTED',
@@ -546,7 +545,8 @@ exports.NotificationType = exports.$Enums.NotificationType = {
   REPORT_DEADLINE_REMINDER: 'REPORT_DEADLINE_REMINDER',
   GOAL_UNLOCK_REQUESTED: 'GOAL_UNLOCK_REQUESTED',
   GOAL_UNLOCK_APPROVED: 'GOAL_UNLOCK_APPROVED',
-  GOAL_UNLOCK_REJECTED: 'GOAL_UNLOCK_REJECTED'
+  GOAL_UNLOCK_REJECTED: 'GOAL_UNLOCK_REJECTED',
+  REPORT_UNLOCKED: 'REPORT_UNLOCKED'
 };
 
 exports.InviteLinkType = exports.$Enums.InviteLinkType = {

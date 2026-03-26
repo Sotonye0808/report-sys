@@ -1,6 +1,6 @@
 import { db } from "@/lib/data/db";
 import { UserRole, ReportStatus, ReportPeriodType, MetricCalculationType } from "@/types/global";
-import type { Report as PrismaReport, ReportSection as PrismaReportSection, ReportMetric as PrismaReportMetric } from "@prisma/client";
+import type { Report as PrismaReport, ReportSection as PrismaReportSection, ReportMetric as PrismaReportMetric } from "../../prisma/generated";
 
 export type AggregationScope = "campus" | "group" | "all";
 
