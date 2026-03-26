@@ -20,7 +20,7 @@
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset",
     "test": "tsx \"test/**/*.test.ts\"",
-    "postinstall": "prisma generate & prisma migrate dev --name deadlines-modded & prisma migrate deploy"
+    "postinstall": "prisma generate"
   },
   "type": "module",
   "dependencies": {
