@@ -1,5 +1,6 @@
 import { db } from "@/lib/data/db";
 import { UserRole, ReportStatus, ReportPeriodType, MetricCalculationType } from "@/types/global";
+import type { Report as PrismaReport, ReportSection as PrismaReportSection, ReportMetric as PrismaReportMetric } from "@prisma/client";
 
 export type AggregationScope = "campus" | "group" | "all";
 
@@ -16,8 +17,10 @@ export interface AggregationCriteria {
     action?: "preview" | "generate";
 }
 
-type ReportWithSections = import("@prisma/client").Report & {
-    sections: (import("@prisma/client").ReportSection & { metrics: import("@prisma/client").ReportMetric[] })[];
+// TODO: Prisma `Report`/`ReportSection`/`ReportMetric` are used here explicitly by alias to avoid DOM global `Report` collision.
+// Avoid using bare global name `Report` in this file because `lib.dom` has a different `Report` interface (body/type/url/toJSON).
+type ReportWithSections = PrismaReport & {
+    sections: (PrismaReportSection & { metrics: PrismaReportMetric[] })[];
 };
 
 export interface AggregatedMetricValue {
