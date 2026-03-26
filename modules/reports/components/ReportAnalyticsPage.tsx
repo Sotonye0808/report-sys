@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useApiData } from "@/lib/hooks/useApiData";
 import { useRole } from "@/lib/hooks/useRole";
@@ -11,7 +11,7 @@ import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Button } from "@/components/ui/Button";
-import { Card, Tag, Divider } from "antd";
+import { Card, Tag, Divider, Select, Checkbox } from "antd";
 import {
   ArrowLeftOutlined,
   BarChartOutlined,
@@ -22,7 +22,9 @@ import {
 import {
   ResponsiveContainer,
   BarChart,
+  LineChart,
   Bar,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -61,12 +63,26 @@ function getOverallInsight(overallPct: number | null, yoyDelta: number | null) {
   return "Great results; maintain performance and look for scalable improvements.";
 }
 
+const CHART_TYPE_OPTIONS = [
+  { value: "bar", label: "Bar" },
+  { value: "line", label: "Line" },
+  { value: "area", label: "Area" },
+];
+
+type ChartType = "bar" | "line" | "area";
+
 export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
   const router = useRouter();
   const { role } = useRole();
 
   const { data: report } = useApiData<Report>(API_ROUTES.reports.detail(reportId));
   const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
+
+  const [chartType, setChartType] = useState<ChartType>("bar");
+  const [showGoal, setShowGoal] = useState(true);
+  const [showAchieved, setShowAchieved] = useState(true);
+  const [showYoY, setShowYoY] = useState(true);
+  const [topMetrics, setTopMetrics] = useState<number>(10);
 
   const template = useMemo(
     () => (templates ?? []).find((t) => t.id === report?.templateId) ?? null,
@@ -124,6 +140,10 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
 
     return { data, overallPct, yoyDelta, totalGoal, totalAchieved, metricsWithGoal, comment };
   }, [sectionsWithMetrics]);
+
+  const chartData = useMemo(() => {
+    return [...summary.data].sort((a, b) => (b.pct ?? 0) - (a.pct ?? 0)).slice(0, topMetrics);
+  }, [summary.data, topMetrics]);
 
   if (report === undefined || templates === undefined) {
     return <LoadingSkeleton rows={6} />;
@@ -189,6 +209,44 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
           <div className="text-sm text-ds-text-secondary">{summary.comment}</div>
         </Card>
 
+        <Card title="Performance by metric controls" bordered>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-ds-text-secondary">Chart type:</span>
+              <Select
+                size="small"
+                value={chartType}
+                options={CHART_TYPE_OPTIONS}
+                onChange={(value) => setChartType(value as ChartType)}
+                style={{ width: 120 }}
+              />
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              <Checkbox checked={showGoal} onChange={(e) => setShowGoal(e.target.checked)}>
+                Goal
+              </Checkbox>
+              <Checkbox checked={showAchieved} onChange={(e) => setShowAchieved(e.target.checked)}>
+                Achieved
+              </Checkbox>
+              <Checkbox checked={showYoY} onChange={(e) => setShowYoY(e.target.checked)}>
+                YoY
+              </Checkbox>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-ds-text-secondary">Top metrics:</span>
+              <Select
+                size="small"
+                value={topMetrics}
+                options={[5, 10, 20, 50].map((n) => ({ value: n, label: String(n) }))}
+                onChange={(value) => setTopMetrics(Number(value))}
+                style={{ width: 80 }}
+              />
+            </div>
+          </div>
+        </Card>
+
         {isEmpty ? (
           <Card>
             <p className="text-sm text-ds-text-subtle">No metrics available for analytics yet.</p>
@@ -198,16 +256,52 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
             <Card title="Performance by metric">
               <div className="h-96">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={summary.data} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="goal" fill="#8884d8" name="Goal" />
-                    <Bar dataKey="achieved" fill="#82ca9d" name="Achieved" />
-                    <Bar dataKey="yoy" fill="#ffc658" name="YoY" />
-                  </BarChart>
+                  {chartType === "bar" ? (
+                    <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      {showGoal && <Bar dataKey="goal" fill="#8884d8" name="Goal" />}
+                      {showAchieved && <Bar dataKey="achieved" fill="#82ca9d" name="Achieved" />}
+                      {showYoY && <Bar dataKey="yoy" fill="#ffc658" name="YoY" />}
+                    </BarChart>
+                  ) : chartType === "line" ? (
+                    <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      {showGoal && (
+                        <Line type="monotone" dataKey="goal" stroke="#8884d8" dot={false} />
+                      )}
+                      {showAchieved && (
+                        <Line type="monotone" dataKey="achieved" stroke="#82ca9d" dot={false} />
+                      )}
+                      {showYoY && (
+                        <Line type="monotone" dataKey="yoy" stroke="#ffc658" dot={false} />
+                      )}
+                    </LineChart>
+                  ) : (
+                    <AreaChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      {showGoal && (
+                        <Area type="monotone" dataKey="goal" stroke="#8884d8" fill="#8884d8" />
+                      )}
+                      {showAchieved && (
+                        <Area type="monotone" dataKey="achieved" stroke="#82ca9d" fill="#82ca9d" />
+                      )}
+                      {showYoY && (
+                        <Area type="monotone" dataKey="yoy" stroke="#ffc658" fill="#ffc658" />
+                      )}
+                    </AreaChart>
+                  )}
                 </ResponsiveContainer>
               </div>
             </Card>
