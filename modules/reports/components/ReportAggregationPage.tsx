@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { message, Select, Space, Tag } from "antd";
+import { message, Select, Space, Tag, Checkbox } from "antd";
 import { ArrowLeftOutlined, DatabaseOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import { useApiData } from "@/lib/hooks/useApiData";
 import { useAuth } from "@/providers/AuthProvider";
@@ -38,6 +38,7 @@ export function ReportAggregationPage() {
   const [periodWeek, setPeriodWeek] = useState<number | undefined>(undefined);
   const [templateId, setTemplateId] = useState<string>("");
   const [metricIds, setMetricIds] = useState<string[]>([]);
+  const [includeDrafts, setIncludeDrafts] = useState<boolean>(false);
   const [includeStatuses, setIncludeStatuses] = useState<ReportStatus[]>(STATUS_OPTIONS);
 
   const [previewResult, setPreviewResult] = useState<any>(null);
@@ -101,7 +102,9 @@ export function ReportAggregationPage() {
           periodMonth: periodType === ReportPeriodType.MONTHLY ? periodMonth : undefined,
           periodWeek: periodType === ReportPeriodType.WEEKLY ? periodWeek : undefined,
           templateId: templateId || undefined,
-          includeStatuses,
+          includeStatuses: includeDrafts
+            ? [...includeStatuses, ReportStatus.DRAFT]
+            : includeStatuses,
           metricIds: metricIds.length > 0 ? metricIds : undefined,
           action: "preview",
         }),
@@ -137,7 +140,9 @@ export function ReportAggregationPage() {
           periodMonth: periodType === ReportPeriodType.MONTHLY ? periodMonth : undefined,
           periodWeek: periodType === ReportPeriodType.WEEKLY ? periodWeek : undefined,
           templateId: templateId || undefined,
-          includeStatuses,
+          includeStatuses: includeDrafts
+            ? [...includeStatuses, ReportStatus.DRAFT]
+            : includeStatuses,
           metricIds: metricIds.length > 0 ? metricIds : undefined,
           action: "generate",
         }),
@@ -350,7 +355,11 @@ export function ReportAggregationPage() {
               options={STATUS_OPTIONS.map((s) => ({ value: s, label: s }))}
               onChange={(v) => setIncludeStatuses(v as ReportStatus[])}
               placeholder="Statuses"
+              dropdownMatchSelectWidth={false}
             />
+            <Checkbox checked={includeDrafts} onChange={(e) => setIncludeDrafts(e.target.checked)}>
+              Include draft reports
+            </Checkbox>
           </Space>
         </Card>
       </div>

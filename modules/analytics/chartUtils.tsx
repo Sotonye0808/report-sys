@@ -1,3 +1,13 @@
+/**
+ * Shared chart utilities for analytics modules.
+ *
+ * Same UI policy:
+ * - All charts must be consistent across the report-specific page and the global analytics page.
+ * - Axis labels must be readable (auto/short/full modes) and include a title fallback for long truncated values.
+ * - Maximum series/metric counts should show a user warning when >50 points to avoid performance issues.
+ * - Tooltip and legend labels must be explicitly set from content tokens.
+ */
+
 import { ReactNode } from "react";
 import {
   BarChart,
@@ -20,6 +30,7 @@ import {
 import { CONTENT } from "@/config/content";
 
 export type MetricChartType = "bar" | "line" | "area" | "pie";
+export type AxisLabelMode = "auto" | "short" | "full";
 
 export const METRIC_CHART_TYPE_OPTIONS = [
   { label: "Bar", value: "bar" },
@@ -27,6 +38,37 @@ export const METRIC_CHART_TYPE_OPTIONS = [
   { label: "Area", value: "area" },
   { label: "Pie", value: "pie" },
 ] as const;
+
+export function formatAxisLabel(value: any, mode: AxisLabelMode = "auto", maxLen = 20) {
+  if (typeof value !== "string") return String(value);
+  if (mode === "full") return value;
+  if (mode === "short") {
+    return value.length > maxLen ? `${value.slice(0, maxLen - 3)}...` : value;
+  }
+  // auto: attempt to shrink by splitting on word boundary
+  if (value.length <= maxLen) return value;
+  const words = value.split(" ");
+  if (words.length === 1) return `${value.slice(0, maxLen - 3)}...`;
+  const short = words.map((w) => w.charAt(0).toUpperCase()).join(".");
+  return short.length <= maxLen ? short : `${value.slice(0, maxLen - 3)}...`;
+}
+
+function renderXAxisTick(
+  props: any,
+  formatter?: (value: string) => string,
+  maxLen = 22,
+): React.ReactNode {
+  const { x, y, payload } = props;
+  const full = payload?.value ?? "";
+  const formatted = formatter ? formatter(String(full)) : formatAxisLabel(full, "auto", maxLen);
+
+  return (
+    <text x={x} y={y + 15} textAnchor="end" fill="var(--ds-text-subtle)" style={{ fontSize: 11 }}>
+      <title>{String(full)}</title>
+      {formatted}
+    </text>
+  );
+}
 
 const PIE_COLORS = [
   "var(--ds-chart-1)",
@@ -43,6 +85,7 @@ export interface RenderMetricChartProps {
   tooltipStyle: React.CSSProperties;
   granularityLabel?: string;
   metricCalculationType?: string;
+  xAxisTickFormatter?: (value: string) => string;
 }
 
 export function renderMetricChart({
@@ -51,6 +94,7 @@ export function renderMetricChart({
   tooltipStyle,
   granularityLabel,
   metricCalculationType,
+  xAxisTickFormatter,
 }: RenderMetricChartProps): ReactNode {
   if (!data || data.length === 0) {
     return null;
@@ -60,14 +104,25 @@ export function renderMetricChart({
     const pieSliceValueKey = "achieved";
     const pieData = data
       .filter((item) => item[pieSliceValueKey] != null)
-      .map((item) => ({ name: item.periodLabel ?? item.period, value: Number(item[pieSliceValueKey]) }));
+      .map((item) => ({
+        name: item.periodLabel ?? item.period,
+        value: Number(item[pieSliceValueKey]),
+      }));
 
     if (!pieData.length) return null;
 
     return (
       <ResponsiveContainer width="100%" height={280}>
         <PieChart>
-          <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label>
+          <Pie
+            data={pieData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={90}
+            label
+          >
             {pieData.map((_entry, index) => (
               <Cell key={String(index)} fill={PIE_COLORS[index % PIE_COLORS.length]} />
             ))}
@@ -84,7 +139,14 @@ export function renderMetricChart({
       <ResponsiveContainer width="100%" height={280}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-          <XAxis dataKey="periodLabel" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+          <XAxis
+            dataKey="periodLabel"
+            tick={(props) => renderXAxisTick(props, xAxisTickFormatter, 22)}
+            angle={-40}
+            textAnchor="end"
+            height={80}
+            tickFormatter={xAxisTickFormatter}
+          />
           <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
           <Tooltip contentStyle={tooltipStyle} />
           <Legend />
@@ -116,7 +178,14 @@ export function renderMetricChart({
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-          <XAxis dataKey="periodLabel" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+          <XAxis
+            dataKey="periodLabel"
+            tick={(props) => renderXAxisTick(props, xAxisTickFormatter, 22)}
+            angle={-40}
+            textAnchor="end"
+            height={80}
+            tickFormatter={xAxisTickFormatter}
+          />
           <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
           <Tooltip contentStyle={tooltipStyle} />
           <Legend />
@@ -149,7 +218,14 @@ export function renderMetricChart({
     <ResponsiveContainer width="100%" height={280}>
       <ComposedChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-        <XAxis dataKey="periodLabel" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+        <XAxis
+          dataKey="periodLabel"
+          tick={(props) => renderXAxisTick(props, xAxisTickFormatter, 22)}
+          angle={-40}
+          textAnchor="end"
+          height={80}
+          tickFormatter={xAxisTickFormatter}
+        />
         <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
         <Tooltip contentStyle={tooltipStyle} />
         <Legend />

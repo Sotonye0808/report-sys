@@ -251,7 +251,11 @@ function BulkGoalTable({
   });
 
   const draftKey = `draft:goals:campus:${campusId}:${year}:${mode}`;
-  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } = useFormPersistence<{
+  const {
+    status: draftStatus,
+    lastSavedAt: draftLastSaved,
+    clearDraft,
+  } = useFormPersistence<{
     annValues: BulkGoalValues;
     monthValues: Record<string, Record<number, number>>;
   }>({
@@ -267,22 +271,27 @@ function BulkGoalTable({
   const [saving, setSaving] = useState(false);
   const [unlockGoal, setUnlockGoal] = useState<Goal | undefined>(undefined);
 
-
-  /* Collect all goal-capturing metrics across all templates */
-  const sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }> =
-    templates.flatMap((tmpl) =>
-      tmpl.sections
-        .slice()
-        .sort((a, b) => a.order - b.order)
-        .map((section) => ({
-          section,
-          metrics: section.metrics
-            .filter((m) => m.capturesGoal)
-            .slice()
-            .sort((a, b) => a.order - b.order),
-        }))
-        .filter(({ metrics }) => metrics.length > 0),
-    );
+  /* Collect all goal-capturing metrics organized by template */
+  const groupedTemplateSections: Array<{
+    templateName: string;
+    templateId: string;
+    sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }>;
+  }> = templates.map((tmpl) => ({
+    templateName: tmpl.name,
+    templateId: tmpl.id,
+    sections: tmpl.sections
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((section) => ({
+        section,
+        metrics: section.metrics
+          .filter((m) => m.capturesGoal)
+          .slice()
+          .sort((a, b) => a.order - b.order),
+      }))
+      .filter(({ metrics }) => metrics.length > 0),
+  }));
+  const sections = groupedTemplateSections.flatMap((t) => t.sections);
 
   const handleSaveAll = async () => {
     setSaving(true);
@@ -343,7 +352,9 @@ function BulkGoalTable({
 
       if (!ok || !json?.success) {
         message.error(
-          json?.error ?? (CONTENT.errors as Record<string, string>).generic ?? "Error saving goals.",
+          json?.error ??
+            (CONTENT.errors as Record<string, string>).generic ??
+            "Error saving goals.",
         );
         return;
       }
@@ -557,7 +568,11 @@ function AllCampusesMatrix({
     return init;
   });
 
-  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } = useFormPersistence<{
+  const {
+    status: draftStatus,
+    lastSavedAt: draftLastSaved,
+    clearDraft,
+  } = useFormPersistence<{
     matrixValues: MatrixValues;
   }>({
     formKey: draftKey,
@@ -571,20 +586,28 @@ function AllCampusesMatrix({
   const [saving, setSaving] = useState(false);
   const [allMetricValues, setAllMetricValues] = useState<Record<string, number | undefined>>({});
 
+  const groupedTemplateSections: Array<{
+    templateName: string;
+    templateId: string;
+    sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }>;
+  }> = templates.map((tmpl) => ({
+    templateName: tmpl.name,
+    templateId: tmpl.id,
+    sections: tmpl.sections
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((section) => ({
+        section,
+        metrics: section.metrics
+          .filter((m) => m.capturesGoal)
+          .slice()
+          .sort((a, b) => a.order - b.order),
+      }))
+      .filter(({ metrics }) => metrics.length > 0),
+  }));
+
   const sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }> =
-    templates.flatMap((tmpl) =>
-      tmpl.sections
-        .slice()
-        .sort((a, b) => a.order - b.order)
-        .map((section) => ({
-          section,
-          metrics: section.metrics
-            .filter((m) => m.capturesGoal)
-            .slice()
-            .sort((a, b) => a.order - b.order),
-        }))
-        .filter(({ metrics }) => metrics.length > 0),
-    );
+    groupedTemplateSections.flatMap((t) => t.sections);
 
   const setCellValue = (campusId: string, metricId: string, v: number | null) =>
     setMatrixValues((prev) => ({
@@ -690,9 +713,13 @@ function AllCampusesMatrix({
 
   return (
     <div className="space-y-4">
-      <FormDraftBanner status={draftStatus} lastSavedAt={draftLastSaved} onClear={() => {
-        clearDraft();
-      }} />
+      <FormDraftBanner
+        status={draftStatus}
+        lastSavedAt={draftLastSaved}
+        onClear={() => {
+          clearDraft();
+        }}
+      />
       <p className="text-xs text-ds-text-subtle">{g.bulkNote as string}</p>
 
       <div className="flex items-center gap-2 mb-2">
@@ -708,92 +735,104 @@ function AllCampusesMatrix({
         </span>
       </div>
 
-      {sections.map(({ section, metrics }) => (
-        <div
-          key={section.id}
-          className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base overflow-hidden"
-        >
-          <div className="px-5 py-3 border-b border-ds-border-base bg-ds-surface">
-            <span className="font-semibold text-sm text-ds-text-primary">{section.name}</span>
+      {groupedTemplateSections.map((tmpl) => (
+        <div key={tmpl.templateId} className="space-y-4">
+          <div className="text-sm font-semibold text-ds-text-primary py-1 px-3 bg-ds-surface rounded-ds-md">
+            Template: {tmpl.templateName}
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[600px]">
-              <thead>
-                <tr className="border-b border-ds-border-subtle text-xs text-ds-text-secondary">
-                  <th className="text-left px-4 py-2 w-40 font-semibold">Metric</th>
-                  <th className="text-center px-2 py-2 font-semibold w-40">Apply to all</th>
-                  {campuses.map((campus) => (
-                    <th
-                      key={campus.id}
-                      className="text-center px-2 py-2 font-semibold min-w-[110px]"
-                    >
-                      {campus.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {metrics.map((metric) => {
-                  return (
-                    <tr
-                      key={metric.id}
-                      className="border-b border-ds-border-subtle last:border-none hover:bg-ds-surface/40"
-                    >
-                      <td className="px-4 py-2 text-ds-text-primary font-medium">{metric.name}</td>
-                      <td className="px-2 py-2 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <InputNumber
-                            size="small"
-                            className="w-20"
-                            min={0}
-                            value={allMetricValues[metric.id]}
-                            onChange={(v) =>
-                              setAllMetricValues((prev) => ({
-                                ...prev,
-                                [metric.id]: v ?? undefined,
-                              }))
-                            }
-                          />
-                          <Button size="small" onClick={() => applyValueToAllCampuses(metric.id)}>
-                            Set
-                          </Button>
-                        </div>
-                      </td>
-                      {campuses.map((campus) => {
-                        const existing =
-                          goalMap[goalKey(campus.id, metric.id, year, GoalMode.ANNUAL)];
-                        const isLocked = (existing?.isLocked ?? false) && !isSuperadmin;
-                        const currentVal =
-                          matrixValues[campus.id]?.[metric.id] ?? existing?.targetValue;
-                        return (
-                          <td key={campus.id} className="px-2 py-2 text-center">
-                            {isLocked ? (
-                              <Tooltip title={g.lockedNote as string}>
-                                <Tag icon={<LockOutlined />} color="orange">
-                                  {existing?.targetValue?.toLocaleString() ?? "—"}
-                                </Tag>
-                              </Tooltip>
-                            ) : (
+          {tmpl.sections.map(({ section, metrics }) => (
+            <div
+              key={section.id}
+              className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base overflow-hidden"
+            >
+              <div className="px-5 py-3 border-b border-ds-border-base bg-ds-surface">
+                <span className="font-semibold text-sm text-ds-text-primary">{section.name}</span>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm min-w-[600px]">
+                  <thead>
+                    <tr className="border-b border-ds-border-subtle text-xs text-ds-text-secondary">
+                      <th className="text-left px-4 py-2 w-40 font-semibold">Metric</th>
+                      <th className="text-center px-2 py-2 font-semibold w-40">Apply to all</th>
+                      {campuses.map((campus) => (
+                        <th
+                          key={campus.id}
+                          className="text-center px-2 py-2 font-semibold min-w-[110px]"
+                        >
+                          {campus.name}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {metrics.map((metric) => {
+                      return (
+                        <tr
+                          key={metric.id}
+                          className="border-b border-ds-border-subtle last:border-none hover:bg-ds-surface/40"
+                        >
+                          <td className="px-4 py-2 text-ds-text-primary font-medium">
+                            {metric.name}
+                          </td>
+                          <td className="px-2 py-2 text-center">
+                            <div className="flex items-center justify-center gap-1">
                               <InputNumber
                                 size="small"
-                                className="w-24 text-center"
+                                className="w-20"
                                 min={0}
-                                value={currentVal}
-                                disabled={!canEdit}
-                                placeholder="—"
-                                controls={false}
-                                onChange={(v) => setCellValue(campus.id, metric.id, v)}
+                                value={allMetricValues[metric.id]}
+                                onChange={(v) =>
+                                  setAllMetricValues((prev) => ({
+                                    ...prev,
+                                    [metric.id]: v ?? undefined,
+                                  }))
+                                }
                               />
-                            )}
+                              <Button
+                                size="small"
+                                onClick={() => applyValueToAllCampuses(metric.id)}
+                              >
+                                Set
+                              </Button>
+                            </div>
                           </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                          {campuses.map((campus) => {
+                            const existing =
+                              goalMap[goalKey(campus.id, metric.id, year, GoalMode.ANNUAL)];
+                            const isLocked = (existing?.isLocked ?? false) && !isSuperadmin;
+                            const currentVal =
+                              matrixValues[campus.id]?.[metric.id] ?? existing?.targetValue;
+                            return (
+                              <td key={campus.id} className="px-2 py-2 text-center">
+                                {isLocked ? (
+                                  <Tooltip title={g.lockedNote as string}>
+                                    <Tag icon={<LockOutlined />} color="orange">
+                                      {existing?.targetValue?.toLocaleString() ?? "—"}
+                                    </Tag>
+                                  </Tooltip>
+                                ) : (
+                                  <InputNumber
+                                    size="small"
+                                    className="w-24 text-center"
+                                    min={0}
+                                    value={currentVal}
+                                    disabled={!canEdit}
+                                    placeholder="—"
+                                    controls={false}
+                                    onChange={(v) => setCellValue(campus.id, metric.id, v)}
+                                  />
+                                )}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
         </div>
       ))}
 

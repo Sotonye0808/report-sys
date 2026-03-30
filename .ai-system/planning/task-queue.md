@@ -43,6 +43,9 @@
 - [x] Implement template version sync in report rendering: load metric name from template version by metric ID, and keep existing reports backwards-compatible.
 - [x] Add UI feedback for template upgrade mismatch and migration path in `modules/reports/components/ReportDetailPage.tsx` and `modules/reports/components/ReportEditPage.tsx`.
 - [x] Refactor chart-code paths and common helpers into a shared `modules/analytics/chartUtils.ts` to avoid duplication and improve maintainability.
+- [x] Improve analytics chart labeling and readability: add section/metric display options, better x-axis handling, and toggle chart libraries (Recharts, Victory, Chart.js) in `modules/reports/components/ReportAnalyticsPage.tsx`.
+- [x] Add regression tests for chart label rendering (x-axis, tooltip, legend) and metric/section breadcrumbing in analytics.
+- [x] Add design system audit to ensure all analytics charts conform to token colors and accessible text in `modules/analytics`.
 
 ---
 

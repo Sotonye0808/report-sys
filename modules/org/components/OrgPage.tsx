@@ -1001,6 +1001,10 @@ function HierarchyTab() {
             ]}
           />
 
+          <div className="text-xs text-ds-text-secondary">
+            Dry run validates operations and simulates results without saving. Apply changes commits
+            them to database and refreshes hierarchy.
+          </div>
           <div className="flex items-center gap-2">
             <Button onClick={() => handleBulkSend(true)} disabled={bulkLoading}>
               Dry run

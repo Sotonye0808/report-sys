@@ -36,8 +36,10 @@ import {
 import { utils, writeFile } from "xlsx";
 import {
   MetricChartType,
+  AxisLabelMode,
   METRIC_CHART_TYPE_OPTIONS,
   renderMetricChart,
+  formatAxisLabel,
 } from "@/modules/analytics/chartUtils";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
@@ -309,6 +311,7 @@ export function AnalyticsPage() {
   const [granularity, setGranularity] = useState<"weekly" | "monthly" | "quarterly">("monthly");
   const [compareYear, setCompareYear] = useState<number>(CURRENT_YEAR - 1);
   const [chartType, setChartType] = useState<MetricChartType>("bar");
+  const [axisLabelMode, setAxisLabelMode] = useState<AxisLabelMode>("auto");
   const [metricsData, setMetricsData] = useState<MetricAnalyticsData | null>(null);
   const [metricsLoading, setMetricsLoading] = useState(false);
   const [availableMetrics, setAvailableMetrics] = useState<AvailableMetric[]>([]);
@@ -870,6 +873,20 @@ export function AnalyticsPage() {
           onChange={(v) => setChartType(v as MetricChartType)}
           options={METRIC_CHART_TYPE_OPTIONS.map((opt) => ({ label: opt.label, value: opt.value }))}
         />
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-ds-text-secondary">X-axis labels:</span>
+          <Select
+            size="small"
+            value={axisLabelMode}
+            options={[
+              { label: "Auto", value: "auto" },
+              { label: "Short", value: "short" },
+              { label: "Full", value: "full" },
+            ]}
+            onChange={(value) => setAxisLabelMode(value as AxisLabelMode)}
+            style={{ width: 100 }}
+          />
+        </div>
       </div>
 
       {!selectedMetricId ? (
@@ -881,12 +898,21 @@ export function AnalyticsPage() {
       ) : (
         <>
           {/* Goal vs Achieved */}
+          {metricsData.aggregate.length > 50 && (
+            <Card type="inner" className="border-yellow-300 bg-yellow-50">
+              <p className="text-xs text-yellow-800">
+                The chart includes over 50 periods/metrics. Consider narrowing the dataset to
+                improve rendering performance.
+              </p>
+            </Card>
+          )}
           <ChartCard title={CONTENT.analytics.goalVsAchievedTitle as string}>
             {renderMetricChart({
               chartType,
               data: metricsData.aggregate,
               tooltipStyle: TOOLTIP_STYLE,
               metricCalculationType: metricsData.calculationType,
+              xAxisTickFormatter: (value) => formatAxisLabel(String(value), axisLabelMode, 22),
             })}
           </ChartCard>
 
@@ -901,6 +927,10 @@ export function AnalyticsPage() {
                     <XAxis
                       dataKey="period"
                       tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                      angle={-40}
+                      textAnchor="end"
+                      height={70}
+                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 20)}
                     />
                     <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
                     <Tooltip contentStyle={TOOLTIP_STYLE} />
