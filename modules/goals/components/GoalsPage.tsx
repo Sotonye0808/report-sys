@@ -121,6 +121,30 @@ function goalsToMap(goals: Goal[]): Record<string, Goal> {
   return map;
 }
 
+interface TemplateSectionGroup {
+  templateId: string;
+  templateName: string;
+  sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }>;
+}
+
+function buildTemplateSectionGroups(templates: ReportTemplate[]): TemplateSectionGroup[] {
+  return templates.map((tmpl) => ({
+    templateName: tmpl.name,
+    templateId: tmpl.id,
+    sections: tmpl.sections
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((section) => ({
+        section,
+        metrics: section.metrics
+          .filter((m) => m.capturesGoal)
+          .slice()
+          .sort((a, b) => a.order - b.order),
+      }))
+      .filter(({ metrics }) => metrics.length > 0),
+  }));
+}
+
 /* ── Unlock-request modal ───────────────────────────────────────────────────── */
 
 interface UnlockModalProps {
@@ -251,7 +275,11 @@ function BulkGoalTable({
   });
 
   const draftKey = `draft:goals:campus:${campusId}:${year}:${mode}`;
-  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } = useFormPersistence<{
+  const {
+    status: draftStatus,
+    lastSavedAt: draftLastSaved,
+    clearDraft,
+  } = useFormPersistence<{
     annValues: BulkGoalValues;
     monthValues: Record<string, Record<number, number>>;
   }>({
@@ -267,22 +295,9 @@ function BulkGoalTable({
   const [saving, setSaving] = useState(false);
   const [unlockGoal, setUnlockGoal] = useState<Goal | undefined>(undefined);
 
-
-  /* Collect all goal-capturing metrics across all templates */
-  const sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }> =
-    templates.flatMap((tmpl) =>
-      tmpl.sections
-        .slice()
-        .sort((a, b) => a.order - b.order)
-        .map((section) => ({
-          section,
-          metrics: section.metrics
-            .filter((m) => m.capturesGoal)
-            .slice()
-            .sort((a, b) => a.order - b.order),
-        }))
-        .filter(({ metrics }) => metrics.length > 0),
-    );
+  /* Collect all goal-capturing metrics organized by template */
+  const templateSections = buildTemplateSectionGroups(templates);
+  const sections = templateSections.flatMap((t) => t.sections);
 
   const handleSaveAll = async () => {
     setSaving(true);
@@ -343,7 +358,9 @@ function BulkGoalTable({
 
       if (!ok || !json?.success) {
         message.error(
-          json?.error ?? (CONTENT.errors as Record<string, string>).generic ?? "Error saving goals.",
+          json?.error ??
+            (CONTENT.errors as Record<string, string>).generic ??
+            "Error saving goals.",
         );
         return;
       }
@@ -357,7 +374,7 @@ function BulkGoalTable({
     }
   };
 
-  if (sections.length === 0) {
+  if (templateSections.length === 0) {
     return (
       <EmptyState
         icon={<TrophyOutlined />}
@@ -367,141 +384,120 @@ function BulkGoalTable({
     );
   }
 
-  /* Build Collapse panels — one per section */
-  const collapseItems = sections.map(({ section, metrics }) => ({
-    key: section.id,
-    label: (
-      <div className="flex items-center gap-2">
-        <span className="font-semibold text-ds-text-primary">{section.name}</span>
-        <span className="text-xs text-ds-text-subtle">
-          {metrics.length} goal metric{metrics.length !== 1 ? "s" : ""}
-        </span>
-      </div>
-    ),
-    children: (
-      <div className="space-y-0">
-        {/* Column headers */}
-        <div className="overflow-x-auto">
-          <div
-            className={`grid gap-3 pb-2 border-b border-ds-border-subtle text-xs font-semibold text-ds-text-secondary ${mode === GoalMode.MONTHLY ? "grid-cols-[200px_1fr] min-w-[800px]" : "grid-cols-[200px_160px_120px]"}`}
-          >
-            <span>{g.metricColumn as string}</span>
-            {mode === GoalMode.ANNUAL ? (
-              <>
-                <span>{g.annualTargetShort as string}</span>
-                <span className="text-right">Status</span>
-              </>
-            ) : (
-              <div className="grid grid-cols-12 gap-1">
-                {MONTH_LABELS.map((lbl) => (
-                  <span key={lbl} className="text-center truncate">
-                    {lbl}
-                  </span>
-                ))}
+  return (
+    <div className="space-y-4">
+      {templateSections.map((tmpl) => (
+        <Collapse key={tmpl.templateId} ghost>
+          <Collapse.Panel
+            key={tmpl.templateId}
+            header={
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-ds-text-primary">Template: {tmpl.templateName}</span>
+                <span className="text-xs text-ds-text-subtle">
+                  {tmpl.sections.reduce((acc, cur) => acc + cur.metrics.length, 0)} metrics
+                </span>
               </div>
-            )}
-          </div>
-
-          {metrics.map((metric) => {
-            const existingGoal =
-              mode === GoalMode.ANNUAL
-                ? goalMap[goalKey(campusId, metric.id, year, GoalMode.ANNUAL)]
-                : undefined;
-            const isLocked = (existingGoal?.isLocked ?? false) && !isSuperadmin;
-
-            return (
-              <div
-                key={metric.id}
-                className={`grid gap-3 py-3 border-b border-ds-border-subtle last:border-none items-center ${mode === GoalMode.MONTHLY ? "grid-cols-[200px_1fr] min-w-[800px]" : "grid-cols-[200px_160px_120px]"}`}
-              >
-                {/* Metric name */}
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <span className="text-sm text-ds-text-primary truncate">{metric.name}</span>
-                  {isLocked && (
-                    <Tooltip title={g.lockedNote as string}>
-                      <LockOutlined className="text-orange-400 text-xs shrink-0" />
-                    </Tooltip>
-                  )}
-                </div>
-
-                {mode === GoalMode.ANNUAL ? (
-                  <>
-                    {/* Annual target input */}
-                    <InputNumber
-                      className="w-full"
-                      min={0}
-                      value={annValues[metric.id]}
-                      disabled={!canEdit || isLocked}
-                      placeholder={g.noGoalSet as string}
-                      onChange={(v) =>
-                        setAnnValues((prev) => ({ ...prev, [metric.id]: v ?? undefined }))
-                      }
-                    />
-                    {/* Lock / edit action */}
-                    <div className="flex justify-end">
-                      {isLocked ? (
-                        <Button
-                          size="small"
-                          icon={<UnlockOutlined />}
-                          onClick={() => setUnlockGoal(existingGoal)}
-                        >
-                          {g.requestUnlock as string}
-                        </Button>
-                      ) : existingGoal ? (
-                        <Tag color="green">
-                          <UnlockOutlined className="mr-1" />
-                          Set
-                        </Tag>
-                      ) : (
-                        <Tag color="default">{g.noGoalSet as string}</Tag>
-                      )}
+            }
+          >
+            {tmpl.sections.map(({ section, metrics }) => (
+              <Collapse key={section.id} ghost>
+                <Collapse.Panel
+                  key={section.id}
+                  header={
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-ds-text-primary">{section.name}</span>
+                      <span className="text-xs text-ds-text-subtle">
+                        {metrics.length} goal metric{metrics.length !== 1 ? "s" : ""}
+                      </span>
                     </div>
-                  </>
-                ) : (
-                  /* Monthly mode — 12 mini inputs */
-                  <div className="grid grid-cols-12 gap-1">
-                    {MONTH_LABELS.map((_, idx) => {
-                      const month = idx + 1;
-                      const monthGoal =
-                        goalMap[goalKey(campusId, metric.id, year, GoalMode.MONTHLY, month)];
-                      const monthLocked = (monthGoal?.isLocked ?? false) && !isSuperadmin;
+                  }
+                >
+                  <div className="space-y-2 p-3">
+                    {metrics.map((metric) => {
+                      const existingGoal =
+                        mode === GoalMode.ANNUAL
+                          ? goalMap[goalKey(campusId, metric.id, year, GoalMode.ANNUAL)]
+                          : undefined;
+                      const isLocked = (existingGoal?.isLocked ?? false) && !isSuperadmin;
+
                       return (
-                        <InputNumber
-                          key={month}
-                          size="small"
-                          className="w-full"
-                          min={0}
-                          value={monthValues[metric.id]?.[month] ?? monthGoal?.targetValue}
-                          disabled={!canEdit || monthLocked}
-                          placeholder="0"
-                          controls={false}
-                          onChange={(v) =>
-                            setMonthValues((prev) => ({
-                              ...prev,
-                              [metric.id]: { ...(prev[metric.id] ?? {}), [month]: v ?? 0 },
-                            }))
-                          }
-                        />
+                        <div
+                          key={metric.id}
+                          className="border-b border-ds-border-subtle py-2 last:border-none"
+                        >
+                          <div className="flex items-center justify-between gap-3 mb-2">
+                            <span className="font-medium text-ds-text-primary truncate">
+                              {metric.name}
+                            </span>
+                            <span className="text-xs text-ds-text-subtle">
+                              {isLocked ? "Locked" : "Editable"}
+                            </span>
+                          </div>
+                          {mode === GoalMode.ANNUAL ? (
+                            <div className="flex items-center gap-3">
+                              <InputNumber
+                                className="w-36"
+                                min={0}
+                                value={annValues[metric.id]}
+                                disabled={!canEdit || isLocked}
+                                placeholder={g.noGoalSet as string}
+                                onChange={(v) =>
+                                  setAnnValues((prev) => ({ ...prev, [metric.id]: v ?? undefined }))
+                                }
+                              />
+                              {isLocked ? (
+                                <Tooltip title={g.lockedNote as string}>
+                                  <Tag icon={<LockOutlined />} color="orange">
+                                    Locked
+                                  </Tag>
+                                </Tooltip>
+                              ) : existingGoal ? (
+                                <Tag color="green">Set</Tag>
+                              ) : (
+                                <Tag color="default">{g.noGoalSet as string}</Tag>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="grid grid-cols-12 gap-1">
+                              {MONTH_LABELS.map((_, idx) => {
+                                const month = idx + 1;
+                                const monthGoal =
+                                  goalMap[goalKey(campusId, metric.id, year, GoalMode.MONTHLY, month)];
+                                const monthLocked = (monthGoal?.isLocked ?? false) && !isSuperadmin;
+                                return (
+                                  <InputNumber
+                                    key={month}
+                                    size="small"
+                                    className="w-full"
+                                    min={0}
+                                    value={monthValues[metric.id]?.[month] ?? monthGoal?.targetValue}
+                                    disabled={!canEdit || monthLocked}
+                                    placeholder="0"
+                                    controls={false}
+                                    onChange={(v) =>
+                                      setMonthValues((prev) => ({
+                                        ...prev,
+                                        [metric.id]: {
+                                          ...(prev[metric.id] ?? {}),
+                                          [month]: v ?? 0,
+                                        },
+                                      }))
+                                    }
+                                  />
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
                       );
                     })}
                   </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    ),
-  }));
-
-  return (
-    <div className="space-y-4 form-scroll-container">
-      <Collapse
-        items={collapseItems}
-        defaultActiveKey={collapseItems.map((i) => i.key)}
-        className="bg-ds-surface-elevated border border-ds-border-base rounded-ds-2xl overflow-hidden"
-      />
-
+                </Collapse.Panel>
+              </Collapse>
+            ))}
+          </Collapse.Panel>
+        </Collapse>
+      ))}
       {canEdit && (
         <div className="form-action-wrapper flex justify-end">
           <Button type="primary" icon={<SaveOutlined />} loading={saving} onClick={handleSaveAll}>
@@ -509,7 +505,6 @@ function BulkGoalTable({
           </Button>
         </div>
       )}
-
       {unlockGoal && (
         <UnlockModal
           goal={unlockGoal}
@@ -557,7 +552,11 @@ function AllCampusesMatrix({
     return init;
   });
 
-  const { status: draftStatus, lastSavedAt: draftLastSaved, clearDraft } = useFormPersistence<{
+  const {
+    status: draftStatus,
+    lastSavedAt: draftLastSaved,
+    clearDraft,
+  } = useFormPersistence<{
     matrixValues: MatrixValues;
   }>({
     formKey: draftKey,
@@ -571,20 +570,9 @@ function AllCampusesMatrix({
   const [saving, setSaving] = useState(false);
   const [allMetricValues, setAllMetricValues] = useState<Record<string, number | undefined>>({});
 
+  const templateSections = buildTemplateSectionGroups(templates);
   const sections: Array<{ section: ReportTemplateSection; metrics: ReportTemplateMetric[] }> =
-    templates.flatMap((tmpl) =>
-      tmpl.sections
-        .slice()
-        .sort((a, b) => a.order - b.order)
-        .map((section) => ({
-          section,
-          metrics: section.metrics
-            .filter((m) => m.capturesGoal)
-            .slice()
-            .sort((a, b) => a.order - b.order),
-        }))
-        .filter(({ metrics }) => metrics.length > 0),
-    );
+    templateSections.flatMap((t) => t.sections);
 
   const setCellValue = (campusId: string, metricId: string, v: number | null) =>
     setMatrixValues((prev) => ({
@@ -690,9 +678,11 @@ function AllCampusesMatrix({
 
   return (
     <div className="space-y-4">
-      <FormDraftBanner status={draftStatus} lastSavedAt={draftLastSaved} onClear={() => {
-        clearDraft();
-      }} />
+      <FormDraftBanner
+        status={draftStatus}
+        lastSavedAt={draftLastSaved}
+        onClear={() => clearDraft()}
+      />
       <p className="text-xs text-ds-text-subtle">{g.bulkNote as string}</p>
 
       <div className="flex items-center gap-2 mb-2">
@@ -708,94 +698,99 @@ function AllCampusesMatrix({
         </span>
       </div>
 
-      {sections.map(({ section, metrics }) => (
-        <div
-          key={section.id}
-          className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base overflow-hidden"
-        >
-          <div className="px-5 py-3 border-b border-ds-border-base bg-ds-surface">
-            <span className="font-semibold text-sm text-ds-text-primary">{section.name}</span>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[600px]">
-              <thead>
-                <tr className="border-b border-ds-border-subtle text-xs text-ds-text-secondary">
-                  <th className="text-left px-4 py-2 w-40 font-semibold">Metric</th>
-                  <th className="text-center px-2 py-2 font-semibold w-40">Apply to all</th>
-                  {campuses.map((campus) => (
-                    <th
-                      key={campus.id}
-                      className="text-center px-2 py-2 font-semibold min-w-[110px]"
-                    >
-                      {campus.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {metrics.map((metric) => {
-                  return (
-                    <tr
-                      key={metric.id}
-                      className="border-b border-ds-border-subtle last:border-none hover:bg-ds-surface/40"
-                    >
-                      <td className="px-4 py-2 text-ds-text-primary font-medium">{metric.name}</td>
-                      <td className="px-2 py-2 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <InputNumber
-                            size="small"
-                            className="w-20"
-                            min={0}
-                            value={allMetricValues[metric.id]}
-                            onChange={(v) =>
-                              setAllMetricValues((prev) => ({
-                                ...prev,
-                                [metric.id]: v ?? undefined,
-                              }))
-                            }
-                          />
-                          <Button size="small" onClick={() => applyValueToAllCampuses(metric.id)}>
-                            Set
-                          </Button>
-                        </div>
-                      </td>
-                      {campuses.map((campus) => {
-                        const existing =
-                          goalMap[goalKey(campus.id, metric.id, year, GoalMode.ANNUAL)];
-                        const isLocked = (existing?.isLocked ?? false) && !isSuperadmin;
-                        const currentVal =
-                          matrixValues[campus.id]?.[metric.id] ?? existing?.targetValue;
-                        return (
-                          <td key={campus.id} className="px-2 py-2 text-center">
-                            {isLocked ? (
-                              <Tooltip title={g.lockedNote as string}>
-                                <Tag icon={<LockOutlined />} color="orange">
-                                  {existing?.targetValue?.toLocaleString() ?? "—"}
-                                </Tag>
-                              </Tooltip>
-                            ) : (
+      <Collapse defaultActiveKey={templateSections.map((t) => t.templateId)} ghost>
+        {templateSections.map((tmpl) => (
+          <Collapse.Panel
+            key={tmpl.templateId}
+            header={
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-ds-text-primary">
+                  Template: {tmpl.templateName}
+                </span>
+                <span className="text-xs text-ds-text-subtle">
+                  {tmpl.sections.reduce((acc, cur) => acc + cur.metrics.length, 0)} metrics
+                </span>
+              </div>
+            }
+          >
+            {tmpl.sections.map(({ section, metrics }) => (
+              <div
+                key={section.id}
+                className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base overflow-hidden mb-4"
+              >
+                <div className="px-5 py-3 border-b border-ds-border-base bg-ds-surface">
+                  <span className="font-semibold text-sm text-ds-text-primary">{section.name}</span>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm min-w-[600px]">
+                    <thead>
+                      <tr className="border-b border-ds-border-subtle text-xs text-ds-text-secondary">
+                        <th className="text-left px-4 py-2 w-40 font-semibold">Metric</th>
+                        <th className="text-center px-2 py-2 font-semibold w-40">Apply to all</th>
+                        {campuses.map((campus) => (
+                          <th key={campus.id} className="text-center px-2 py-2 font-semibold min-w-[110px]">
+                            {campus.name}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {metrics.map((metric) => (
+                        <tr key={metric.id} className="border-b border-ds-border-subtle last:border-none hover:bg-ds-surface/40">
+                          <td className="px-4 py-2 text-ds-text-primary font-medium">{metric.name}</td>
+                          <td className="px-2 py-2 text-center">
+                            <div className="flex items-center justify-center gap-1">
                               <InputNumber
                                 size="small"
-                                className="w-24 text-center"
+                                className="w-20"
                                 min={0}
-                                value={currentVal}
-                                disabled={!canEdit}
-                                placeholder="—"
-                                controls={false}
-                                onChange={(v) => setCellValue(campus.id, metric.id, v)}
+                                value={allMetricValues[metric.id]}
+                                onChange={(v) =>
+                                  setAllMetricValues((prev) => ({ ...prev, [metric.id]: v ?? undefined }))
+                                }
                               />
-                            )}
+                              <Button size="small" onClick={() => applyValueToAllCampuses(metric.id)}>
+                                Set
+                              </Button>
+                            </div>
                           </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      ))}
+                          {campuses.map((campus) => {
+                            const existing = goalMap[goalKey(campus.id, metric.id, year, GoalMode.ANNUAL)];
+                            const isLocked = (existing?.isLocked ?? false) && !isSuperadmin;
+                            const currentVal = matrixValues[campus.id]?.[metric.id] ?? existing?.targetValue;
+                            return (
+                              <td key={campus.id} className="px-2 py-2 text-center">
+                                {isLocked ? (
+                                  <Tooltip title={g.lockedNote as string}>
+                                    <Tag icon={<LockOutlined />} color="orange">
+                                      {existing?.targetValue?.toLocaleString() ?? "—"}
+                                    </Tag>
+                                  </Tooltip>
+                                ) : (
+                                  <InputNumber
+                                    size="small"
+                                    className="w-24 text-center"
+                                    min={0}
+                                    value={currentVal}
+                                    disabled={!canEdit}
+                                    placeholder="—"
+                                    controls={false}
+                                    onChange={(v) => setCellValue(campus.id, metric.id, v)}
+                                  />
+                                )}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))}
+          </Collapse.Panel>
+        ))}
+      </Collapse>
 
       {canEdit && mode === GoalMode.ANNUAL && (
         <div className="form-action-wrapper flex justify-end">

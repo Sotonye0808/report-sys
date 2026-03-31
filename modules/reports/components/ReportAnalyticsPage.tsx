@@ -33,6 +33,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import { formatAxisLabel, AxisLabelMode } from "@/modules/analytics/chartUtils";
 
 interface ReportAnalyticsPageProps {
   reportId: string;
@@ -83,6 +84,7 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
   const [showAchieved, setShowAchieved] = useState(true);
   const [showYoY, setShowYoY] = useState(true);
   const [topMetrics, setTopMetrics] = useState<number>(10);
+  const [axisLabelMode, setAxisLabelMode] = useState<AxisLabelMode>("auto");
 
   const template = useMemo(
     () => (templates ?? []).find((t) => t.id === report?.templateId) ?? null,
@@ -114,6 +116,7 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
 
         data.push({
           name: metric.metricName,
+          label: `${section.sectionName}: ${metric.metricName}`,
           achieved,
           goal,
           yoy,
@@ -235,11 +238,23 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
             </div>
 
             <div className="flex items-center gap-2">
+              <span className="text-xs text-ds-text-secondary">X-axis label:</span>
+              <Select
+                size="small"
+                value={axisLabelMode}
+                options={[
+                  { value: "auto", label: "Auto" },
+                  { value: "short", label: "Short" },
+                  { value: "full", label: "Full" },
+                ]}
+                onChange={(value) => setAxisLabelMode(value as AxisLabelMode)}
+                style={{ width: 100 }}
+              />
               <span className="text-xs text-ds-text-secondary">Top metrics:</span>
               <Select
                 size="small"
                 value={topMetrics}
-                options={[5, 10, 20, 50].map((n) => ({ value: n, label: String(n) }))}
+                options={[5, 10, 20, 50, 100].map((n) => ({ value: n, label: String(n) }))}
                 onChange={(value) => setTopMetrics(Number(value))}
                 style={{ width: 80 }}
               />
@@ -253,13 +268,29 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
           </Card>
         ) : (
           <>
+            {chartData.length > 50 && (
+              <Card type="inner" className="border-yellow-300 bg-yellow-50">
+                <p className="text-xs text-yellow-800">
+                  Showing top {topMetrics} metrics. More than 50 metrics can cause rendering
+                  slowdowns. Use the top metrics filter and toggle label mode for better
+                  performance.
+                </p>
+              </Card>
+            )}
             <Card title="Performance by metric">
               <div className="h-96">
                 <ResponsiveContainer width="100%" height="100%">
                   {chartType === "bar" ? (
                     <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                      <XAxis
+                        dataKey="label"
+                        tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                        angle={-40}
+                        textAnchor="end"
+                        height={80}
+                        tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 18)}
+                      />
                       <YAxis />
                       <Tooltip />
                       <Legend />
@@ -270,7 +301,14 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
                   ) : chartType === "line" ? (
                     <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                      <XAxis
+                        dataKey="label"
+                        tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                        angle={-40}
+                        textAnchor="end"
+                        height={80}
+                        tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 18)}
+                      />
                       <YAxis />
                       <Tooltip />
                       <Legend />
@@ -287,7 +325,14 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
                   ) : (
                     <AreaChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                      <XAxis
+                        dataKey="label"
+                        tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                        angle={-40}
+                        textAnchor="end"
+                        height={80}
+                        tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 18)}
+                      />
                       <YAxis />
                       <Tooltip />
                       <Legend />

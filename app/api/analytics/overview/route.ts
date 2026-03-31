@@ -24,6 +24,8 @@ const QuerySchema = z.object({
     groupId: z.string().optional(),
     periodType: z.string().optional(),
     year: z.coerce.number().optional(),
+    includeDrafts: z.coerce.boolean().default(true),
+    statuses: z.array(z.nativeEnum(ReportStatus)).optional(),
 });
 
 export async function GET(req: NextRequest) {
@@ -49,6 +51,12 @@ export async function GET(req: NextRequest) {
     if (query.groupId) where.orgGroupId = query.groupId;
     if (query.periodType) where.periodType = query.periodType;
     if (query.year) where.periodYear = query.year;
+
+    if (query.statuses && query.statuses.length > 0) {
+        where.status = { in: query.statuses };
+    } else if (!query.includeDrafts) {
+        where.status = { not: ReportStatus.DRAFT };
+    }
 
     const reports = await db.report.findMany({ where });
 

@@ -23,8 +23,10 @@
 - [ ] [Feature 1]
 - [ ] [Feature 2]
 - [ ] [Feature 3]
-- [ ] Dynamic org hierarchy (group+campus) with editable tree and modal form
-- [ ] Strong form persistence behavior with config-driven override and rehydration guard (report forms)
+- [x] Dynamic org hierarchy (group+campus) with editable tree and modal form
+- [x] Strong form persistence behavior with config-driven override and rehydration guard (report forms)
+- [x] Analytics draft filtering and aggregation status filtering
+- [x] Goals template grouping with per-campus collapsibles and apply-all behavior
 
 ---
 
@@ -52,17 +54,6 @@
 > **Section summary:** Final steps before production deployment.
 
 - [x] Production environment configured (build verified for no `RESEND_API_KEY` and Prisma route fix)
-- [ ] Security audit (auth, input validation, secrets)
-- [ ] Documentation complete
-- [ ] Deployment pipeline tested
-
----
-
-## Phase 5 — Launch Preparation
-
-> **Section summary:** Final steps before production deployment.
-
-- [ ] Production environment configured
 - [ ] Security audit (auth, input validation, secrets)
 - [ ] Documentation complete
 - [ ] Deployment pipeline tested

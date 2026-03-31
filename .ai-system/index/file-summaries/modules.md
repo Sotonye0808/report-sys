@@ -9,8 +9,9 @@ Feature-centric modules that encapsulate UI components, hooks, and domain logic 
 - `modules/auth` — Authentication utilities and auth-aware components used in the `app/(auth)` routes.
 - `modules/reports` — Core report forms, report detail views, and workflow components for creating/submitting/reviewing reports.
 - `modules/templates` — Template management UI and pages for creating/editing report templates.
-- `modules/analytics` — Dashboards and charts for compliance, submission trends, and KPI tracking.
-- `modules/users` / `modules/org` — Superadmin user and organization management interfaces.
+- `modules/analytics` — Dashboards and charts for compliance, submission trends, and KPI tracking; includes advanced axis label modes and draft-based data filtering from API routes.
+- `modules/goals` — Goal setting and template goal matrix (per-campus and per-group views) with collapsible template panels and one-click apply-to-all behavior.
+- `modules/users` / `modules/org` — Superadmin user and organization management interfaces; `modules/org` now includes org tree fallback to direct database query to avoid Prisma network-timeout EAI_AGAIN issues.
 
 ## Notes
 

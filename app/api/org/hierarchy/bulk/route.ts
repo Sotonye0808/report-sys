@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
         }
 
         const { ops, dryRun } = parsed.data;
+        console.info("[api] org/hierarchy/bulk request", { count: ops.length, dryRun });
         const validation = await validateOps(ops);
         const hasInvalid = validation.some((it) => !it.success);
         if (hasInvalid) {
@@ -84,6 +85,7 @@ export async function POST(req: NextRequest) {
         await db.$transaction(async (tx) => {
             for (let i = 0; i < ops.length; i++) {
                 const op = ops[i];
+                console.debug("[api] org/hierarchy/bulk op start", { index: i, op });
 
                 if (op.type === "group") {
                     const { action, data } = op as OrgBulkOp;
@@ -163,6 +165,7 @@ export async function POST(req: NextRequest) {
         await invalidateCache("org:groups");
         await invalidateCache("org:campuses");
 
+        console.info("[api] org/hierarchy/bulk success", { total: results.length, results });
         return NextResponse.json({ success: true, dryRun: false, results });
     } catch (error: any) {
         console.error("[api] Error in POST /api/org/hierarchy/bulk", error);
