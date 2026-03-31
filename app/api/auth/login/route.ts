@@ -1,6 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/data/db";
+import { PrismaClient } from "@/prisma/generated";
+import { PrismaPg } from "@prisma/adapter-pg";
 import {
     verifyPassword,
     generateTokens,
@@ -19,6 +21,32 @@ const LoginSchema = z.object({
     rememberMe: z.boolean().optional().default(false),
 });
 
+function isPrismaTimeoutError(err: unknown): boolean {
+    if (!err || typeof err !== "object") return false;
+    const code = (err as any).code;
+    return code === "ETIMEDOUT" || code === "P1001" || code === "P1010";
+}
+
+async function findUserWithFallback(email: string) {
+    try {
+        return await db.user.findFirst({ where: { email: { equals: email, mode: "insensitive" } } });
+    } catch (err) {
+        if (isPrismaTimeoutError(err) && process.env.DATABASE_URL) {
+            const fallbackClient = new PrismaClient({
+                adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
+                log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
+            });
+            try {
+                return await fallbackClient.user.findFirst({ where: { email: { equals: email, mode: "insensitive" } } });
+            } finally {
+                await fallbackClient.$disconnect();
+            }
+        }
+
+        throw err;
+    }
+}
+
 export async function POST(req: NextRequest) {
     try {
         const body = LoginSchema.safeParse(await req.json());
@@ -26,7 +54,7 @@ export async function POST(req: NextRequest) {
 
         const { email, password, rememberMe } = body.data;
 
-        const userProfile = await db.user.findFirst({ where: { email: { equals: email, mode: "insensitive" } } });
+        const userProfile = await findUserWithFallback(email);
         if (!userProfile) return unauthorizedResponse("Invalid email or password");
 
         if (!userProfile.isActive) return unauthorizedResponse("Account is deactivated");
