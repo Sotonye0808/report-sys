@@ -33,6 +33,7 @@ modules/analytics
   → lib/utils/api
   → lib/data/prisma
   → config/reports (report definitions)
+  → app/api/analytics/overview and app/api/analytics/metrics route handlers (draft/status filtering)
 
 lib/data/prisma.ts
   → prisma/ (schema & generated client)

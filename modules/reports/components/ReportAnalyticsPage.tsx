@@ -254,7 +254,7 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
               <Select
                 size="small"
                 value={topMetrics}
-                options={[5, 10, 20, 50].map((n) => ({ value: n, label: String(n) }))}
+                options={[5, 10, 20, 50, 100].map((n) => ({ value: n, label: String(n) }))}
                 onChange={(value) => setTopMetrics(Number(value))}
                 style={{ width: 80 }}
               />

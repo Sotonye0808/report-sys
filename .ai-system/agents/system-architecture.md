@@ -121,6 +121,9 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 - Some feature modules still rely on `any` types due to legacy data shapes; type tightening is a priority before release.
 - Offline sync is experimental and depends on service worker support; current implementation is a best-effort cache.
 - Form autosave/draft persistence is implemented with `lib/hooks/useDraftCache` / `useFormPersistence` and should be used in all long forms to avoid data loss on refresh.
+- Org hierarchy load path now includes server-side fallback in `app/api/org/hierarchy/route.ts` to avoid Prisma Accelerate EAI_AGAIN and timeout failures (drift from original single upstream service design).
+- Analytics routes now support explicit `includeDrafts` and status controls in `app/api/analytics/overview` and `app/api/analytics/metrics` to align dashboard output with user filtering controls.
+- Goals page now supports template group panels and per-campus metric matrix (collapsible sections), and this requires careful state scoping in `modules/goals/components/GoalsPage.tsx`.
 - Email provider initialization must be environment-safe: `lib/email/resend.ts` now uses an optional client instance when `RESEND_API_KEY` is missing, preventing build-time failures.
 
 ---

@@ -32,7 +32,7 @@ project-root/
 │   ├── hooks/                    → React hooks (auth, offline sync, data fetching, service worker)
 │   └── utils/                    → Utility functions (API, auth, offline caching, notifications)
 │
-├── modules/                      → Feature modules (reports, goals, analytics, users, org, templates, etc.)
+├── modules/                      → Feature modules (reports, goals, analytics, users, org, templates, etc.) with advanced routes (org hierarchy fallback, analytics draft filtering, goals template grouping)
 │
 ├── providers/                    → React providers (Theme, Antd, Auth)
 │

@@ -38,8 +38,12 @@ export function ReportAggregationPage() {
   const [periodWeek, setPeriodWeek] = useState<number | undefined>(undefined);
   const [templateId, setTemplateId] = useState<string>("");
   const [metricIds, setMetricIds] = useState<string[]>([]);
-  const [includeDrafts, setIncludeDrafts] = useState<boolean>(false);
-  const [includeStatuses, setIncludeStatuses] = useState<ReportStatus[]>(STATUS_OPTIONS);
+  const [includeDrafts, setIncludeDrafts] = useState<boolean>(true);
+  const [includeStatuses, setIncludeStatuses] = useState<ReportStatus[]>([
+    ...STATUS_OPTIONS,
+    ReportStatus.LOCKED,
+    ReportStatus.REQUIRES_EDITS,
+  ]);
 
   const [previewResult, setPreviewResult] = useState<any>(null);
   const [loadingPreview, setLoadingPreview] = useState(false);
@@ -87,6 +91,10 @@ export function ReportAggregationPage() {
     );
   }
 
+  const selectedStatuses = includeDrafts
+    ? Array.from(new Set([...includeStatuses, ReportStatus.DRAFT]))
+    : includeStatuses;
+
   const handlePreview = async () => {
     try {
       setLoadingPreview(true);
@@ -102,9 +110,7 @@ export function ReportAggregationPage() {
           periodMonth: periodType === ReportPeriodType.MONTHLY ? periodMonth : undefined,
           periodWeek: periodType === ReportPeriodType.WEEKLY ? periodWeek : undefined,
           templateId: templateId || undefined,
-          includeStatuses: includeDrafts
-            ? [...includeStatuses, ReportStatus.DRAFT]
-            : includeStatuses,
+          includeStatuses: selectedStatuses,
           metricIds: metricIds.length > 0 ? metricIds : undefined,
           action: "preview",
         }),
@@ -140,9 +146,7 @@ export function ReportAggregationPage() {
           periodMonth: periodType === ReportPeriodType.MONTHLY ? periodMonth : undefined,
           periodWeek: periodType === ReportPeriodType.WEEKLY ? periodWeek : undefined,
           templateId: templateId || undefined,
-          includeStatuses: includeDrafts
-            ? [...includeStatuses, ReportStatus.DRAFT]
-            : includeStatuses,
+          includeStatuses: selectedStatuses,
           metricIds: metricIds.length > 0 ? metricIds : undefined,
           action: "generate",
         }),
@@ -360,6 +364,7 @@ export function ReportAggregationPage() {
             <Checkbox checked={includeDrafts} onChange={(e) => setIncludeDrafts(e.target.checked)}>
               Include draft reports
             </Checkbox>
+            <span className="text-xs text-ds-text-subtle">Toggle to include/exclude drafts in rollup and benchmark.</span>
           </Space>
         </Card>
       </div>

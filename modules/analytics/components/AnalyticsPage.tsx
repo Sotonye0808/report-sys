@@ -1,19 +1,19 @@
-﻿"use client";
+"use client";
 
 /**
  * modules/analytics/components/AnalyticsPage.tsx
- * Full analytics dashboard â€” tabbed, role-aware, config-driven.
+ * Full analytics dashboard — tabbed, role-aware, config-driven.
  *
  * Tabs: Overview | Metrics Analysis | Trends | Compliance
  * Role-awareness:
- *   SUPERADMIN â€” system-wide scope, all 4 KPI cards, all sections
- *   CEO / SPO / CM â€” cross-campus scope, all sections
- *   GROUP_ADMIN / GROUP_PASTOR â€” group-scoped
- *   CAMPUS_ADMIN / CAMPUS_PASTOR / DATA_ENTRY â€” campus-scoped
+ *   SUPERADMIN — system-wide scope, all 4 KPI cards, all sections
+ *   CEO / SPO / CM — cross-campus scope, all sections
+ *   GROUP_ADMIN / GROUP_PASTOR — group-scoped
+ *   CAMPUS_ADMIN / CAMPUS_PASTOR / DATA_ENTRY — campus-scoped
  */
 
 import { useState, useEffect, useCallback } from "react";
-import { Select, Tabs, Segmented, Progress } from "antd";
+import { Select, Tabs, Segmented, Progress, Checkbox } from "antd";
 import Button from "@/components/ui/Button";
 import { DownloadOutlined } from "@ant-design/icons";
 import {
@@ -52,7 +52,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import Card from "@/components/ui/Card";
 import { UserRole, MetricCalculationType } from "@/types/global";
 
-/* â”€â”€ API response types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── API response types ───────────────────────────────────────────────────── */
 
 interface OverviewTotals {
   total: number;
@@ -159,7 +159,7 @@ interface MetricAnalyticsData {
   availableMetrics: AvailableMetric[];
 }
 
-/* â”€â”€ Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Config ───────────────────────────────────────────────────────────────── */
 
 const ALL_ROLES = Object.values(UserRole);
 const CURRENT_YEAR = new Date().getFullYear();
@@ -196,7 +196,7 @@ const PIE_COLORS = [
   "var(--ds-chart-6)",
 ];
 
-/* â”€â”€ KPI card config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── KPI card config ──────────────────────────────────────────────────────── */
 
 interface KpiConfig {
   id: string;
@@ -256,7 +256,7 @@ const KPI_CARDS: KpiConfig[] = [
   },
 ];
 
-/* â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Helpers ──────────────────────────────────────────────────────────────── */
 
 function SectionHeader({ title }: { title: string }) {
   return (
@@ -288,7 +288,7 @@ function ChartCard({
   );
 }
 
-/* â”€â”€ Main component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Main component ───────────────────────────────────────────────────────── */
 
 export function AnalyticsPage() {
   const { user } = useAuth();
@@ -326,6 +326,9 @@ export function AnalyticsPage() {
   const isSuperadmin = role === UserRole.SUPERADMIN;
   const canSeeCrossCampus = CHART_ROLES.includes(role as UserRole);
 
+  /* Include drafts in analytics data */
+  const [includeDrafts, setIncludeDrafts] = useState<boolean>(true);
+
   /* Report-driven analytics modifiers */
   const [selectedReportId, setSelectedReportId] = useState<string | undefined>(undefined);
   const [compareReportId, setCompareReportId] = useState<string | undefined>(undefined);
@@ -343,7 +346,7 @@ export function AnalyticsPage() {
   const { data: allCampuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
   const { data: allUsers } = useApiData<UserProfile[]>(isSuperadmin ? API_ROUTES.users.list : null);
 
-  /* Effective campus filter â€” non-cross-campus roles forced to own campus */
+  /* Effective campus filter — non-cross-campus roles forced to own campus */
   const effectiveCampusId = canSeeCrossCampus ? campusFilter : user?.campusId;
 
   const exportToXlsx = (sheets: { name: string; data: any[] }[], filename: string) => {
@@ -518,32 +521,38 @@ export function AnalyticsPage() {
     };
   };
 
-  /* â”€â”€ Fetch overview â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Fetch overview ─────────────────────────────────────────────────── */
 
   const fetchOverview = useCallback(async () => {
     setOverviewLoading(true);
     try {
-      const params = new URLSearchParams({ year: String(year) });
+      const params = new URLSearchParams({
+        year: String(year),
+        includeDrafts: String(includeDrafts),
+      });
       if (effectiveCampusId) params.set("campusId", effectiveCampusId);
       const res = await fetch(API_ROUTES.analytics.overview + "?" + params.toString());
       const json = await res.json();
       if (json.success) setOverview(json.data as AnalyticsOverview);
     } catch {
-      /* silent â€” skeleton holds */
+      /* silent — skeleton holds */
     } finally {
       setOverviewLoading(false);
     }
-  }, [year, effectiveCampusId]);
+  }, [year, effectiveCampusId, includeDrafts]);
 
   useEffect(() => {
     fetchOverview();
   }, [fetchOverview]);
 
-  /* â”€â”€ Fetch available metrics (for selector) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Fetch available metrics (for selector) ─────────────────────────── */
 
   const fetchAvailableMetrics = useCallback(async () => {
     try {
-      const params = new URLSearchParams({ year: String(year) });
+      const params = new URLSearchParams({
+        year: String(year),
+        includeDrafts: String(includeDrafts),
+      });
       if (effectiveCampusId) params.set("campusId", effectiveCampusId);
       const res = await fetch(API_ROUTES.analytics.metrics + "?" + params.toString());
       const json = await res.json();
@@ -553,13 +562,13 @@ export function AnalyticsPage() {
     } catch {
       /* silent */
     }
-  }, [year, effectiveCampusId]);
+  }, [year, effectiveCampusId, includeDrafts]);
 
   useEffect(() => {
     fetchAvailableMetrics();
   }, [fetchAvailableMetrics]);
 
-  /* â”€â”€ Fetch metric analysis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Fetch metric analysis ──────────────────────────────────────────── */
 
   const fetchMetrics = useCallback(async () => {
     if (!selectedMetricId) return;
@@ -569,6 +578,7 @@ export function AnalyticsPage() {
         year: String(year),
         compareYear: String(compareYear),
         granularity,
+        includeDrafts: String(includeDrafts),
       });
       if (effectiveCampusId) params.set("campusId", effectiveCampusId);
       params.set("metricId", selectedMetricId);
@@ -580,18 +590,22 @@ export function AnalyticsPage() {
     } finally {
       setMetricsLoading(false);
     }
-  }, [selectedMetricId, year, compareYear, granularity, effectiveCampusId]);
+  }, [selectedMetricId, year, compareYear, granularity, effectiveCampusId, includeDrafts]);
 
   useEffect(() => {
     fetchMetrics();
   }, [fetchMetrics]);
 
-  /* ── Fetch quarterly summary ────────────────────────────────────────────── */
+  /* -- Fetch quarterly summary ---------------------------------------------- */
 
   const fetchQuarterly = useCallback(async () => {
     setQuarterlyLoading(true);
     try {
-      const params = new URLSearchParams({ year: String(year), quarter: String(selectedQuarter) });
+      const params = new URLSearchParams({
+        year: String(year),
+        quarter: String(selectedQuarter),
+        includeDrafts: String(includeDrafts),
+      });
       if (effectiveCampusId) params.set("campusId", effectiveCampusId);
       const res = await fetch(API_ROUTES.analytics.quarterly + "?" + params.toString());
       const json = await res.json();
@@ -601,7 +615,7 @@ export function AnalyticsPage() {
     } finally {
       setQuarterlyLoading(false);
     }
-  }, [year, selectedQuarter, effectiveCampusId]);
+  }, [year, selectedQuarter, effectiveCampusId, includeDrafts]);
 
   useEffect(() => {
     fetchQuarterly();
@@ -673,7 +687,7 @@ export function AnalyticsPage() {
     "var(--ds-chart-6)",
   ];
 
-  /* â”€â”€ Shared tab header controls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Shared tab header controls ─────────────────────────────────────── */
 
   const sharedControls = (
     <div className="flex flex-wrap items-center gap-3">
@@ -694,13 +708,16 @@ export function AnalyticsPage() {
         size="middle"
         style={{ width: 100 }}
       />
+      <Checkbox checked={includeDrafts} onChange={(e) => setIncludeDrafts(e.target.checked)}>
+        Include draft reports
+      </Checkbox>
       <Button icon={<DownloadOutlined />} onClick={handleExport} type="default" size="middle">
         Export
       </Button>
     </div>
   );
 
-  /* â”€â”€ Overview tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Overview tab ───────────────────────────────────────────────────── */
 
   const overviewTab =
     overviewLoading || !overview ? (
@@ -802,7 +819,7 @@ export function AnalyticsPage() {
           </ChartCard>
         )}
 
-        {/* Campus breakdown â€” cross-campus roles */}
+        {/* Campus breakdown — cross-campus roles */}
         {canSeeCrossCampus && campusBreakdownNamed.length > 0 && (
           <ChartCard title={CONTENT.analytics.campusBreakdownTitle as string}>
             <ResponsiveContainer width="100%" height={280}>
@@ -837,7 +854,7 @@ export function AnalyticsPage() {
       </div>
     );
 
-  /* â”€â”€ Metrics Analysis tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Metrics Analysis tab ───────────────────────────────────────────── */
 
   const metricsTab = (
     <div className="space-y-6">
@@ -916,7 +933,7 @@ export function AnalyticsPage() {
             })}
           </ChartCard>
 
-          {/* Campus comparison â€” cross-campus roles only */}
+          {/* Campus comparison — cross-campus roles only */}
           {canSeeCrossCampus &&
             campusComparisonData.length > 0 &&
             metricsData.byCampus.length > 1 && (
@@ -979,7 +996,7 @@ export function AnalyticsPage() {
     </div>
   );
 
-  /* â”€â”€ Trends tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Trends tab ─────────────────────────────────────────────────────── */
 
   const trendsTab =
     overviewLoading || !overview ? (
@@ -1059,7 +1076,7 @@ export function AnalyticsPage() {
       </div>
     );
 
-  /* â”€â”€ Compliance tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Compliance tab ─────────────────────────────────────────────────── */
 
   const complianceTab =
     overviewLoading || !overview ? (
@@ -1137,9 +1154,9 @@ export function AnalyticsPage() {
       </div>
     );
 
-  /* â”€â”€ Tab items (config-driven) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Tab items (config-driven) ──────────────────────────────────────── */
 
-  /* ── Quarterly tab ──────────────────────────────────────────────────────── */
+  /* -- Quarterly tab -------------------------------------------------------- */
 
   const quarterlyBrNamed = (quarterlyData?.campusBreakdown ?? []).map((row) => ({
     ...row,
@@ -1292,7 +1309,7 @@ export function AnalyticsPage() {
     },
   ];
 
-  /* â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Render ─────────────────────────────────────────────────────────── */
 
   return (
     <PageLayout>

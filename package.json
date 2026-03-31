@@ -26,6 +26,7 @@
   "dependencies": {
     "@ant-design/cssinjs": "^2.0.2",
     "@ant-design/icons": "^6.1.0",
+    "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.4.2",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.36.3",

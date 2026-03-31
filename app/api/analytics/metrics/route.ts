@@ -22,7 +22,7 @@ import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import { ROLE_CONFIG } from "@/config/roles";
-import { UserRole, MetricCalculationType } from "@/types/global";
+import { UserRole, MetricCalculationType, ReportStatus } from "@/types/global";
 
 const QuerySchema = z.object({
     metricId: z.string().optional(),
@@ -34,6 +34,8 @@ const QuerySchema = z.object({
     granularity: z.enum(["weekly", "monthly", "quarterly"]).default("monthly"),
     startMonth: z.coerce.number().int().min(1).max(12).default(1),
     endMonth: z.coerce.number().int().min(1).max(12).default(12),
+    includeDrafts: z.coerce.boolean().default(true),
+    statuses: z.array(z.nativeEnum(ReportStatus)).optional(),
 });
 
 /* ── Types ─────────────────────────────────────────────────────────────────── */
@@ -191,6 +193,12 @@ export async function GET(req: NextRequest) {
             gte: query.startMonth,
             lte: query.endMonth,
         };
+    }
+
+    if (query.statuses && query.statuses.length > 0) {
+        reportWhere.status = { in: query.statuses };
+    } else if (!query.includeDrafts) {
+        reportWhere.status = { not: ReportStatus.DRAFT };
     }
 
     const [scopedReports, allCampuses] = await Promise.all([

@@ -47,3 +47,14 @@ Creating a shared audit/event helper (e.g., `createReportEvent` or a generic `cr
 
 **Apply When:**
 When building a new workflow that needs history/audit tracking or notifications, implement the workflow through the shared helper instead of repeating the same `tx.reportEvent.create` logic.
+
+## Tolerate transient network/DB failure with fallback paths
+
+**Context:**
+The org hierarchy API began throwing transient `EAI_AGAIN`/timeout failures when Prisma Accelerate endpoint resolution failed in local/test environments.
+
+**What We Learned:**
+Agent logic and route handlers should have fallback data paths (e.g., first try central helper, fallback to direct DB query) so transient third-party outages don't take down key UI flows.
+
+**Apply When:**
+Any route that currently depends on a single upstream/managed connection (Prisma Accelerate, tRPC server, external web API) is critical for product workflow. Add defensive fallback behavior and error logging.

@@ -143,3 +143,25 @@ Enhanced bulk writing reliability, error handling, and DRY draft persistence acr
 - Add regression tests around form draft autosave/restore and prisma timeout enforcement
 - Add cross-tab `storage` synchronization for draft state updates.
 
+## 2026-03-31 — Analytics, Goals, and Org Resilience Fixes
+
+**Summary:**
+Implemented final bugfixes and stabilization for analytics draft filtering, report aggregation status handling, goals template grouping with per-campus collapsible matrix, and org hierarchy Prisma network-fallback behavior. Typecheck is green after goals UI template loop scope correction.
+
+**Completed:**
+- Added `includeDrafts` support to `app/api/analytics/overview` and `app/api/analytics/metrics`
+- Updated `modules/reports/components/ReportAggregationPage.tsx` to surface draft/status filters
+- Upgraded `modules/goals/components/GoalsPage.tsx` template matrix rendering with campus columns and collapsed template panels
+- Added org hierarchy fallback path in `app/api/org/hierarchy/route.ts` for Prisma connection reliability
+- Updated `.ai-system` docs (repo map, dependency graph, module summaries, architecture, project plan, dev history, lessons learned)
+
+**Key Changes:**
+- Resilience in `org` API for transient Prisma Accelerate failures (EAI_AGAIN/timeouts)
+- Unified draft visibility flag for analytics and report aggregation
+- Goals UI now supports per-template collapsible sections across campus/group views
+
+**Next Sprint Focus:**
+- Add integration tests for analytics draft filtering and org hierarchy fallback
+- Finalize remaining task queue items for launch prep (security, accessibility, docs)
+
+
