@@ -7,6 +7,7 @@ import {
   AssetState,
   AssetUploadMode,
 } from "@/types/global";
+import type { Prisma } from "@/prisma/generated";
 import { canDiscardSession, canFinalizeSession, canUploadToSession, isAssetDeletable } from "@/lib/assets/lifecycleStateMachine";
 import {
   destroyImageFromCloudinary,
@@ -37,7 +38,7 @@ async function appendEvent(tx: Tx, input: {
       assetId: input.assetId,
       actorId: input.actorId,
       requestId: input.requestId,
-      details: input.details,
+      details: input.details as Prisma.InputJsonValue | undefined,
     },
   });
 }

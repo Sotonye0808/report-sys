@@ -311,3 +311,54 @@ Add and run the newly identified regression tests for cache invalidation loop te
 
 - Static diagnostics (`get_errors`) for all touched files are clean.
 - End-to-end browser verification is still required to confirm no pending requests remain under real data volume.
+
+## Session 8 — 2026-04-04
+
+**Completed:**
+
+- Implemented Cloudinary managed screenshot asset lifecycle for bug reports.
+- Added Prisma schema/migration groundwork for managed assets (`MediaAsset`, `AssetUploadSession`, `AssetLifecycleEvent`) and bug-report linkage via `screenshotAssetId` while preserving legacy `screenshotUrl`.
+- Added Cloudinary adapter with enforced folder contract `root/project/domain/year/month` via `CLOUDINARY_ROOT_FOLDER` and `CLOUDINARY_PROJECT_ASSET_FOLDER`.
+- Implemented lifecycle domain service with session state-machine guards and transactional DB updates plus compensating Cloudinary deletes on failure paths.
+- Added lifecycle APIs:
+  - `POST /api/assets/sessions`
+  - `POST /api/assets/sessions/:id/upload`
+  - `POST /api/assets/sessions/:id/finalize`
+  - `POST /api/assets/sessions/:id/discard`
+  - `POST /api/assets/cleanup`
+- Integrated bug-report create/read flows to support managed `screenshotAssetId` and fallback compatibility to legacy `screenshotUrl`.
+- Updated bug-report submit/manage UI to use unified mutation lifecycle handling and avoid stuck loading states.
+- Added regression tests for lifecycle state guards and screenshot migration compatibility.
+
+**Files Modified:**
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260404230000_cloudinary_asset_lifecycle/migration.sql`
+- `lib/assets/cloudinaryAdapter.ts`
+- `lib/assets/lifecycleStateMachine.ts`
+- `lib/assets/lifecycleService.ts`
+- `app/api/assets/sessions/route.ts`
+- `app/api/assets/sessions/[id]/upload/route.ts`
+- `app/api/assets/sessions/[id]/finalize/route.ts`
+- `app/api/assets/sessions/[id]/discard/route.ts`
+- `app/api/assets/cleanup/route.ts`
+- `app/api/bug-reports/route.ts`
+- `app/api/bug-reports/[id]/route.ts`
+- `modules/bug-reports/components/BugReportPage.tsx`
+- `modules/bug-reports/components/BugReportManagePage.tsx`
+- `config/routes.ts`
+- `types/global.ts`
+- `.env.example`
+- `.ai-system/agents/system-architecture.md`
+- `.ai-system/planning/task-queue.md`
+- `test/lifecycleStateMachine.test.ts`
+- `test/bugReportAssetCompatibility.test.ts`
+
+**Next Task:**
+
+Run final validations (`typecheck`, targeted tests, build if possible), run `parallel_validation`, resolve any findings, and open PR.
+
+**Notes / Blockers:**
+
+- Baseline lint remains blocked by ESLint v9 flat-config migration gap (`eslint.config.*` missing).
+- Build may fail in sandbox due blocked Google Fonts fetch (known environment limitation).
