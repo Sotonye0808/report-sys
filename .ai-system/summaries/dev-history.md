@@ -192,3 +192,50 @@ Created a dedicated implementation plan to consolidate API and DB interaction fl
 **Next Sprint Focus:**
 
 Implement the temporary plan in cloud session, complete tests for stuck-loading regressions and notification-channel gating, then update architecture and repair docs with final outcomes.
+
+## 2026-04-04 — Production Readiness Consolidation (Write Paths + Channels)
+
+**Summary:**
+Implemented a broad production-readiness consolidation slice for invite/profile/org/notification write paths. Standardized API response contracts with request correlation IDs, added structured redacted logging, centralized write-domain services, and refactored client mutations to a shared lifecycle helper to prevent stuck loading states. Completed notification preference + push subscription persistence APIs and introduced channel orchestration with graceful Resend fallback.
+
+**Completed:**
+
+- Added request-context and logging utilities:
+  - `lib/server/requestContext.ts`
+  - `lib/utils/serverLogger.ts`
+- Standardized API response helpers in `lib/utils/api.ts` with optional `requestId` + header propagation.
+- Added client mutation utility `lib/utils/apiMutation.ts` and refactored writes in:
+  - `modules/users/components/InvitesPage.tsx`
+  - `modules/users/components/ProfilePage.tsx`
+  - `modules/org/components/OrgPage.tsx`
+  - `modules/notifications/components/InboxPage.tsx`
+- Extracted domain services:
+  - `modules/users/services/inviteService.ts`
+  - `modules/users/services/profileService.ts`
+  - `modules/org/services/orgWriteService.ts`
+- Refactored key routes to use unified contract + request IDs:
+  - invite/profile/org/notifications write routes
+- Added notification persistence + orchestration:
+  - `app/api/notifications/preferences/route.ts`
+  - `app/api/notifications/push-subscriptions/route.ts`
+  - `lib/utils/notificationPreferences.ts`
+  - `lib/utils/notificationOrchestrator.ts`
+- Added config-driven email templates and updated Resend integration:
+  - `lib/email/templates/layout.ts`
+  - `lib/email/templates/registry.ts`
+  - `lib/email/resend.ts`
+- Added regression tests:
+  - `test/apiResponseContract.test.ts`
+  - `test/apiMutationLifecycle.test.ts`
+
+**Key Changes:**
+
+- Write APIs now consistently return standardized envelope semantics with optional request IDs for traceability.
+- Client mutation handling is centralized, reducing duplicated loading/error handling and preventing stuck mutation states.
+- Notification channels now support user preference persistence and non-fatal email fallback when `RESEND_API_KEY` is absent.
+
+**Next Sprint Focus:**
+
+- Add integration tests for Resend-enabled/disabled gating behavior and expand orchestration coverage in workflow-triggered paths.
+- Add diagnostics runbook documentation in `.ai-system`.
+- Resolve baseline repository validation blockers (`eslint` flat config migration, build font fetch in restricted environment, test glob script issue) in a dedicated tooling pass.

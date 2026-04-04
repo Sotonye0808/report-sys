@@ -3,6 +3,9 @@ import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache, invalidateCache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
+import { getRequestContext } from "@/lib/server/requestContext";
+import { badRequestResponse, handleApiError, successResponse, unauthorizedResponse } from "@/lib/utils/api";
+import { logServerInfo } from "@/lib/utils/serverLogger";
 
 const OrgBulkOpSchema = z.object({
     type: z.enum(["group", "campus"]),
@@ -16,6 +19,8 @@ const OrgBulkRequestSchema = z.object({
     ops: z.array(OrgBulkOpSchema),
     dryRun: z.boolean().optional().default(false),
 });
+
+const VALIDATION_ERROR_MESSAGE = "Invalid bulk operation payload";
 
 async function validateOps(ops: z.infer<typeof OrgBulkOpSchema>[]) {
     const results: Array<{ index: number; success: boolean; message: string }> = [];
@@ -50,27 +55,35 @@ async function validateOps(ops: z.infer<typeof OrgBulkOpSchema>[]) {
 }
 
 export async function POST(req: NextRequest) {
+    const ctx = getRequestContext(req);
     try {
         const auth = await verifyAuth(req);
         if (!auth.success || auth.user.role !== UserRole.SUPERADMIN) {
-            return NextResponse.json(
-                { success: false, error: auth.success ? "Forbidden" : auth.error },
-                { status: auth.success ? 403 : auth.status ?? 401 },
-            );
+            return unauthorizedResponse(auth.success ? "Forbidden" : auth.error, ctx.requestId);
         }
 
         const body = await req.json();
         const parsed = OrgBulkRequestSchema.safeParse(body);
         if (!parsed.success) {
-            return NextResponse.json({ success: false, error: parsed.error.message }, { status: 400 });
+            return badRequestResponse(parsed.error.message, ctx.requestId);
         }
 
         const { ops, dryRun } = parsed.data;
-        console.info("[api] org/hierarchy/bulk request", { count: ops.length, dryRun });
+        logServerInfo("[api] org/hierarchy/bulk request", {
+            requestId: ctx.requestId,
+            route: ctx.route,
+            count: ops.length,
+            dryRun,
+        });
         const validation = await validateOps(ops);
         const hasInvalid = validation.some((it) => !it.success);
         if (hasInvalid) {
-            return NextResponse.json({ success: false, validation }, { status: 400 });
+            const response = badRequestResponse(VALIDATION_ERROR_MESSAGE, ctx.requestId);
+            const body = await response.json();
+            return NextResponse.json({ ...body, validation }, {
+                status: 400,
+                headers: { "x-request-id": ctx.requestId },
+            });
         }
 
         const results: Array<{ index: number; success: boolean; message: string; id?: string }> = [];
@@ -79,7 +92,7 @@ export async function POST(req: NextRequest) {
             for (let i = 0; i < ops.length; i++) {
                 results.push({ index: i, success: true, message: "Dry-run OK" });
             }
-            return NextResponse.json({ success: true, dryRun: true, results });
+            return NextResponse.json(successResponse({ dryRun: true, results }, ctx.requestId), { headers: { "x-request-id": ctx.requestId } });
         }
 
         await db.$transaction(async (tx) => {
@@ -165,10 +178,16 @@ export async function POST(req: NextRequest) {
         await invalidateCache("org:groups");
         await invalidateCache("org:campuses");
 
-        console.info("[api] org/hierarchy/bulk success", { total: results.length, results });
-        return NextResponse.json({ success: true, dryRun: false, results });
-    } catch (error: any) {
-        console.error("[api] Error in POST /api/org/hierarchy/bulk", error);
-        return NextResponse.json({ success: false, error: error?.message ?? "Failed to update org hierarchy" }, { status: 500 });
+        logServerInfo("[api] org/hierarchy/bulk success", {
+            requestId: ctx.requestId,
+            route: ctx.route,
+            total: results.length,
+        });
+        return NextResponse.json(successResponse({ dryRun: false, results }, ctx.requestId), { headers: { "x-request-id": ctx.requestId } });
+    } catch (error: unknown) {
+        return handleApiError(error, {
+            requestId: ctx.requestId,
+            route: ctx.route,
+        });
     }
 }

@@ -167,3 +167,69 @@ TypeScript project doesn't allow `*.ts` extension in import paths.
 - `test/reportWorkflow.test.ts`
 
 **Date:** 2026-03-20
+
+## ESLint v9 flat-config mismatch in local validation
+
+**Symptom:**
+`npm run lint` fails immediately with: `ESLint couldn't find an eslint.config.(js|mjs|cjs) file`.
+
+**Root Cause:**
+Project uses ESLint v9 but repository still relies on legacy `.eslintrc` expectations.
+
+**Fix Applied:**
+
+- No code-path workaround in feature slices; documented as pre-existing validation blocker during production-readiness implementation.
+
+**Prevention:**
+
+- Add `eslint.config.mjs` and migrate existing lint rules to flat config before enforcing lint in CI/local mandatory checks.
+
+**Files Affected:**
+
+- `package.json` (script invocation impacted)
+
+**Date:** 2026-04-04
+
+## Build failure in sandbox due blocked Google Fonts fetch
+
+**Symptom:**
+`npm run build` fails in restricted environment when `next/font` cannot fetch `Inter` and `JetBrains Mono`.
+
+**Root Cause:**
+Sandbox networking blocks Google Fonts origin used at build time by Next.js font optimization.
+
+**Fix Applied:**
+
+- No app-code behavior change in this slice; validated with targeted typecheck/tests and documented environment limitation.
+
+**Prevention:**
+
+- Use local font assets or `next/font/local` for fully offline/restricted build compatibility in CI/sandbox contexts.
+
+**Files Affected:**
+
+- `app/layout.tsx` (font import surface)
+
+**Date:** 2026-04-04
+
+## `npm run test` glob resolution mismatch
+
+**Symptom:**
+`npm run test` fails with `ERR_MODULE_NOT_FOUND` for literal path `test/**/*.test.ts`.
+
+**Root Cause:**
+Quoted glob is passed as a literal path to `tsx` under this shell/runtime combination.
+
+**Fix Applied:**
+
+- Used targeted `npx tsx <file>` execution for new regression tests during this slice; script-level fix deferred.
+
+**Prevention:**
+
+- Update test script to shell-agnostic glob expansion strategy (e.g., unquoted glob or node test runner integration).
+
+**Files Affected:**
+
+- `package.json` (test script behavior)
+
+**Date:** 2026-04-04

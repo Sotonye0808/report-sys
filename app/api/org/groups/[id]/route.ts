@@ -7,7 +7,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { db, cache, invalidateCache } from "@/lib/data/db";
+import { db } from "@/lib/data/db";
+import { getRequestContext } from "@/lib/server/requestContext";
+import { updateGroup } from "@/modules/org/services/orgWriteService";
+import {
+    errorResponse,
+    handleApiError,
+    successResponse,
+    unauthorizedResponse,
+} from "@/lib/utils/api";
 import { UserRole } from "@/types/global";
 
 const UpdateGroupSchema = z.object({
@@ -20,46 +28,48 @@ export async function GET(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> },
 ) {
-    const { id } = await params;
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+    const ctx = getRequestContext(req);
+    try {
+        const { id } = await params;
+        const auth = await verifyAuth(req);
+        if (!auth.success) {
+            return unauthorizedResponse(auth.error, ctx.requestId);
+        }
 
-    const group = await db.orgGroup.findUnique({ where: { id } });
-    if (!group) {
-        return NextResponse.json({ success: false, error: "Group not found." }, { status: 404 });
+        const group = await db.orgGroup.findUnique({ where: { id } });
+        if (!group) {
+            return errorResponse("Group not found.", 404, ctx.requestId);
+        }
+        return NextResponse.json(successResponse(group, ctx.requestId), {
+            headers: { "x-request-id": ctx.requestId },
+        });
+    } catch (err) {
+        return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
     }
-    return NextResponse.json({ success: true, data: group });
 }
 
 export async function PUT(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> },
 ) {
-    const { id } = await params;
-    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+    const ctx = getRequestContext(req);
+    try {
+        const { id } = await params;
+        const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+        if (!auth.success) {
+            return unauthorizedResponse(auth.error, ctx.requestId);
+        }
+
+        const body = UpdateGroupSchema.parse(await req.json());
+        const result = await updateGroup(id, body);
+        if (!result.success) {
+            return errorResponse(result.error, result.code, ctx.requestId);
+        }
+
+        return NextResponse.json(successResponse(result.data, ctx.requestId), {
+            headers: { "x-request-id": ctx.requestId },
+        });
+    } catch (err) {
+        return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
     }
-
-    const body = UpdateGroupSchema.parse(await req.json());
-    const group = await db.orgGroup.findUnique({ where: { id } });
-    if (!group) {
-        return NextResponse.json({ success: false, error: "Group not found." }, { status: 404 });
-    }
-
-    const updated = await db.orgGroup.update({
-        where: { id },
-        data: {
-            ...(body.name !== undefined && { name: body.name }),
-            ...(body.country !== undefined && { country: body.country }),
-            ...(body.leaderId !== undefined && { leaderId: body.leaderId }),
-        },
-    });
-
-    await invalidateCache("org:campuses:*");
-    await invalidateCache("org:groups:*");
-    await invalidateCache("org:hierarchy");
-    return NextResponse.json({ success: true, data: updated });
 }

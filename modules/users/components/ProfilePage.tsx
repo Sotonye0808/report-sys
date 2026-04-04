@@ -30,6 +30,7 @@ import { RoleBadge } from "@/components/ui/StatusBadge";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { ROLE_CONFIG } from "@/config/roles";
 import { fmtDate } from "@/lib/utils/formatDate";
+import { apiMutation } from "@/lib/utils/apiMutation";
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* Shared primitives                                                           */
@@ -87,13 +88,9 @@ function ProfileTab({ user }: { user: AuthUser }) {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    fetch(API_ROUTES.users.profile)
-      .then((r) => r.json())
-      .then((j) => {
-        if (j.success) setProfile(j.data);
-      })
-      .catch(() => {
-        /* no-op */
+    apiMutation<UserProfile>(API_ROUTES.users.profile, { method: "GET" })
+      .then((result) => {
+        if (result.ok && result.data) setProfile(result.data);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -115,23 +112,19 @@ function ProfileTab({ user }: { user: AuthUser }) {
   const handleSave = async (values: { firstName: string; lastName: string; phone?: string }) => {
     setSaving(true);
     try {
-      const res = await fetch(API_ROUTES.users.profile, {
+      const result = await apiMutation<UserProfile, typeof values>(API_ROUTES.users.profile, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: values,
       });
-      const json = await res.json();
-      if (!res.ok) {
-        message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
-        setSaving(false);
+      if (!result.ok) {
+        message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
         return;
       }
-      setProfile(json.data);
+      if (result.data) setProfile(result.data);
       message.success(CONTENT.profile.profileUpdated as string);
       setEditing(false);
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
-      setSaving(false);
     } finally {
       setSaving(false);
     }
@@ -257,17 +250,15 @@ function SecurityTab() {
     setError(null);
     setSuccess(false);
     try {
-      const res = await fetch(API_ROUTES.auth.changePassword, {
+      const result = await apiMutation(API_ROUTES.auth.changePassword, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+        body: {
           currentPassword: values.currentPassword,
           newPassword: values.newPassword,
-        }),
+        },
       });
-      const json = await res.json();
-      if (!res.ok) {
-        setError(json.error ?? (CONTENT.errors as Record<string, string>).generic);
+      if (!result.ok) {
+        setError(result.error ?? (CONTENT.errors as Record<string, string>).generic);
         return;
       }
       setSuccess(true);
@@ -394,8 +385,6 @@ function AppearanceTab() {
 /* Notifications tab                                                           */
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
-const NOTIF_KEY = "hs-notif-prefs";
-
 interface NotifPrefs {
   email: boolean;
   inApp: boolean;
@@ -403,16 +392,6 @@ interface NotifPrefs {
 }
 
 const DEFAULT_PREFS: NotifPrefs = { email: true, inApp: true, deadlineReminders: true };
-
-function loadPrefs(): NotifPrefs {
-  if (typeof window === "undefined") return DEFAULT_PREFS;
-  try {
-    const raw = localStorage.getItem(NOTIF_KEY);
-    return raw ? { ...DEFAULT_PREFS, ...JSON.parse(raw) } : DEFAULT_PREFS;
-  } catch {
-    return DEFAULT_PREFS;
-  }
-}
 
 interface NotifRowProps {
   label: string;
@@ -446,13 +425,23 @@ const NOTIF_ROWS: Array<{ key: keyof NotifPrefs; labelKey: string; descKey: stri
 function NotificationsTab() {
   const [prefs, setPrefs] = useState<NotifPrefs>(DEFAULT_PREFS);
   const [loaded, setLoaded] = useState(false);
+  const [savingPrefs, setSavingPrefs] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [pushSupported, setPushSupported] = useState(false);
   const [pushEnabled, setPushEnabled] = useState(false);
   const [pushLoading, setPushLoading] = useState(false);
 
   useEffect(() => {
-    setPrefs(loadPrefs());
-    setLoaded(true);
+    apiMutation<NotifPrefs>(API_ROUTES.notifications.preferences, { method: "GET" })
+      .then((result) => {
+        if (result.ok && result.data) {
+          setPrefs(result.data);
+        } else {
+          setPrefs(DEFAULT_PREFS);
+        }
+        setHasUnsavedChanges(false);
+      })
+      .finally(() => setLoaded(true));
 
     // Check push notification support
     if ("serviceWorker" in navigator && "PushManager" in window) {
@@ -469,9 +458,33 @@ function NotificationsTab() {
   }, []);
 
   const handleChange = (key: keyof NotifPrefs, val: boolean) => {
-    const next = { ...prefs, [key]: val };
-    setPrefs(next);
-    if (typeof window !== "undefined") localStorage.setItem(NOTIF_KEY, JSON.stringify(next));
+    setPrefs((prev) => {
+      const next = { ...prev, [key]: val };
+      setHasUnsavedChanges(true);
+      return next;
+    });
+  };
+
+  const savePreferences = async () => {
+    setSavingPrefs(true);
+    try {
+      const result = await apiMutation<NotifPrefs, NotifPrefs>(API_ROUTES.notifications.preferences, {
+        method: "PUT",
+        body: prefs,
+      });
+      if (!result.ok) {
+        message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
+        return;
+      }
+      const persisted = result.data ?? prefs;
+      setPrefs(persisted);
+      setHasUnsavedChanges(false);
+      message.success((CONTENT.settings as Record<string, string>).saved);
+    } catch {
+      message.error((CONTENT.errors as Record<string, string>).generic);
+    } finally {
+      setSavingPrefs(false);
+    }
   };
 
   const handleTogglePush = async () => {
@@ -481,7 +494,13 @@ function NotificationsTab() {
       const reg = await navigator.serviceWorker.ready;
       if (pushEnabled) {
         const sub = await reg.pushManager.getSubscription();
-        if (sub) await sub.unsubscribe();
+        if (sub) {
+          await apiMutation(API_ROUTES.notifications.pushSubscriptions, {
+            method: "DELETE",
+            body: { endpoint: sub.endpoint },
+          });
+          await sub.unsubscribe();
+        }
         setPushEnabled(false);
         message.info((CONTENT.settings as Record<string, string>).pushDisabled);
       } else {
@@ -496,9 +515,14 @@ function NotificationsTab() {
           return;
         }
 
-        await reg.pushManager.subscribe({
+        const subscription = await reg.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+        });
+
+        await apiMutation(API_ROUTES.notifications.pushSubscriptions, {
+          method: "POST",
+          body: subscription.toJSON(),
         });
 
         const currentSub = await reg.pushManager.getSubscription();
@@ -536,10 +560,16 @@ function NotificationsTab() {
           />
         ))}
         <div className="flex justify-end mt-4">
+          {hasUnsavedChanges && (
+            <span className="text-xs text-ds-text-subtle mr-3 self-center">
+              {(CONTENT.settings as Record<string, string>).unsavedChanges}
+            </span>
+          )}
           <Button
             type="primary"
             icon={<CheckOutlined />}
-            onClick={() => message.success((CONTENT.settings as Record<string, string>).saved)}
+            loading={savingPrefs}
+            onClick={savePreferences}
           >
             {(CONTENT.settings as Record<string, string>).savePreferences}
           </Button>

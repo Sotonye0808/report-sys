@@ -7,8 +7,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db } from "@/lib/data/db";
-import { sendInviteEmail } from "@/lib/email/resend";
-import { UserRole, InviteLinkType, HIERARCHY_ORDER } from "@/types/global";
+import { getRequestContext } from "@/lib/server/requestContext";
+import { createInviteLink } from "@/modules/users/services/inviteService";
+import {
+  handleApiError,
+  successResponse,
+  unauthorizedResponse,
+  errorResponse,
+} from "@/lib/utils/api";
+import { logServerInfo } from "@/lib/utils/serverLogger";
+import { UserRole } from "@/types/global";
 
 const ALLOWED_ROLES = [
   UserRole.SUPERADMIN,
@@ -31,66 +39,61 @@ const CreateInviteLinkSchema = z.object({
 });
 
 export async function GET(req: NextRequest) {
-  const auth = await verifyAuth(req, ALLOWED_ROLES);
-  if (!auth.success) {
-    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-  }
+  const ctx = getRequestContext(req);
+  try {
+    const auth = await verifyAuth(req, ALLOWED_ROLES);
+    if (!auth.success) {
+      return unauthorizedResponse(auth.error, ctx.requestId);
+    }
 
-  const links = await db.inviteLink.findMany({
-    where: { createdById: auth.user.id },
-    orderBy: { createdAt: "desc" },
-  });
-  return NextResponse.json({ success: true, data: links });
+    const links = await db.inviteLink.findMany({
+      where: { createdById: auth.user.id },
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json(successResponse(links, ctx.requestId), {
+      headers: { "x-request-id": ctx.requestId },
+    });
+  } catch (err) {
+    return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
+  }
 }
 
 export async function POST(req: NextRequest) {
-  const auth = await verifyAuth(req, ALLOWED_ROLES);
-  if (!auth.success) {
-    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-  }
+  const ctx = getRequestContext(req);
+  try {
+    const auth = await verifyAuth(req, ALLOWED_ROLES);
+    if (!auth.success) {
+      return unauthorizedResponse(auth.error, ctx.requestId);
+    }
 
-  const body = CreateInviteLinkSchema.parse(await req.json());
+    const body = CreateInviteLinkSchema.parse(await req.json());
+    const result = await createInviteLink(body, {
+      id: auth.user.id,
+      role: auth.user.role,
+      firstName: auth.user.firstName,
+      lastName: auth.user.lastName,
+    });
 
-  // Enforce role hierarchy: user can only invite roles below them (except SUPERADMIN who can invite any)
-  const creatorOrder = HIERARCHY_ORDER[auth.user.role];
-  const targetOrder = HIERARCHY_ORDER[body.targetRole];
-  if (auth.user.role !== UserRole.SUPERADMIN && targetOrder <= creatorOrder) {
-    return NextResponse.json(
-      { success: false, error: "Cannot create invite for a role at or above your level" },
-      { status: 403 },
-    );
-  }
+    if (!result.success) {
+      return errorResponse(result.error, result.code, ctx.requestId);
+    }
 
-  const expiresAt = new Date(Date.now() + body.expiresInHours * 3600 * 1000).toISOString();
-  const token = crypto.randomUUID().replace(/-/g, "");
-
-  const link = await db.inviteLink.create({
-    data: {
-      token,
-      type: InviteLinkType.DIRECT,
+    logServerInfo("[invite-links] created", {
+      requestId: ctx.requestId,
+      route: ctx.route,
+      actorId: auth.user.id,
       targetRole: body.targetRole,
-      campusId: body.campusId,
-      groupId: body.groupId,
-      createdById: auth.user.id,
-      expiresAt,
-      note: body.note,
-      isActive: true,
-    },
-  });
+      hasRecipientEmail: Boolean(body.recipientEmail),
+    });
 
-  if (body.recipientEmail && process.env.RESEND_API_KEY) {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "";
-    const inviteUrl = `${appUrl}/join?token=${token}`;
-    await sendInviteEmail({
-      to: body.recipientEmail,
-      inviterName: `${auth.user.firstName} ${auth.user.lastName}`.trim() || "Harvesters Admin",
-      role: body.targetRole,
-      joinUrl: inviteUrl,
-    }).catch((err) => {
-      // eslint-disable-next-line no-console
-      console.warn("[invite-links] failed to send invite email", err);
+    return NextResponse.json(successResponse(result.data, ctx.requestId), {
+      status: 201,
+      headers: { "x-request-id": ctx.requestId },
+    });
+  } catch (err) {
+    return handleApiError(err, {
+      requestId: ctx.requestId,
+      route: ctx.route,
     });
   }
-
-  return NextResponse.json({ success: true, data: link }, { status: 201 });
 }

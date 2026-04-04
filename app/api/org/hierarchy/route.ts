@@ -7,25 +7,33 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import { getOrgHierarchy, scopeByRole, filterHierarchyByScope, OrgHierarchy } from "@/lib/data/orgHierarchy";
+import { getRequestContext } from "@/lib/server/requestContext";
+import { handleApiError, successResponse, unauthorizedResponse } from "@/lib/utils/api";
+import { logServerWarn } from "@/lib/utils/serverLogger";
 
 export async function GET(req: NextRequest) {
+    const ctx = getRequestContext(req);
     try {
         const auth = await verifyAuth(req);
         if (!auth.success) {
-            return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+            return unauthorizedResponse(auth.error, ctx.requestId);
         }
 
         const cached = await cache.get("org:hierarchy");
         if (cached) {
-            const parsed = JSON.parse(cached as string);
-            return NextResponse.json(parsed);
+            const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
+            return NextResponse.json(parsed, { headers: { "x-request-id": ctx.requestId } });
         }
 
         let raw;
         try {
             raw = await getOrgHierarchy();
         } catch (err) {
-            console.error("[api] org/hierarchy primary fetch failed, trying fallback", err);
+            logServerWarn("[api] org/hierarchy primary fetch failed, trying fallback", {
+                requestId: ctx.requestId,
+                route: ctx.route,
+                error: err instanceof Error ? err.message : String(err),
+            });
             // fallback to explicit query in case helper fails due Prisma client settings
             const groups = await db.orgGroup.findMany({
                 orderBy: { name: "asc" },
@@ -53,12 +61,11 @@ export async function GET(req: NextRequest) {
         const scope = scopeByRole(auth.user);
         const hierarchy = filterHierarchyByScope(raw as OrgHierarchy, scope);
 
-        const data = { success: true, data: hierarchy };
+        const data = successResponse(hierarchy, ctx.requestId);
         await cache.set("org:hierarchy", JSON.stringify(data), 120);
 
-        return NextResponse.json(data);
+        return NextResponse.json(data, { headers: { "x-request-id": ctx.requestId } });
     } catch (err) {
-        console.error("[api] Error in GET /api/org/hierarchy", err);
-        return NextResponse.json({ success: false, error: "Failed to load org hierarchy." }, { status: 500 });
+        return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
     }
 }

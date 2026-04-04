@@ -7,7 +7,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { db, cache, invalidateCache } from "@/lib/data/db";
+import { db } from "@/lib/data/db";
+import { getRequestContext } from "@/lib/server/requestContext";
+import { updateCampus } from "@/modules/org/services/orgWriteService";
+import {
+  errorResponse,
+  handleApiError,
+  successResponse,
+  unauthorizedResponse,
+} from "@/lib/utils/api";
 import { UserRole } from "@/types/global";
 
 const UpdateCampusSchema = z.object({
@@ -22,48 +30,48 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id } = await params;
-  const auth = await verifyAuth(req);
-  if (!auth.success) {
-    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-  }
+  const ctx = getRequestContext(req);
+  try {
+    const { id } = await params;
+    const auth = await verifyAuth(req);
+    if (!auth.success) {
+      return unauthorizedResponse(auth.error, ctx.requestId);
+    }
 
-  const campus = await db.campus.findUnique({ where: { id } });
-  if (!campus) {
-    return NextResponse.json({ success: false, error: "Campus not found." }, { status: 404 });
+    const campus = await db.campus.findUnique({ where: { id } });
+    if (!campus) {
+      return errorResponse("Campus not found.", 404, ctx.requestId);
+    }
+    return NextResponse.json(successResponse(campus, ctx.requestId), {
+      headers: { "x-request-id": ctx.requestId },
+    });
+  } catch (err) {
+    return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
   }
-  return NextResponse.json({ success: true, data: campus });
 }
 
 export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { id } = await params;
-  const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
-  if (!auth.success) {
-    return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+  const ctx = getRequestContext(req);
+  try {
+    const { id } = await params;
+    const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
+    if (!auth.success) {
+      return unauthorizedResponse(auth.error, ctx.requestId);
+    }
+
+    const body = UpdateCampusSchema.parse(await req.json());
+    const result = await updateCampus(id, body);
+    if (!result.success) {
+      return errorResponse(result.error, result.code, ctx.requestId);
+    }
+
+    return NextResponse.json(successResponse(result.data, ctx.requestId), {
+      headers: { "x-request-id": ctx.requestId },
+    });
+  } catch (err) {
+    return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
   }
-
-  const body = UpdateCampusSchema.parse(await req.json());
-  const campus = await db.campus.findUnique({ where: { id } });
-  if (!campus) {
-    return NextResponse.json({ success: false, error: "Campus not found." }, { status: 404 });
-  }
-
-  const updated = await db.campus.update({
-    where: { id },
-    data: {
-      ...(body.name !== undefined && { name: body.name }),
-      ...(body.groupId !== undefined && { parentId: body.groupId }),
-      ...(body.country !== undefined && { country: body.country }),
-      ...(body.location !== undefined && { location: body.location }),
-      ...(body.adminId !== undefined && { adminId: body.adminId }),
-    },
-  });
-
-  await invalidateCache("org:campuses:*");
-  await invalidateCache("org:groups:*");
-  await invalidateCache("org:hierarchy");
-  return NextResponse.json({ success: true, data: updated });
 }
