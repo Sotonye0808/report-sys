@@ -59,6 +59,16 @@ export async function apiMutation<TData = unknown, TBody = unknown>(
         requestId: responseRequestId,
         status: res.status,
       });
+
+      if (!res.ok) {
+        return {
+          ok: false,
+          status: res.status,
+          requestId: responseRequestId,
+          error: `Request failed (${res.status})`,
+        };
+      }
+
       return {
         ok: false,
         status: res.status,

@@ -422,6 +422,17 @@ const NOTIF_ROWS: Array<{ key: keyof NotifPrefs; labelKey: string; descKey: stri
   },
 ];
 
+function urlBase64ToUint8Array(base64String: string): Uint8Array {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const rawData = atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
 function NotificationsTab() {
   const [prefs, setPrefs] = useState<NotifPrefs>(DEFAULT_PREFS);
   const [loaded, setLoaded] = useState(false);
@@ -430,6 +441,40 @@ function NotificationsTab() {
   const [pushSupported, setPushSupported] = useState(false);
   const [pushEnabled, setPushEnabled] = useState(false);
   const [pushLoading, setPushLoading] = useState(false);
+
+  const upsertPushPreference = async (enabled: boolean) => {
+    await apiMutation(API_ROUTES.notifications.preferences, {
+      method: "PUT",
+      body: { push: enabled },
+    });
+  };
+
+  const syncPushStateFromBrowser = async () => {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+      setPushSupported(false);
+      setPushEnabled(false);
+      return;
+    }
+
+    setPushSupported(true);
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const permission = Notification.permission;
+      const sub = await reg.pushManager.getSubscription();
+      const enabled = permission === "granted" && !!sub;
+      setPushEnabled(enabled);
+
+      if (enabled && sub) {
+        // Ensure backend state is in sync with browser subscription state.
+        await apiMutation(API_ROUTES.notifications.pushSubscriptions, {
+          method: "POST",
+          body: sub.toJSON(),
+        });
+      }
+    } catch {
+      setPushEnabled(false);
+    }
+  };
 
   useEffect(() => {
     apiMutation<NotifPrefs>(API_ROUTES.notifications.preferences, { method: "GET" })
@@ -443,18 +488,7 @@ function NotificationsTab() {
       })
       .finally(() => setLoaded(true));
 
-    // Check push notification support
-    if ("serviceWorker" in navigator && "PushManager" in window) {
-      setPushSupported(true);
-      navigator.serviceWorker.ready
-        .then((reg) => reg.pushManager.getSubscription())
-        .then((sub) => {
-          setPushEnabled(!!sub);
-        })
-        .catch(() => {
-          setPushEnabled(false);
-        });
-    }
+    void syncPushStateFromBrowser();
   }, []);
 
   const handleChange = (key: keyof NotifPrefs, val: boolean) => {
@@ -468,10 +502,13 @@ function NotificationsTab() {
   const savePreferences = async () => {
     setSavingPrefs(true);
     try {
-      const result = await apiMutation<NotifPrefs, NotifPrefs>(API_ROUTES.notifications.preferences, {
-        method: "PUT",
-        body: prefs,
-      });
+      const result = await apiMutation<NotifPrefs, NotifPrefs>(
+        API_ROUTES.notifications.preferences,
+        {
+          method: "PUT",
+          body: prefs,
+        },
+      );
       if (!result.ok) {
         message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
         return;
@@ -495,16 +532,25 @@ function NotificationsTab() {
       if (pushEnabled) {
         const sub = await reg.pushManager.getSubscription();
         if (sub) {
-          await apiMutation(API_ROUTES.notifications.pushSubscriptions, {
+          const removeResult = await apiMutation(API_ROUTES.notifications.pushSubscriptions, {
             method: "DELETE",
             body: { endpoint: sub.endpoint },
           });
+          if (!removeResult.ok) {
+            message.warning(
+              removeResult.error ?? (CONTENT.errors as Record<string, string>).generic,
+            );
+          }
           await sub.unsubscribe();
         }
+        await upsertPushPreference(false);
         setPushEnabled(false);
         message.info((CONTENT.settings as Record<string, string>).pushDisabled);
       } else {
-        const permission = await Notification.requestPermission();
+        let permission = Notification.permission;
+        if (permission !== "granted") {
+          permission = await Notification.requestPermission();
+        }
         if (permission === "denied") {
           message.warning((CONTENT.settings as Record<string, string>).pushPermissionDenied);
           return;
@@ -515,25 +561,57 @@ function NotificationsTab() {
           return;
         }
 
+        const existingSub = await reg.pushManager.getSubscription();
+        if (existingSub) {
+          const saveExistingResult = await apiMutation(API_ROUTES.notifications.pushSubscriptions, {
+            method: "POST",
+            body: existingSub.toJSON(),
+          });
+          if (!saveExistingResult.ok) {
+            message.error(
+              saveExistingResult.error ?? (CONTENT.errors as Record<string, string>).generic,
+            );
+            return;
+          }
+
+          await upsertPushPreference(true);
+          setPushEnabled(true);
+          message.success((CONTENT.settings as Record<string, string>).pushEnabled);
+          return;
+        }
+
+        const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+        if (!vapidPublicKey) {
+          message.error(
+            (CONTENT.settings as Record<string, string>).pushNotConfigured ??
+              (CONTENT.errors as Record<string, string>).generic,
+          );
+          return;
+        }
+
         const subscription = await reg.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+          applicationServerKey: urlBase64ToUint8Array(vapidPublicKey) as BufferSource,
         });
 
-        await apiMutation(API_ROUTES.notifications.pushSubscriptions, {
-          method: "POST",
-          body: subscription.toJSON(),
-        });
-
-        const currentSub = await reg.pushManager.getSubscription();
-        const isEnabled = !!currentSub;
-        setPushEnabled(isEnabled);
-
-        if (isEnabled) {
-          message.success((CONTENT.settings as Record<string, string>).pushEnabled);
-        } else {
-          message.error((CONTENT.errors as Record<string, string>).generic);
+        const saveSubscriptionResult = await apiMutation(
+          API_ROUTES.notifications.pushSubscriptions,
+          {
+            method: "POST",
+            body: subscription.toJSON(),
+          },
+        );
+        if (!saveSubscriptionResult.ok) {
+          await subscription.unsubscribe().catch(() => undefined);
+          message.error(
+            saveSubscriptionResult.error ?? (CONTENT.errors as Record<string, string>).generic,
+          );
+          return;
         }
+
+        await upsertPushPreference(true);
+        setPushEnabled(true);
+        message.success((CONTENT.settings as Record<string, string>).pushEnabled);
       }
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);

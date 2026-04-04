@@ -43,6 +43,12 @@
 - [x] Add regression tests for non-stuck loading states and response/error handling on invite/profile/org CRUD flows
 - [x] Add integration tests for Resend-enabled and Resend-disabled modes to verify email gating does not break core app behavior
 - [x] Add diagnostics runbook section in `.ai-system` for tracing failed operations (where to find request IDs, structured logs, and route debug metadata)
+- [x] Hotfix Redis cache invalidation cursor termination bug (`"0"` vs `0`) that caused profile/org write requests to remain pending and return gateway timeout responses
+- [x] Move profile/org/hierarchy write-path cache invalidation to non-blocking async invalidation and correct concrete org list cache keys
+- [x] Fix push notification toggle synchronization: detect existing browser subscription, avoid duplicate subscribe path, and guard missing `NEXT_PUBLIC_VAPID_PUBLIC_KEY`
+- [ ] Add regression test coverage for Redis scan cursor string termination and write-route completion under cache invalidation load
+- [ ] Add UI regression test coverage ensuring profile and org hierarchy mutations update UI state without manual refresh
+- [ ] Add push notification sync test matrix (permission granted + existing subscription, granted + no subscription, missing VAPID key)
 
 ---
 

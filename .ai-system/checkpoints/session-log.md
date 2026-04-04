@@ -269,3 +269,45 @@ Add integration tests for Resend-enabled vs Resend-disabled modes, add diagnosti
   - ESLint v9 flat config file missing (`eslint.config.*`).
   - Google Fonts fetch blocked in sandbox causing `next build` failure.
   - `npm run test` uses quoted glob that fails module resolution in this shell; targeted tests run successfully via `npx tsx`.
+
+## Session 7 — 2026-04-04
+
+**Completed:**
+
+- Audited post-cloud regression where profile and org hierarchy writes stayed pending and UI never exited loading until refresh.
+- Identified root cause in Redis cache invalidation loop terminal cursor handling (`"0"` vs `0`) and blocking invalidation on write-response path.
+- Applied hotfixes:
+  - fixed cursor completion handling and exact-key invalidation fast-path in `lib/data/redis.ts`
+  - moved profile/org/hierarchy cache invalidation to non-blocking async where safe
+  - corrected hierarchy bulk invalidation keys for org list caches
+- Hardened push notification toggle sync:
+  - reconcile browser permission + existing subscription on load
+  - avoid duplicate subscribe when subscription already exists
+  - guard missing `NEXT_PUBLIC_VAPID_PUBLIC_KEY` with config-driven message
+  - normalize VAPID key conversion for subscribe API call
+- Updated `.ai-system` planning + diagnostics + repair docs with incident findings and remaining regression-test tasks.
+
+**Files Modified:**
+
+- `lib/data/redis.ts`
+- `modules/users/services/profileService.ts`
+- `modules/org/services/orgWriteService.ts`
+- `app/api/org/hierarchy/bulk/route.ts`
+- `lib/utils/apiMutation.ts`
+- `modules/users/components/ProfilePage.tsx`
+- `config/content.ts`
+- `.ai-system/planning/task-queue.md`
+- `.ai-system/planning/temp-production-readiness-plan-2026-04-04.md`
+- `.ai-system/operations/diagnostics-runbook.md`
+- `.ai-system/agents/repair-system.md`
+- `.ai-system/checkpoints/session-log.md`
+- `.ai-system/summaries/dev-history.md`
+
+**Next Task:**
+
+Add and run the newly identified regression tests for cache invalidation loop termination and immediate post-mutation UI update behavior.
+
+**Notes / Blockers:**
+
+- Static diagnostics (`get_errors`) for all touched files are clean.
+- End-to-end browser verification is still required to confirm no pending requests remain under real data volume.

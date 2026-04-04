@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { db, cache, invalidateCache } from "@/lib/data/db";
+import { db, cache } from "@/lib/data/db";
 import { UserRole } from "@/types/global";
 import { getRequestContext } from "@/lib/server/requestContext";
 import { badRequestResponse, handleApiError, successResponse, unauthorizedResponse } from "@/lib/utils/api";
@@ -174,9 +174,11 @@ export async function POST(req: NextRequest) {
             }
         });
 
-        await invalidateCache("org:hierarchy");
-        await invalidateCache("org:groups");
-        await invalidateCache("org:campuses");
+        cache.invalidatePatternAsync("org:hierarchy");
+        cache.invalidatePatternAsync("org:groups:list");
+        cache.invalidatePatternAsync("org:campuses:list");
+        cache.invalidatePatternAsync("org:groups:*");
+        cache.invalidatePatternAsync("org:campuses:*");
 
         logServerInfo("[api] org/hierarchy/bulk success", {
             requestId: ctx.requestId,

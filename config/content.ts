@@ -758,6 +758,7 @@ export const CONTENT = {
         pushDisabled: "Push notifications disabled.",
         pushNotSupported: "Push notifications are not supported in this browser.",
         pushPermissionDenied: "Permission denied. Enable notifications in your browser settings.",
+        pushNotConfigured: "Push notifications are not configured for this environment.",
         enablePush: "Enable Push",
         disablePush: "Disable Push",
         saved: "Preferences saved.",

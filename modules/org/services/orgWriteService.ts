@@ -1,8 +1,13 @@
-import { db, invalidateCache } from "@/lib/data/db";
+import { cache, db } from "@/lib/data/db";
 import { fail, ok, type OperationResult } from "@/modules/common/services/operationResult";
 
-async function invalidateOrgCaches() {
-  await invalidateCache("org:campuses:*", "org:groups:*", "org:hierarchy*");
+function invalidateOrgCaches() {
+  cache.invalidatePatternAsync("org:campuses:list");
+  cache.invalidatePatternAsync("org:groups:list");
+  cache.invalidatePatternAsync("org:hierarchy");
+  cache.invalidatePatternAsync("org:campuses:*");
+  cache.invalidatePatternAsync("org:groups:*");
+  cache.invalidatePatternAsync("org:hierarchy*");
 }
 
 export async function createGroup(data: {
@@ -18,7 +23,7 @@ export async function createGroup(data: {
     },
   });
 
-  await invalidateOrgCaches();
+  invalidateOrgCaches();
   return ok(group as unknown as OrgGroup);
 }
 
@@ -38,7 +43,7 @@ export async function updateGroup(
     },
   });
 
-  await invalidateOrgCaches();
+  invalidateOrgCaches();
   return ok(updated as unknown as OrgGroup);
 }
 
@@ -60,7 +65,7 @@ export async function createCampus(data: {
     },
   });
 
-  await invalidateOrgCaches();
+  invalidateOrgCaches();
   return ok(campus as unknown as Campus);
 }
 
@@ -88,7 +93,7 @@ export async function updateCampus(
     },
   });
 
-  await invalidateOrgCaches();
+  invalidateOrgCaches();
   return ok(updated as unknown as Campus);
 }
 

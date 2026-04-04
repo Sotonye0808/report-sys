@@ -239,3 +239,30 @@ Implemented a broad production-readiness consolidation slice for invite/profile/
 - Add integration tests for Resend-enabled/disabled gating behavior and expand orchestration coverage in workflow-triggered paths.
 - Add diagnostics runbook documentation in `.ai-system`.
 - Resolve baseline repository validation blockers (`eslint` flat config migration, build font fetch in restricted environment, test glob script issue) in a dedicated tooling pass.
+
+## 2026-04-04 — Post-Cloud Incident Hotfix (Pending Writes + Push Sync)
+
+**Summary:**
+Investigated and fixed a regression where profile and org hierarchy write operations stayed pending in the browser, resulting in UI loading deadlocks and eventual 504 non-JSON responses. Root cause was a Redis scan cursor termination mismatch (`"0"` vs `0`) combined with blocking cache invalidation on the write critical path. Push notification toggle state synchronization was also hardened to correctly reconcile browser permission/subscription and backend persistence.
+
+**Completed:**
+
+- Fixed cache invalidation scan termination logic and optimized exact-key invalidation in `lib/data/redis.ts`.
+- Changed selected write-path invalidations to non-blocking async invalidation:
+  - `modules/users/services/profileService.ts`
+  - `modules/org/services/orgWriteService.ts`
+  - `app/api/org/hierarchy/bulk/route.ts`
+- Improved client mutation fallback behavior for non-JSON error responses in `lib/utils/apiMutation.ts`.
+- Fixed push settings sync/toggle behavior in `modules/users/components/ProfilePage.tsx` and added config-driven missing-VAPID message in `config/content.ts`.
+- Updated planning and diagnostics docs with concrete incident signature, root cause, and remaining regression tasks.
+
+**Key Changes:**
+
+- Write routes are no longer blocked by long-running cache invalidation loops on the response path.
+- Push toggle now supports existing-subscription reconciliation and explicit configuration validation.
+
+**Next Sprint Focus:**
+
+- Add regression coverage for Redis cursor terminal-value variants and write-route completion timing.
+- Add UI regression tests for immediate post-mutation state updates (no manual refresh).
+- Add push sync matrix tests for permission/subscription/VAPID edge cases.

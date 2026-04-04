@@ -45,3 +45,28 @@ If payload shape differs, route is not yet on the unified contract path.
 
 Use targeted `npx tsx` test execution + `npm run typecheck` until tooling pass lands.
 
+## 6) Known Incident Signature — Pending Writes + 504 + Non-JSON Error
+
+Symptoms:
+
+- Browser network tab shows write request pending for a long duration.
+- UI remains in processing/loading state until timeout.
+- Client logs include `[apiMutation] invalid JSON response` with status `504`.
+- Data appears updated only after manual refresh.
+
+Primary Cause (resolved hotfix on 2026-04-04):
+
+- Redis invalidation scan loop used terminal check `cursor !== 0` only.
+- Upstash can return terminal cursor as string `"0"`, causing loop continuation and blocking route completion.
+
+Fast Verification:
+
+1. Confirm route logs show request entered write handler and DB mutation completed.
+2. Check if response was delayed before cache invalidation completion.
+3. Verify `lib/data/redis.ts` includes string-and-number cursor completion check and exact-key fast path.
+
+Mitigation Pattern:
+
+- Keep cache invalidation non-blocking for write critical path where possible.
+- Prefer async invalidation (`invalidatePatternAsync`) after successful DB commit.
+- Use exact-key delete path for non-glob patterns to avoid full keyspace scan.

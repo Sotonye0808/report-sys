@@ -200,3 +200,49 @@ Update sections after implementation:
 - Avoid introducing any new hardcoded route strings or role literals.
 - Add or update tests alongside each migration slice.
 - At completion: update task queue checkboxes, checkpoints/session-log.md, summaries/dev-history.md, and any changed architecture docs.
+
+---
+
+## Audit Addendum — 2026-04-04 (Post-cloud Incident Review)
+
+### Confirmed Incident Symptoms
+
+- Profile update requests intermittently returned 504 with non-JSON body observed by `apiMutation` as `invalid JSON response`.
+- Org hierarchy bulk writes remained pending in browser/network until timeout, while DB mutations were eventually visible after page refresh.
+- Push notification toggle showed OFF despite browser notification permission already granted, and ON toggle path could error.
+
+### Root Causes Identified
+
+1. Redis cache invalidation loop termination bug:
+
+- `lib/data/redis.ts` compared scan cursor to numeric `0` only.
+- Upstash scan cursor may return string `"0"`, causing non-terminating invalidation loops.
+
+2. Blocking invalidation on write-path request critical path:
+
+- Profile and org services awaited cache invalidation before responding.
+- Combined with cursor bug, this produced request hang and upstream gateway timeouts.
+
+3. Push state sync gap and toggle flow fragility:
+
+- UI state initialization used only `getSubscription` and did not reliably reconcile existing browser subscription with backend state.
+- Toggle ON path requested subscription without robustly handling already-subscribed state and missing VAPID key.
+
+### Hotfixes Applied
+
+- Fixed Redis invalidation cursor completion logic for both numeric and string terminal cursors.
+- Optimized invalidation for non-glob exact keys to direct `DEL` (no SCAN).
+- Added timeout wrapping around SCAN/DEL inside invalidation path.
+- Switched profile/org/hierarchy write invalidations to non-blocking async invalidation.
+- Corrected hierarchy bulk invalidation key targets for org list caches.
+- Hardened push UI toggle flow:
+  - Sync from browser permission + existing subscription.
+  - Upsert existing subscription to backend when detected.
+  - Guard missing `NEXT_PUBLIC_VAPID_PUBLIC_KEY` with explicit config-driven message.
+  - Avoid duplicate subscribe path if subscription already exists.
+
+### Remaining Validation Work (Required Before Declaring Stable)
+
+- Add regression tests for Redis cursor termination and response completion timing.
+- Add end-to-end UI regression coverage for profile/org immediate post-mutation updates.
+- Add push sync matrix tests across permission/subscription/VAPID scenarios.
