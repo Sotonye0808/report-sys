@@ -5,7 +5,14 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAuth } from "@/lib/utils/auth";
-import { db } from "@/lib/data/db";
+import { getRequestContext } from "@/lib/server/requestContext";
+import { revokeInviteLink } from "@/modules/users/services/inviteService";
+import {
+    errorResponse,
+    handleApiError,
+    successResponse,
+    unauthorizedResponse,
+} from "@/lib/utils/api";
 import { UserRole } from "@/types/global";
 
 const ALLOWED_ROLES = [
@@ -23,43 +30,26 @@ export async function DELETE(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> },
 ) {
-    const auth = await verifyAuth(req, ALLOWED_ROLES);
-    if (!auth.success) {
-        return NextResponse.json(
-            { success: false, error: auth.error },
-            { status: auth.status ?? 401 },
-        );
+    const ctx = getRequestContext(req);
+    try {
+        const auth = await verifyAuth(req, ALLOWED_ROLES);
+        if (!auth.success) {
+            return unauthorizedResponse(auth.error, ctx.requestId);
+        }
+
+        const { id } = await params;
+        const result = await revokeInviteLink(id, {
+            id: auth.user.id,
+            role: auth.user.role,
+        });
+        if (!result.success) {
+            return errorResponse(result.error, result.code, ctx.requestId);
+        }
+
+        return NextResponse.json(successResponse(result.data, ctx.requestId), {
+            headers: { "x-request-id": ctx.requestId },
+        });
+    } catch (err) {
+        return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
     }
-
-    const { id } = await params;
-
-    const link = await db.inviteLink.findUnique({ where: { id } });
-    if (!link) {
-        return NextResponse.json(
-            { success: false, error: "Invite link not found" },
-            { status: 404 },
-        );
-    }
-
-    // Only the creator or a SUPERADMIN can revoke
-    if (link.createdById !== auth.user.id && auth.user.role !== UserRole.SUPERADMIN) {
-        return NextResponse.json(
-            { success: false, error: "You can only revoke your own invite links" },
-            { status: 403 },
-        );
-    }
-
-    if (!link.isActive) {
-        return NextResponse.json(
-            { success: false, error: "Invite link is already revoked" },
-            { status: 400 },
-        );
-    }
-
-    const updated = await db.inviteLink.update({
-        where: { id },
-        data: { isActive: false },
-    });
-
-    return NextResponse.json({ success: true, data: updated });
 }

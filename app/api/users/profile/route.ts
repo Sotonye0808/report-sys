@@ -7,7 +7,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { db, cache } from "@/lib/data/db";
+import { getRequestContext } from "@/lib/server/requestContext";
+import { getOwnProfile, updateOwnProfile } from "@/modules/users/services/profileService";
+import {
+    handleApiError,
+    successResponse,
+    unauthorizedResponse,
+    errorResponse,
+} from "@/lib/utils/api";
 
 /* ── Update schema ────────────────────────────────────────────────────────── */
 
@@ -20,44 +27,46 @@ const UpdateProfileSchema = z.object({
 /* ── GET /api/users/profile ───────────────────────────────────────────────── */
 
 export async function GET(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
-    }
+    const ctx = getRequestContext(req);
+    try {
+        const auth = await verifyAuth(req);
+        if (!auth.success) {
+            return unauthorizedResponse(auth.error, ctx.requestId);
+        }
 
-    const user = await db.user.findUnique({
-        where: { id: auth.user.id },
-        omit: { passwordHash: true },
-    });
-    if (!user) {
-        return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
-    }
+        const result = await getOwnProfile(auth.user.id);
+        if (!result.success) {
+            return errorResponse(result.error, result.code, ctx.requestId);
+        }
 
-    return NextResponse.json({ success: true, data: user });
+        return NextResponse.json(successResponse(result.data, ctx.requestId), {
+            headers: { "x-request-id": ctx.requestId },
+        });
+    } catch (err) {
+        return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
+    }
 }
 
 /* ── PUT /api/users/profile ───────────────────────────────────────────────── */
 
 export async function PUT(req: NextRequest) {
-    const auth = await verifyAuth(req);
-    if (!auth.success) {
-        return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+    const ctx = getRequestContext(req);
+    try {
+        const auth = await verifyAuth(req);
+        if (!auth.success) {
+            return unauthorizedResponse(auth.error, ctx.requestId);
+        }
+
+        const body = UpdateProfileSchema.parse(await req.json());
+        const result = await updateOwnProfile(auth.user.id, body);
+        if (!result.success) {
+            return errorResponse(result.error, result.code, ctx.requestId);
+        }
+
+        return NextResponse.json(successResponse(result.data, ctx.requestId), {
+            headers: { "x-request-id": ctx.requestId },
+        });
+    } catch (err) {
+        return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
     }
-
-    const body = UpdateProfileSchema.parse(await req.json());
-
-    const user = await db.user.findUnique({ where: { id: auth.user.id } });
-    if (!user) {
-        return NextResponse.json({ success: false, error: "User not found." }, { status: 404 });
-    }
-
-    const updated = await db.user.update({
-        where: { id: auth.user.id },
-        data: body,
-        omit: { passwordHash: true },
-    });
-
-    await cache.invalidatePattern(`users:detail:${auth.user.id}`);
-
-    return NextResponse.json({ success: true, data: updated });
 }

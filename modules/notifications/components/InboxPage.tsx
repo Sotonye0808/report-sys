@@ -17,6 +17,7 @@ import Button from "@/components/ui/Button";
 import { PageLayout } from "@/components/ui/PageLayout";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { apiMutation } from "@/lib/utils/apiMutation";
 
 /* ── Notification row ─────────────────────────────────────────────────────── */
 
@@ -98,7 +99,13 @@ export function InboxPage() {
 
   const handleMarkRead = async (id: string) => {
     try {
-      await fetch(API_ROUTES.notifications.markRead(id), { method: "POST" });
+      const result = await apiMutation<AppNotification>(API_ROUTES.notifications.markRead(id), {
+        method: "POST",
+      });
+      if (!result.ok) {
+        message.error(result.error ?? (CONTENT.common.errorDefault as string));
+        return;
+      }
       refetch();
     } catch {
       message.error(CONTENT.common.errorDefault as string);
@@ -107,7 +114,13 @@ export function InboxPage() {
 
   const handleMarkAllRead = async () => {
     try {
-      await fetch(API_ROUTES.notifications.markAllRead, { method: "POST" });
+      const result = await apiMutation<{ updated: number }>(API_ROUTES.notifications.markAllRead, {
+        method: "POST",
+      });
+      if (!result.ok) {
+        message.error(result.error ?? (CONTENT.common.errorDefault as string));
+        return;
+      }
       message.success(
         (CONTENT.notifications.markAllRead as string) ?? "All notifications marked as read.",
       );

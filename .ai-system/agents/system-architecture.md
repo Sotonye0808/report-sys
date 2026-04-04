@@ -39,7 +39,10 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 | `modules/org/`      | Organization hierarchy management (groups, campuses, future multi-level org structure)                                                          | `modules/org/*`                                                                                                                            | `lib/data`, `config/*`, `lib/hooks/*`  |     | `lib/data/orgHierarchy.ts` | Org hierarchy helper service (role scope filtering, hierarchical tree) | `lib/data/orgHierarchy.ts` | `lib/data`, `modules/org`, `modules/reports` |
 | `lib/data/`         | Data access layer with Prisma, Redis, and mock DB adapters                                                                                      | `lib/data/prisma.ts`, `lib/data/redis.ts`, `lib/data/db.ts`                                                                                | `prisma`, `@upstash/redis`             |
 | `lib/email/`        | Email delivery via Resend                                                                                                                       | `lib/email/resend.ts`                                                                                                                      | `resend`                               |
+| `lib/email/templates/` | Config-driven email template registry and shared HTML layout shell                                                                           | `lib/email/templates/registry.ts`, `lib/email/templates/layout.ts`                                                                        | `lib/email`, `config/*`                |
 | `lib/hooks/`        | Shared React hooks (auth, offline sync, data fetching)                                                                                          | `lib/hooks/*`                                                                                                                              | `lib/utils/*`                          |
+| `lib/server/`       | Server request-scoped helpers (correlation IDs, request metadata context)                                                                       | `lib/server/requestContext.ts`                                                                                                             | `app/api/*`                            |
+| `lib/utils/`        | Shared cross-cutting utilities (response helpers, logging, notifications, client mutation lifecycle)                                            | `lib/utils/api.ts`, `lib/utils/serverLogger.ts`, `lib/utils/apiMutation.ts`, `lib/utils/notificationOrchestrator.ts`                    | `modules/*`, `app/api/*`               |
 | `prisma/`           | Database schema, migrations, and seed data                                                                                                      | `prisma/schema.prisma`, `prisma/seed.ts`                                                                                                   | `@prisma/client`                       |
 
 ---
@@ -58,6 +61,9 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 5) Response is serialized and returned to the client.
 6) Client updates UI state based on API response.
 7) Hierarchy and aggregation endpoints (e.g. `/api/org/hierarchy`, `/api/reports/aggregate`) may pre-filter results by role scope and include source metadata for audit.
+8) Write endpoints generate/propagate request correlation IDs (`x-request-id`) and emit structured redacted logs for diagnostics.
+9) Client write actions use unified mutation helper (`apiMutation`) with consistent pending/success/error lifecycle to prevent stuck loading states.
+10) Notification fan-out is orchestrated by channel preference: in-app first, email when `RESEND_API_KEY` + user preference allow, and push when subscription exists.
 ```
 
 ### Authentication Flow
@@ -90,8 +96,11 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 | `DATABASE_URL`        | Prisma database connection string         | `.env*`  | Not set (required for production)     |
 | `REDIS_URL`           | Upstash Redis connection                  | `.env*`  | Not set (optional)                    |
 | `RESEND_API_KEY`      | Resend email API key                      | `.env*`  | Not set (optional)                    |
+| `EMAIL_FROM`          | Sender identity for outbound email        | `.env*`  | `Harvesters Reporting <noreply@...>`  |
 | `JWT_SECRET`          | JWT signing secret                        | `.env*`  | Not set (required for auth)           |
 | `NEXTAUTH_URL`        | NextAuth base URL (if used)               | `.env*`  | Not set                               |
+| `NEXT_PUBLIC_APP_URL` | Absolute app URL for email deep links     | `.env*`  | Not set (recommended in production)   |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Browser push subscription public key | `.env*` | Not set (optional, required for push) |
 
 ---
 
@@ -125,6 +134,8 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 - Analytics routes now support explicit `includeDrafts` and status controls in `app/api/analytics/overview` and `app/api/analytics/metrics` to align dashboard output with user filtering controls.
 - Goals page now supports template group panels and per-campus metric matrix (collapsible sections), and this requires careful state scoping in `modules/goals/components/GoalsPage.tsx`.
 - Email provider initialization must be environment-safe: `lib/email/resend.ts` now uses an optional client instance when `RESEND_API_KEY` is missing, preventing build-time failures.
+- Notification preference and push-subscription persistence currently uses cache-backed storage (`lib/utils/notificationPreferences.ts`) as a transitional durability layer; migration to relational persistence is recommended for long-term reliability.
+- Write-route diagnostics now depend on request ID propagation and structured logging; all new write endpoints should include request context via `lib/server/requestContext.ts`.
 
 ---
 

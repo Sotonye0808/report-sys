@@ -762,6 +762,7 @@ export const CONTENT = {
         disablePush: "Disable Push",
         saved: "Preferences saved.",
         savePreferences: "Save Preferences",
+        unsavedChanges: "Unsaved changes",
     },
     /* ── Offline Page ────────────────────────────────────────────────────────── */
     offline: {

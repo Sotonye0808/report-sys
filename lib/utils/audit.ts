@@ -6,8 +6,7 @@
  */
 import type { Prisma } from "@/prisma/generated";
 import { db } from "@/lib/data/db";
-import { createNotification } from "@/lib/utils/notifications";
-import { sendReportStatusEmail } from "@/lib/email/resend";
+import { dispatchNotificationChannels } from "@/lib/utils/notificationOrchestrator";
 import { ReportEventType, NotificationType, ReportStatus } from "@/types/global";
 
 export type AuditTarget = "report" | "template" | "goal";
@@ -57,6 +56,23 @@ export interface AuditNotificationParams {
     recipientEmail?: string;
 }
 
+async function resolveRecipientEmail(
+    recipientId: string,
+    fallbackEmail?: string,
+    tx?: Prisma.TransactionClient,
+) {
+    if (fallbackEmail) {
+        return fallbackEmail;
+    }
+
+    const target = tx ?? db;
+    const user = await target.user.findUnique({
+        where: { id: recipientId },
+        select: { email: true },
+    });
+    return user?.email;
+}
+
 /**
  * Create in-app notification and one optional email notification.
  */
@@ -65,37 +81,38 @@ export async function createAuditNotification(
     tx?: Prisma.TransactionClient,
 ) {
     const target = tx ?? db;
+    const emailAddress = await resolveRecipientEmail(
+        params.recipientId,
+        params.recipientEmail,
+        tx,
+    );
 
-    await createNotification(
-        {
+    if (tx) {
+        // Keep transactional write path side-effect free outside the DB transaction.
+        // Email/push orchestration is intentionally skipped in transactional contexts
+        // to avoid dispatching external notifications before a successful commit.
+        await target.notification.create({
+            data: {
+                userId: params.recipientId,
+                type: params.eventType,
+                title: params.title,
+                message: params.message,
+                reportId: params.reportId,
+            },
+        });
+    } else {
+        await dispatchNotificationChannels({
             userId: params.recipientId,
             type: params.eventType,
             title: params.title,
             message: params.message,
             reportId: params.reportId,
-        },
-        tx,
-    );
-
-    const emailAddress = params.recipientEmail
-        ? params.recipientEmail
-        : (await target.user.findUnique({ where: { id: params.recipientId } }))?.email;
-
-    if (!emailAddress || !process.env.RESEND_API_KEY) {
-        return;
+            emailTo: emailAddress,
+            emailSubject: params.title,
+            emailHtml: `<p>${params.message}</p>`,
+        });
     }
 
-    // Fire and forget; don't block on failures.
-    sendReportStatusEmail({
-        to: emailAddress,
-        reporterName: params.actorName ?? "",
-        reportTitle: params.reportTitle ?? "Report",
-        newStatus: params.title,
-        reportUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/reports/${params.reportId}`,
-    }).catch((err) => {
-        // eslint-disable-next-line no-console
-        console.warn("[audit] Failed to send report status email:", err);
-    });
 }
 
 /**

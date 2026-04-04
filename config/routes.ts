@@ -155,6 +155,8 @@ export const API_ROUTES = {
         list: "/api/notifications",
         markRead: (id: string) => `/api/notifications/${id}/read`,
         markAllRead: "/api/notifications/read-all",
+        preferences: "/api/notifications/preferences",
+        pushSubscriptions: "/api/notifications/push-subscriptions",
     },
     inviteLinks: {
         list: "/api/invite-links",

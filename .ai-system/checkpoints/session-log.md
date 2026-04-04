@@ -173,3 +173,99 @@ Add a dedicated `UNLOCKED` audit event and ensure it displays correctly in the r
 **Notes / Blockers:**
 
 - Existing lint toolchain requires .eslintrc or config fix; current lint issue is outside current feature scope.
+
+## Session 5 — 2026-04-04
+
+**Completed:**
+
+- Planned a production-readiness consolidation feature focused on API/DB write-flow consistency, mutation lifecycle reliability, and notification/email channel readiness.
+- Reviewed architecture, project plan, task queue, and key route/module implementations for invites, profile, org hierarchy, notifications, and resend wiring.
+- Appended concrete implementation tasks to current sprint in `.ai-system/planning/task-queue.md`.
+- Created temporary implementation blueprint for autonomous cloud execution in `.ai-system/planning/temp-production-readiness-plan-2026-04-04.md`.
+
+**Files Modified:**
+
+- .ai-system/planning/task-queue.md — added production-readiness consolidation tasks
+- .ai-system/planning/temp-production-readiness-plan-2026-04-04.md — added phased implementation plan and architecture update checklist
+- .ai-system/checkpoints/session-log.md — added session summary
+- .ai-system/summaries/dev-history.md — added history entry
+
+**Next Task:**
+
+Execute the temporary production-readiness plan in a cloud autonomous session, then update architecture docs and test records as each slice lands.
+
+**Notes / Blockers:**
+
+- `design-system.md` remains template-like; implementation should continue using existing tokenized UI primitives and config-driven content while a fuller design-system spec is completed.
+
+## Session 6 — 2026-04-04
+
+**Completed:**
+
+- Implemented production-readiness write-path consolidation slice across invite/profile/org/notifications.
+- Added shared request correlation context, structured server logging with sensitive-field redaction, and standardized API response helpers (`requestId` + `x-request-id` propagation).
+- Added shared write mutation utility (`lib/utils/apiMutation.ts`) and refactored `InvitesPage`, `ProfilePage`, `OrgPage`, and `InboxPage` write handlers to use unified lifecycle handling with safe loading reset.
+- Extracted invite/profile/org write logic into domain services:
+  - `modules/users/services/inviteService.ts`
+  - `modules/users/services/profileService.ts`
+  - `modules/org/services/orgWriteService.ts`
+- Added notification preferences + push subscription persistence APIs (`/api/notifications/preferences`, `/api/notifications/push-subscriptions`) and wired Profile notification settings to backend state.
+- Added config-driven email template registry (`lib/email/templates/*`) and updated Resend helpers to consume shared templates.
+- Added channel orchestrator (`lib/utils/notificationOrchestrator.ts`) for in-app/email/push with no-key email fallback.
+- Added regression tests for response contract and mutation lifecycle:
+  - `test/apiResponseContract.test.ts`
+  - `test/apiMutationLifecycle.test.ts`
+- Validation run:
+  - `npm run typecheck` ✅
+  - `npx tsx test/apiResponseContract.test.ts` ✅
+  - `npx tsx test/apiMutationLifecycle.test.ts` ✅
+  - Baseline environment constraints observed: `npm run lint` fails due ESLint v9 config migration, full `npm run build` fails in sandbox due blocked Google Fonts fetch, and `npm run test` script glob is invalid under current shell expansion.
+
+**Files Modified:**
+
+- `lib/utils/api.ts`
+- `lib/server/requestContext.ts`
+- `lib/utils/serverLogger.ts`
+- `lib/utils/apiMutation.ts`
+- `modules/common/services/operationResult.ts`
+- `modules/users/services/inviteService.ts`
+- `modules/users/services/profileService.ts`
+- `modules/org/services/orgWriteService.ts`
+- `app/api/invite-links/route.ts`
+- `app/api/invite-links/[id]/route.ts`
+- `app/api/users/profile/route.ts`
+- `app/api/org/groups/route.ts`
+- `app/api/org/groups/[id]/route.ts`
+- `app/api/org/campuses/route.ts`
+- `app/api/org/campuses/[id]/route.ts`
+- `app/api/org/hierarchy/route.ts`
+- `app/api/org/hierarchy/bulk/route.ts`
+- `app/api/notifications/route.ts`
+- `app/api/notifications/[id]/read/route.ts`
+- `app/api/notifications/read-all/route.ts`
+- `app/api/notifications/preferences/route.ts`
+- `app/api/notifications/push-subscriptions/route.ts`
+- `lib/utils/notificationPreferences.ts`
+- `lib/utils/notificationOrchestrator.ts`
+- `lib/email/templates/layout.ts`
+- `lib/email/templates/registry.ts`
+- `lib/email/resend.ts`
+- `modules/users/components/InvitesPage.tsx`
+- `modules/users/components/ProfilePage.tsx`
+- `modules/org/components/OrgPage.tsx`
+- `modules/notifications/components/InboxPage.tsx`
+- `config/routes.ts`
+- `test/apiResponseContract.test.ts`
+- `test/apiMutationLifecycle.test.ts`
+- `.ai-system/planning/task-queue.md`
+
+**Next Task:**
+
+Add integration tests for Resend-enabled vs Resend-disabled modes, add diagnostics runbook section in `.ai-system`, run final validation (`parallel_validation`), and open PR.
+
+**Notes / Blockers:**
+
+- Build/lint/test baseline has pre-existing environment/tooling issues not introduced by this slice:
+  - ESLint v9 flat config file missing (`eslint.config.*`).
+  - Google Fonts fetch blocked in sandbox causing `next build` failure.
+  - `npm run test` uses quoted glob that fails module resolution in this shell; targeted tests run successfully via `npx tsx`.

@@ -7,7 +7,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { db, cache, invalidateCache } from "@/lib/data/db";
+import { db, cache } from "@/lib/data/db";
+import { getRequestContext } from "@/lib/server/requestContext";
+import { createGroup } from "@/modules/org/services/orgWriteService";
+import {
+    errorResponse,
+    handleApiError,
+    successResponse,
+    unauthorizedResponse,
+} from "@/lib/utils/api";
+import { logServerInfo } from "@/lib/utils/serverLogger";
 import { UserRole } from "@/types/global";
 
 const CreateGroupSchema = z.object({
@@ -18,48 +27,58 @@ const CreateGroupSchema = z.object({
 });
 
 export async function GET(req: NextRequest) {
+    const ctx = getRequestContext(req);
     try {
         const auth = await verifyAuth(req);
         if (!auth.success) {
-            return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+            return unauthorizedResponse(auth.error, ctx.requestId);
         }
 
         const cached = await cache.get("org:groups:list");
-        if (cached) return NextResponse.json(cached);
+        if (cached) {
+            const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
+            return NextResponse.json(parsed, { headers: { "x-request-id": ctx.requestId } });
+        }
 
         const groups = await db.orgGroup.findMany({ orderBy: { name: "asc" } });
-        const response = { success: true, data: groups };
+        const response = successResponse(groups, ctx.requestId);
         await cache.set("org:groups:list", JSON.stringify(response), 120);
-        return NextResponse.json(response);
+        return NextResponse.json(response, { headers: { "x-request-id": ctx.requestId } });
     } catch (err) {
-        console.error("[api] Error in GET /api/org/groups", err);
-        return NextResponse.json({ success: false, error: "Failed to load groups." }, { status: 500 });
+        return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
     }
 }
 
 export async function POST(req: NextRequest) {
+    const ctx = getRequestContext(req);
     try {
         const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
         if (!auth.success) {
-            return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+            return unauthorizedResponse(auth.error, ctx.requestId);
         }
 
         const body = CreateGroupSchema.parse(await req.json());
+        const result = await createGroup({
+            name: body.name,
+            country: body.country,
+            leaderId: body.leaderId,
+        });
+        if (!result.success) {
+            return errorResponse(result.error, result.code, ctx.requestId);
+        }
 
-        const group = await db.orgGroup.create({
-            data: {
-                name: body.name,
-                country: body.country ?? "",
-                leaderId: body.leaderId,
-            },
+        logServerInfo("[org/groups] created", {
+            requestId: ctx.requestId,
+            route: ctx.route,
+            actorId: auth.user.id,
+            groupId: result.data.id,
         });
 
-        await invalidateCache("org:campuses:*");
-        await invalidateCache("org:groups:*");
-        await invalidateCache("org:hierarchy");
-        return NextResponse.json({ success: true, data: group }, { status: 201 });
+        return NextResponse.json(successResponse(result.data, ctx.requestId), {
+            status: 201,
+            headers: { "x-request-id": ctx.requestId },
+        });
     } catch (err) {
-        console.error("[api] Error in POST /api/org/groups", err);
-        return NextResponse.json({ success: false, error: "Failed to create group." }, { status: 500 });
+        return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
     }
 }
