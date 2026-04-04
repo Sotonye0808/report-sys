@@ -155,6 +155,48 @@ export enum BugReportCategory {
     OTHER = "OTHER",
 }
 
+export enum AssetDomain {
+    BUG_REPORT_SCREENSHOT = "BUG_REPORT_SCREENSHOT",
+}
+
+export enum AssetProvider {
+    CLOUDINARY = "CLOUDINARY",
+    LEGACY_URL = "LEGACY_URL",
+}
+
+export enum AssetState {
+    TEMP = "TEMP",
+    READY = "READY",
+    DISCARDED = "DISCARDED",
+    DELETE_PENDING = "DELETE_PENDING",
+    DELETED = "DELETED",
+    FAILED = "FAILED",
+}
+
+export enum AssetUploadMode {
+    DEFERRED_SUBMIT = "DEFERRED_SUBMIT",
+    PREUPLOAD_DRAFT = "PREUPLOAD_DRAFT",
+}
+
+export enum AssetSessionState {
+    OPEN = "OPEN",
+    TEMP_UPLOADED = "TEMP_UPLOADED",
+    FINALIZED = "FINALIZED",
+    DISCARDED = "DISCARDED",
+    EXPIRED = "EXPIRED",
+}
+
+export enum AssetLifecycleEventType {
+    SESSION_CREATED = "SESSION_CREATED",
+    TEMP_UPLOADED = "TEMP_UPLOADED",
+    FINALIZED = "FINALIZED",
+    DISCARDED = "DISCARDED",
+    CLEANUP_DELETED = "CLEANUP_DELETED",
+    CLEANUP_FAILED = "CLEANUP_FAILED",
+    COMPENSATION_DELETED = "COMPENSATION_DELETED",
+    COMPENSATION_FAILED = "COMPENSATION_FAILED",
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // RUNTIME CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
@@ -704,6 +746,7 @@ declare global {
         category: BugReportCategory;
         description: string;
         screenshotUrl?: string;
+        screenshotAssetId?: string;
         contactEmail: string;
         status: BugReportStatus;
         adminNotes?: string;
@@ -711,6 +754,43 @@ declare global {
         createdBy?: UserProfile;
         createdAt: string;
         updatedAt: string;
+    }
+
+    interface MediaAsset {
+        id: string;
+        ownerId: string;
+        domain: AssetDomain;
+        provider: AssetProvider;
+        state: AssetState;
+        publicId?: string;
+        secureUrl?: string;
+        format?: string;
+        bytes?: number;
+        width?: number;
+        height?: number;
+        mimeType?: string;
+        originalFileName?: string;
+        folder?: string;
+        createdAt: string;
+        updatedAt: string;
+        finalizedAt?: string;
+        discardedAt?: string;
+        expiresAt?: string;
+    }
+
+    interface AssetUploadSession {
+        id: string;
+        ownerId: string;
+        domain: AssetDomain;
+        mode: AssetUploadMode;
+        state: AssetSessionState;
+        activeAssetId?: string;
+        activeAsset?: MediaAsset;
+        createdAt: string;
+        updatedAt: string;
+        finalizedAt?: string;
+        discardedAt?: string;
+        expiresAt?: string;
     }
 
     type ApiResponse<T> =
