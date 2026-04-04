@@ -35,7 +35,8 @@ export async function updateOwnProfile(
     omit: { passwordHash: true },
   });
 
-  await cache.invalidatePattern(`users:detail:${userId}`);
+  cache.invalidatePatternAsync(`users:detail:${userId}`);
+  cache.invalidatePatternAsync("users:list:*");
   return ok(updated as unknown as UserProfile);
 }
 

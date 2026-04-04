@@ -34,6 +34,14 @@ function key(k: string): string {
     return `${PREFIX}${k}`;
 }
 
+function isScanCursorComplete(cursor: string | number): boolean {
+    return cursor === 0 || cursor === "0";
+}
+
+function isGlobPattern(pattern: string): boolean {
+    return /[\*\?\[\]]/.test(pattern);
+}
+
 const REDIS_OP_TIMEOUT_MS = Number(process.env.REDIS_OP_TIMEOUT_MS ?? 2000);
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
@@ -105,20 +113,28 @@ export const cache = {
      */
     async invalidatePattern(pattern: string): Promise<number> {
         try {
+            if (!isGlobPattern(pattern)) {
+                const deleted = await withTimeout(redis.del(key(pattern)), REDIS_OP_TIMEOUT_MS);
+                return typeof deleted === "number" ? deleted : 0;
+            }
+
             let cursor: string | number = 0;
             let deleted = 0;
             do {
-                const result = await redis.scan(cursor, {
-                    match: key(pattern),
-                    count: 100,
-                });
+                const result = await withTimeout(
+                    redis.scan(cursor, {
+                        match: key(pattern),
+                        count: 100,
+                    }),
+                    REDIS_OP_TIMEOUT_MS,
+                );
                 const [nextCur, keys] = result as [number | string, string[]];
                 cursor = nextCur;
                 if (keys.length > 0) {
-                    await redis.del(...keys);
+                    await withTimeout(redis.del(...keys), REDIS_OP_TIMEOUT_MS);
                     deleted += keys.length;
                 }
-            } while (cursor !== 0);
+            } while (!isScanCursorComplete(cursor));
             return deleted;
         } catch (err) {
             // Cache failures should not break core write operations.

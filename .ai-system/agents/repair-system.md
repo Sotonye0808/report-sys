@@ -233,3 +233,61 @@ Quoted glob is passed as a literal path to `tsx` under this shell/runtime combin
 - `package.json` (test script behavior)
 
 **Date:** 2026-04-04
+
+## Pending write requests caused by Redis cursor termination mismatch
+
+**Symptom:**
+Profile and org hierarchy write operations stayed in pending state, UI remained in loading/processing, and client logs showed non-JSON 504 failures. Data appeared after manual refresh.
+
+**Root Cause:**
+`cache.invalidatePattern` loop termination compared cursor against numeric `0` only. Upstash scan can return terminal cursor as string `"0"`, causing non-terminating invalidation loops. Because some write routes awaited invalidation, responses timed out.
+
+**Fix Applied:**
+
+- Updated `lib/data/redis.ts` to treat both `0` and `"0"` as terminal cursors.
+- Added exact-key optimization (direct `DEL`) for non-glob invalidation requests.
+- Added timeout wrapping for scan/delete operations in invalidation path.
+- Switched profile/org/hierarchy write invalidations to async non-blocking invalidation where safe.
+
+**Prevention:**
+
+- Never assume Redis scan cursor type; handle string/number terminal values.
+- Keep cache invalidation off the critical response path for user-facing writes.
+- Add regression tests covering cursor terminal type variants.
+
+**Files Affected:**
+
+- `lib/data/redis.ts`
+- `modules/users/services/profileService.ts`
+- `modules/org/services/orgWriteService.ts`
+- `app/api/org/hierarchy/bulk/route.ts`
+
+**Date:** 2026-04-04
+
+## Push notification toggle mismatch with browser-enabled notifications
+
+**Symptom:**
+Push toggle appeared off even when browser notification permission was already granted. Toggling on could fail with generic error.
+
+**Root Cause:**
+UI initialization did not fully reconcile browser permission + existing push subscription + backend persistence state. Enable flow also did not robustly handle existing subscriptions or missing VAPID key.
+
+**Fix Applied:**
+
+- Added browser-state sync path in profile notifications tab.
+- If subscription already exists, upsert backend record instead of forcing a new subscribe.
+- Added explicit guard/message for missing `NEXT_PUBLIC_VAPID_PUBLIC_KEY`.
+- Converted VAPID key to `Uint8Array` for subscribe call compatibility.
+
+**Prevention:**
+
+- Treat push enabled state as `permission === granted` AND `subscription exists`.
+- Reconcile backend subscription state on UI load.
+- Validate VAPID env before attempting subscription creation.
+
+**Files Affected:**
+
+- `modules/users/components/ProfilePage.tsx`
+- `config/content.ts`
+
+**Date:** 2026-04-04
