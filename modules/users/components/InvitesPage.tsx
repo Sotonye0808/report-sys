@@ -21,6 +21,7 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { ROLE_CONFIG } from "@/config/roles";
 import { CAMPUS_SCOPED_ROLES, GROUP_SCOPED_ROLES } from "@/config/hierarchy";
 import Table from "@/components/ui/Table";
+import { apiMutation } from "@/lib/utils/apiMutation";
 
 /* ── Invitable roles: hierarchy-based ───────────────────────────────────────── */
 
@@ -120,15 +121,12 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
   }) => {
     setSaving(true);
     try {
-      const res = await fetch(API_ROUTES.inviteLinks.list, {
+      const result = await apiMutation<InviteLink, typeof values>(API_ROUTES.inviteLinks.list, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: values,
       });
-      const json = await res.json();
-      if (!res.ok) {
-        message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
-        setSaving(false);
+      if (!result.ok) {
+        message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
         return;
       }
       message.success("Invite link generated!");
@@ -136,7 +134,6 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
       onCreated();
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
-      setSaving(false);
     } finally {
       setSaving(false);
     }
@@ -251,10 +248,11 @@ export function InvitesPage() {
 
   const handleRevoke = async (id: string) => {
     try {
-      const res = await fetch(API_ROUTES.inviteLinks.revoke(id), { method: "DELETE" });
-      const json = await res.json();
-      if (!res.ok) {
-        message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
+      const result = await apiMutation<InviteLink>(API_ROUTES.inviteLinks.revoke(id), {
+        method: "DELETE",
+      });
+      if (!result.ok) {
+        message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
         return;
       }
       message.success("Invite link revoked.");

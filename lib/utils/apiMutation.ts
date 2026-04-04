@@ -2,7 +2,7 @@
 
 import { CONTENT } from "@/config/content";
 
-type MutationMethod = "POST" | "PUT" | "PATCH" | "DELETE";
+type MutationMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 interface MutationRequestOptions<TBody> {
   method?: MutationMethod;
@@ -49,13 +49,35 @@ export async function apiMutation<TData = unknown, TBody = unknown>(
 
     const responseRequestId = res.headers.get("x-request-id") ?? requestId;
     const text = await res.text().catch(() => "");
-    const json = text ? JSON.parse(text) : {};
+    let json: any = {};
+    try {
+      json = text ? JSON.parse(text) : {};
+    } catch {
+      console.error("[apiMutation] invalid JSON response", {
+        method,
+        url,
+        requestId: responseRequestId,
+        status: res.status,
+      });
+      return {
+        ok: false,
+        status: res.status,
+        requestId: responseRequestId,
+        error: getDefaultErrorMessage(),
+      };
+    }
 
     if (!res.ok) {
       const parsedError =
         (json as ApiErrorPayload)?.error ??
         (json as ApiErrorPayload)?.message ??
         getDefaultErrorMessage();
+      console.warn("[apiMutation] request failed", {
+        method,
+        url,
+        requestId: responseRequestId,
+        status: res.status,
+      });
       return {
         ok: false,
         status: res.status,
@@ -65,6 +87,12 @@ export async function apiMutation<TData = unknown, TBody = unknown>(
     }
 
     const data = json && typeof json === "object" && "success" in json ? json.data : json;
+    console.info("[apiMutation] request succeeded", {
+      method,
+      url,
+      requestId: responseRequestId,
+      status: res.status,
+    });
 
     return {
       ok: true,
@@ -73,6 +101,11 @@ export async function apiMutation<TData = unknown, TBody = unknown>(
       data: data as TData,
     };
   } catch {
+    console.error("[apiMutation] network failure", {
+      method,
+      url,
+      requestId,
+    });
     return {
       ok: false,
       status: 0,
@@ -81,4 +114,3 @@ export async function apiMutation<TData = unknown, TBody = unknown>(
     };
   }
 }
-

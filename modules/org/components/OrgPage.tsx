@@ -26,6 +26,7 @@ import Table from "@/components/ui/Table";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { FilterToolbar } from "@/components/ui/FilterToolbar";
+import { apiMutation } from "@/lib/utils/apiMutation";
 
 const ORG_ID = process.env.NEXT_PUBLIC_ORG_ID ?? "harvesters";
 
@@ -54,6 +55,11 @@ type OrgBulkOp = {
   action: OrgBulkAction;
   data: Record<string, any>;
 };
+
+interface OrgBulkSendResult {
+  dryRun: boolean;
+  results: Array<{ index: number; success: boolean; message: string; id?: string }>;
+}
 
 /* ── Campus tab ─────────────────────────────────────────────────────────── */
 
@@ -142,37 +148,31 @@ function CampusesTab() {
     setSaving(true);
     try {
       if (editTarget) {
-        const res = await fetch(API_ROUTES.org.campus(editTarget.id), {
+        const result = await apiMutation<Campus, Record<string, unknown>>(API_ROUTES.org.campus(editTarget.id), {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+          body: {
             ...values,
             groupId: values.groupId || null,
-          }),
+          },
         });
-        if (!res.ok) {
-          const j = await res.json();
-          message.error(j.error);
-          setSaving(false);
+        if (!result.ok) {
+          message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
           return;
         }
         message.success(CONTENT.common.successSave as string);
         setEditTarget(null);
         refetch();
       } else {
-        const res = await fetch(API_ROUTES.org.campuses, {
+        const result = await apiMutation<Campus, Record<string, unknown>>(API_ROUTES.org.campuses, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+          body: {
             ...values,
             organisationId: ORG_ID,
             groupId: values.groupId || null,
-          }),
+          },
         });
-        if (!res.ok) {
-          const j = await res.json();
-          message.error(j.error);
-          setSaving(false);
+        if (!result.ok) {
+          message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
           return;
         }
         message.success(CONTENT.common.successSave as string);
@@ -182,7 +182,6 @@ function CampusesTab() {
       form.resetFields();
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
-      setSaving(false);
     } finally {
       setSaving(false);
     }
@@ -341,30 +340,24 @@ function GroupsTab() {
     setSaving(true);
     try {
       if (editTarget) {
-        const res = await fetch(API_ROUTES.org.group(editTarget.id), {
+        const result = await apiMutation<OrgGroup, typeof values>(API_ROUTES.org.group(editTarget.id), {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values),
+          body: values,
         });
-        if (!res.ok) {
-          const j = await res.json();
-          message.error(j.error);
-          setSaving(false);
+        if (!result.ok) {
+          message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
           return;
         }
         message.success(CONTENT.common.successSave as string);
         setEditTarget(null);
         refetchGroups();
       } else {
-        const res = await fetch(API_ROUTES.org.groups, {
+        const result = await apiMutation<OrgGroup, Record<string, unknown>>(API_ROUTES.org.groups, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...values, organisationId: ORG_ID }),
+          body: { ...values, organisationId: ORG_ID },
         });
-        if (!res.ok) {
-          const j = await res.json();
-          message.error(j.error);
-          setSaving(false);
+        if (!result.ok) {
+          message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
           return;
         }
         message.success(CONTENT.common.successSave as string);
@@ -374,7 +367,6 @@ function GroupsTab() {
       form.resetFields();
     } catch {
       message.error((CONTENT.errors as Record<string, string>).generic);
-      setSaving(false);
     } finally {
       setSaving(false);
     }
@@ -529,15 +521,14 @@ function HierarchyTab() {
 
       const ops = interactiveBulk ? buildOpsFromInteractive() : JSON.parse(bulkText);
 
-      const res = await fetch(API_ROUTES.org.hierarchyBulk, {
+      const result = await apiMutation<OrgBulkSendResult, { ops: OrgBulkOp[]; dryRun: boolean }>(API_ROUTES.org.hierarchyBulk, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ops, dryRun: isDryRun }),
+        body: { ops, dryRun: isDryRun },
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setBulkError(data.error || "Bulk operation failed");
+      if (!result.ok) {
+        setBulkError(result.error || "Bulk operation failed");
       } else {
+        const data = { success: true, ...(result.data ?? { dryRun: isDryRun, results: [] }) };
         setBulkResult(data);
         if (!isDryRun && data.success) {
           await refetchHierarchy();
@@ -585,15 +576,12 @@ function HierarchyTab() {
         if (values.location !== undefined) body.location = values.location;
       }
 
-      const res = await fetch(url, {
+      const result = await apiMutation(url, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body,
       });
-
-      if (!res.ok) {
-        const j = await res.json();
-        message.error(j.error || "Save failed");
+      if (!result.ok) {
+        message.error(result.error || "Save failed");
         return;
       }
 

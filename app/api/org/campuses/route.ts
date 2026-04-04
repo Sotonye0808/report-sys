@@ -7,7 +7,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { db, cache, invalidateCache } from "@/lib/data/db";
+import { db, cache } from "@/lib/data/db";
+import { getRequestContext } from "@/lib/server/requestContext";
+import { createCampus } from "@/modules/org/services/orgWriteService";
+import {
+    errorResponse,
+    handleApiError,
+    successResponse,
+    unauthorizedResponse,
+} from "@/lib/utils/api";
 import { UserRole } from "@/types/global";
 
 const CreateCampusSchema = z.object({
@@ -20,51 +28,53 @@ const CreateCampusSchema = z.object({
 });
 
 export async function GET(req: NextRequest) {
+    const ctx = getRequestContext(req);
     try {
         const auth = await verifyAuth(req);
         if (!auth.success) {
-            return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+            return unauthorizedResponse(auth.error, ctx.requestId);
         }
 
         const cached = await cache.get("org:campuses:list");
-        if (cached) return NextResponse.json(cached);
+        if (cached) {
+            const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
+            return NextResponse.json(parsed, { headers: { "x-request-id": ctx.requestId } });
+        }
 
         const campuses = await db.campus.findMany({ orderBy: { name: "asc" } });
-        const response = { success: true, data: campuses };
+        const response = successResponse(campuses, ctx.requestId);
         await cache.set("org:campuses:list", JSON.stringify(response), 120);
-        return NextResponse.json(response);
+        return NextResponse.json(response, { headers: { "x-request-id": ctx.requestId } });
     } catch (err) {
-        console.error("[api] Error in GET /api/org/campuses", err);
-        return NextResponse.json({ success: false, error: "Failed to load campuses." }, { status: 500 });
+        return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
     }
 }
 
 export async function POST(req: NextRequest) {
+    const ctx = getRequestContext(req);
     try {
         const auth = await verifyAuth(req, [UserRole.SUPERADMIN]);
         if (!auth.success) {
-            return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
+            return unauthorizedResponse(auth.error, ctx.requestId);
         }
 
         const body = CreateCampusSchema.parse(await req.json());
-
-        const campus = await db.campus.create({
-            data: {
-                name: body.name,
-                parentId: body.groupId ?? "",
-                country: body.country ?? "",
-                location: body.location ?? "",
-                adminId: body.adminId,
-                isActive: true,
-            },
+        const result = await createCampus({
+            name: body.name,
+            country: body.country,
+            location: body.location,
+            groupId: body.groupId,
+            adminId: body.adminId,
         });
+        if (!result.success) {
+            return errorResponse(result.error, result.code, ctx.requestId);
+        }
 
-        await invalidateCache("org:campuses:*");
-        await invalidateCache("org:groups:*");
-        await invalidateCache("org:hierarchy");
-        return NextResponse.json({ success: true, data: campus }, { status: 201 });
+        return NextResponse.json(successResponse(result.data, ctx.requestId), {
+            status: 201,
+            headers: { "x-request-id": ctx.requestId },
+        });
     } catch (err) {
-        console.error("[api] Error in POST /api/org/campuses", err);
-        return NextResponse.json({ success: false, error: "Failed to create campus." }, { status: 500 });
+        return handleApiError(err, { requestId: ctx.requestId, route: ctx.route });
     }
 }
