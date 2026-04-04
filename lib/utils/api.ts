@@ -4,6 +4,7 @@
  */
 
 import { NextResponse } from "next/server";
+import { logServerError } from "@/lib/utils/serverLogger";
 
 interface PrismaClientKnownRequestErrorLike {
     name: string;
@@ -21,30 +22,31 @@ function isPrismaClientKnownRequestError(err: unknown): err is PrismaClientKnown
 }
 
 /** Returns a plain { success: true, data } object — wrap in NextResponse.json() at the call site. */
-export function successResponse<T>(data: T): { success: true, data: T } {
-    return { success: true, data };
+export function successResponse<T>(data: T, requestId?: string): { success: true, data: T, requestId?: string } {
+    return requestId ? { success: true, data, requestId } : { success: true, data };
 }
 
-export function errorResponse(error: string, status: number) {
-    return NextResponse.json({ success: false, error, code: status } satisfies ApiResponse<never>, {
+export function errorResponse(error: string, status: number, requestId?: string) {
+    return NextResponse.json({ success: false, error, code: status, ...(requestId ? { requestId } : {}) } satisfies ApiResponse<never> & { requestId?: string }, {
         status,
+        headers: requestId ? { "x-request-id": requestId } : undefined,
     });
 }
 
-export function unauthorizedResponse(message = "Unauthorised") {
-    return errorResponse(message, 401);
+export function unauthorizedResponse(message = "Unauthorised", requestId?: string) {
+    return errorResponse(message, 401, requestId);
 }
 
-export function forbiddenResponse(message = "Insufficient permissions") {
-    return errorResponse(message, 403);
+export function forbiddenResponse(message = "Insufficient permissions", requestId?: string) {
+    return errorResponse(message, 403, requestId);
 }
 
-export function notFoundResponse(message = "Not found") {
-    return errorResponse(message, 404);
+export function notFoundResponse(message = "Not found", requestId?: string) {
+    return errorResponse(message, 404, requestId);
 }
 
-export function badRequestResponse(message = "Bad request") {
-    return errorResponse(message, 400);
+export function badRequestResponse(message = "Bad request", requestId?: string) {
+    return errorResponse(message, 400, requestId);
 }
 
 function getErrorPayload(err: unknown) {
@@ -68,9 +70,17 @@ function getErrorPayload(err: unknown) {
     return { message: "Unknown error" };
 }
 
-export function handleApiError(err: unknown) {
+export function handleApiError(
+    err: unknown,
+    options?: { requestId?: string; route?: string; context?: Record<string, unknown> },
+) {
     const payload = getErrorPayload(err);
-    console.error("[API Error]", payload);
+    logServerError("[API Error]", {
+        requestId: options?.requestId,
+        route: options?.route,
+        error: payload,
+        ...options?.context,
+    });
 
     let status = 500;
     let error = payload?.message ?? "An unexpected error occurred";
@@ -93,8 +103,12 @@ export function handleApiError(err: unknown) {
             success: false,
             error,
             code: status,
-            debug: payload,
+            ...(process.env.NODE_ENV !== "production" ? { debug: payload } : {}),
+            ...(options?.requestId ? { requestId: options.requestId } : {}),
         },
-        { status },
+        {
+            status,
+            headers: options?.requestId ? { "x-request-id": options.requestId } : undefined,
+        },
     );
 }
