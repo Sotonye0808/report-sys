@@ -32,6 +32,17 @@
 - [ ] Wire Resend email service into invite creation, password reset, report workflow events (submission/approval/lock/reminder)
 - [x] Implement missing report workflow endpoints & UI: edit drafts, update requests, and goal unlock requests
 - [x] Update documentation and `.env.example` for Resend and production env variables
+- [ ] Consolidate API response contract for invite/profile/org CRUD routes using shared helpers (`successResponse`, `errorResponse`, `handleApiError`) with consistent `success|data|error|code` payload shape
+- [ ] Introduce shared client mutation utility for API writes (pending/success/error lifecycle, safe loading reset, unified toast mapping, request/response logging)
+- [ ] Refactor `InvitesPage`, `ProfilePage`, `OrgPage`, and `InboxPage` mutations to use consolidated mutation utility with guaranteed refetch/invalidation on success
+- [ ] Extract invite/profile/org write operations into domain services to centralize validation, transaction boundaries, and cache invalidation
+- [ ] Add request correlation IDs + structured logs for write routes (invite links, user profile, org groups/campuses/hierarchy bulk, notifications)
+- [ ] Add config-driven email template registry and shared email layout wrapper (logo, brand header/footer, dynamic placeholders) for all Resend email types
+- [ ] Complete channel-orchestrated notification flow (in-app + email + push) with graceful fallback when `RESEND_API_KEY` is missing
+- [ ] Add persistent notification preference and push subscription APIs; wire profile notification settings to backend storage instead of local-only state
+- [ ] Add regression tests for non-stuck loading states and response/error handling on invite/profile/org CRUD flows
+- [ ] Add integration tests for Resend-enabled and Resend-disabled modes to verify email gating does not break core app behavior
+- [ ] Add diagnostics runbook section in `.ai-system` for tracing failed operations (where to find request IDs, structured logs, and route debug metadata)
 
 ---
 

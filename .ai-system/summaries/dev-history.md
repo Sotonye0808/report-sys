@@ -105,6 +105,7 @@ Resolved deployment build failure due to Resend initialization without API key a
 Implemented a universal form persistence utility for local draft autosave/restore across reports, templates, goals, org, and bug-report pages. Hardened Prisma transactions by aligning with Accelerate timeout limits (15000ms) and reduced bulk transaction flags to avoid interactive timeouts.
 
 **Completed:**
+
 - Added `useDraftCache` localStorage fallback and persistence extension
 - Added `useFormPersistence` wrapper hook for consistent draft state + status
 - Added `FormDraftBanner` UI with user notification for saved/restored/cleared states
@@ -113,10 +114,12 @@ Implemented a universal form persistence utility for local draft autosave/restor
 - Updated task queue and project history docs
 
 **Key Changes:**
+
 - UX now displays explicit draft save/restore notifications for form safety, fulfilling requirement of preventing refresh loss.
 - Prevents invalid Accelerate interactive transaction timeout 15000ms error by applying limits and chunked operation design.
 
 **Next Sprint Focus:**
+
 - Extend form persistence to Org and Bug Report pages
 
 ## 2026-03-25 — Bulk Transaction Safety + Shared Draft Status
@@ -125,6 +128,7 @@ Implemented a universal form persistence utility for local draft autosave/restor
 Enhanced bulk writing reliability, error handling, and DRY draft persistence across goals and templates. Added a shared helper for chunked bulk transactions, large-payload limits, and automated bulk tests.
 
 **Completed:**
+
 - Added `lib/data/bulkTransaction.ts` with chunking, retry and metrics support
 - Added `app/api/middleware/validate-bulk-limit.ts` and integrated into goals bulk route
 - Refactored goals persistence to `useFormPersistence` and removed duplicate state logic
@@ -132,11 +136,13 @@ Enhanced bulk writing reliability, error handling, and DRY draft persistence acr
 - Updated task queue state and persisted completion in history
 
 **Key Changes:**
+
 - Mitigates OOM and long-running transaction risk by enforcing max item limits and chunked I/O
 - Centralized draft status handling for consistent UX across pages
 - Improved observability on bulk route performance with metrics logs
 
 **Next Sprint Focus:**
+
 - Add integration tests for timeout and content-consistency edge cases in template old/new variants
 - Expand generic bulk API middleware integration to `report-templates` and `reports` bulk entry points
 - Finish offline sync indicator and retry queue behavior in UI
@@ -149,6 +155,7 @@ Enhanced bulk writing reliability, error handling, and DRY draft persistence acr
 Implemented final bugfixes and stabilization for analytics draft filtering, report aggregation status handling, goals template grouping with per-campus collapsible matrix, and org hierarchy Prisma network-fallback behavior. Typecheck is green after goals UI template loop scope correction.
 
 **Completed:**
+
 - Added `includeDrafts` support to `app/api/analytics/overview` and `app/api/analytics/metrics`
 - Updated `modules/reports/components/ReportAggregationPage.tsx` to surface draft/status filters
 - Upgraded `modules/goals/components/GoalsPage.tsx` template matrix rendering with campus columns and collapsed template panels
@@ -156,12 +163,32 @@ Implemented final bugfixes and stabilization for analytics draft filtering, repo
 - Updated `.ai-system` docs (repo map, dependency graph, module summaries, architecture, project plan, dev history, lessons learned)
 
 **Key Changes:**
+
 - Resilience in `org` API for transient Prisma Accelerate failures (EAI_AGAIN/timeouts)
 - Unified draft visibility flag for analytics and report aggregation
 - Goals UI now supports per-template collapsible sections across campus/group views
 
 **Next Sprint Focus:**
+
 - Add integration tests for analytics draft filtering and org hierarchy fallback
 - Finalize remaining task queue items for launch prep (security, accessibility, docs)
 
+## 2026-04-04 — Production Readiness Consolidation Plan
 
+**Summary:**
+Created a dedicated implementation plan to consolidate API and DB interaction flows for weaker CRUD paths (invite links, profile, org hierarchy/campus/group) and to complete resilient notification channel wiring. The plan emphasizes unified mutation lifecycle handling, consistent API response envelopes, structured logging, and optional-but-ready Resend integration.
+
+**Completed:**
+
+- Audited current route/module patterns across invites, profile, org, notifications, and resend wiring.
+- Added concrete current-sprint tasks in `.ai-system/planning/task-queue.md` for API consolidation, mutation helper rollout, channel orchestration, and testing.
+- Created `.ai-system/planning/temp-production-readiness-plan-2026-04-04.md` for autonomous cloud implementation.
+
+**Key Changes:**
+
+- Established a single planning source for production-readiness hardening that can be executed in vertical slices without architectural drift.
+- Added architecture update checklist targets for `system-architecture.md` (data flow, modules, config points, and constraints).
+
+**Next Sprint Focus:**
+
+Implement the temporary plan in cloud session, complete tests for stuck-loading regressions and notification-channel gating, then update architecture and repair docs with final outcomes.
