@@ -9,6 +9,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
 import { API_ROUTES, APP_ROUTES } from "@/config/routes";
 import { CONTENT } from "@/config/content";
+import { resolveOrgRollupContext } from "@/modules/org";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
 import { Button } from "@/components/ui/Button";
 import { Card } from "antd";
@@ -99,34 +100,35 @@ export function ReportAggregationPage() {
     });
   }, [reportListData?.reports, scopeId, scopeType]);
 
+  const rollupContext = useMemo(
+    () =>
+      resolveOrgRollupContext({
+        role: role as UserRole,
+        userCampusId: user?.campusId ?? undefined,
+        userGroupId: user?.orgGroupId ?? undefined,
+        hierarchy: orgHierarchy,
+      }),
+    [orgHierarchy, role, user?.campusId, user?.orgGroupId],
+  );
+
   const scopeItems = useMemo(() => {
-    if (!orgHierarchy) return [];
     if (scopeType === "group") {
-      return orgHierarchy.map((g) => ({ value: g.id, label: g.name }));
+      return rollupContext.scopeOptions.groups;
     }
     if (scopeType === "campus") {
-      return orgHierarchy.flatMap((g) =>
-        g.campuses.map((c) => ({ value: c.id, label: `${g.name} / ${c.name}` })),
-      );
+      return rollupContext.scopeOptions.campuses;
     }
     return [];
-  }, [orgHierarchy, scopeType]);
+  }, [rollupContext.scopeOptions.campuses, rollupContext.scopeOptions.groups, scopeType]);
 
   useEffect(() => {
     if (!user || !role || !orgHierarchy) return;
 
-    if (isCampusRole) {
-      setScopeType("campus");
-      setScopeId(user.campusId ?? "");
-      return;
+    if (isCampusRole || isGroupRole) {
+      setScopeType(rollupContext.roleScopeType);
+      setScopeId(rollupContext.roleScopeId);
     }
-
-    if (isGroupRole) {
-      setScopeType("group");
-      setScopeId(user.orgGroupId ?? "");
-      return;
-    }
-  }, [isCampusRole, isGroupRole, orgHierarchy, role, user]);
+  }, [isCampusRole, isGroupRole, orgHierarchy, role, rollupContext.roleScopeId, rollupContext.roleScopeType, user]);
 
   useEffect(() => {
     if (!templateId && metricIds.length > 0) {

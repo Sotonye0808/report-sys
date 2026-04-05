@@ -175,8 +175,11 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
             >
               Back
             </Button>
-            <Button icon={<BarChartOutlined />} onClick={() => window.location.reload()}>
-              Refresh
+            <Button
+              icon={<BarChartOutlined />}
+              onClick={() => router.replace(APP_ROUTES.reportAnalytics(reportId))}
+            >
+              {CONTENT.common.refresh as string}
             </Button>
           </div>
         }

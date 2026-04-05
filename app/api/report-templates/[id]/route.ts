@@ -8,6 +8,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
+import { createTemplateVersionSnapshot } from "@/lib/utils/audit";
+import { parseCachedJsonSafe } from "@/lib/utils/cacheJson";
 import { UserRole, MetricFieldType, MetricCalculationType, ReportDeadlinePolicy } from "@/types/global";
 
 /* ── Schemas ──────────────────────────────────────────────────────────────── */
@@ -69,14 +71,8 @@ export async function GET(
 
         const cacheKey = `templates:detail:${id}`;
         const cached = await cache.get(cacheKey);
-        if (cached) {
-            try {
-                const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
-                return NextResponse.json(parsed);
-            } catch {
-                // Cached payload is invalid JSON; ignore and refetch from the database.
-            }
-        }
+        const parsedCached = parseCachedJsonSafe(cached);
+        if (parsedCached) return NextResponse.json(parsedCached);
 
         const template = await db.reportTemplate.findUnique({
             where: { id },
@@ -302,14 +298,15 @@ export async function PUT(
                     include: { sections: { include: { metrics: { orderBy: { order: "asc" } } }, orderBy: { order: "asc" } } },
                 });
                 if (!full) throw new Error("Failed to load updated template for snapshot");
-                await tx.reportTemplateVersion.create({
-                    data: {
+                await createTemplateVersionSnapshot(
+                    {
                         templateId: id,
                         versionNumber: full.version,
                         snapshot: JSON.parse(JSON.stringify(full)),
-                        createdById: auth.user.id,
+                        actorId: auth.user.id,
                     },
-                });
+                    tx,
+                );
 
                 return full;
             },
