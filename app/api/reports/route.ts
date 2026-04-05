@@ -256,6 +256,13 @@ export async function POST(req: NextRequest) {
                 },
                 recipient: creator,
                 requestId: ctx.requestId,
+            }).catch((error) => {
+                console.warn("[reports.create] deadline reminder dispatch failed", {
+                    requestId: ctx.requestId,
+                    reportId: report.id,
+                    actorId: auth.user.id,
+                    error: error instanceof Error ? error.message : String(error),
+                });
             });
         }
 

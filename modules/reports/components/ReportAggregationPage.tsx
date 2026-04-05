@@ -323,6 +323,11 @@ export function ReportAggregationPage() {
               }}
               disabled={!isGlobalRole}
             />
+            {!isGlobalRole && (
+              <span className="text-xs text-ds-text-subtle">
+                {aggregationContent.scopeLockedHint}
+              </span>
+            )}
             {(scopeType === "campus" || scopeType === "group") && (
               <Select
                 value={scopeId || undefined}

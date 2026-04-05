@@ -285,6 +285,7 @@ export const CONTENT = {
             accessDeniedTitle: "Access denied",
             accessDeniedDescription: "You are not permitted to use aggregation.",
             scopeRequiredError: "Please select a scope before previewing.",
+            scopeLockedHint: "Scope is fixed by your role permissions.",
         },
         export: {
             button: "Export (.xlsx)",

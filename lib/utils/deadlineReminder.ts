@@ -4,6 +4,14 @@ import { NotificationType } from "@/types/global";
 import { dispatchNotificationChannels } from "@/lib/utils/notificationOrchestrator";
 import { logServerWarn } from "@/lib/utils/serverLogger";
 
+function formatReminderDeadline(date: Date): string {
+  return new Intl.DateTimeFormat("en-NG", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Africa/Lagos",
+  }).format(date);
+}
+
 export async function dispatchDeadlineReminder(params: {
   report: {
     id: string;
@@ -39,7 +47,8 @@ export async function dispatchDeadlineReminder(params: {
     reminderContent.fallbackRecipient;
   const reportTitle = params.report.title ?? reminderContent.fallbackReportTitle;
   const reportUrl = `/reports/${params.report.id}`;
-  const message = `${reminderContent.messagePrefix} ${reportTitle} ${reminderContent.messageDueOn} ${deadlineDate.toLocaleString()}.`;
+  const formattedDeadline = formatReminderDeadline(deadlineDate);
+  const message = `${reminderContent.messagePrefix} ${reportTitle} ${reminderContent.messageDueOn} ${formattedDeadline}.`;
 
   try {
     const result = await dispatchNotificationChannels({
