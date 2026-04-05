@@ -87,6 +87,7 @@ export function ReportNewPage() {
   const [goalsMap, setGoalsMap] = useState<GoalsForReportMap>({});
   const [goalsLoading, setGoalsLoading] = useState(false);
   const goalFetchKeyRef = useRef<string | null>(null);
+  const pickerValueRef = useRef<Dayjs | null>(null);
 
   // pickerValue is the single source of truth for the selected period
   const [pickerValue, setPickerValue] = useState<Dayjs | null>(null);
@@ -186,7 +187,6 @@ export function ReportNewPage() {
     load();
   }, [user]);
 
-  const pickerValueRef = useRef<Dayjs | null>(null);
   useEffect(() => {
     pickerValueRef.current = pickerValue;
   }, [pickerValue]);

@@ -8,7 +8,7 @@
  * pre-seeded into the form as read-only goal values with live stat tracking.
  */
 
-import { useState, use, useEffect, useRef } from "react";
+import { useState, use, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { message } from "antd";
 import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
@@ -96,9 +96,14 @@ export function ReportEditPage({ params }: PageProps) {
     templateVersion?.snapshot && templateVersion.snapshot !== undefined
       ? templateVersion.snapshot
       : template;
-  const goalCampusId = report?.campusId ?? "";
-  const goalPeriodYear = report?.periodYear ?? null;
-  const goalPeriodMonth = report?.periodMonth ?? null;
+  const { goalCampusId, goalPeriodYear, goalPeriodMonth } = useMemo(
+    () => ({
+      goalCampusId: report?.campusId ?? "",
+      goalPeriodYear: report?.periodYear ?? null,
+      goalPeriodMonth: report?.periodMonth ?? null,
+    }),
+    [report?.campusId, report?.periodMonth, report?.periodYear],
+  );
 
   const isTemplateVersionMismatch = Boolean(
     report?.templateVersionId &&
