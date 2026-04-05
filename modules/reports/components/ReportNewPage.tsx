@@ -78,6 +78,7 @@ export function ReportNewPage() {
   const [templates, setTemplates] = useState<ReportTemplate[]>([]);
   const [campuses, setCampuses] = useState<Campus[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
+  const [defaultsReady, setDefaultsReady] = useState(false);
   const draftKey = "draft:report:new";
 
   /* Template sections state */
@@ -86,6 +87,7 @@ export function ReportNewPage() {
   const [goalsMap, setGoalsMap] = useState<GoalsForReportMap>({});
   const [goalsLoading, setGoalsLoading] = useState(false);
   const goalFetchKeyRef = useRef<string | null>(null);
+  const pickerValueRef = useRef<Dayjs | null>(null);
 
   // pickerValue is the single source of truth for the selected period
   const [pickerValue, setPickerValue] = useState<Dayjs | null>(null);
@@ -139,7 +141,7 @@ export function ReportNewPage() {
       setGoalsMap(draft.goalsMap || {});
       message.info("Restored your unsaved draft.");
     },
-    enabled: true,
+    enabled: defaultsReady,
   });
 
   useEffect(() => {
@@ -174,18 +176,24 @@ export function ReportNewPage() {
         setSelectedTemplate(defaultTemplate);
       }
 
-      if (!pickerValue) {
+      if (!pickerValueRef.current) {
         setPickerValue(dayjs());
       }
 
       setDataLoading(false);
+      setDefaultsReady(true);
     };
 
     load();
-  }, [user, form]);
+  }, [user]);
+
+  useEffect(() => {
+    pickerValueRef.current = pickerValue;
+  }, [pickerValue]);
 
   /* Load goals whenever campus + period changes */
   useEffect(() => {
+    if (!defaultsReady) return;
     const resolvedCampusId = campusId ?? user?.campusId;
     const resolvedPeriodType = periodType ?? ReportPeriodType.MONTHLY;
     if (!resolvedCampusId || !pickerValue) return;
@@ -228,7 +236,7 @@ export function ReportNewPage() {
     return () => {
       active = false;
     };
-  }, [campusId, user?.campusId, pickerValue, periodType]);
+  }, [campusId, user?.campusId, pickerValue, periodType, defaultsReady]);
 
   /* When template changes, reset metric values (but keep goals) */
   const handleTemplateChange = useCallback(

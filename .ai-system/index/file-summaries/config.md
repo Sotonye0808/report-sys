@@ -2,17 +2,19 @@
 
 ## Purpose
 
-Application configuration and business rules. This folder contains the single source of truth for roles, navigation, routes, report templates, and content strings used throughout the UI.
+Centralized business configuration for routes, navigation, roles/permissions, hierarchy behavior, report lifecycle defaults, and user-facing copy.
 
 ## Key Files
 
-- `config/routes.ts` — Route definitions and URL builders used by pages and navigation.
-- `config/roles.ts` — Role configuration and capability matrix for all user roles.
-- `config/reports.ts` — Default report template, status transitions, deadline configuration, and report-related constants.
-- `config/content.ts` — All user-facing copy strings (labels, messages, headings) organized by feature.
-- `config/hierarchy.ts` — Organization structure config (Campus → OrgGroup) and helper utilities.
+- `config/routes.ts` - Canonical app and API route constants (including report aggregation and assets lifecycle API paths).
+- `config/nav.ts` - Dashboard navigation model filtered by role.
+- `config/roles.ts` - Capability matrix and role-scoped behavior controls.
+- `config/reports.ts` - Report workflow and deadline/reminder configuration.
+- `config/content.ts` - Feature copy, labels, notifications text, and UI strings.
+- `config/hierarchy.ts` - Organization structure constants and helpers.
 
 ## Notes
 
-- Config files are pure data; they do not import React or UI components.
-- Changes to config may require UI adjustments (e.g., adding a new user role should update navigation and permissions).
+- Keep these files framework-agnostic (no React/component imports).
+- Prefer config-driven UI/API labels and messages to avoid hardcoded copy in features.
+- Route additions should update both `config/routes.ts` and any affected nav/breadcrumb consumers.

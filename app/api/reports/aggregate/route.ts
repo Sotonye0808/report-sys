@@ -6,18 +6,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
-import { successResponse, badRequestResponse, forbiddenResponse, handleApiError } from "@/lib/utils/api";
+import { successResponse, badRequestResponse, forbiddenResponse, notFoundResponse, handleApiError } from "@/lib/utils/api";
 import { ReportStatus, ReportPeriodType, UserRole } from "@/types/global";
-import { calculateAggregation, persistAggregatedReport, AggregationCriteria } from "@/lib/data/reportAggregation";
+import { calculateAggregation, persistAggregatedReport, AggregationCriteria, AggregationNoReportsError } from "@/lib/data/reportAggregation";
 
 const AggregationRequestSchema = z.object({
     scopeType: z.enum(["campus", "group", "all"]),
-    scopeId: z.string().uuid().optional(),
+    scopeId: z.string().min(1).optional(),
     periodType: z.nativeEnum(ReportPeriodType),
     periodYear: z.number().int().min(2000).max(2100),
     periodMonth: z.number().int().min(1).max(12).optional(),
     periodWeek: z.number().int().min(1).max(53).optional(),
-    templateId: z.string().uuid().optional(),
+    templateId: z.string().min(1).optional(),
+    includeDrafts: z.boolean().optional().default(true),
     includeStatuses: z.array(z.nativeEnum(ReportStatus)).optional(),
     metricIds: z.array(z.string()).optional(),
     action: z.enum(["preview", "generate"]).default("preview"),
@@ -52,6 +53,7 @@ export async function POST(req: NextRequest) {
             periodMonth: body.periodMonth,
             periodWeek: body.periodWeek,
             templateId: body.templateId,
+            includeDrafts: body.includeDrafts,
             includeStatuses: body.includeStatuses,
             metricIds: body.metricIds,
             action: body.action,
@@ -73,6 +75,12 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json(successResponse({ aggregation: aggregationResult }));
     } catch (err) {
+        if (err instanceof z.ZodError) {
+            return badRequestResponse("Invalid aggregation request payload.");
+        }
+        if (err instanceof AggregationNoReportsError) {
+            return notFoundResponse(err.message);
+        }
         if (err instanceof Error && err.message.includes("not authorized")) {
             return forbiddenResponse(err.message);
         }

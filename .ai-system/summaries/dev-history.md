@@ -357,3 +357,74 @@ Stabilized the aggregated-report flow by fixing scope resolution/enforcement acr
 **Next Sprint Focus:**
 
 - Complete remaining open production-readiness tasks (UI no-refresh regression harness, audit-helper refactor completion, remaining router/report-form fixes) and finish aggregation docs/metric-selector completion.
+
+## 2026-04-05 — Update-AI-System Sync + Aggregation No-Result Hardening
+
+**Summary:**
+Completed a follow-up synchronization pass to align `.ai-system` documentation and queue state with current repository reality, and patched the aggregation endpoint to avoid misclassifying no-data scenarios as server errors. Group-scope report matching was also hardened to reduce false-negative aggregation results on mixed data paths.
+
+**Completed:**
+
+- Updated aggregation behavior:
+  - `app/api/reports/aggregate/route.ts` now maps no-source-report conditions to `404`.
+  - `lib/data/reportAggregation.ts` now uses domain `AggregationNoReportsError` and broadens group scope matching (`orgGroupId` OR group campus IDs).
+- Refreshed planning/docs artifacts:
+  - `.ai-system/planning/task-queue.md`
+  - `.ai-system/planning/temp-task-queue-gap-audit-2026-04-05.md`
+  - `.ai-system/index/repo-map.md`
+  - `.ai-system/index/dependency-graph.md`
+  - `.ai-system/index/file-summaries/*`
+  - `.ai-system/agents/system-architecture.md`
+- Revalidated aggregation unit coverage:
+  - `npx tsx test/aggregation.test.ts` passed.
+
+**Key Changes:**
+
+- API consumers now get an actionable no-data response (`404`) instead of misleading `500` for empty aggregation criteria.
+- Task queue reconciliation now reflects the reduced open scope (10 actionable items excluding placeholder backlog entries).
+- Index/architecture docs now include managed assets, request-context logging utilities, and updated aggregation behavior.
+
+**Next Sprint Focus:**
+
+Complete remaining queue items: aggregation UI completion (metric selector/stepper + nav/breadcrumb), open regression suites, and template snapshot audit-helper refactor finalization.
+
+## 2026-04-05 — Remaining Queue Closure (Regression + Runtime + Rollup Consistency)
+
+**Summary:**
+Completed the remaining actionable queue slice by closing regression/test gaps, fixing report form rehydration and route-refresh behavior, and finalizing aggregation/org rollup architecture consistency. Centralized template snapshot persistence was moved into the shared audit helper, and cache-safe parsing was applied to key template/report read routes to reduce runtime cache-shape failures.
+
+**Completed:**
+
+- Added `test/taskQueueRemainingRegressions.test.ts` to cover:
+  - report template/auth refresh envelope regressions
+  - unlock/history envelope regressions
+  - org rollup scope behavior for campus/group/global roles
+- Moved template version snapshot write path to central helper:
+  - `lib/utils/audit.ts` (`createTemplateVersionSnapshot`)
+  - `app/api/report-templates/[id]/route.ts`
+- Added and integrated org hierarchy rollup context helper:
+  - `modules/org/services/orgRollupContext.ts`
+  - `modules/reports/components/ReportAggregationPage.tsx`
+- Fixed report form period/template rehydration loops and repetitive goals loading:
+  - `modules/reports/components/ReportNewPage.tsx`
+  - `modules/reports/components/ReportEditPage.tsx`
+- Fixed manual-reload navigation behavior on analytics page:
+  - `modules/reports/components/ReportAnalyticsPage.tsx` (router refresh path)
+- Added reusable cache-safe JSON parser and applied in template/report read routes:
+  - `lib/utils/cacheJson.ts`
+  - `app/api/report-templates/route.ts`
+  - `app/api/report-templates/[id]/route.ts`
+  - `app/api/reports/[id]/route.ts`
+  - `app/api/reports/[id]/history/route.ts`
+- Updated queue/checkpoint/architecture/project docs for closure.
+
+**Key Changes:**
+
+- Aggregation scope defaults/options now derive from a single org rollup context helper, reducing role-scope drift risk across UI/API flows.
+- Template snapshot persistence is now centralized in audit utility, aligning with report workflow event centralization and reducing duplicated write logic.
+- Report form draft restore now waits for defaults readiness, preventing stale rehydrate loops and redundant goals fetch churn.
+
+**Next Sprint Focus:**
+
+- Expand UI-level integration harness coverage for profile/org mutation rendering behavior when full component-mount test runtime is available.
+- Resolve repo baseline tooling debt: ESLint flat config migration and shell-agnostic test script glob handling.

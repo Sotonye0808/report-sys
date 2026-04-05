@@ -11,6 +11,7 @@ export const CONTENT = {
     nav: {
         dashboard: "Dashboard",
         reports: "Reports",
+        aggregatedReports: "Aggregated Reports",
         templates: "Templates",
         analytics: "Analytics",
         users: "Users",
@@ -640,6 +641,7 @@ export const CONTENT = {
         filter: "Filter",
         reset: "Reset",
         export: "Export",
+        refresh: "Refresh",
         loading: "Loading…",
         submitting: "Submitting…",
         required: "Required",

@@ -57,6 +57,10 @@ The Harvesters Central Reporting System is a **standalone, role-based web applic
 Phase: Active Development
 Active sprint focus: Production readiness, bug fixes, and quarterly summaries feature
 
+Aggregation closure note (2026-04-05):
+- Role-aware aggregation scope resolution now uses shared org rollup context helper behavior (campus/group/global-safe defaults).
+- Aggregation retrieval remains draft-inclusive by default (`includeDrafts`) and is validated in targeted tests for campus/group/global paths.
+
 ---
 
 ## Tech Decisions Already Made

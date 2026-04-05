@@ -143,3 +143,23 @@ export async function createAuditEvent(
     // Future targets: template, goal
     return null;
 }
+
+export async function createTemplateVersionSnapshot(
+    params: {
+        templateId: string;
+        versionNumber: number;
+        snapshot: unknown;
+        actorId: string;
+    },
+    tx?: Prisma.TransactionClient,
+) {
+    const target = tx ?? db;
+    return target.reportTemplateVersion.create({
+        data: {
+            templateId: params.templateId,
+            versionNumber: params.versionNumber,
+            snapshot: params.snapshot as Prisma.InputJsonValue,
+            createdById: params.actorId,
+        },
+    });
+}

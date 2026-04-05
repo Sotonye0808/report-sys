@@ -13,6 +13,7 @@ export interface AggregationCriteria {
     periodMonth?: number;
     periodWeek?: number;
     templateId?: string;
+    includeDrafts?: boolean;
     includeStatuses?: ReportStatus[];
     metricIds?: string[];
     action?: "preview" | "generate";
@@ -56,6 +57,42 @@ export interface AggregationResult {
     periodWeek?: number;
 }
 
+export class AggregationNoReportsError extends Error {
+    constructor(message = "No reports found for the selected scope and period.") {
+        super(message);
+        this.name = "AggregationNoReportsError";
+    }
+}
+
+const DRAFT_INCLUDED_STATUSES: ReportStatus[] = [
+    ReportStatus.DRAFT,
+    ReportStatus.SUBMITTED,
+    ReportStatus.APPROVED,
+    ReportStatus.REVIEWED,
+    ReportStatus.LOCKED,
+    ReportStatus.REQUIRES_EDITS,
+];
+
+const DRAFT_EXCLUDED_STATUSES: ReportStatus[] = [
+    ReportStatus.SUBMITTED,
+    ReportStatus.APPROVED,
+    ReportStatus.REVIEWED,
+    ReportStatus.LOCKED,
+    ReportStatus.REQUIRES_EDITS,
+];
+
+function resolveAggregationStatuses(criteria: AggregationCriteria): ReportStatus[] {
+    if (criteria.includeStatuses && criteria.includeStatuses.length > 0) {
+        const statuses = new Set(criteria.includeStatuses);
+        if (criteria.includeDrafts !== false) {
+            statuses.add(ReportStatus.DRAFT);
+        }
+        return Array.from(statuses);
+    }
+
+    return criteria.includeDrafts === false ? DRAFT_EXCLUDED_STATUSES : DRAFT_INCLUDED_STATUSES;
+}
+
 /** Determine campus IDs available for user scope. */
 export async function resolveScopeCampusIds(user: AuthUser): Promise<string[] | null> {
     if (!user || !user.role) return null;
@@ -96,7 +133,7 @@ export async function buildReportQuery(
     const where: any = {
         periodType: criteria.periodType,
         periodYear: criteria.periodYear,
-        status: { in: criteria.includeStatuses ?? [ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.SUBMITTED] },
+        status: { in: resolveAggregationStatuses(criteria) },
     };
 
     if (criteria.periodType === ReportPeriodType.MONTHLY && criteria.periodMonth != null) {
@@ -110,7 +147,20 @@ export async function buildReportQuery(
     if (criteria.scopeType === "campus" && criteria.scopeId) {
         where.campusId = criteria.scopeId;
     } else if (criteria.scopeType === "group" && criteria.scopeId) {
-        where.orgGroupId = criteria.scopeId;
+        const selectedGroup = await db.orgGroup.findUnique({
+            where: { id: criteria.scopeId },
+            include: { campuses: { select: { id: true } } },
+        });
+
+        const selectedGroupCampusIds = selectedGroup?.campuses.map((campus) => campus.id) ?? [];
+        if (selectedGroupCampusIds.length > 0) {
+            where.OR = [
+                { orgGroupId: criteria.scopeId },
+                { campusId: { in: selectedGroupCampusIds } },
+            ];
+        } else {
+            where.orgGroupId = criteria.scopeId;
+        }
     } else if (campusScope && campusScope.length > 0) {
         where.campusId = { in: campusScope };
     }
@@ -139,7 +189,7 @@ export async function calculateAggregation(
     });
 
     if (reports.length === 0) {
-        throw new Error("No reports found for the selected scope and period.");
+        throw new AggregationNoReportsError();
     }
 
     const templateIds = Array.from(new Set(reports.map((r) => r.templateId)));

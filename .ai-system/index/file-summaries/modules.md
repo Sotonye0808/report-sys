@@ -2,19 +2,21 @@
 
 ## Purpose
 
-Feature-centric modules that encapsulate UI components, hooks, and domain logic for each business capability (reports, analytics, users, org, goals, notifications, etc.).
+Domain-oriented feature boundaries for UI, route-facing service orchestration, and business workflows.
 
 ## Key Modules
 
-- `modules/auth` — Authentication utilities and auth-aware components used in the `app/(auth)` routes.
-- `modules/reports` — Core report forms, report detail views, and workflow components for creating/submitting/reviewing reports.
-- `modules/templates` — Template management UI and pages for creating/editing report templates.
-- `modules/analytics` — Dashboards and charts for compliance, submission trends, and KPI tracking; includes advanced axis label modes and draft-based data filtering from API routes.
-- `modules/goals` — Goal setting and template goal matrix (per-campus and per-group views) with collapsible template panels and one-click apply-to-all behavior.
-- `modules/users` / `modules/org` — Superadmin user and organization management interfaces; `modules/org` now includes org tree fallback to direct database query to avoid Prisma network-timeout EAI_AGAIN issues.
+- `modules/auth` - Auth-facing pages/components and settings screens.
+- `modules/reports` - Report create/edit/detail/analytics/aggregation pages, workflow services, and template-history helpers.
+- `modules/analytics` - Dashboard metrics, chart rendering, and chart utility helpers.
+- `modules/goals` - Goal matrix UX, editing flows, and unlock/edit request experiences.
+- `modules/users` - User profile management, invite workflows, and user admin surfaces.
+- `modules/org` - Organization hierarchy/group/campus management and write services.
+- `modules/notifications` - Inbox and notification-state UX.
+- `modules/templates` - Template management pages and supporting UI.
 
 ## Notes
 
-- Each module exposes a small public surface via `modules/<module>/index.ts` for easy imports.
-- Modules depend on shared utilities in `lib/` and configuration in `config/`.
-- UI components for modules are often built on shared primitives in `components/ui/`.
+- Keep module logic domain-focused; shared primitives belong in `components/ui` and `lib/*`.
+- `modules/reports/services/reportWorkflow.ts` is the primary workflow boundary for report status transitions and audit/event behavior.
+- Aggregation UI exists in `modules/reports/components/ReportAggregationPage.tsx` and remains an active enhancement area (stepper/metric-selection polish).

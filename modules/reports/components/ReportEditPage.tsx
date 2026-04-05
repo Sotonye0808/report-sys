@@ -8,7 +8,7 @@
  * pre-seeded into the form as read-only goal values with live stat tracking.
  */
 
-import { useState, use, useEffect } from "react";
+import { useState, use, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { message } from "antd";
 import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
@@ -51,8 +51,9 @@ export function ReportEditPage({ params }: PageProps) {
   const [notes, setNotes] = useState("");
   const [metricValues, setMetricValues] = useState<Record<string, MetricValues>>({});
   const [goalsMap, setGoalsMap] = useState<GoalsForReportMap>({});
-  const [initialized, setInitialized] = useState(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
   const [saving, setSaving] = useState(false);
+  const goalFetchKeyRef = useRef<string | null>(null);
 
   const {
     status: draftStatus,
@@ -71,7 +72,7 @@ export function ReportEditPage({ params }: PageProps) {
       setNotes(draft.notes);
       setMetricValues(draft.metricValues);
       setGoalsMap(draft.goalsMap);
-      setInitialized(true);
+      setHasInitialized(true);
     },
     enabled: true,
   });
@@ -95,6 +96,14 @@ export function ReportEditPage({ params }: PageProps) {
     templateVersion?.snapshot && templateVersion.snapshot !== undefined
       ? templateVersion.snapshot
       : template;
+  const { goalCampusId, goalPeriodYear, goalPeriodMonth } = useMemo(
+    () => ({
+      goalCampusId: report?.campusId ?? "",
+      goalPeriodYear: report?.periodYear ?? null,
+      goalPeriodMonth: report?.periodMonth ?? null,
+    }),
+    [report?.campusId, report?.periodMonth, report?.periodYear],
+  );
 
   const isTemplateVersionMismatch = Boolean(
     report?.templateVersionId &&
@@ -103,19 +112,26 @@ export function ReportEditPage({ params }: PageProps) {
     template.version !== templateToUse.version,
   );
 
-  /* Initialise form values + load goals once report + template are available */
+  /* Initialise form values once report + template are available */
   useEffect(() => {
-    if (!report || !templateToUse || !initialized) return;
+    if (!report || !templateToUse || hasInitialized) return;
     setTitle(report.title ?? "");
     setNotes(report.notes ?? "");
     setMetricValues(parseSectionsToMetricValues((report.sections ?? []) as unknown[]));
-    setInitialized(true);
+    setHasInitialized(true);
+  }, [hasInitialized, report, templateToUse]);
 
-    // Load goals for this campus + period
-    const campusId = report.campusId;
-    const year = report.periodYear;
-    const month = report.periodMonth;
-    if (!campusId || !year) return;
+  /* Load goals for this campus + period */
+  useEffect(() => {
+    if (!goalCampusId || !goalPeriodYear) return;
+    const campusId = goalCampusId;
+    const year = goalPeriodYear;
+    const month = goalPeriodMonth ?? undefined;
+    const nextFetchKey = `${campusId}:${year}:${month === undefined ? "none" : month}`;
+    if (goalFetchKeyRef.current === nextFetchKey) {
+      return;
+    }
+    goalFetchKeyRef.current = nextFetchKey;
 
     const params = new URLSearchParams({ campusId, year: String(year) });
     if (month) params.set("month", String(month));
@@ -128,7 +144,7 @@ export function ReportEditPage({ params }: PageProps) {
       .catch(() => {
         /* non-fatal */
       });
-  }, [report, template, initialized]);
+  }, [goalCampusId, goalPeriodMonth, goalPeriodYear]);
 
   const handleMetricChange = (metricId: string, v: MetricValues) =>
     setMetricValues((prev) => ({ ...prev, [metricId]: v }));

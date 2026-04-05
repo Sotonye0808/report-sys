@@ -4,3 +4,4 @@
  */
 
 export { OrgPage } from "./components/OrgPage";
+export { resolveOrgRollupContext } from "./services/orgRollupContext";

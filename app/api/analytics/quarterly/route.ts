@@ -22,6 +22,7 @@ const QuerySchema = z.object({
     year: z.coerce.number().optional(),
     quarter: z.coerce.number().min(1).max(4).optional(),
     campusId: z.string().optional(),
+    includeDrafts: z.enum(["true", "false"]).optional().default("true"),
 });
 
 function getQuarterMonths(q: number): number[] {
@@ -35,6 +36,7 @@ export async function GET(req: NextRequest) {
     }
 
     const query = QuerySchema.parse(Object.fromEntries(new URL(req.url).searchParams));
+    const includeDrafts = query.includeDrafts === "true";
 
     const now = new Date();
     const year = query.year ?? now.getFullYear();
@@ -56,6 +58,9 @@ export async function GET(req: NextRequest) {
         where.campusId = auth.user.campusId;
     }
     if (query.campusId) where.campusId = query.campusId;
+    if (!includeDrafts) {
+        where.status = { not: ReportStatus.DRAFT };
+    }
 
     const reports = await db.report.findMany({ where });
 
@@ -70,6 +75,9 @@ export async function GET(req: NextRequest) {
     if (where.campusId) prevWhere.campusId = where.campusId;
     if (roleConfig?.reportVisibilityScope === "campus" && auth.user.campusId) {
         prevWhere.campusId = auth.user.campusId;
+    }
+    if (!includeDrafts) {
+        prevWhere.status = { not: ReportStatus.DRAFT };
     }
     const prevReports = await db.report.findMany({ where: prevWhere });
 

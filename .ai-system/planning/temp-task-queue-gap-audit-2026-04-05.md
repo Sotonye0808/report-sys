@@ -1,7 +1,7 @@
 # Task Queue Gap Audit and Cloud Handoff
 
-Date: 2026-04-05
-Scope: Verify unchecked tasks vs implementation reality, then prepare cloud-session execution prompt
+Date: 2026-04-05 (handoff refresh)
+Scope: Final cloud handoff for all remaining implementation work
 
 ---
 
@@ -9,85 +9,59 @@ Scope: Verify unchecked tasks vs implementation reality, then prepare cloud-sess
 
 Source: `.ai-system/planning/task-queue.md`
 
-- Raw checked items: 51
-- Raw unchecked items: 19
-
-Reconciliation from code audit:
-
-- Verified done and checkbox-corrected in this audit pass: 2
-  - Offline sync indicator + retry queue
-  - Aggregated export chart embedding in export utility
+- Raw checked items: 60
+- Raw unchecked items: 10
 - Placeholder backlog items (non-actionable): 2
   - `[Backlog item 1]`
   - `[Backlog item 2]`
 
-Actionable remaining tasks after reconciliation: 17
+Actionable remaining tasks after reconciliation: 8
 
 ---
 
-## 2) Verified Done (Checkboxes corrected)
+## 2) Latest Implemented Context (Do Not Rework)
 
-1. Add offline sync indicator + retry queue for pending offline submissions
+Completed in current local session and already reflected in queue verification notes:
 
-Evidence:
+- Aggregation now supports draft-inclusive retrieval defaults end-to-end (`includeDrafts`) and robust status resolution.
+- Aggregation period filters for month/week can be left unset for year-wide matching.
+- Aggregation metric selector is enabled and template-driven in UI.
+- Aggregated reports nav entry added for authorized roles.
+- Analytics overview/metrics/quarterly endpoints now parse and honor draft-inclusion flags consistently.
+- Analytics page now auto-aligns year to latest available scoped report year when current year has no data.
 
-- `components/ui/OfflineIndicator.tsx`
-- `lib/hooks/useOfflineSync.ts`
-- `lib/utils/offlineQueue.ts`
-- `lib/utils/offlineFetch.ts`
+Key evidence files:
 
-2. Add data visualization embedding to export (spreadsheet charts/worksheet summary)
-
-Evidence:
-
-- `lib/utils/exportReports.ts` (`exportAggregatedReport` writes `Chart Data` sheet)
-- `modules/reports/components/ReportAggregationPage.tsx` uses `exportAggregatedReport`
+- `app/api/reports/aggregate/route.ts`
+- `lib/data/reportAggregation.ts`
+- `modules/reports/components/ReportAggregationPage.tsx`
+- `app/api/analytics/overview/route.ts`
+- `app/api/analytics/metrics/route.ts`
+- `app/api/analytics/quarterly/route.ts`
+- `modules/analytics/components/AnalyticsPage.tsx`
+- `config/nav.ts`
 
 ---
 
-## 3) Remaining Actionable Tasks (17)
+## 3) Remaining Actionable Tasks (8)
 
 ### A. Current Sprint Open
 
 1. Add regression tests for report template API and auth refresh behavior
 2. Add regression tests for report unlock and audit trail visibility
-3. Implement central audit trail helper and refactor report events + template version snapshots to use it
+3. Complete audit trail refactor by moving template version snapshot events to central helper (`lib/utils/audit.ts`)
 4. Fix report form stuck period/template selection and repetitive goals loading
 5. Fix router navigation failure where page transitions require reload before working
-6. Wire Resend email service into invite creation, password reset, report workflow events (submission/approval/lock/reminder)
-7. Add regression tests for Redis scan cursor string termination and write-route completion under cache invalidation load
-8. Add UI regression tests ensuring profile/org hierarchy mutations update UI state without manual refresh
-9. Add push notification sync test matrix
+6. Add UI regression tests ensuring profile/org hierarchy mutations update UI state without manual refresh
 
 ### B. Aggregated Rollup Feature Open / Partial
 
-10. Add report aggregation API kernel decorators and zod schemas (`app/api/reports/aggregate`) — partial
-11. Extend report data model/response types for `aggregationSource` and `aggregatedFrom`
-12. Implement `lib/data/reportAggregation.ts` robustness and correctness for template/version/scope/status calculations — partial
-13. Add org hierarchy context helper for rollup scope resolution
-14. Complete `ReportAggregationPage` interactive stepper + metric selector behavior — partial
-15. Add automated aggregation correctness tests in `test/aggregation.test.ts`
-16. Update nav + breadcrumbs for aggregate route coverage — partial
-17. Document aggregation behavior in project docs/hypersystem notes
+7. Add org hierarchy context helper for rollup scope resolution
+8. Document aggregation behavior in `.ai-system` architecture/project notes (plus product docs when introduced)
 
 ---
 
-## 4) Aggregation Failure Focus (Known user issue)
-
-Observed user issue:
-
-- Aggregation consistently fails with selected scope load errors.
-
-Current implementation gaps likely contributing:
-
-- Scope UX and role constraints are mismatched for some role/scope combinations.
-- Aggregation page has disabled metric selector and incomplete guided flow.
-- No automated aggregation test harness (`test/aggregation.test.ts`) to lock behavior.
-- Missing report-level metadata fields (`aggregationSource`, `aggregatedFrom`) reduce traceability and debugging.
-
----
-
-## 5) Cloud Session Prompt (Ready to Paste)
+## 4) Cloud Session Prompt (Ready to Paste)
 
 Read first:
 
@@ -95,68 +69,58 @@ Read first:
 - `.ai-system/planning/task-queue.md`
 - `.ai-system/agents/system-architecture.md`
 - `.ai-system/agents/repair-system.md`
-- `.ai-system/planning/aggregated-report-feature-plan.md`
-- `.ai-system/planning/cloudinary-asset-lifecycle-implementation-blueprint-2026-04-04.md`
 - `.ai-system/planning/temp-task-queue-gap-audit-2026-04-05.md`
 
 Task:
-Close the verified remaining actionable tasks from the task queue (17 items), with first priority on fixing aggregated report generation failures and then completing production-readiness test coverage.
+Complete all 8 remaining actionable tasks from the queue, in order of risk reduction and user impact.
 
-Critical priorities:
+Priority order:
 
-1. Fix aggregated report scope failure end-to-end so selected scope loads and preview/generate work reliably.
-2. Add missing aggregation tests (`test/aggregation.test.ts`) for sum/average/snapshot and scope/role behavior.
-3. Complete metadata support (`aggregationSource`, `aggregatedFrom`) in types/API responses.
-4. Complete remaining production-readiness regression tests:
-   - report template API + auth refresh
-   - report unlock + audit trail visibility
-   - Redis cursor termination/write completion
-   - profile/org UI mutation no-refresh behavior
-   - push sync matrix
-5. Finish Resend reminder wiring so report deadline reminder path is actually dispatched (not only templated).
+1. Regression coverage:
+   report template API + auth refresh; report unlock + audit trail visibility; profile/org UI no-refresh behavior
+2. Runtime correctness fixes:
+   report form stuck period/template selection and repetitive goals loading; router navigation requiring manual reload
+3. Architecture consistency:
+   complete template snapshot migration to central audit helper; add org hierarchy rollup helper for aggregation
+4. Documentation closure:
+   finalize aggregation behavior notes in `.ai-system` architecture/project docs
 
 Execution requirements:
 
-- Keep all user-facing text config-driven (`config/content.ts`).
-- Keep strict TypeScript and Zod validation boundaries.
-- Keep role-aware behavior consistent with `config/roles.ts` and existing route policy.
-- Use request-id structured logs on new write/failure-critical paths.
-- Avoid regressions in cloudinary screenshot lifecycle and existing report workflows.
+- Keep all user-facing strings in `config/content.ts`.
+- Preserve strict TypeScript + Zod boundaries.
+- Keep role-aware behavior aligned to `config/roles.ts`.
+- Keep request-id structured logging on failure-critical paths.
+- Do not regress already-landed aggregation and analytics draft-retrieval behavior.
 
-Task-queue hygiene requirement:
-
-- Mark tasks `[x]` only when implemented and validated.
-- Leave partial tasks unchecked and add short verification notes when needed.
-
-Validation gates before finishing:
+Validation gates:
 
 - `npm run -s typecheck` passes.
-- New/updated targeted tests run and pass (or clearly documented blockers with evidence).
-- Aggregation user flow validated for at least:
-  - one campus-scoped role
-  - one group-scoped role
+- New/updated tests pass (or blockers documented with evidence and next action).
+- Manual aggregation smoke check confirms draft-inclusive retrieval for at least:
+  - one campus role
+  - one group role
   - one global role
 
-Required docs updates in this session:
+Required docs updates before close:
 
-- `.ai-system/planning/task-queue.md` (checkbox status + notes)
+- `.ai-system/planning/task-queue.md`
 - `.ai-system/checkpoints/session-log.md`
 - `.ai-system/summaries/dev-history.md`
-- `.ai-system/agents/system-architecture.md` (if architecture behavior changed)
-- `.ai-system/agents/repair-system.md` (for newly discovered/fixed issue patterns)
+- `.ai-system/agents/system-architecture.md` (if behavior changed)
+- `.ai-system/agents/repair-system.md` (if new repair pattern found)
 
-Final report format expected from cloud session:
+Required final cloud report format:
 
-1. Completed tasks (with file evidence)
-2. Remaining tasks (if any) with blocker reason
-3. Aggregation bug root cause + fix summary
-4. Test results summary
-5. Risk notes and immediate next recommendations
+1. Completed items with file evidence
+2. Remaining items + blocker reasons (if any)
+3. Test/typecheck results
+4. Risk notes and immediate follow-up recommendation
 
 ---
 
-## 6) Context Refresh Note
+## 5) Context Refresh Note
 
-RepoMix snapshot refreshed via MCP for cloud context:
+Repo snapshot available for cloud context:
 
-- `repomix-current.txt` regenerated on 2026-04-05
+- `repomix-current.txt` (regenerated 2026-04-05)

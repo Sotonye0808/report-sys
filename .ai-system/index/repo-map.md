@@ -9,36 +9,37 @@
 ```
 project-root/
 │
-├── app/                          → Next.js App Router routes & server actions
-│   ├── (auth)/                   → Authentication pages (login, register, forgot/reset password)
-│   ├── (dashboard)/              → Authenticated dashboard routes (reports, analytics, users, org, templates)
-│   ├── api/                      → Server-side API routes (Next.js route handlers)
-│   ├── offline/                  → Offline fallback page (service worker awareness)
-│   ├── layout.tsx                → Root layout (providers, fonts, metadata)
-│   ├── page.tsx                  → Root landing redirect
-│   ├── error.tsx                 → Global error boundary
-│   ├── not-found.tsx             → 404 page
-│   └── manifest.ts / robots.ts   → metadata endpoints
+├── app/                          → Next.js App Router routes + API handlers
+│   ├── (auth)/                   → Public authentication pages
+│   ├── (dashboard)/              → Authenticated feature routes (reports/analytics/goals/org/users/etc.)
+│   ├── api/                      → Route handlers (auth, reports, aggregation, goals, org, notifications, assets)
+│   ├── offline/                  → Offline fallback route
+│   └── layout.tsx + page.tsx     → App shell + root entrypoints
 │
 ├── components/                   → UI primitives and shared components
 │   └── ui/                       → Design-system building blocks (Button, Card, Table, Modal, etc.)
 │
-├── config/                       → App config (content strings, routes, role hierarchy, report templates)
+├── config/                       → Config + business rules (content, roles, routes, nav, reports)
 │
-├── lib/                          → Core libraries (data access, hooks, utils, email, design tokens)
+├── lib/                          → Shared libraries (data, assets lifecycle, hooks, server helpers, utils)
+│   ├── assets/                   → Cloudinary adapter + lifecycle service/state machine
 │   ├── data/                     → Database adapters (Prisma, Redis, mock DB)
 │   ├── design-system/            → Token helpers and Ant Design theme integration
 │   ├── email/                    → Email provider (Resend)
 │   ├── hooks/                    → React hooks (auth, offline sync, data fetching, service worker)
+│   ├── server/                   → Request context helpers (request ID, metadata)
 │   └── utils/                    → Utility functions (API, auth, offline caching, notifications)
 │
-├── modules/                      → Feature modules (reports, goals, analytics, users, org, templates, etc.) with advanced routes (org hierarchy fallback, analytics draft filtering, goals template grouping)
+├── modules/                      → Feature modules (reports, analytics, goals, org, users, templates, notifications, auth)
 │
 ├── providers/                    → React providers (Theme, Antd, Auth)
 │
 ├── prisma/                       → Prisma schema, migrations, seed data
+│   └── generated/                → Generated Prisma client
 │
 ├── public/                       → Static assets (manifest, icons, service worker)
+│
+├── test/                         → Node/TS regression tests
 │
 ├── types/                        → Global TypeScript type declarations
 │
@@ -52,18 +53,19 @@ project-root/
 
 ## Directory Descriptions
 
-| Directory     | Purpose                                                                      | Key Files                                                          |
-| ------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `app/`        | Next.js App Router entrypoints, pages, layouts, and API route handlers       | `app/page.tsx`, `app/layout.tsx`, `app/api/*`, `app/(dashboard)/*` |
-| `components/` | Shared UI components and design-system primitives                            | `components/ui/Button.tsx`, `components/ui/Table.tsx`              |
-| `config/`     | Application configuration and business rules (roles, routes, templates, nav) | `config/routes.ts`, `config/roles.ts`, `config/reports.ts`         |
-| `lib/`        | Library code for data access, utilities, hooks, and email                    | `lib/data/prisma.ts`, `lib/utils/api.ts`, `lib/email/resend.ts`    |
-| `modules/`    | Feature modules that group UI, hooks, and API integration for a domain       | `modules/reports/*`, `modules/analytics/*`, `modules/users/*`      |
-| `providers/`  | React context providers used by the app shell                                | `providers/AuthProvider.tsx`, `providers/AntdProvider.tsx`         |
-| `prisma/`     | Database schema, migrations, and seed scripts                                | `prisma/schema.prisma`, `prisma/seed.ts`                           |
-| `public/`     | Static assets served by Next.js                                              | `public/manifest.json`, `public/sw.js`                             |
-| `types/`      | Global TypeScript types and enums used across the app                        | `types/global.d.ts`                                                |
-| `.ai-system/` | AI tooling, documentation, and workflow helpers                              | `.ai-system/agents/`, `.ai-system/index/`                          |
+| Directory     | Purpose                                                    | Key Files                                                                  |
+| ------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `app/`        | Next.js App Router pages/layouts and server route handlers | `app/page.tsx`, `app/layout.tsx`, `app/api/*`, `app/(dashboard)/*`         |
+| `components/` | Shared UI components and design-system primitives          | `components/ui/Button.tsx`, `components/ui/Table.tsx`                      |
+| `config/`     | Application configuration and role/routing/content rules   | `config/routes.ts`, `config/roles.ts`, `config/content.ts`                 |
+| `lib/`        | Shared data/hooks/utils/email/assets/server helpers        | `lib/data/prisma.ts`, `lib/assets/lifecycleService.ts`, `lib/utils/api.ts` |
+| `modules/`    | Domain feature modules                                     | `modules/reports/*`, `modules/analytics/*`, `modules/users/*`              |
+| `providers/`  | React context providers used by the app shell              | `providers/AuthProvider.tsx`, `providers/AntdProvider.tsx`                 |
+| `prisma/`     | Database schema, migrations, and seed scripts              | `prisma/schema.prisma`, `prisma/seed.ts`                                   |
+| `public/`     | Static assets served by Next.js                            | `public/manifest.json`, `public/sw.js`                                     |
+| `test/`       | Targeted regression and unit tests                         | `test/aggregation.test.ts`, `test/reportWorkflow.test.ts`                  |
+| `types/`      | Global TypeScript types and enums used across the app      | `types/global.d.ts`                                                        |
+| `.ai-system/` | AI tooling, documentation, and workflow helpers            | `.ai-system/agents/`, `.ai-system/index/`                                  |
 
 ---
 
@@ -76,6 +78,7 @@ project-root/
 | Global error boundary          | `app/error.tsx`        |
 | Auth API                       | `app/api/auth/*`       |
 | Reports API                    | `app/api/reports/*`    |
+| Asset lifecycle API            | `app/api/assets/*`     |
 | Prisma schema / migrations     | `prisma/schema.prisma` |
 | Seed data                      | `prisma/seed.ts`       |
 | Global type definitions        | `types/global.d.ts`    |

@@ -2,16 +2,17 @@
 
 ## Purpose
 
-Defines the database schema, migrations, and seed data for the application.
+Source of truth for relational data shape, migrations, generated Prisma client, and development seed data.
 
 ## Key Files
 
-- `prisma/schema.prisma` — Database schema for users, reports, templates, goals, notifications, and related entities.
-- `prisma/migrations/` — Generated migration history.
-- `prisma/seed.ts` — Seed script that populates the database (or mock DB in dev) with fixture data for users, orgs, templates, reports, and more.
-- `prisma/config.ts` — Prisma configuration for runtime environment.
+- `prisma/schema.prisma` - Full schema (users, org hierarchy, reports/workflow events, templates, goals, notifications, and managed asset lifecycle models).
+- `prisma/migrations/` - Migration history applied to development/production databases.
+- `prisma/generated/` - Generated Prisma client consumed by `lib/data/*`.
+- `prisma/seed.ts` - Seed orchestration for users, org hierarchy, templates, reports, events, goals, and notifications.
+- `prisma/config.ts` - Prisma runtime config.
 
 ## Notes
 
-- The system supports both mock DB (for local development) and real PostgreSQL via Prisma.
-- Seed script is guarded to prevent duplicate seeding on hot reloads.
+- Runtime data access uses Prisma via `lib/data/prisma.ts` and `lib/data/db.ts`.
+- Managed screenshot lifecycle introduces `MediaAsset`, `AssetUploadSession`, and `AssetLifecycleEvent`; schema/migration drift here affects bug-report upload flows.

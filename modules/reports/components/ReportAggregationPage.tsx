@@ -9,6 +9,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
 import { API_ROUTES, APP_ROUTES } from "@/config/routes";
 import { CONTENT } from "@/config/content";
+import { resolveOrgRollupContext } from "@/modules/org";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
 import { Button } from "@/components/ui/Button";
 import { Card } from "antd";
@@ -28,11 +29,12 @@ export function ReportAggregationPage() {
   const [scopeId, setScopeId] = useState<string>("");
   const [periodType, setPeriodType] = useState<ReportPeriodType>(ReportPeriodType.MONTHLY);
   const [periodYear, setPeriodYear] = useState<number>(new Date().getFullYear());
-  const [periodMonth, setPeriodMonth] = useState<number | undefined>(new Date().getMonth() + 1);
+  const [periodMonth, setPeriodMonth] = useState<number | undefined>(undefined);
   const [periodWeek, setPeriodWeek] = useState<number | undefined>(undefined);
   const [templateId, setTemplateId] = useState<string>("");
   const [metricIds, setMetricIds] = useState<string[]>([]);
   const [includeDrafts, setIncludeDrafts] = useState<boolean>(true);
+  const [periodTouched, setPeriodTouched] = useState(false);
   const [includeStatuses, setIncludeStatuses] = useState<ReportStatus[]>([
     ...STATUS_OPTIONS,
     ReportStatus.LOCKED,
@@ -61,38 +63,111 @@ export function ReportAggregationPage() {
   const { data: templates, loading: templatesLoading } = useApiData<ReportTemplate[]>(
     API_ROUTES.reportTemplates.list,
   );
+  const { data: reportListData } = useApiData<{ reports: Report[]; total: number }>(
+    `${API_ROUTES.reports.list}?page=1&pageSize=500`,
+  );
   const { data: orgHierarchy, loading: hierarchyLoading } = useApiData<OrgGroupWithDetails[]>(
     API_ROUTES.org.hierarchy,
   );
 
+  const selectedTemplate = useMemo(
+    () => (templates ?? []).find((template) => template.id === templateId),
+    [templateId, templates],
+  );
+
+  const metricOptions = useMemo(
+    () =>
+      (selectedTemplate?.sections ?? []).flatMap((section) =>
+        (section.metrics ?? []).map((metric) => ({
+          value: metric.id,
+          label: `${section.name} / ${metric.name}`,
+        })),
+      ),
+    [selectedTemplate],
+  );
+
+  const scopedReports = useMemo(() => {
+    const reports = reportListData?.reports ?? [];
+
+    return reports.filter((report) => {
+      if (scopeType === "campus" && scopeId) {
+        return report.campusId === scopeId;
+      }
+      if (scopeType === "group" && scopeId) {
+        return report.orgGroupId === scopeId;
+      }
+      return true;
+    });
+  }, [reportListData?.reports, scopeId, scopeType]);
+
+  const rollupContext = useMemo(
+    () =>
+      resolveOrgRollupContext({
+        role: role as UserRole,
+        userCampusId: user?.campusId ?? undefined,
+        userGroupId: user?.orgGroupId ?? undefined,
+        hierarchy: orgHierarchy,
+      }),
+    [orgHierarchy, role, user?.campusId, user?.orgGroupId],
+  );
+
   const scopeItems = useMemo(() => {
-    if (!orgHierarchy) return [];
     if (scopeType === "group") {
-      return orgHierarchy.map((g) => ({ value: g.id, label: g.name }));
+      return rollupContext.scopeOptions.groups;
     }
     if (scopeType === "campus") {
-      return orgHierarchy.flatMap((g) =>
-        g.campuses.map((c) => ({ value: c.id, label: `${g.name} / ${c.name}` })),
-      );
+      return rollupContext.scopeOptions.campuses;
     }
     return [];
-  }, [orgHierarchy, scopeType]);
+  }, [rollupContext.scopeOptions.campuses, rollupContext.scopeOptions.groups, scopeType]);
 
   useEffect(() => {
     if (!user || !role || !orgHierarchy) return;
 
-    if (isCampusRole) {
-      setScopeType("campus");
-      setScopeId(user.campusId ?? "");
+    if (isCampusRole || isGroupRole) {
+      setScopeType(rollupContext.roleScopeType);
+      setScopeId(rollupContext.roleScopeId);
+    }
+  }, [isCampusRole, isGroupRole, orgHierarchy, role, rollupContext.roleScopeId, rollupContext.roleScopeType, user]);
+
+  useEffect(() => {
+    if (!templateId && metricIds.length > 0) {
+      setMetricIds([]);
       return;
     }
 
-    if (isGroupRole) {
-      setScopeType("group");
-      setScopeId(user.orgGroupId ?? "");
+    if (metricIds.length === 0) {
       return;
     }
-  }, [isCampusRole, isGroupRole, orgHierarchy, role, user]);
+
+    const allowedMetricIds = new Set(metricOptions.map((metric) => metric.value));
+    const filteredMetricIds = metricIds.filter((metricId) => allowedMetricIds.has(metricId));
+    if (filteredMetricIds.length !== metricIds.length) {
+      setMetricIds(filteredMetricIds);
+    }
+  }, [metricIds, metricOptions, templateId]);
+
+  useEffect(() => {
+    if (periodTouched || scopedReports.length === 0) {
+      return;
+    }
+
+    const latest = [...scopedReports].sort((a, b) => {
+      if (b.periodYear !== a.periodYear) return b.periodYear - a.periodYear;
+      if ((b.periodMonth ?? 0) !== (a.periodMonth ?? 0))
+        return (b.periodMonth ?? 0) - (a.periodMonth ?? 0);
+      if ((b.periodWeek ?? 0) !== (a.periodWeek ?? 0))
+        return (b.periodWeek ?? 0) - (a.periodWeek ?? 0);
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    })[0];
+
+    if (!latest) return;
+
+    setPeriodType(latest.periodType);
+    setPeriodYear(latest.periodYear);
+    setPeriodMonth(latest.periodType === ReportPeriodType.MONTHLY ? latest.periodMonth : undefined);
+    setPeriodWeek(latest.periodType === ReportPeriodType.WEEKLY ? latest.periodWeek : undefined);
+  }, [periodTouched, scopedReports]);
 
   if (!user || !role) return <LoadingSkeleton rows={6} />;
 
@@ -142,6 +217,7 @@ export function ReportAggregationPage() {
           periodMonth: periodType === ReportPeriodType.MONTHLY ? periodMonth : undefined,
           periodWeek: periodType === ReportPeriodType.WEEKLY ? periodWeek : undefined,
           templateId: templateId || undefined,
+          includeDrafts,
           includeStatuses: selectedStatuses,
           metricIds: metricIds.length > 0 ? metricIds : undefined,
           action: "preview",
@@ -178,6 +254,7 @@ export function ReportAggregationPage() {
           periodMonth: periodType === ReportPeriodType.MONTHLY ? periodMonth : undefined,
           periodWeek: periodType === ReportPeriodType.WEEKLY ? periodWeek : undefined,
           templateId: templateId || undefined,
+          includeDrafts,
           includeStatuses: selectedStatuses,
           metricIds: metricIds.length > 0 ? metricIds : undefined,
           action: "generate",
@@ -349,7 +426,17 @@ export function ReportAggregationPage() {
             <Select
               value={periodType}
               options={Object.values(ReportPeriodType).map((v) => ({ value: v, label: v }))}
-              onChange={(value) => setPeriodType(value as ReportPeriodType)}
+              onChange={(value) => {
+                const nextPeriodType = value as ReportPeriodType;
+                setPeriodTouched(true);
+                setPeriodType(nextPeriodType);
+                if (nextPeriodType !== ReportPeriodType.MONTHLY) {
+                  setPeriodMonth(undefined);
+                }
+                if (nextPeriodType !== ReportPeriodType.WEEKLY) {
+                  setPeriodWeek(undefined);
+                }
+              }}
             />
             <input
               type="number"
@@ -357,26 +444,45 @@ export function ReportAggregationPage() {
               value={periodYear}
               min={2000}
               max={2100}
-              onChange={(ev) => setPeriodYear(Number(ev.target.value))}
+              aria-label="Aggregation period year"
+              title="Aggregation period year"
+              onChange={(ev) => {
+                setPeriodTouched(true);
+                setPeriodYear(Number(ev.target.value));
+              }}
             />
             {periodType === ReportPeriodType.MONTHLY && (
               <input
                 type="number"
                 className="w-full p-2 border border-ds-border-base rounded-ds-lg"
-                value={periodMonth}
+                value={periodMonth ?? ""}
                 min={1}
                 max={12}
-                onChange={(ev) => setPeriodMonth(Number(ev.target.value))}
+                placeholder="All months"
+                aria-label="Aggregation period month"
+                title="Aggregation period month"
+                onChange={(ev) => {
+                  setPeriodTouched(true);
+                  const raw = ev.target.value.trim();
+                  setPeriodMonth(raw === "" ? undefined : Number(raw));
+                }}
               />
             )}
             {periodType === ReportPeriodType.WEEKLY && (
               <input
                 type="number"
                 className="w-full p-2 border border-ds-border-base rounded-ds-lg"
-                value={periodWeek}
+                value={periodWeek ?? ""}
                 min={1}
                 max={53}
-                onChange={(ev) => setPeriodWeek(Number(ev.target.value))}
+                placeholder="All weeks"
+                aria-label="Aggregation period week"
+                title="Aggregation period week"
+                onChange={(ev) => {
+                  setPeriodTouched(true);
+                  const raw = ev.target.value.trim();
+                  setPeriodWeek(raw === "" ? undefined : Number(raw));
+                }}
               />
             )}
           </Space>
@@ -396,9 +502,12 @@ export function ReportAggregationPage() {
             <Select
               mode="multiple"
               value={metricIds}
-              options={[]}
+              options={metricOptions}
+              onChange={(v) => setMetricIds(v as string[])}
               placeholder={aggregationContent.metricsPlaceholder}
-              disabled
+              disabled={!templateId || metricOptions.length === 0}
+              optionFilterProp="label"
+              showSearch
             />
             <Select
               mode="multiple"
@@ -411,7 +520,9 @@ export function ReportAggregationPage() {
             <Checkbox checked={includeDrafts} onChange={(e) => setIncludeDrafts(e.target.checked)}>
               {aggregationContent.includeDraftsLabel}
             </Checkbox>
-            <span className="text-xs text-ds-text-subtle">{aggregationContent.includeDraftsHint}</span>
+            <span className="text-xs text-ds-text-subtle">
+              {aggregationContent.includeDraftsHint}
+            </span>
           </Space>
         </Card>
       </div>

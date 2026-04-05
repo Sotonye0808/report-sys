@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
+import { parseCachedJsonSafe } from "@/lib/utils/cacheJson";
 import { UserRole, MetricFieldType, MetricCalculationType, ReportDeadlinePolicy } from "@/types/global";
 
 /* ── Schemas ──────────────────────────────────────────────────────────────── */
@@ -64,14 +65,8 @@ export async function GET(req: NextRequest) {
 
         const cacheKey = "templates:list";
         const cached = await cache.get(cacheKey);
-        if (cached) {
-            try {
-                const parsed = typeof cached === "string" ? JSON.parse(cached) : cached;
-                return NextResponse.json(parsed);
-            } catch {
-                // Cached payload is invalid JSON; ignore and refetch from the database.
-            }
-        }
+        const parsedCached = parseCachedJsonSafe(cached);
+        if (parsedCached) return NextResponse.json(parsedCached);
 
         const templates = await db.reportTemplate.findMany({
             orderBy: { createdAt: "desc" },
