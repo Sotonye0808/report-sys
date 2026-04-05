@@ -36,7 +36,7 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 | `config/`           | Routes, roles, navigation, report settings, and copy                      | `config/routes.ts`, `config/nav.ts`, `config/roles.ts`, `config/reports.ts`, `config/content.ts`                     | `types/global.ts`                                       |
 | `modules/reports`   | Report workflows, detail/edit/analytics/aggregation UI, workflow services | `modules/reports/components/*`, `modules/reports/services/reportWorkflow.ts`                                         | `lib/data`, `lib/utils`, `config/*`                     |
 | `modules/analytics` | Analytics pages/charts and chart utility logic                            | `modules/analytics/components/AnalyticsPage.tsx`, `modules/analytics/chartUtils.ts`                                  | `lib/utils/exportReports`, `app/api/analytics/*`        |
-| `modules/org`       | Group/campus hierarchy management and write operations                    | `modules/org/components/OrgPage.tsx`, `modules/org/services/orgWriteService.ts`                                      | `lib/data`, `lib/utils`, `config/*`                     |
+| `modules/org`       | Group/campus hierarchy management, write operations, and rollup scope context helpers | `modules/org/components/OrgPage.tsx`, `modules/org/services/orgWriteService.ts`, `modules/org/services/orgRollupContext.ts` | `lib/data`, `lib/utils`, `config/*`                     |
 | `lib/data/`         | Prisma/Redis data boundary and query helpers                              | `lib/data/prisma.ts`, `lib/data/db.ts`, `lib/data/redis.ts`, `lib/data/reportAggregation.ts`                         | `prisma/generated`, `@upstash/redis`                    |
 | `lib/assets/`       | Managed Cloudinary upload session lifecycle and cleanup                   | `lib/assets/cloudinaryAdapter.ts`, `lib/assets/lifecycleService.ts`, `lib/assets/lifecycleStateMachine.ts`           | `app/api/assets/*`, `app/api/bug-reports/*`, `prisma/*` |
 | `lib/server/`       | Request context metadata (request IDs, route context)                     | `lib/server/requestContext.ts`                                                                                       | `app/api/*`                                             |
@@ -66,6 +66,7 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 11) Bug report screenshots now use managed asset lifecycle sessions (`/api/assets/sessions`): create → optional temp upload (`preupload_draft`) → finalize/discard, with deferred submit as default mode.
 12) Asset lifecycle writes use DB transactions for state and compensating Cloudinary deletes on downstream DB failures; stale TEMP assets are cleaned by `/api/assets/cleanup`.
 13) Aggregation preview/generate treats no matching source reports as domain not-found (`404`) rather than generic server failure, improving user error handling.
+14) Aggregation UI now resolves scope defaults/options through a shared org rollup helper (`resolveOrgRollupContext`) so campus/group/global role constraints stay consistent.
 ```
 
 ### Authentication Flow
@@ -151,6 +152,8 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 - Write-route diagnostics now depend on request ID propagation and structured logging; all new write endpoints should include request context via `lib/server/requestContext.ts`.
 - Bug report migration currently supports both legacy `screenshotUrl` and managed `screenshotAssetId`; read paths should continue preferring managed asset URL when present.
 - Aggregation still has pending UX polish (stepper completeness, metric selector ergonomics, and nav/breadcrumb discoverability) even after query/response hardening.
+- Report form persistence now gates restoration until defaults are loaded to prevent period/template rehydration loops and repeated goals fetches.
+- Report analytics refresh action now uses router replace/navigation refresh flow instead of hard browser reload to avoid route-state regressions.
 
 ---
 

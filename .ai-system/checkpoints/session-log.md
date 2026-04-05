@@ -481,3 +481,53 @@ Run a cloud implementation session using the new prompt to close the remaining 1
 
 - Aggregation query/response behavior is improved, but full integrated runtime validation across campus/group/global user journeys is still pending.
 - Baseline lint/build environment constraints remain unchanged in this sandbox.
+
+## Session 12 — 2026-04-05
+
+**Completed:**
+
+- Closed the remaining actionable queue items for this sprint handoff:
+  - added targeted regression coverage for template/auth refresh, unlock/history, and role-scope rollup behavior
+  - migrated template snapshot writes to central audit helper (`createTemplateVersionSnapshot`)
+  - added org rollup helper (`resolveOrgRollupContext`) and integrated it into aggregation scope options/defaults
+  - fixed report form persistence/rehydration loops and repetitive goals loading in new/edit report flows
+  - replaced analytics hard reload action with router-driven refresh path
+- Added cache-safe parser utility and applied it to report/report-history and template routes to avoid cache-shape regressions.
+- Updated `.ai-system` architecture/project/task-queue docs to reflect aggregation and rollup behavior closure.
+- Validation:
+  - `npm run -s typecheck` ✅
+  - `npx tsx test/taskQueueRemainingRegressions.test.ts` ✅
+  - `npx tsx test/redisAndRoutesContract.test.ts` ✅
+  - `npx tsx test/aggregation.test.ts` ✅
+  - `DATABASE_URL=postgresql://localhost:5432/test npx tsx test/mutationAndPushMatrix.test.ts` ✅
+
+**Files Modified:**
+
+- `lib/utils/audit.ts`
+- `app/api/report-templates/[id]/route.ts`
+- `app/api/report-templates/route.ts`
+- `app/api/reports/[id]/route.ts`
+- `app/api/reports/[id]/history/route.ts`
+- `modules/reports/components/ReportNewPage.tsx`
+- `modules/reports/components/ReportEditPage.tsx`
+- `modules/reports/components/ReportAnalyticsPage.tsx`
+- `modules/reports/components/ReportAggregationPage.tsx`
+- `modules/org/services/orgRollupContext.ts`
+- `modules/org/index.ts`
+- `lib/utils/cacheJson.ts`
+- `config/content.ts`
+- `test/taskQueueRemainingRegressions.test.ts`
+- `.ai-system/planning/task-queue.md`
+- `.ai-system/agents/system-architecture.md`
+- `.ai-system/agents/project-context.md`
+- `.ai-system/checkpoints/session-log.md`
+- `.ai-system/summaries/dev-history.md`
+
+**Next Task:**
+
+- Run final review/security validation on PR changes and publish final cloud completion report with residual risk/follow-up recommendations.
+
+**Notes / Blockers:**
+
+- `npm run lint` remains blocked by missing ESLint flat config in repo baseline.
+- Full `npm run test` script remains blocked by quoted-glob script behavior in this shell; targeted suites were run successfully.

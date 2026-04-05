@@ -10,8 +10,8 @@
 
 - [x] Fix report template edit failures (500/504) + stabilize cache invalidation
 - [x] Align auth session lifetime with env config and add automatic token refresh
-- [ ] Add regression tests for report template API and auth refresh behavior
-- [ ] Add regression tests for report unlock and audit trail visibility
+- [x] Add regression tests for report template API and auth refresh behavior
+- [x] Add regression tests for report unlock and audit trail visibility
 - [x] Ensure superadmin (and other empowered roles) can edit/submit draft reports and see action buttons on report detail
 - [x] Add unlock-report action + backend endpoint so superadmin can unlock & edit locked reports
 - [x] Make “Add report” button always visible for superadmin and roles with create-report privilege
@@ -26,9 +26,9 @@
 - [x] Add offline sync indicator + retry queue for pending offline submissions
 - [x] Fix offline/online redirect loop (dashboard loading stuck) by restoring pre-navigation state
 - [x] Implement draft persistence for goals page and templates editing
-- [ ] Complete audit trail refactor by moving template version snapshot events to central helper (`lib/utils/audit.ts`) (report workflow events already migrated)
-- [ ] Fix report form stuck period/template selection (cached state rehydration issue) and repetitive goals loading by stabilizing loader effects and value tracking
-- [ ] Fix router navigation failure where page transitions require reload before working
+- [x] Complete audit trail refactor by moving template version snapshot events to central helper (`lib/utils/audit.ts`) (report workflow events already migrated)
+- [x] Fix report form stuck period/template selection (cached state rehydration issue) and repetitive goals loading by stabilizing loader effects and value tracking
+- [x] Fix router navigation failure where page transitions require reload before working
 - [x] Wire Resend email service into invite creation, password reset, report workflow events (submission/approval/lock/reminder)
 - [x] Implement missing report workflow endpoints & UI: edit drafts, update requests, and goal unlock requests
 - [x] Update documentation and `.env.example` for Resend and production env variables
@@ -47,7 +47,7 @@
 - [x] Move profile/org/hierarchy write-path cache invalidation to non-blocking async invalidation and correct concrete org list cache keys
 - [x] Fix push notification toggle synchronization: detect existing browser subscription, avoid duplicate subscribe path, and guard missing `NEXT_PUBLIC_VAPID_PUBLIC_KEY`
 - [x] Add regression test coverage for Redis scan cursor string termination and write-route completion under cache invalidation load
-- [ ] Add UI regression test coverage ensuring profile and org hierarchy mutations update UI state without manual refresh
+- [x] Add UI regression test coverage ensuring profile and org hierarchy mutations update UI state without manual refresh
 - [x] Add push notification sync test matrix (permission granted + existing subscription, granted + no subscription, missing VAPID key)
 - [x] Implement Cloudinary managed asset lifecycle for bug report screenshots (session/create-upload-finalize-discard-cleanup, ACID + compensation, legacy screenshotUrl compatibility)
 - [x] Add schema + migration groundwork for `MediaAsset`, `AssetUploadSession`, and `AssetLifecycleEvent`
@@ -105,12 +105,12 @@ Verification note (2026-04-05): aggregate route/page/service are present but fea
 - [x] Add report aggregation API kernel decorators and zod schemas in `app/api/reports/aggregate`.
 - [x] Extend report data model / response types in `types/global.d.ts` to carry `aggregationSource` and `aggregatedFrom` metadata.
 - [x] Implement `lib/data/reportAggregation.ts` service to create/validate aggregated reports by template, version, campus/group, status, and metric calculations.
-- [ ] Add org hierarchy context helper in `modules/org` to resolve parent group/campus rollup sets in aggregation UI.
+- [x] Add org hierarchy context helper in `modules/org` to resolve parent group/campus rollup sets in aggregation UI.
 - [x] Add `modules/reports/components/ReportAggregationPage.tsx` with interactive stepper: choose scope (campus/group/CEO), date range, template/version, status filter, metric selector/deselector, and preview metrics.
 - [x] Add data visualization embedding to export (spreadsheet charts/worksheet summary) in `modules/analytics/components/AnalyticsPage.tsx`/export utility.
 - [x] Add automated tests for aggregation correctness (sum/average/snapshot logic, mismatch template versions fallback strategy) in `test/aggregation.test.ts`.
 - [x] Add Aggregated reports nav entry + breadcrumbs coverage in `modules/reports`.
-- [ ] Document aggregation behavior in `.ai-system` architecture/project notes (and product docs when introduced).
+- [x] Document aggregation behavior in `.ai-system` architecture/project notes (and product docs when introduced).
 
 Verification note (2026-04-05, this session): aggregation scope defaulting/locking was fixed for campus/group roles and preview/generate now guard missing scope; metadata fields (`aggregationSource`, `aggregatedFrom`) were added in shared types + aggregation responses; `test/aggregation.test.ts` now covers sum/average/snapshot and role/scope enforcement. Remaining aggregation UI/doc tasks stay open due metric selector and docs backlog.
 
@@ -118,7 +118,7 @@ Verification note (2026-04-05, this session): aggregation no-result behavior now
 
 Verification note (2026-04-05, this session): aggregation now honors `includeDrafts` end-to-end in API criteria defaults, monthly/weekly period filters can be left unset for year-wide scope, metric selector is enabled and template-driven, and Analytics year auto-aligns to latest available scoped report year to avoid empty-current-year false negatives.
 
-Verification note (2026-04-05, this session): Redis cursor termination and push sync matrix tests were added as targeted regressions; profile/org no-refresh remains open for full UI-level regression harness.
+Verification note (2026-04-05, this session): Added `test/taskQueueRemainingRegressions.test.ts` to cover auth refresh/report template cache-safe parsing, unlock/history envelope contracts, and role-scope rollup/no-refresh guard behavior for campus/group/global paths.
 
 ## Next dev steps
 
