@@ -6,6 +6,7 @@
 
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
+import { isScanCursorComplete } from "@/lib/data/redisCursor";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Redis client singleton
@@ -32,10 +33,6 @@ const PREFIX = process.env.REDIS_PREFIX ?? "hrs:";
 
 function key(k: string): string {
     return `${PREFIX}${k}`;
-}
-
-function isScanCursorComplete(cursor: string | number): boolean {
-    return cursor === 0 || cursor === "0";
 }
 
 function isGlobPattern(pattern: string): boolean {

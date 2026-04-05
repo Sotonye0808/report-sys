@@ -440,6 +440,8 @@ declare global {
         title?: string;
         templateId: string;
         templateVersionId: string;
+        aggregationSource?: "ROLLUP";
+        aggregatedFrom?: string[];
         campusId: string;
         orgGroupId: string;
         period?: string;

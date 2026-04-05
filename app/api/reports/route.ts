@@ -19,6 +19,8 @@ import {
 import { ROLE_CONFIG } from "@/config/roles";
 import { DEADLINE_CONFIG } from "@/config/reports";
 import { UserRole, ReportStatus, ReportPeriodType, ReportDeadlinePolicy, ReportEventType, MetricCalculationType } from "@/types/global";
+import { dispatchDeadlineReminder } from "@/lib/utils/deadlineReminder";
+import { getRequestContext } from "@/lib/server/requestContext";
 
 dayjs.extend(weekOfYear);
 
@@ -154,6 +156,7 @@ export async function GET(req: NextRequest) {
 /* ── POST ──────────────────────────────────────────────────────────────────── */
 
 export async function POST(req: NextRequest) {
+    const ctx = getRequestContext(req);
     try {
         const auth = await verifyAuth(req);
         if (!auth.success) return unauthorizedResponse(auth.error);
@@ -238,6 +241,23 @@ export async function POST(req: NextRequest) {
 
             return newReport;
         });
+
+        const creator = await db.user.findUnique({
+            where: { id: auth.user.id },
+            select: { id: true, email: true, firstName: true, lastName: true },
+        });
+
+        if (creator?.email) {
+            void dispatchDeadlineReminder({
+                report: {
+                    id: report.id,
+                    title: report.title,
+                    deadline: report.deadline,
+                },
+                recipient: creator,
+                requestId: ctx.requestId,
+            });
+        }
 
         cache.invalidatePatternAsync(`reports:list:${auth.user.id}:*`);
 

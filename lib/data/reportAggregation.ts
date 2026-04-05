@@ -1,6 +1,7 @@
 import { db } from "@/lib/data/db";
 import { UserRole, ReportStatus, ReportPeriodType, MetricCalculationType } from "@/types/global";
 import type { Report as PrismaReport, ReportSection as PrismaReportSection, ReportMetric as PrismaReportMetric } from "../../prisma/generated";
+import { computeAggregatedValues, enforceAggregationScope } from "@/lib/data/reportAggregationUtils";
 
 export type AggregationScope = "campus" | "group" | "all";
 
@@ -45,6 +46,8 @@ export interface AggregationResult {
     aggregatedSections: AggregatedSectionValue[];
     templateId: string;
     templateVersionId?: string;
+    aggregationSource: "ROLLUP";
+    aggregatedFrom: string[];
     scopeType: AggregationScope;
     scopeId?: string;
     periodType: ReportPeriodType;
@@ -74,23 +77,21 @@ export async function resolveScopeCampusIds(user: AuthUser): Promise<string[] | 
     return null;
 }
 
-export function enforceScope(criteria: AggregationCriteria, user: AuthUser) {
-    if (!user || !user.role) throw new Error("Unauthorized");
-
-    if (user.role === UserRole.CAMPUS_ADMIN || user.role === UserRole.CAMPUS_PASTOR) {
-        if (criteria.scopeType !== "campus" || criteria.scopeId !== user.campusId) {
-            throw new Error("Campus roles can only aggregate their own campus.");
-        }
-    }
-    if ((user.role === UserRole.GROUP_ADMIN || user.role === UserRole.GROUP_PASTOR) && criteria.scopeType === "group") {
-        if (criteria.scopeId !== user.orgGroupId) {
-            throw new Error("Group roles can only aggregate their own group.");
-        }
-    }
+export function enforceScope(criteria: AggregationCriteria, user: AuthUser, resolvedScopeCampusIds?: string[] | null) {
+    enforceAggregationScope({
+        user,
+        scopeType: criteria.scopeType,
+        scopeId: criteria.scopeId,
+        resolvedScopeCampusIds,
+    });
 }
 
-export async function buildReportQuery(criteria: AggregationCriteria, user: AuthUser) {
-    const campusScope = await resolveScopeCampusIds(user);
+export async function buildReportQuery(
+    criteria: AggregationCriteria,
+    user: AuthUser,
+    resolvedScopeCampusIds?: string[] | null,
+) {
+    const campusScope = resolvedScopeCampusIds ?? await resolveScopeCampusIds(user);
 
     const where: any = {
         periodType: criteria.periodType,
@@ -121,9 +122,10 @@ export async function calculateAggregation(
     criteria: AggregationCriteria,
     user: AuthUser,
 ): Promise<AggregationResult> {
-    enforceScope(criteria, user);
+    const campusScope = await resolveScopeCampusIds(user);
+    enforceScope(criteria, user, campusScope);
 
-    const where = await buildReportQuery(criteria, user);
+    const where = await buildReportQuery(criteria, user, campusScope);
     const reports = await db.report.findMany({
         where,
         include: {
@@ -232,27 +234,14 @@ export async function calculateAggregation(
                     snapshot: null,
                 };
 
-                let monthlyGoal = 0;
-                let monthlyAchieved = 0;
-                let yoyGoal = 0;
-
-                if (existing.count === 0) {
-                    monthlyGoal = 0;
-                    monthlyAchieved = 0;
-                    yoyGoal = 0;
-                } else if (existing.calculationType === MetricCalculationType.AVERAGE) {
-                    monthlyGoal = existing.goalSum / existing.count;
-                    monthlyAchieved = existing.achievedSum / existing.count;
-                    yoyGoal = existing.yoySum / existing.count;
-                } else if (existing.calculationType === MetricCalculationType.SNAPSHOT) {
-                    monthlyGoal = existing.snapshot?.monthlyGoal ?? 0;
-                    monthlyAchieved = existing.snapshot?.monthlyAchieved ?? 0;
-                    yoyGoal = existing.snapshot?.yoyGoal ?? 0;
-                } else {
-                    monthlyGoal = existing.goalSum;
-                    monthlyAchieved = existing.achievedSum;
-                    yoyGoal = existing.yoySum;
-                }
+                const { monthlyGoal, monthlyAchieved, yoyGoal } = computeAggregatedValues({
+                    calculationType: existing.calculationType,
+                    goalSum: existing.goalSum,
+                    achievedSum: existing.achievedSum,
+                    yoySum: existing.yoySum,
+                    count: existing.count,
+                    snapshot: existing.snapshot,
+                });
 
                 return {
                     templateMetricId: metric.id,
@@ -272,6 +261,8 @@ export async function calculateAggregation(
         aggregatedSections,
         templateId,
         templateVersionId: reports[0].templateVersionId ?? undefined,
+        aggregationSource: "ROLLUP",
+        aggregatedFrom: reports.map((report) => report.id),
         scopeType: criteria.scopeType,
         scopeId: criteria.scopeId,
         periodType: criteria.periodType,
@@ -284,7 +275,7 @@ export async function calculateAggregation(
 export async function persistAggregatedReport(
     result: AggregationResult,
     user: AuthUser,
-): Promise<import("../../prisma/generated").Report> {
+): Promise<import("../../prisma/generated").Report & { aggregationSource: "ROLLUP"; aggregatedFrom: string[] }> {
     const title = `Aggregated ${result.scopeType} ${result.periodType} ${result.scopeId ?? "all"} ${result.periodYear}`;
     const firstCampusId = result.sourceReports?.[0]?.campusId ?? "";
     const firstOrgGroupId = result.sourceReports?.[0]?.orgGroupId ?? "";
@@ -347,5 +338,9 @@ export async function persistAggregatedReport(
         return created;
     });
 
-    return report;
+    return {
+        ...report,
+        aggregationSource: "ROLLUP",
+        aggregatedFrom: result.aggregatedFrom,
+    };
 }

@@ -323,3 +323,37 @@ Performed a repo-backed audit of unchecked task-queue items to distinguish truly
 **Next Sprint Focus:**
 
 Execute the cloud session prompt from the gap-audit plan, close remaining actionable tasks, and update architecture/repair docs based on final aggregation and regression outcomes.
+
+## 2026-04-05 — Aggregation Scope Stabilization + Targeted Regression Coverage
+
+**Summary:**
+Stabilized the aggregated-report flow by fixing scope resolution/enforcement across UI and API, added aggregation metadata support, and introduced targeted regression suites for aggregation math/scope behavior, Redis cursor termination, write-completion contract behavior, and push sync matrix variants. Also wired deadline reminder dispatch through the existing notification orchestration path from report creation.
+
+**Completed:**
+
+- Fixed aggregation scope behavior end-to-end for campus/group/global roles in:
+  - `app/api/reports/aggregate/route.ts`
+  - `lib/data/reportAggregation.ts`
+  - `modules/reports/components/ReportAggregationPage.tsx`
+- Added metadata support:
+  - `types/global.ts` (`aggregationSource`, `aggregatedFrom`)
+  - aggregation response persistence metadata in `lib/data/reportAggregation.ts`
+- Added new helper modules:
+  - `lib/data/reportAggregationUtils.ts`
+  - `lib/data/redisCursor.ts`
+  - `lib/utils/deadlineReminder.ts`
+- Added/updated targeted tests:
+  - `test/aggregation.test.ts`
+  - `test/mutationAndPushMatrix.test.ts`
+  - `test/redisAndRoutesContract.test.ts`
+- Updated task queue verification and checkbox status in `.ai-system/planning/task-queue.md`.
+
+**Key Changes:**
+
+- Aggregation preview/generate now fails fast on missing scope and applies role-safe defaults to prevent scope load mismatches.
+- Deadline reminder path is now dispatched (in-app/email/push orchestration) when a report is created within configured reminder lead window.
+- Redis cursor terminal handling is now testable via a pure helper, reducing regression risk for cache invalidation loops.
+
+**Next Sprint Focus:**
+
+- Complete remaining open production-readiness tasks (UI no-refresh regression harness, audit-helper refactor completion, remaining router/report-form fixes) and finish aggregation docs/metric-selector completion.

@@ -394,3 +394,48 @@ Run a cloud implementation session using the new prompt to close the remaining 1
 
 - `rg` is unavailable in this shell environment; task counting used PowerShell `Select-String` instead.
 - Aggregation path has code present (`route/page/service`) but requires end-to-end correctness fixes before completion check-offs.
+
+## Session 10 — 2026-04-05
+
+**Completed:**
+
+- Fixed aggregated report scope-loading failures by enforcing role-aware defaults/constraints across API + UI:
+  - campus roles are forced to own campus scope
+  - group roles are constrained to own group / own-group campuses
+  - preview now blocks missing scope selection before request dispatch
+- Added aggregation metadata support (`aggregationSource`, `aggregatedFrom`) in shared report types and aggregation service responses.
+- Added aggregation regression suite `test/aggregation.test.ts` covering sum/average/snapshot behavior and role/scope enforcement.
+- Added targeted production-readiness regression coverage:
+  - `test/redisAndRoutesContract.test.ts` (cursor termination + auth/report contract envelope)
+  - `test/mutationAndPushMatrix.test.ts` (write completion contract checks + push sync matrix variants)
+- Wired deadline reminder dispatch path via `lib/utils/deadlineReminder.ts` and invoked it from report creation path (`app/api/reports/route.ts`) using notification orchestration.
+- Updated task queue checkboxes + verification notes for completed and still-open items.
+
+**Files Modified:**
+
+- `app/api/reports/aggregate/route.ts`
+- `app/api/reports/route.ts`
+- `lib/data/reportAggregation.ts`
+- `lib/data/reportAggregationUtils.ts`
+- `lib/data/redis.ts`
+- `lib/data/redisCursor.ts`
+- `lib/utils/deadlineReminder.ts`
+- `modules/reports/components/ReportAggregationPage.tsx`
+- `modules/reports/components/ReportDetailPage.tsx`
+- `types/global.ts`
+- `config/content.ts`
+- `test/aggregation.test.ts`
+- `test/mutationAndPushMatrix.test.ts`
+- `test/redisAndRoutesContract.test.ts`
+- `.ai-system/planning/task-queue.md`
+- `.ai-system/checkpoints/session-log.md`
+- `.ai-system/summaries/dev-history.md`
+
+**Next Task:**
+
+- Complete remaining open task-queue items (UI-level profile/org no-refresh regression harness, central audit helper refactor completion, report/template/router issues, and aggregation docs/metric-selector completion).
+
+**Notes / Blockers:**
+
+- Baseline full test script and build remain environment-blocked in this sandbox (`npm run test` quoted glob issue, build requires unrestricted font fetch); required gate `npm run -s typecheck` passes and targeted updated tests pass.
+- Lint baseline is still blocked by repo ESLint/tooling state in this environment.
