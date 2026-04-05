@@ -397,6 +397,7 @@ exports.Prisma.BugReportScalarFieldEnum = {
   category: 'category',
   description: 'description',
   screenshotUrl: 'screenshotUrl',
+  screenshotAssetId: 'screenshotAssetId',
   contactEmail: 'contactEmail',
   status: 'status',
   adminNotes: 'adminNotes',
@@ -405,12 +406,69 @@ exports.Prisma.BugReportScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.MediaAssetScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  domain: 'domain',
+  provider: 'provider',
+  state: 'state',
+  publicId: 'publicId',
+  secureUrl: 'secureUrl',
+  resourceType: 'resourceType',
+  format: 'format',
+  bytes: 'bytes',
+  width: 'width',
+  height: 'height',
+  mimeType: 'mimeType',
+  originalFileName: 'originalFileName',
+  folder: 'folder',
+  metadata: 'metadata',
+  requestId: 'requestId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  finalizedAt: 'finalizedAt',
+  discardedAt: 'discardedAt',
+  expiresAt: 'expiresAt'
+};
+
+exports.Prisma.AssetUploadSessionScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  domain: 'domain',
+  mode: 'mode',
+  state: 'state',
+  activeAssetId: 'activeAssetId',
+  idempotencyKey: 'idempotencyKey',
+  requestId: 'requestId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  finalizedAt: 'finalizedAt',
+  discardedAt: 'discardedAt',
+  expiresAt: 'expiresAt'
+};
+
+exports.Prisma.AssetLifecycleEventScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  assetId: 'assetId',
+  actorId: 'actorId',
+  eventType: 'eventType',
+  details: 'details',
+  requestId: 'requestId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
 };
 
 exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
@@ -573,6 +631,48 @@ exports.BugReportStatus = exports.$Enums.BugReportStatus = {
   CLOSED: 'CLOSED'
 };
 
+exports.AssetDomain = exports.$Enums.AssetDomain = {
+  BUG_REPORT_SCREENSHOT: 'BUG_REPORT_SCREENSHOT'
+};
+
+exports.AssetProvider = exports.$Enums.AssetProvider = {
+  CLOUDINARY: 'CLOUDINARY',
+  LEGACY_URL: 'LEGACY_URL'
+};
+
+exports.AssetState = exports.$Enums.AssetState = {
+  TEMP: 'TEMP',
+  READY: 'READY',
+  DISCARDED: 'DISCARDED',
+  DELETE_PENDING: 'DELETE_PENDING',
+  DELETED: 'DELETED',
+  FAILED: 'FAILED'
+};
+
+exports.AssetUploadMode = exports.$Enums.AssetUploadMode = {
+  DEFERRED_SUBMIT: 'DEFERRED_SUBMIT',
+  PREUPLOAD_DRAFT: 'PREUPLOAD_DRAFT'
+};
+
+exports.AssetSessionState = exports.$Enums.AssetSessionState = {
+  OPEN: 'OPEN',
+  TEMP_UPLOADED: 'TEMP_UPLOADED',
+  FINALIZED: 'FINALIZED',
+  DISCARDED: 'DISCARDED',
+  EXPIRED: 'EXPIRED'
+};
+
+exports.AssetLifecycleEventType = exports.$Enums.AssetLifecycleEventType = {
+  SESSION_CREATED: 'SESSION_CREATED',
+  TEMP_UPLOADED: 'TEMP_UPLOADED',
+  FINALIZED: 'FINALIZED',
+  DISCARDED: 'DISCARDED',
+  CLEANUP_DELETED: 'CLEANUP_DELETED',
+  CLEANUP_FAILED: 'CLEANUP_FAILED',
+  COMPENSATION_DELETED: 'COMPENSATION_DELETED',
+  COMPENSATION_FAILED: 'COMPENSATION_FAILED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   OrgGroup: 'OrgGroup',
@@ -593,7 +693,10 @@ exports.Prisma.ModelName = {
   MetricEntry: 'MetricEntry',
   Notification: 'Notification',
   InviteLink: 'InviteLink',
-  BugReport: 'BugReport'
+  BugReport: 'BugReport',
+  MediaAsset: 'MediaAsset',
+  AssetUploadSession: 'AssetUploadSession',
+  AssetLifecycleEvent: 'AssetLifecycleEvent'
 };
 
 /**

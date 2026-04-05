@@ -29,7 +29,7 @@
 - [ ] Implement central audit trail helper (`lib/utils/audit.ts`) and refactor report events + template version snapshots to use it
 - [ ] Fix report form stuck period/template selection (cached state rehydration issue) and repetitive goals loading by stabilizing loader effects and value tracking
 - [ ] Fix router navigation failure where page transitions require reload before working
-- [ ] Wire Resend email service into invite creation, password reset, report workflow events (submission/approval/lock/reminder)
+- [x] Wire Resend email service into invite creation, password reset, report workflow events (submission/approval/lock/reminder)
 - [x] Implement missing report workflow endpoints & UI: edit drafts, update requests, and goal unlock requests
 - [x] Update documentation and `.env.example` for Resend and production env variables
 - [x] Consolidate API response contract for invite/profile/org CRUD routes using shared helpers (`successResponse`, `errorResponse`, `handleApiError`) with consistent `success|data|error|code` payload shape
@@ -46,9 +46,9 @@
 - [x] Hotfix Redis cache invalidation cursor termination bug (`"0"` vs `0`) that caused profile/org write requests to remain pending and return gateway timeout responses
 - [x] Move profile/org/hierarchy write-path cache invalidation to non-blocking async invalidation and correct concrete org list cache keys
 - [x] Fix push notification toggle synchronization: detect existing browser subscription, avoid duplicate subscribe path, and guard missing `NEXT_PUBLIC_VAPID_PUBLIC_KEY`
-- [ ] Add regression test coverage for Redis scan cursor string termination and write-route completion under cache invalidation load
+- [x] Add regression test coverage for Redis scan cursor string termination and write-route completion under cache invalidation load
 - [ ] Add UI regression test coverage ensuring profile and org hierarchy mutations update UI state without manual refresh
-- [ ] Add push notification sync test matrix (permission granted + existing subscription, granted + no subscription, missing VAPID key)
+- [x] Add push notification sync test matrix (permission granted + existing subscription, granted + no subscription, missing VAPID key)
 - [x] Implement Cloudinary managed asset lifecycle for bug report screenshots (session/create-upload-finalize-discard-cleanup, ACID + compensation, legacy screenshotUrl compatibility)
 - [x] Add schema + migration groundwork for `MediaAsset`, `AssetUploadSession`, and `AssetLifecycleEvent`
 - [x] Add bug report UI integration for managed screenshots with deferred submit default and `preupload_draft` feature flag
@@ -102,15 +102,19 @@
 
 Verification note (2026-04-05): aggregate route/page/service are present but feature is still failing in real usage (selected scope load failure). Keep this section open until end-to-end aggregation succeeds and is validated with tests.
 
-- [ ] Add report aggregation API kernel decorators and zod schemas in `app/api/reports/aggregate`.
-- [ ] Extend report data model / response types in `types/global.d.ts` to carry `aggregationSource` and `aggregatedFrom` metadata.
-- [ ] Implement `lib/data/reportAggregation.ts` service to create/validate aggregated reports by template, version, campus/group, status, and metric calculations.
+- [x] Add report aggregation API kernel decorators and zod schemas in `app/api/reports/aggregate`.
+- [x] Extend report data model / response types in `types/global.d.ts` to carry `aggregationSource` and `aggregatedFrom` metadata.
+- [x] Implement `lib/data/reportAggregation.ts` service to create/validate aggregated reports by template, version, campus/group, status, and metric calculations.
 - [ ] Add org hierarchy context helper in `modules/org` to resolve parent group/campus rollup sets in aggregation UI.
 - [ ] Add `modules/reports/components/ReportAggregationPage.tsx` with interactive stepper: choose scope (campus/group/CEO), date range, template/version, status filter, metric selector/deselector, and preview metrics.
 - [x] Add data visualization embedding to export (spreadsheet charts/worksheet summary) in `modules/analytics/components/AnalyticsPage.tsx`/export utility.
-- [ ] Add automated tests for aggregation correctness (sum/average/snapshot logic, mismatch template versions fallback strategy) in `test/aggregation.test.ts`.
+- [x] Add automated tests for aggregation correctness (sum/average/snapshot logic, mismatch template versions fallback strategy) in `test/aggregation.test.ts`.
 - [ ] Update `config/routes.ts` nav to include Aggregated reports route; update breadcrumbs in `modules/reports`.
 - [ ] Document aggregation behavior in `docs/` and `hypersystem` architecture notes.
+
+Verification note (2026-04-05, this session): aggregation scope defaulting/locking was fixed for campus/group roles and preview/generate now guard missing scope; metadata fields (`aggregationSource`, `aggregatedFrom`) were added in shared types + aggregation responses; `test/aggregation.test.ts` now covers sum/average/snapshot and role/scope enforcement. Remaining aggregation UI/doc tasks stay open due metric selector and docs backlog.
+
+Verification note (2026-04-05, this session): Redis cursor termination and push sync matrix tests were added as targeted regressions; profile/org no-refresh remains open for full UI-level regression harness.
 
 ## Next dev steps
 

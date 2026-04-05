@@ -505,6 +505,16 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
           <Descriptions.Item label={CONTENT.reports.columnLabels?.status ?? "Status"}>
             <ReportStatusBadge status={report.status} />
           </Descriptions.Item>
+          {report.aggregationSource && (
+            <Descriptions.Item label="Aggregation Source">
+              {report.aggregationSource}
+            </Descriptions.Item>
+          )}
+          {report.aggregatedFrom && report.aggregatedFrom.length > 0 && (
+            <Descriptions.Item label="Aggregated From">
+              {report.aggregatedFrom.length} report(s)
+            </Descriptions.Item>
+          )}
           {submitter && (
             <Descriptions.Item label={CONTENT.reports.columnLabels?.submittedBy ?? "Submitted by"}>
               {submitter.firstName} {submitter.lastName}

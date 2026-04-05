@@ -113,6 +113,21 @@ export type InviteLink = $Result.DefaultSelection<Prisma.$InviteLinkPayload>
  * 
  */
 export type BugReport = $Result.DefaultSelection<Prisma.$BugReportPayload>
+/**
+ * Model MediaAsset
+ * 
+ */
+export type MediaAsset = $Result.DefaultSelection<Prisma.$MediaAssetPayload>
+/**
+ * Model AssetUploadSession
+ * 
+ */
+export type AssetUploadSession = $Result.DefaultSelection<Prisma.$AssetUploadSessionPayload>
+/**
+ * Model AssetLifecycleEvent
+ * 
+ */
+export type AssetLifecycleEvent = $Result.DefaultSelection<Prisma.$AssetLifecycleEventPayload>
 
 /**
  * Enums
@@ -309,6 +324,66 @@ export const BugReportCategory: {
 
 export type BugReportCategory = (typeof BugReportCategory)[keyof typeof BugReportCategory]
 
+
+export const AssetDomain: {
+  BUG_REPORT_SCREENSHOT: 'BUG_REPORT_SCREENSHOT'
+};
+
+export type AssetDomain = (typeof AssetDomain)[keyof typeof AssetDomain]
+
+
+export const AssetProvider: {
+  CLOUDINARY: 'CLOUDINARY',
+  LEGACY_URL: 'LEGACY_URL'
+};
+
+export type AssetProvider = (typeof AssetProvider)[keyof typeof AssetProvider]
+
+
+export const AssetState: {
+  TEMP: 'TEMP',
+  READY: 'READY',
+  DISCARDED: 'DISCARDED',
+  DELETE_PENDING: 'DELETE_PENDING',
+  DELETED: 'DELETED',
+  FAILED: 'FAILED'
+};
+
+export type AssetState = (typeof AssetState)[keyof typeof AssetState]
+
+
+export const AssetUploadMode: {
+  DEFERRED_SUBMIT: 'DEFERRED_SUBMIT',
+  PREUPLOAD_DRAFT: 'PREUPLOAD_DRAFT'
+};
+
+export type AssetUploadMode = (typeof AssetUploadMode)[keyof typeof AssetUploadMode]
+
+
+export const AssetSessionState: {
+  OPEN: 'OPEN',
+  TEMP_UPLOADED: 'TEMP_UPLOADED',
+  FINALIZED: 'FINALIZED',
+  DISCARDED: 'DISCARDED',
+  EXPIRED: 'EXPIRED'
+};
+
+export type AssetSessionState = (typeof AssetSessionState)[keyof typeof AssetSessionState]
+
+
+export const AssetLifecycleEventType: {
+  SESSION_CREATED: 'SESSION_CREATED',
+  TEMP_UPLOADED: 'TEMP_UPLOADED',
+  FINALIZED: 'FINALIZED',
+  DISCARDED: 'DISCARDED',
+  CLEANUP_DELETED: 'CLEANUP_DELETED',
+  CLEANUP_FAILED: 'CLEANUP_FAILED',
+  COMPENSATION_DELETED: 'COMPENSATION_DELETED',
+  COMPENSATION_FAILED: 'COMPENSATION_FAILED'
+};
+
+export type AssetLifecycleEventType = (typeof AssetLifecycleEventType)[keyof typeof AssetLifecycleEventType]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -374,6 +449,30 @@ export const BugReportStatus: typeof $Enums.BugReportStatus
 export type BugReportCategory = $Enums.BugReportCategory
 
 export const BugReportCategory: typeof $Enums.BugReportCategory
+
+export type AssetDomain = $Enums.AssetDomain
+
+export const AssetDomain: typeof $Enums.AssetDomain
+
+export type AssetProvider = $Enums.AssetProvider
+
+export const AssetProvider: typeof $Enums.AssetProvider
+
+export type AssetState = $Enums.AssetState
+
+export const AssetState: typeof $Enums.AssetState
+
+export type AssetUploadMode = $Enums.AssetUploadMode
+
+export const AssetUploadMode: typeof $Enums.AssetUploadMode
+
+export type AssetSessionState = $Enums.AssetSessionState
+
+export const AssetSessionState: typeof $Enums.AssetSessionState
+
+export type AssetLifecycleEventType = $Enums.AssetLifecycleEventType
+
+export const AssetLifecycleEventType: typeof $Enums.AssetLifecycleEventType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -695,6 +794,36 @@ export class PrismaClient<
     * ```
     */
   get bugReport(): Prisma.BugReportDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.mediaAsset`: Exposes CRUD operations for the **MediaAsset** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MediaAssets
+    * const mediaAssets = await prisma.mediaAsset.findMany()
+    * ```
+    */
+  get mediaAsset(): Prisma.MediaAssetDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.assetUploadSession`: Exposes CRUD operations for the **AssetUploadSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AssetUploadSessions
+    * const assetUploadSessions = await prisma.assetUploadSession.findMany()
+    * ```
+    */
+  get assetUploadSession(): Prisma.AssetUploadSessionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.assetLifecycleEvent`: Exposes CRUD operations for the **AssetLifecycleEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AssetLifecycleEvents
+    * const assetLifecycleEvents = await prisma.assetLifecycleEvent.findMany()
+    * ```
+    */
+  get assetLifecycleEvent(): Prisma.AssetLifecycleEventDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1148,7 +1277,10 @@ export namespace Prisma {
     MetricEntry: 'MetricEntry',
     Notification: 'Notification',
     InviteLink: 'InviteLink',
-    BugReport: 'BugReport'
+    BugReport: 'BugReport',
+    MediaAsset: 'MediaAsset',
+    AssetUploadSession: 'AssetUploadSession',
+    AssetLifecycleEvent: 'AssetLifecycleEvent'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1164,7 +1296,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "orgGroup" | "campus" | "reportTemplate" | "reportTemplateSection" | "reportTemplateMetric" | "reportTemplateVersion" | "report" | "reportSection" | "reportMetric" | "reportEdit" | "reportUpdateRequest" | "reportEvent" | "reportVersion" | "goal" | "goalEditRequest" | "metricEntry" | "notification" | "inviteLink" | "bugReport"
+      modelProps: "user" | "orgGroup" | "campus" | "reportTemplate" | "reportTemplateSection" | "reportTemplateMetric" | "reportTemplateVersion" | "report" | "reportSection" | "reportMetric" | "reportEdit" | "reportUpdateRequest" | "reportEvent" | "reportVersion" | "goal" | "goalEditRequest" | "metricEntry" | "notification" | "inviteLink" | "bugReport" | "mediaAsset" | "assetUploadSession" | "assetLifecycleEvent"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2648,6 +2780,228 @@ export namespace Prisma {
           }
         }
       }
+      MediaAsset: {
+        payload: Prisma.$MediaAssetPayload<ExtArgs>
+        fields: Prisma.MediaAssetFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MediaAssetFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaAssetPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MediaAssetFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaAssetPayload>
+          }
+          findFirst: {
+            args: Prisma.MediaAssetFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaAssetPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MediaAssetFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaAssetPayload>
+          }
+          findMany: {
+            args: Prisma.MediaAssetFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaAssetPayload>[]
+          }
+          create: {
+            args: Prisma.MediaAssetCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaAssetPayload>
+          }
+          createMany: {
+            args: Prisma.MediaAssetCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MediaAssetCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaAssetPayload>[]
+          }
+          delete: {
+            args: Prisma.MediaAssetDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaAssetPayload>
+          }
+          update: {
+            args: Prisma.MediaAssetUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaAssetPayload>
+          }
+          deleteMany: {
+            args: Prisma.MediaAssetDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MediaAssetUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MediaAssetUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaAssetPayload>[]
+          }
+          upsert: {
+            args: Prisma.MediaAssetUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaAssetPayload>
+          }
+          aggregate: {
+            args: Prisma.MediaAssetAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMediaAsset>
+          }
+          groupBy: {
+            args: Prisma.MediaAssetGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MediaAssetGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MediaAssetCountArgs<ExtArgs>
+            result: $Utils.Optional<MediaAssetCountAggregateOutputType> | number
+          }
+        }
+      }
+      AssetUploadSession: {
+        payload: Prisma.$AssetUploadSessionPayload<ExtArgs>
+        fields: Prisma.AssetUploadSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AssetUploadSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetUploadSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AssetUploadSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetUploadSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.AssetUploadSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetUploadSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AssetUploadSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetUploadSessionPayload>
+          }
+          findMany: {
+            args: Prisma.AssetUploadSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetUploadSessionPayload>[]
+          }
+          create: {
+            args: Prisma.AssetUploadSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetUploadSessionPayload>
+          }
+          createMany: {
+            args: Prisma.AssetUploadSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AssetUploadSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetUploadSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.AssetUploadSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetUploadSessionPayload>
+          }
+          update: {
+            args: Prisma.AssetUploadSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetUploadSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.AssetUploadSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AssetUploadSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AssetUploadSessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetUploadSessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.AssetUploadSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetUploadSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.AssetUploadSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAssetUploadSession>
+          }
+          groupBy: {
+            args: Prisma.AssetUploadSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AssetUploadSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AssetUploadSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<AssetUploadSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      AssetLifecycleEvent: {
+        payload: Prisma.$AssetLifecycleEventPayload<ExtArgs>
+        fields: Prisma.AssetLifecycleEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AssetLifecycleEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetLifecycleEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AssetLifecycleEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetLifecycleEventPayload>
+          }
+          findFirst: {
+            args: Prisma.AssetLifecycleEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetLifecycleEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AssetLifecycleEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetLifecycleEventPayload>
+          }
+          findMany: {
+            args: Prisma.AssetLifecycleEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetLifecycleEventPayload>[]
+          }
+          create: {
+            args: Prisma.AssetLifecycleEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetLifecycleEventPayload>
+          }
+          createMany: {
+            args: Prisma.AssetLifecycleEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AssetLifecycleEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetLifecycleEventPayload>[]
+          }
+          delete: {
+            args: Prisma.AssetLifecycleEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetLifecycleEventPayload>
+          }
+          update: {
+            args: Prisma.AssetLifecycleEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetLifecycleEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.AssetLifecycleEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AssetLifecycleEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AssetLifecycleEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetLifecycleEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.AssetLifecycleEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AssetLifecycleEventPayload>
+          }
+          aggregate: {
+            args: Prisma.AssetLifecycleEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAssetLifecycleEvent>
+          }
+          groupBy: {
+            args: Prisma.AssetLifecycleEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AssetLifecycleEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AssetLifecycleEventCountArgs<ExtArgs>
+            result: $Utils.Optional<AssetLifecycleEventCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2776,6 +3130,9 @@ export namespace Prisma {
     notification?: NotificationOmit
     inviteLink?: InviteLinkOmit
     bugReport?: BugReportOmit
+    mediaAsset?: MediaAssetOmit
+    assetUploadSession?: AssetUploadSessionOmit
+    assetLifecycleEvent?: AssetLifecycleEventOmit
   }
 
   /* Types for Logging */
@@ -2863,6 +3220,9 @@ export namespace Prisma {
     goals: number
     lockedGoals: number
     createdInviteLinks: number
+    mediaAssets: number
+    assetUploadSessions: number
+    assetLifecycleEvents: number
     notifications: number
     ledOrgGroups: number
     reviewedEdits: number
@@ -2889,6 +3249,9 @@ export namespace Prisma {
     goals?: boolean | UserCountOutputTypeCountGoalsArgs
     lockedGoals?: boolean | UserCountOutputTypeCountLockedGoalsArgs
     createdInviteLinks?: boolean | UserCountOutputTypeCountCreatedInviteLinksArgs
+    mediaAssets?: boolean | UserCountOutputTypeCountMediaAssetsArgs
+    assetUploadSessions?: boolean | UserCountOutputTypeCountAssetUploadSessionsArgs
+    assetLifecycleEvents?: boolean | UserCountOutputTypeCountAssetLifecycleEventsArgs
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     ledOrgGroups?: boolean | UserCountOutputTypeCountLedOrgGroupsArgs
     reviewedEdits?: boolean | UserCountOutputTypeCountReviewedEditsArgs
@@ -2965,6 +3328,27 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountCreatedInviteLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InviteLinkWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMediaAssetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MediaAssetWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAssetUploadSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AssetUploadSessionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAssetLifecycleEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AssetLifecycleEventWhereInput
   }
 
   /**
@@ -3464,6 +3848,86 @@ export namespace Prisma {
 
 
   /**
+   * Count Type MediaAssetCountOutputType
+   */
+
+  export type MediaAssetCountOutputType = {
+    bugReportsAsScreenshot: number
+    uploadSessions: number
+    lifecycleEvents: number
+  }
+
+  export type MediaAssetCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bugReportsAsScreenshot?: boolean | MediaAssetCountOutputTypeCountBugReportsAsScreenshotArgs
+    uploadSessions?: boolean | MediaAssetCountOutputTypeCountUploadSessionsArgs
+    lifecycleEvents?: boolean | MediaAssetCountOutputTypeCountLifecycleEventsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MediaAssetCountOutputType without action
+   */
+  export type MediaAssetCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAssetCountOutputType
+     */
+    select?: MediaAssetCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MediaAssetCountOutputType without action
+   */
+  export type MediaAssetCountOutputTypeCountBugReportsAsScreenshotArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BugReportWhereInput
+  }
+
+  /**
+   * MediaAssetCountOutputType without action
+   */
+  export type MediaAssetCountOutputTypeCountUploadSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AssetUploadSessionWhereInput
+  }
+
+  /**
+   * MediaAssetCountOutputType without action
+   */
+  export type MediaAssetCountOutputTypeCountLifecycleEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AssetLifecycleEventWhereInput
+  }
+
+
+  /**
+   * Count Type AssetUploadSessionCountOutputType
+   */
+
+  export type AssetUploadSessionCountOutputType = {
+    lifecycleEvents: number
+  }
+
+  export type AssetUploadSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lifecycleEvents?: boolean | AssetUploadSessionCountOutputTypeCountLifecycleEventsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AssetUploadSessionCountOutputType without action
+   */
+  export type AssetUploadSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSessionCountOutputType
+     */
+    select?: AssetUploadSessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AssetUploadSessionCountOutputType without action
+   */
+  export type AssetUploadSessionCountOutputTypeCountLifecycleEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AssetLifecycleEventWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -3726,6 +4190,9 @@ export namespace Prisma {
     goals?: boolean | User$goalsArgs<ExtArgs>
     lockedGoals?: boolean | User$lockedGoalsArgs<ExtArgs>
     createdInviteLinks?: boolean | User$createdInviteLinksArgs<ExtArgs>
+    mediaAssets?: boolean | User$mediaAssetsArgs<ExtArgs>
+    assetUploadSessions?: boolean | User$assetUploadSessionsArgs<ExtArgs>
+    assetLifecycleEvents?: boolean | User$assetLifecycleEventsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     ledOrgGroups?: boolean | User$ledOrgGroupsArgs<ExtArgs>
     reviewedEdits?: boolean | User$reviewedEditsArgs<ExtArgs>
@@ -3817,6 +4284,9 @@ export namespace Prisma {
     goals?: boolean | User$goalsArgs<ExtArgs>
     lockedGoals?: boolean | User$lockedGoalsArgs<ExtArgs>
     createdInviteLinks?: boolean | User$createdInviteLinksArgs<ExtArgs>
+    mediaAssets?: boolean | User$mediaAssetsArgs<ExtArgs>
+    assetUploadSessions?: boolean | User$assetUploadSessionsArgs<ExtArgs>
+    assetLifecycleEvents?: boolean | User$assetLifecycleEventsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     ledOrgGroups?: boolean | User$ledOrgGroupsArgs<ExtArgs>
     reviewedEdits?: boolean | User$reviewedEditsArgs<ExtArgs>
@@ -3856,6 +4326,9 @@ export namespace Prisma {
       goals: Prisma.$GoalPayload<ExtArgs>[]
       lockedGoals: Prisma.$GoalPayload<ExtArgs>[]
       createdInviteLinks: Prisma.$InviteLinkPayload<ExtArgs>[]
+      mediaAssets: Prisma.$MediaAssetPayload<ExtArgs>[]
+      assetUploadSessions: Prisma.$AssetUploadSessionPayload<ExtArgs>[]
+      assetLifecycleEvents: Prisma.$AssetLifecycleEventPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       ledOrgGroups: Prisma.$OrgGroupPayload<ExtArgs>[]
       reviewedEdits: Prisma.$ReportEditPayload<ExtArgs>[]
@@ -4293,6 +4766,9 @@ export namespace Prisma {
     goals<T extends User$goalsArgs<ExtArgs> = {}>(args?: Subset<T, User$goalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     lockedGoals<T extends User$lockedGoalsArgs<ExtArgs> = {}>(args?: Subset<T, User$lockedGoalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     createdInviteLinks<T extends User$createdInviteLinksArgs<ExtArgs> = {}>(args?: Subset<T, User$createdInviteLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InviteLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    mediaAssets<T extends User$mediaAssetsArgs<ExtArgs> = {}>(args?: Subset<T, User$mediaAssetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assetUploadSessions<T extends User$assetUploadSessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$assetUploadSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assetLifecycleEvents<T extends User$assetLifecycleEventsArgs<ExtArgs> = {}>(args?: Subset<T, User$assetLifecycleEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ledOrgGroups<T extends User$ledOrgGroupsArgs<ExtArgs> = {}>(args?: Subset<T, User$ledOrgGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrgGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewedEdits<T extends User$reviewedEditsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewedEditsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportEditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4917,6 +5393,78 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: InviteLinkScalarFieldEnum | InviteLinkScalarFieldEnum[]
+  }
+
+  /**
+   * User.mediaAssets
+   */
+  export type User$mediaAssetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    where?: MediaAssetWhereInput
+    orderBy?: MediaAssetOrderByWithRelationInput | MediaAssetOrderByWithRelationInput[]
+    cursor?: MediaAssetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MediaAssetScalarFieldEnum | MediaAssetScalarFieldEnum[]
+  }
+
+  /**
+   * User.assetUploadSessions
+   */
+  export type User$assetUploadSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    where?: AssetUploadSessionWhereInput
+    orderBy?: AssetUploadSessionOrderByWithRelationInput | AssetUploadSessionOrderByWithRelationInput[]
+    cursor?: AssetUploadSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AssetUploadSessionScalarFieldEnum | AssetUploadSessionScalarFieldEnum[]
+  }
+
+  /**
+   * User.assetLifecycleEvents
+   */
+  export type User$assetLifecycleEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    where?: AssetLifecycleEventWhereInput
+    orderBy?: AssetLifecycleEventOrderByWithRelationInput | AssetLifecycleEventOrderByWithRelationInput[]
+    cursor?: AssetLifecycleEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AssetLifecycleEventScalarFieldEnum | AssetLifecycleEventScalarFieldEnum[]
   }
 
   /**
@@ -27376,6 +27924,7 @@ export namespace Prisma {
     category: $Enums.BugReportCategory | null
     description: string | null
     screenshotUrl: string | null
+    screenshotAssetId: string | null
     contactEmail: string | null
     status: $Enums.BugReportStatus | null
     adminNotes: string | null
@@ -27389,6 +27938,7 @@ export namespace Prisma {
     category: $Enums.BugReportCategory | null
     description: string | null
     screenshotUrl: string | null
+    screenshotAssetId: string | null
     contactEmail: string | null
     status: $Enums.BugReportStatus | null
     adminNotes: string | null
@@ -27402,6 +27952,7 @@ export namespace Prisma {
     category: number
     description: number
     screenshotUrl: number
+    screenshotAssetId: number
     contactEmail: number
     status: number
     adminNotes: number
@@ -27417,6 +27968,7 @@ export namespace Prisma {
     category?: true
     description?: true
     screenshotUrl?: true
+    screenshotAssetId?: true
     contactEmail?: true
     status?: true
     adminNotes?: true
@@ -27430,6 +27982,7 @@ export namespace Prisma {
     category?: true
     description?: true
     screenshotUrl?: true
+    screenshotAssetId?: true
     contactEmail?: true
     status?: true
     adminNotes?: true
@@ -27443,6 +27996,7 @@ export namespace Prisma {
     category?: true
     description?: true
     screenshotUrl?: true
+    screenshotAssetId?: true
     contactEmail?: true
     status?: true
     adminNotes?: true
@@ -27529,6 +28083,7 @@ export namespace Prisma {
     category: $Enums.BugReportCategory
     description: string
     screenshotUrl: string | null
+    screenshotAssetId: string | null
     contactEmail: string
     status: $Enums.BugReportStatus
     adminNotes: string | null
@@ -27559,6 +28114,7 @@ export namespace Prisma {
     category?: boolean
     description?: boolean
     screenshotUrl?: boolean
+    screenshotAssetId?: boolean
     contactEmail?: boolean
     status?: boolean
     adminNotes?: boolean
@@ -27566,6 +28122,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    screenshotAsset?: boolean | BugReport$screenshotAssetArgs<ExtArgs>
   }, ExtArgs["result"]["bugReport"]>
 
   export type BugReportSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -27573,6 +28130,7 @@ export namespace Prisma {
     category?: boolean
     description?: boolean
     screenshotUrl?: boolean
+    screenshotAssetId?: boolean
     contactEmail?: boolean
     status?: boolean
     adminNotes?: boolean
@@ -27580,6 +28138,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    screenshotAsset?: boolean | BugReport$screenshotAssetArgs<ExtArgs>
   }, ExtArgs["result"]["bugReport"]>
 
   export type BugReportSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -27587,6 +28146,7 @@ export namespace Prisma {
     category?: boolean
     description?: boolean
     screenshotUrl?: boolean
+    screenshotAssetId?: boolean
     contactEmail?: boolean
     status?: boolean
     adminNotes?: boolean
@@ -27594,6 +28154,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    screenshotAsset?: boolean | BugReport$screenshotAssetArgs<ExtArgs>
   }, ExtArgs["result"]["bugReport"]>
 
   export type BugReportSelectScalar = {
@@ -27601,6 +28162,7 @@ export namespace Prisma {
     category?: boolean
     description?: boolean
     screenshotUrl?: boolean
+    screenshotAssetId?: boolean
     contactEmail?: boolean
     status?: boolean
     adminNotes?: boolean
@@ -27609,27 +28171,32 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type BugReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "category" | "description" | "screenshotUrl" | "contactEmail" | "status" | "adminNotes" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["bugReport"]>
+  export type BugReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "category" | "description" | "screenshotUrl" | "screenshotAssetId" | "contactEmail" | "status" | "adminNotes" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["bugReport"]>
   export type BugReportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    screenshotAsset?: boolean | BugReport$screenshotAssetArgs<ExtArgs>
   }
   export type BugReportIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    screenshotAsset?: boolean | BugReport$screenshotAssetArgs<ExtArgs>
   }
   export type BugReportIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    screenshotAsset?: boolean | BugReport$screenshotAssetArgs<ExtArgs>
   }
 
   export type $BugReportPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "BugReport"
     objects: {
       createdBy: Prisma.$UserPayload<ExtArgs>
+      screenshotAsset: Prisma.$MediaAssetPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       category: $Enums.BugReportCategory
       description: string
       screenshotUrl: string | null
+      screenshotAssetId: string | null
       contactEmail: string
       status: $Enums.BugReportStatus
       adminNotes: string | null
@@ -28031,6 +28598,7 @@ export namespace Prisma {
   export interface Prisma__BugReportClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    screenshotAsset<T extends BugReport$screenshotAssetArgs<ExtArgs> = {}>(args?: Subset<T, BugReport$screenshotAssetArgs<ExtArgs>>): Prisma__MediaAssetClient<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -28064,6 +28632,7 @@ export namespace Prisma {
     readonly category: FieldRef<"BugReport", 'BugReportCategory'>
     readonly description: FieldRef<"BugReport", 'String'>
     readonly screenshotUrl: FieldRef<"BugReport", 'String'>
+    readonly screenshotAssetId: FieldRef<"BugReport", 'String'>
     readonly contactEmail: FieldRef<"BugReport", 'String'>
     readonly status: FieldRef<"BugReport", 'BugReportStatus'>
     readonly adminNotes: FieldRef<"BugReport", 'String'>
@@ -28466,6 +29035,25 @@ export namespace Prisma {
   }
 
   /**
+   * BugReport.screenshotAsset
+   */
+  export type BugReport$screenshotAssetArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    where?: MediaAssetWhereInput
+  }
+
+  /**
    * BugReport without action
    */
   export type BugReportDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -28481,6 +29069,3794 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: BugReportInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MediaAsset
+   */
+
+  export type AggregateMediaAsset = {
+    _count: MediaAssetCountAggregateOutputType | null
+    _avg: MediaAssetAvgAggregateOutputType | null
+    _sum: MediaAssetSumAggregateOutputType | null
+    _min: MediaAssetMinAggregateOutputType | null
+    _max: MediaAssetMaxAggregateOutputType | null
+  }
+
+  export type MediaAssetAvgAggregateOutputType = {
+    bytes: number | null
+    width: number | null
+    height: number | null
+  }
+
+  export type MediaAssetSumAggregateOutputType = {
+    bytes: number | null
+    width: number | null
+    height: number | null
+  }
+
+  export type MediaAssetMinAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    domain: $Enums.AssetDomain | null
+    provider: $Enums.AssetProvider | null
+    state: $Enums.AssetState | null
+    publicId: string | null
+    secureUrl: string | null
+    resourceType: string | null
+    format: string | null
+    bytes: number | null
+    width: number | null
+    height: number | null
+    mimeType: string | null
+    originalFileName: string | null
+    folder: string | null
+    requestId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    finalizedAt: Date | null
+    discardedAt: Date | null
+    expiresAt: Date | null
+  }
+
+  export type MediaAssetMaxAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    domain: $Enums.AssetDomain | null
+    provider: $Enums.AssetProvider | null
+    state: $Enums.AssetState | null
+    publicId: string | null
+    secureUrl: string | null
+    resourceType: string | null
+    format: string | null
+    bytes: number | null
+    width: number | null
+    height: number | null
+    mimeType: string | null
+    originalFileName: string | null
+    folder: string | null
+    requestId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    finalizedAt: Date | null
+    discardedAt: Date | null
+    expiresAt: Date | null
+  }
+
+  export type MediaAssetCountAggregateOutputType = {
+    id: number
+    ownerId: number
+    domain: number
+    provider: number
+    state: number
+    publicId: number
+    secureUrl: number
+    resourceType: number
+    format: number
+    bytes: number
+    width: number
+    height: number
+    mimeType: number
+    originalFileName: number
+    folder: number
+    metadata: number
+    requestId: number
+    createdAt: number
+    updatedAt: number
+    finalizedAt: number
+    discardedAt: number
+    expiresAt: number
+    _all: number
+  }
+
+
+  export type MediaAssetAvgAggregateInputType = {
+    bytes?: true
+    width?: true
+    height?: true
+  }
+
+  export type MediaAssetSumAggregateInputType = {
+    bytes?: true
+    width?: true
+    height?: true
+  }
+
+  export type MediaAssetMinAggregateInputType = {
+    id?: true
+    ownerId?: true
+    domain?: true
+    provider?: true
+    state?: true
+    publicId?: true
+    secureUrl?: true
+    resourceType?: true
+    format?: true
+    bytes?: true
+    width?: true
+    height?: true
+    mimeType?: true
+    originalFileName?: true
+    folder?: true
+    requestId?: true
+    createdAt?: true
+    updatedAt?: true
+    finalizedAt?: true
+    discardedAt?: true
+    expiresAt?: true
+  }
+
+  export type MediaAssetMaxAggregateInputType = {
+    id?: true
+    ownerId?: true
+    domain?: true
+    provider?: true
+    state?: true
+    publicId?: true
+    secureUrl?: true
+    resourceType?: true
+    format?: true
+    bytes?: true
+    width?: true
+    height?: true
+    mimeType?: true
+    originalFileName?: true
+    folder?: true
+    requestId?: true
+    createdAt?: true
+    updatedAt?: true
+    finalizedAt?: true
+    discardedAt?: true
+    expiresAt?: true
+  }
+
+  export type MediaAssetCountAggregateInputType = {
+    id?: true
+    ownerId?: true
+    domain?: true
+    provider?: true
+    state?: true
+    publicId?: true
+    secureUrl?: true
+    resourceType?: true
+    format?: true
+    bytes?: true
+    width?: true
+    height?: true
+    mimeType?: true
+    originalFileName?: true
+    folder?: true
+    metadata?: true
+    requestId?: true
+    createdAt?: true
+    updatedAt?: true
+    finalizedAt?: true
+    discardedAt?: true
+    expiresAt?: true
+    _all?: true
+  }
+
+  export type MediaAssetAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MediaAsset to aggregate.
+     */
+    where?: MediaAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaAssets to fetch.
+     */
+    orderBy?: MediaAssetOrderByWithRelationInput | MediaAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MediaAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaAssets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MediaAssets
+    **/
+    _count?: true | MediaAssetCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MediaAssetAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MediaAssetSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MediaAssetMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MediaAssetMaxAggregateInputType
+  }
+
+  export type GetMediaAssetAggregateType<T extends MediaAssetAggregateArgs> = {
+        [P in keyof T & keyof AggregateMediaAsset]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMediaAsset[P]>
+      : GetScalarType<T[P], AggregateMediaAsset[P]>
+  }
+
+
+
+
+  export type MediaAssetGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MediaAssetWhereInput
+    orderBy?: MediaAssetOrderByWithAggregationInput | MediaAssetOrderByWithAggregationInput[]
+    by: MediaAssetScalarFieldEnum[] | MediaAssetScalarFieldEnum
+    having?: MediaAssetScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MediaAssetCountAggregateInputType | true
+    _avg?: MediaAssetAvgAggregateInputType
+    _sum?: MediaAssetSumAggregateInputType
+    _min?: MediaAssetMinAggregateInputType
+    _max?: MediaAssetMaxAggregateInputType
+  }
+
+  export type MediaAssetGroupByOutputType = {
+    id: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    provider: $Enums.AssetProvider
+    state: $Enums.AssetState
+    publicId: string | null
+    secureUrl: string | null
+    resourceType: string | null
+    format: string | null
+    bytes: number | null
+    width: number | null
+    height: number | null
+    mimeType: string | null
+    originalFileName: string | null
+    folder: string | null
+    metadata: JsonValue | null
+    requestId: string | null
+    createdAt: Date
+    updatedAt: Date
+    finalizedAt: Date | null
+    discardedAt: Date | null
+    expiresAt: Date | null
+    _count: MediaAssetCountAggregateOutputType | null
+    _avg: MediaAssetAvgAggregateOutputType | null
+    _sum: MediaAssetSumAggregateOutputType | null
+    _min: MediaAssetMinAggregateOutputType | null
+    _max: MediaAssetMaxAggregateOutputType | null
+  }
+
+  type GetMediaAssetGroupByPayload<T extends MediaAssetGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MediaAssetGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MediaAssetGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MediaAssetGroupByOutputType[P]>
+            : GetScalarType<T[P], MediaAssetGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MediaAssetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    domain?: boolean
+    provider?: boolean
+    state?: boolean
+    publicId?: boolean
+    secureUrl?: boolean
+    resourceType?: boolean
+    format?: boolean
+    bytes?: boolean
+    width?: boolean
+    height?: boolean
+    mimeType?: boolean
+    originalFileName?: boolean
+    folder?: boolean
+    metadata?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    finalizedAt?: boolean
+    discardedAt?: boolean
+    expiresAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    bugReportsAsScreenshot?: boolean | MediaAsset$bugReportsAsScreenshotArgs<ExtArgs>
+    uploadSessions?: boolean | MediaAsset$uploadSessionsArgs<ExtArgs>
+    lifecycleEvents?: boolean | MediaAsset$lifecycleEventsArgs<ExtArgs>
+    _count?: boolean | MediaAssetCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["mediaAsset"]>
+
+  export type MediaAssetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    domain?: boolean
+    provider?: boolean
+    state?: boolean
+    publicId?: boolean
+    secureUrl?: boolean
+    resourceType?: boolean
+    format?: boolean
+    bytes?: boolean
+    width?: boolean
+    height?: boolean
+    mimeType?: boolean
+    originalFileName?: boolean
+    folder?: boolean
+    metadata?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    finalizedAt?: boolean
+    discardedAt?: boolean
+    expiresAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["mediaAsset"]>
+
+  export type MediaAssetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    domain?: boolean
+    provider?: boolean
+    state?: boolean
+    publicId?: boolean
+    secureUrl?: boolean
+    resourceType?: boolean
+    format?: boolean
+    bytes?: boolean
+    width?: boolean
+    height?: boolean
+    mimeType?: boolean
+    originalFileName?: boolean
+    folder?: boolean
+    metadata?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    finalizedAt?: boolean
+    discardedAt?: boolean
+    expiresAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["mediaAsset"]>
+
+  export type MediaAssetSelectScalar = {
+    id?: boolean
+    ownerId?: boolean
+    domain?: boolean
+    provider?: boolean
+    state?: boolean
+    publicId?: boolean
+    secureUrl?: boolean
+    resourceType?: boolean
+    format?: boolean
+    bytes?: boolean
+    width?: boolean
+    height?: boolean
+    mimeType?: boolean
+    originalFileName?: boolean
+    folder?: boolean
+    metadata?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    finalizedAt?: boolean
+    discardedAt?: boolean
+    expiresAt?: boolean
+  }
+
+  export type MediaAssetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ownerId" | "domain" | "provider" | "state" | "publicId" | "secureUrl" | "resourceType" | "format" | "bytes" | "width" | "height" | "mimeType" | "originalFileName" | "folder" | "metadata" | "requestId" | "createdAt" | "updatedAt" | "finalizedAt" | "discardedAt" | "expiresAt", ExtArgs["result"]["mediaAsset"]>
+  export type MediaAssetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    bugReportsAsScreenshot?: boolean | MediaAsset$bugReportsAsScreenshotArgs<ExtArgs>
+    uploadSessions?: boolean | MediaAsset$uploadSessionsArgs<ExtArgs>
+    lifecycleEvents?: boolean | MediaAsset$lifecycleEventsArgs<ExtArgs>
+    _count?: boolean | MediaAssetCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MediaAssetIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MediaAssetIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $MediaAssetPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MediaAsset"
+    objects: {
+      owner: Prisma.$UserPayload<ExtArgs>
+      bugReportsAsScreenshot: Prisma.$BugReportPayload<ExtArgs>[]
+      uploadSessions: Prisma.$AssetUploadSessionPayload<ExtArgs>[]
+      lifecycleEvents: Prisma.$AssetLifecycleEventPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ownerId: string
+      domain: $Enums.AssetDomain
+      provider: $Enums.AssetProvider
+      state: $Enums.AssetState
+      publicId: string | null
+      secureUrl: string | null
+      resourceType: string | null
+      format: string | null
+      bytes: number | null
+      width: number | null
+      height: number | null
+      mimeType: string | null
+      originalFileName: string | null
+      folder: string | null
+      metadata: Prisma.JsonValue | null
+      requestId: string | null
+      createdAt: Date
+      updatedAt: Date
+      finalizedAt: Date | null
+      discardedAt: Date | null
+      expiresAt: Date | null
+    }, ExtArgs["result"]["mediaAsset"]>
+    composites: {}
+  }
+
+  type MediaAssetGetPayload<S extends boolean | null | undefined | MediaAssetDefaultArgs> = $Result.GetResult<Prisma.$MediaAssetPayload, S>
+
+  type MediaAssetCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MediaAssetFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MediaAssetCountAggregateInputType | true
+    }
+
+  export interface MediaAssetDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MediaAsset'], meta: { name: 'MediaAsset' } }
+    /**
+     * Find zero or one MediaAsset that matches the filter.
+     * @param {MediaAssetFindUniqueArgs} args - Arguments to find a MediaAsset
+     * @example
+     * // Get one MediaAsset
+     * const mediaAsset = await prisma.mediaAsset.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MediaAssetFindUniqueArgs>(args: SelectSubset<T, MediaAssetFindUniqueArgs<ExtArgs>>): Prisma__MediaAssetClient<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MediaAsset that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MediaAssetFindUniqueOrThrowArgs} args - Arguments to find a MediaAsset
+     * @example
+     * // Get one MediaAsset
+     * const mediaAsset = await prisma.mediaAsset.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MediaAssetFindUniqueOrThrowArgs>(args: SelectSubset<T, MediaAssetFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MediaAssetClient<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MediaAsset that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaAssetFindFirstArgs} args - Arguments to find a MediaAsset
+     * @example
+     * // Get one MediaAsset
+     * const mediaAsset = await prisma.mediaAsset.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MediaAssetFindFirstArgs>(args?: SelectSubset<T, MediaAssetFindFirstArgs<ExtArgs>>): Prisma__MediaAssetClient<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MediaAsset that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaAssetFindFirstOrThrowArgs} args - Arguments to find a MediaAsset
+     * @example
+     * // Get one MediaAsset
+     * const mediaAsset = await prisma.mediaAsset.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MediaAssetFindFirstOrThrowArgs>(args?: SelectSubset<T, MediaAssetFindFirstOrThrowArgs<ExtArgs>>): Prisma__MediaAssetClient<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MediaAssets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaAssetFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MediaAssets
+     * const mediaAssets = await prisma.mediaAsset.findMany()
+     * 
+     * // Get first 10 MediaAssets
+     * const mediaAssets = await prisma.mediaAsset.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const mediaAssetWithIdOnly = await prisma.mediaAsset.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MediaAssetFindManyArgs>(args?: SelectSubset<T, MediaAssetFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MediaAsset.
+     * @param {MediaAssetCreateArgs} args - Arguments to create a MediaAsset.
+     * @example
+     * // Create one MediaAsset
+     * const MediaAsset = await prisma.mediaAsset.create({
+     *   data: {
+     *     // ... data to create a MediaAsset
+     *   }
+     * })
+     * 
+     */
+    create<T extends MediaAssetCreateArgs>(args: SelectSubset<T, MediaAssetCreateArgs<ExtArgs>>): Prisma__MediaAssetClient<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MediaAssets.
+     * @param {MediaAssetCreateManyArgs} args - Arguments to create many MediaAssets.
+     * @example
+     * // Create many MediaAssets
+     * const mediaAsset = await prisma.mediaAsset.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MediaAssetCreateManyArgs>(args?: SelectSubset<T, MediaAssetCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MediaAssets and returns the data saved in the database.
+     * @param {MediaAssetCreateManyAndReturnArgs} args - Arguments to create many MediaAssets.
+     * @example
+     * // Create many MediaAssets
+     * const mediaAsset = await prisma.mediaAsset.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MediaAssets and only return the `id`
+     * const mediaAssetWithIdOnly = await prisma.mediaAsset.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MediaAssetCreateManyAndReturnArgs>(args?: SelectSubset<T, MediaAssetCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MediaAsset.
+     * @param {MediaAssetDeleteArgs} args - Arguments to delete one MediaAsset.
+     * @example
+     * // Delete one MediaAsset
+     * const MediaAsset = await prisma.mediaAsset.delete({
+     *   where: {
+     *     // ... filter to delete one MediaAsset
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MediaAssetDeleteArgs>(args: SelectSubset<T, MediaAssetDeleteArgs<ExtArgs>>): Prisma__MediaAssetClient<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MediaAsset.
+     * @param {MediaAssetUpdateArgs} args - Arguments to update one MediaAsset.
+     * @example
+     * // Update one MediaAsset
+     * const mediaAsset = await prisma.mediaAsset.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MediaAssetUpdateArgs>(args: SelectSubset<T, MediaAssetUpdateArgs<ExtArgs>>): Prisma__MediaAssetClient<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MediaAssets.
+     * @param {MediaAssetDeleteManyArgs} args - Arguments to filter MediaAssets to delete.
+     * @example
+     * // Delete a few MediaAssets
+     * const { count } = await prisma.mediaAsset.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MediaAssetDeleteManyArgs>(args?: SelectSubset<T, MediaAssetDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MediaAssets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaAssetUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MediaAssets
+     * const mediaAsset = await prisma.mediaAsset.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MediaAssetUpdateManyArgs>(args: SelectSubset<T, MediaAssetUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MediaAssets and returns the data updated in the database.
+     * @param {MediaAssetUpdateManyAndReturnArgs} args - Arguments to update many MediaAssets.
+     * @example
+     * // Update many MediaAssets
+     * const mediaAsset = await prisma.mediaAsset.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MediaAssets and only return the `id`
+     * const mediaAssetWithIdOnly = await prisma.mediaAsset.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MediaAssetUpdateManyAndReturnArgs>(args: SelectSubset<T, MediaAssetUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MediaAsset.
+     * @param {MediaAssetUpsertArgs} args - Arguments to update or create a MediaAsset.
+     * @example
+     * // Update or create a MediaAsset
+     * const mediaAsset = await prisma.mediaAsset.upsert({
+     *   create: {
+     *     // ... data to create a MediaAsset
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MediaAsset we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MediaAssetUpsertArgs>(args: SelectSubset<T, MediaAssetUpsertArgs<ExtArgs>>): Prisma__MediaAssetClient<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MediaAssets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaAssetCountArgs} args - Arguments to filter MediaAssets to count.
+     * @example
+     * // Count the number of MediaAssets
+     * const count = await prisma.mediaAsset.count({
+     *   where: {
+     *     // ... the filter for the MediaAssets we want to count
+     *   }
+     * })
+    **/
+    count<T extends MediaAssetCountArgs>(
+      args?: Subset<T, MediaAssetCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MediaAssetCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MediaAsset.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaAssetAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MediaAssetAggregateArgs>(args: Subset<T, MediaAssetAggregateArgs>): Prisma.PrismaPromise<GetMediaAssetAggregateType<T>>
+
+    /**
+     * Group by MediaAsset.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaAssetGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MediaAssetGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MediaAssetGroupByArgs['orderBy'] }
+        : { orderBy?: MediaAssetGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MediaAssetGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMediaAssetGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MediaAsset model
+   */
+  readonly fields: MediaAssetFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MediaAsset.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MediaAssetClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    bugReportsAsScreenshot<T extends MediaAsset$bugReportsAsScreenshotArgs<ExtArgs> = {}>(args?: Subset<T, MediaAsset$bugReportsAsScreenshotArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BugReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    uploadSessions<T extends MediaAsset$uploadSessionsArgs<ExtArgs> = {}>(args?: Subset<T, MediaAsset$uploadSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    lifecycleEvents<T extends MediaAsset$lifecycleEventsArgs<ExtArgs> = {}>(args?: Subset<T, MediaAsset$lifecycleEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MediaAsset model
+   */
+  interface MediaAssetFieldRefs {
+    readonly id: FieldRef<"MediaAsset", 'String'>
+    readonly ownerId: FieldRef<"MediaAsset", 'String'>
+    readonly domain: FieldRef<"MediaAsset", 'AssetDomain'>
+    readonly provider: FieldRef<"MediaAsset", 'AssetProvider'>
+    readonly state: FieldRef<"MediaAsset", 'AssetState'>
+    readonly publicId: FieldRef<"MediaAsset", 'String'>
+    readonly secureUrl: FieldRef<"MediaAsset", 'String'>
+    readonly resourceType: FieldRef<"MediaAsset", 'String'>
+    readonly format: FieldRef<"MediaAsset", 'String'>
+    readonly bytes: FieldRef<"MediaAsset", 'Int'>
+    readonly width: FieldRef<"MediaAsset", 'Int'>
+    readonly height: FieldRef<"MediaAsset", 'Int'>
+    readonly mimeType: FieldRef<"MediaAsset", 'String'>
+    readonly originalFileName: FieldRef<"MediaAsset", 'String'>
+    readonly folder: FieldRef<"MediaAsset", 'String'>
+    readonly metadata: FieldRef<"MediaAsset", 'Json'>
+    readonly requestId: FieldRef<"MediaAsset", 'String'>
+    readonly createdAt: FieldRef<"MediaAsset", 'DateTime'>
+    readonly updatedAt: FieldRef<"MediaAsset", 'DateTime'>
+    readonly finalizedAt: FieldRef<"MediaAsset", 'DateTime'>
+    readonly discardedAt: FieldRef<"MediaAsset", 'DateTime'>
+    readonly expiresAt: FieldRef<"MediaAsset", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MediaAsset findUnique
+   */
+  export type MediaAssetFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaAsset to fetch.
+     */
+    where: MediaAssetWhereUniqueInput
+  }
+
+  /**
+   * MediaAsset findUniqueOrThrow
+   */
+  export type MediaAssetFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaAsset to fetch.
+     */
+    where: MediaAssetWhereUniqueInput
+  }
+
+  /**
+   * MediaAsset findFirst
+   */
+  export type MediaAssetFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaAsset to fetch.
+     */
+    where?: MediaAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaAssets to fetch.
+     */
+    orderBy?: MediaAssetOrderByWithRelationInput | MediaAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MediaAssets.
+     */
+    cursor?: MediaAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaAssets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MediaAssets.
+     */
+    distinct?: MediaAssetScalarFieldEnum | MediaAssetScalarFieldEnum[]
+  }
+
+  /**
+   * MediaAsset findFirstOrThrow
+   */
+  export type MediaAssetFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaAsset to fetch.
+     */
+    where?: MediaAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaAssets to fetch.
+     */
+    orderBy?: MediaAssetOrderByWithRelationInput | MediaAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MediaAssets.
+     */
+    cursor?: MediaAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaAssets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MediaAssets.
+     */
+    distinct?: MediaAssetScalarFieldEnum | MediaAssetScalarFieldEnum[]
+  }
+
+  /**
+   * MediaAsset findMany
+   */
+  export type MediaAssetFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaAssets to fetch.
+     */
+    where?: MediaAssetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaAssets to fetch.
+     */
+    orderBy?: MediaAssetOrderByWithRelationInput | MediaAssetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MediaAssets.
+     */
+    cursor?: MediaAssetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaAssets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaAssets.
+     */
+    skip?: number
+    distinct?: MediaAssetScalarFieldEnum | MediaAssetScalarFieldEnum[]
+  }
+
+  /**
+   * MediaAsset create
+   */
+  export type MediaAssetCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MediaAsset.
+     */
+    data: XOR<MediaAssetCreateInput, MediaAssetUncheckedCreateInput>
+  }
+
+  /**
+   * MediaAsset createMany
+   */
+  export type MediaAssetCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MediaAssets.
+     */
+    data: MediaAssetCreateManyInput | MediaAssetCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MediaAsset createManyAndReturn
+   */
+  export type MediaAssetCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * The data used to create many MediaAssets.
+     */
+    data: MediaAssetCreateManyInput | MediaAssetCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MediaAsset update
+   */
+  export type MediaAssetUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MediaAsset.
+     */
+    data: XOR<MediaAssetUpdateInput, MediaAssetUncheckedUpdateInput>
+    /**
+     * Choose, which MediaAsset to update.
+     */
+    where: MediaAssetWhereUniqueInput
+  }
+
+  /**
+   * MediaAsset updateMany
+   */
+  export type MediaAssetUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MediaAssets.
+     */
+    data: XOR<MediaAssetUpdateManyMutationInput, MediaAssetUncheckedUpdateManyInput>
+    /**
+     * Filter which MediaAssets to update
+     */
+    where?: MediaAssetWhereInput
+    /**
+     * Limit how many MediaAssets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MediaAsset updateManyAndReturn
+   */
+  export type MediaAssetUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * The data used to update MediaAssets.
+     */
+    data: XOR<MediaAssetUpdateManyMutationInput, MediaAssetUncheckedUpdateManyInput>
+    /**
+     * Filter which MediaAssets to update
+     */
+    where?: MediaAssetWhereInput
+    /**
+     * Limit how many MediaAssets to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MediaAsset upsert
+   */
+  export type MediaAssetUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MediaAsset to update in case it exists.
+     */
+    where: MediaAssetWhereUniqueInput
+    /**
+     * In case the MediaAsset found by the `where` argument doesn't exist, create a new MediaAsset with this data.
+     */
+    create: XOR<MediaAssetCreateInput, MediaAssetUncheckedCreateInput>
+    /**
+     * In case the MediaAsset was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MediaAssetUpdateInput, MediaAssetUncheckedUpdateInput>
+  }
+
+  /**
+   * MediaAsset delete
+   */
+  export type MediaAssetDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    /**
+     * Filter which MediaAsset to delete.
+     */
+    where: MediaAssetWhereUniqueInput
+  }
+
+  /**
+   * MediaAsset deleteMany
+   */
+  export type MediaAssetDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MediaAssets to delete
+     */
+    where?: MediaAssetWhereInput
+    /**
+     * Limit how many MediaAssets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MediaAsset.bugReportsAsScreenshot
+   */
+  export type MediaAsset$bugReportsAsScreenshotArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BugReport
+     */
+    select?: BugReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BugReport
+     */
+    omit?: BugReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BugReportInclude<ExtArgs> | null
+    where?: BugReportWhereInput
+    orderBy?: BugReportOrderByWithRelationInput | BugReportOrderByWithRelationInput[]
+    cursor?: BugReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BugReportScalarFieldEnum | BugReportScalarFieldEnum[]
+  }
+
+  /**
+   * MediaAsset.uploadSessions
+   */
+  export type MediaAsset$uploadSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    where?: AssetUploadSessionWhereInput
+    orderBy?: AssetUploadSessionOrderByWithRelationInput | AssetUploadSessionOrderByWithRelationInput[]
+    cursor?: AssetUploadSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AssetUploadSessionScalarFieldEnum | AssetUploadSessionScalarFieldEnum[]
+  }
+
+  /**
+   * MediaAsset.lifecycleEvents
+   */
+  export type MediaAsset$lifecycleEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    where?: AssetLifecycleEventWhereInput
+    orderBy?: AssetLifecycleEventOrderByWithRelationInput | AssetLifecycleEventOrderByWithRelationInput[]
+    cursor?: AssetLifecycleEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AssetLifecycleEventScalarFieldEnum | AssetLifecycleEventScalarFieldEnum[]
+  }
+
+  /**
+   * MediaAsset without action
+   */
+  export type MediaAssetDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AssetUploadSession
+   */
+
+  export type AggregateAssetUploadSession = {
+    _count: AssetUploadSessionCountAggregateOutputType | null
+    _min: AssetUploadSessionMinAggregateOutputType | null
+    _max: AssetUploadSessionMaxAggregateOutputType | null
+  }
+
+  export type AssetUploadSessionMinAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    domain: $Enums.AssetDomain | null
+    mode: $Enums.AssetUploadMode | null
+    state: $Enums.AssetSessionState | null
+    activeAssetId: string | null
+    idempotencyKey: string | null
+    requestId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    finalizedAt: Date | null
+    discardedAt: Date | null
+    expiresAt: Date | null
+  }
+
+  export type AssetUploadSessionMaxAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    domain: $Enums.AssetDomain | null
+    mode: $Enums.AssetUploadMode | null
+    state: $Enums.AssetSessionState | null
+    activeAssetId: string | null
+    idempotencyKey: string | null
+    requestId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    finalizedAt: Date | null
+    discardedAt: Date | null
+    expiresAt: Date | null
+  }
+
+  export type AssetUploadSessionCountAggregateOutputType = {
+    id: number
+    ownerId: number
+    domain: number
+    mode: number
+    state: number
+    activeAssetId: number
+    idempotencyKey: number
+    requestId: number
+    createdAt: number
+    updatedAt: number
+    finalizedAt: number
+    discardedAt: number
+    expiresAt: number
+    _all: number
+  }
+
+
+  export type AssetUploadSessionMinAggregateInputType = {
+    id?: true
+    ownerId?: true
+    domain?: true
+    mode?: true
+    state?: true
+    activeAssetId?: true
+    idempotencyKey?: true
+    requestId?: true
+    createdAt?: true
+    updatedAt?: true
+    finalizedAt?: true
+    discardedAt?: true
+    expiresAt?: true
+  }
+
+  export type AssetUploadSessionMaxAggregateInputType = {
+    id?: true
+    ownerId?: true
+    domain?: true
+    mode?: true
+    state?: true
+    activeAssetId?: true
+    idempotencyKey?: true
+    requestId?: true
+    createdAt?: true
+    updatedAt?: true
+    finalizedAt?: true
+    discardedAt?: true
+    expiresAt?: true
+  }
+
+  export type AssetUploadSessionCountAggregateInputType = {
+    id?: true
+    ownerId?: true
+    domain?: true
+    mode?: true
+    state?: true
+    activeAssetId?: true
+    idempotencyKey?: true
+    requestId?: true
+    createdAt?: true
+    updatedAt?: true
+    finalizedAt?: true
+    discardedAt?: true
+    expiresAt?: true
+    _all?: true
+  }
+
+  export type AssetUploadSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AssetUploadSession to aggregate.
+     */
+    where?: AssetUploadSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AssetUploadSessions to fetch.
+     */
+    orderBy?: AssetUploadSessionOrderByWithRelationInput | AssetUploadSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AssetUploadSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AssetUploadSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AssetUploadSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AssetUploadSessions
+    **/
+    _count?: true | AssetUploadSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AssetUploadSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AssetUploadSessionMaxAggregateInputType
+  }
+
+  export type GetAssetUploadSessionAggregateType<T extends AssetUploadSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateAssetUploadSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAssetUploadSession[P]>
+      : GetScalarType<T[P], AggregateAssetUploadSession[P]>
+  }
+
+
+
+
+  export type AssetUploadSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AssetUploadSessionWhereInput
+    orderBy?: AssetUploadSessionOrderByWithAggregationInput | AssetUploadSessionOrderByWithAggregationInput[]
+    by: AssetUploadSessionScalarFieldEnum[] | AssetUploadSessionScalarFieldEnum
+    having?: AssetUploadSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AssetUploadSessionCountAggregateInputType | true
+    _min?: AssetUploadSessionMinAggregateInputType
+    _max?: AssetUploadSessionMaxAggregateInputType
+  }
+
+  export type AssetUploadSessionGroupByOutputType = {
+    id: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    mode: $Enums.AssetUploadMode
+    state: $Enums.AssetSessionState
+    activeAssetId: string | null
+    idempotencyKey: string | null
+    requestId: string | null
+    createdAt: Date
+    updatedAt: Date
+    finalizedAt: Date | null
+    discardedAt: Date | null
+    expiresAt: Date | null
+    _count: AssetUploadSessionCountAggregateOutputType | null
+    _min: AssetUploadSessionMinAggregateOutputType | null
+    _max: AssetUploadSessionMaxAggregateOutputType | null
+  }
+
+  type GetAssetUploadSessionGroupByPayload<T extends AssetUploadSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AssetUploadSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AssetUploadSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AssetUploadSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], AssetUploadSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AssetUploadSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    domain?: boolean
+    mode?: boolean
+    state?: boolean
+    activeAssetId?: boolean
+    idempotencyKey?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    finalizedAt?: boolean
+    discardedAt?: boolean
+    expiresAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    activeAsset?: boolean | AssetUploadSession$activeAssetArgs<ExtArgs>
+    lifecycleEvents?: boolean | AssetUploadSession$lifecycleEventsArgs<ExtArgs>
+    _count?: boolean | AssetUploadSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["assetUploadSession"]>
+
+  export type AssetUploadSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    domain?: boolean
+    mode?: boolean
+    state?: boolean
+    activeAssetId?: boolean
+    idempotencyKey?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    finalizedAt?: boolean
+    discardedAt?: boolean
+    expiresAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    activeAsset?: boolean | AssetUploadSession$activeAssetArgs<ExtArgs>
+  }, ExtArgs["result"]["assetUploadSession"]>
+
+  export type AssetUploadSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    domain?: boolean
+    mode?: boolean
+    state?: boolean
+    activeAssetId?: boolean
+    idempotencyKey?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    finalizedAt?: boolean
+    discardedAt?: boolean
+    expiresAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    activeAsset?: boolean | AssetUploadSession$activeAssetArgs<ExtArgs>
+  }, ExtArgs["result"]["assetUploadSession"]>
+
+  export type AssetUploadSessionSelectScalar = {
+    id?: boolean
+    ownerId?: boolean
+    domain?: boolean
+    mode?: boolean
+    state?: boolean
+    activeAssetId?: boolean
+    idempotencyKey?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    finalizedAt?: boolean
+    discardedAt?: boolean
+    expiresAt?: boolean
+  }
+
+  export type AssetUploadSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ownerId" | "domain" | "mode" | "state" | "activeAssetId" | "idempotencyKey" | "requestId" | "createdAt" | "updatedAt" | "finalizedAt" | "discardedAt" | "expiresAt", ExtArgs["result"]["assetUploadSession"]>
+  export type AssetUploadSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    activeAsset?: boolean | AssetUploadSession$activeAssetArgs<ExtArgs>
+    lifecycleEvents?: boolean | AssetUploadSession$lifecycleEventsArgs<ExtArgs>
+    _count?: boolean | AssetUploadSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type AssetUploadSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    activeAsset?: boolean | AssetUploadSession$activeAssetArgs<ExtArgs>
+  }
+  export type AssetUploadSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    activeAsset?: boolean | AssetUploadSession$activeAssetArgs<ExtArgs>
+  }
+
+  export type $AssetUploadSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AssetUploadSession"
+    objects: {
+      owner: Prisma.$UserPayload<ExtArgs>
+      activeAsset: Prisma.$MediaAssetPayload<ExtArgs> | null
+      lifecycleEvents: Prisma.$AssetLifecycleEventPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ownerId: string
+      domain: $Enums.AssetDomain
+      mode: $Enums.AssetUploadMode
+      state: $Enums.AssetSessionState
+      activeAssetId: string | null
+      idempotencyKey: string | null
+      requestId: string | null
+      createdAt: Date
+      updatedAt: Date
+      finalizedAt: Date | null
+      discardedAt: Date | null
+      expiresAt: Date | null
+    }, ExtArgs["result"]["assetUploadSession"]>
+    composites: {}
+  }
+
+  type AssetUploadSessionGetPayload<S extends boolean | null | undefined | AssetUploadSessionDefaultArgs> = $Result.GetResult<Prisma.$AssetUploadSessionPayload, S>
+
+  type AssetUploadSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AssetUploadSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AssetUploadSessionCountAggregateInputType | true
+    }
+
+  export interface AssetUploadSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AssetUploadSession'], meta: { name: 'AssetUploadSession' } }
+    /**
+     * Find zero or one AssetUploadSession that matches the filter.
+     * @param {AssetUploadSessionFindUniqueArgs} args - Arguments to find a AssetUploadSession
+     * @example
+     * // Get one AssetUploadSession
+     * const assetUploadSession = await prisma.assetUploadSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AssetUploadSessionFindUniqueArgs>(args: SelectSubset<T, AssetUploadSessionFindUniqueArgs<ExtArgs>>): Prisma__AssetUploadSessionClient<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AssetUploadSession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AssetUploadSessionFindUniqueOrThrowArgs} args - Arguments to find a AssetUploadSession
+     * @example
+     * // Get one AssetUploadSession
+     * const assetUploadSession = await prisma.assetUploadSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AssetUploadSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, AssetUploadSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AssetUploadSessionClient<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AssetUploadSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetUploadSessionFindFirstArgs} args - Arguments to find a AssetUploadSession
+     * @example
+     * // Get one AssetUploadSession
+     * const assetUploadSession = await prisma.assetUploadSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AssetUploadSessionFindFirstArgs>(args?: SelectSubset<T, AssetUploadSessionFindFirstArgs<ExtArgs>>): Prisma__AssetUploadSessionClient<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AssetUploadSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetUploadSessionFindFirstOrThrowArgs} args - Arguments to find a AssetUploadSession
+     * @example
+     * // Get one AssetUploadSession
+     * const assetUploadSession = await prisma.assetUploadSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AssetUploadSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, AssetUploadSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__AssetUploadSessionClient<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AssetUploadSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetUploadSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AssetUploadSessions
+     * const assetUploadSessions = await prisma.assetUploadSession.findMany()
+     * 
+     * // Get first 10 AssetUploadSessions
+     * const assetUploadSessions = await prisma.assetUploadSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const assetUploadSessionWithIdOnly = await prisma.assetUploadSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AssetUploadSessionFindManyArgs>(args?: SelectSubset<T, AssetUploadSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AssetUploadSession.
+     * @param {AssetUploadSessionCreateArgs} args - Arguments to create a AssetUploadSession.
+     * @example
+     * // Create one AssetUploadSession
+     * const AssetUploadSession = await prisma.assetUploadSession.create({
+     *   data: {
+     *     // ... data to create a AssetUploadSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends AssetUploadSessionCreateArgs>(args: SelectSubset<T, AssetUploadSessionCreateArgs<ExtArgs>>): Prisma__AssetUploadSessionClient<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AssetUploadSessions.
+     * @param {AssetUploadSessionCreateManyArgs} args - Arguments to create many AssetUploadSessions.
+     * @example
+     * // Create many AssetUploadSessions
+     * const assetUploadSession = await prisma.assetUploadSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AssetUploadSessionCreateManyArgs>(args?: SelectSubset<T, AssetUploadSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AssetUploadSessions and returns the data saved in the database.
+     * @param {AssetUploadSessionCreateManyAndReturnArgs} args - Arguments to create many AssetUploadSessions.
+     * @example
+     * // Create many AssetUploadSessions
+     * const assetUploadSession = await prisma.assetUploadSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AssetUploadSessions and only return the `id`
+     * const assetUploadSessionWithIdOnly = await prisma.assetUploadSession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AssetUploadSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, AssetUploadSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AssetUploadSession.
+     * @param {AssetUploadSessionDeleteArgs} args - Arguments to delete one AssetUploadSession.
+     * @example
+     * // Delete one AssetUploadSession
+     * const AssetUploadSession = await prisma.assetUploadSession.delete({
+     *   where: {
+     *     // ... filter to delete one AssetUploadSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AssetUploadSessionDeleteArgs>(args: SelectSubset<T, AssetUploadSessionDeleteArgs<ExtArgs>>): Prisma__AssetUploadSessionClient<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AssetUploadSession.
+     * @param {AssetUploadSessionUpdateArgs} args - Arguments to update one AssetUploadSession.
+     * @example
+     * // Update one AssetUploadSession
+     * const assetUploadSession = await prisma.assetUploadSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AssetUploadSessionUpdateArgs>(args: SelectSubset<T, AssetUploadSessionUpdateArgs<ExtArgs>>): Prisma__AssetUploadSessionClient<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AssetUploadSessions.
+     * @param {AssetUploadSessionDeleteManyArgs} args - Arguments to filter AssetUploadSessions to delete.
+     * @example
+     * // Delete a few AssetUploadSessions
+     * const { count } = await prisma.assetUploadSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AssetUploadSessionDeleteManyArgs>(args?: SelectSubset<T, AssetUploadSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AssetUploadSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetUploadSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AssetUploadSessions
+     * const assetUploadSession = await prisma.assetUploadSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AssetUploadSessionUpdateManyArgs>(args: SelectSubset<T, AssetUploadSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AssetUploadSessions and returns the data updated in the database.
+     * @param {AssetUploadSessionUpdateManyAndReturnArgs} args - Arguments to update many AssetUploadSessions.
+     * @example
+     * // Update many AssetUploadSessions
+     * const assetUploadSession = await prisma.assetUploadSession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AssetUploadSessions and only return the `id`
+     * const assetUploadSessionWithIdOnly = await prisma.assetUploadSession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AssetUploadSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, AssetUploadSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AssetUploadSession.
+     * @param {AssetUploadSessionUpsertArgs} args - Arguments to update or create a AssetUploadSession.
+     * @example
+     * // Update or create a AssetUploadSession
+     * const assetUploadSession = await prisma.assetUploadSession.upsert({
+     *   create: {
+     *     // ... data to create a AssetUploadSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AssetUploadSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AssetUploadSessionUpsertArgs>(args: SelectSubset<T, AssetUploadSessionUpsertArgs<ExtArgs>>): Prisma__AssetUploadSessionClient<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AssetUploadSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetUploadSessionCountArgs} args - Arguments to filter AssetUploadSessions to count.
+     * @example
+     * // Count the number of AssetUploadSessions
+     * const count = await prisma.assetUploadSession.count({
+     *   where: {
+     *     // ... the filter for the AssetUploadSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends AssetUploadSessionCountArgs>(
+      args?: Subset<T, AssetUploadSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AssetUploadSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AssetUploadSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetUploadSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AssetUploadSessionAggregateArgs>(args: Subset<T, AssetUploadSessionAggregateArgs>): Prisma.PrismaPromise<GetAssetUploadSessionAggregateType<T>>
+
+    /**
+     * Group by AssetUploadSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetUploadSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AssetUploadSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AssetUploadSessionGroupByArgs['orderBy'] }
+        : { orderBy?: AssetUploadSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AssetUploadSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAssetUploadSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AssetUploadSession model
+   */
+  readonly fields: AssetUploadSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AssetUploadSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AssetUploadSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    activeAsset<T extends AssetUploadSession$activeAssetArgs<ExtArgs> = {}>(args?: Subset<T, AssetUploadSession$activeAssetArgs<ExtArgs>>): Prisma__MediaAssetClient<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    lifecycleEvents<T extends AssetUploadSession$lifecycleEventsArgs<ExtArgs> = {}>(args?: Subset<T, AssetUploadSession$lifecycleEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AssetUploadSession model
+   */
+  interface AssetUploadSessionFieldRefs {
+    readonly id: FieldRef<"AssetUploadSession", 'String'>
+    readonly ownerId: FieldRef<"AssetUploadSession", 'String'>
+    readonly domain: FieldRef<"AssetUploadSession", 'AssetDomain'>
+    readonly mode: FieldRef<"AssetUploadSession", 'AssetUploadMode'>
+    readonly state: FieldRef<"AssetUploadSession", 'AssetSessionState'>
+    readonly activeAssetId: FieldRef<"AssetUploadSession", 'String'>
+    readonly idempotencyKey: FieldRef<"AssetUploadSession", 'String'>
+    readonly requestId: FieldRef<"AssetUploadSession", 'String'>
+    readonly createdAt: FieldRef<"AssetUploadSession", 'DateTime'>
+    readonly updatedAt: FieldRef<"AssetUploadSession", 'DateTime'>
+    readonly finalizedAt: FieldRef<"AssetUploadSession", 'DateTime'>
+    readonly discardedAt: FieldRef<"AssetUploadSession", 'DateTime'>
+    readonly expiresAt: FieldRef<"AssetUploadSession", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AssetUploadSession findUnique
+   */
+  export type AssetUploadSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which AssetUploadSession to fetch.
+     */
+    where: AssetUploadSessionWhereUniqueInput
+  }
+
+  /**
+   * AssetUploadSession findUniqueOrThrow
+   */
+  export type AssetUploadSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which AssetUploadSession to fetch.
+     */
+    where: AssetUploadSessionWhereUniqueInput
+  }
+
+  /**
+   * AssetUploadSession findFirst
+   */
+  export type AssetUploadSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which AssetUploadSession to fetch.
+     */
+    where?: AssetUploadSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AssetUploadSessions to fetch.
+     */
+    orderBy?: AssetUploadSessionOrderByWithRelationInput | AssetUploadSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AssetUploadSessions.
+     */
+    cursor?: AssetUploadSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AssetUploadSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AssetUploadSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AssetUploadSessions.
+     */
+    distinct?: AssetUploadSessionScalarFieldEnum | AssetUploadSessionScalarFieldEnum[]
+  }
+
+  /**
+   * AssetUploadSession findFirstOrThrow
+   */
+  export type AssetUploadSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which AssetUploadSession to fetch.
+     */
+    where?: AssetUploadSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AssetUploadSessions to fetch.
+     */
+    orderBy?: AssetUploadSessionOrderByWithRelationInput | AssetUploadSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AssetUploadSessions.
+     */
+    cursor?: AssetUploadSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AssetUploadSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AssetUploadSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AssetUploadSessions.
+     */
+    distinct?: AssetUploadSessionScalarFieldEnum | AssetUploadSessionScalarFieldEnum[]
+  }
+
+  /**
+   * AssetUploadSession findMany
+   */
+  export type AssetUploadSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which AssetUploadSessions to fetch.
+     */
+    where?: AssetUploadSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AssetUploadSessions to fetch.
+     */
+    orderBy?: AssetUploadSessionOrderByWithRelationInput | AssetUploadSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AssetUploadSessions.
+     */
+    cursor?: AssetUploadSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AssetUploadSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AssetUploadSessions.
+     */
+    skip?: number
+    distinct?: AssetUploadSessionScalarFieldEnum | AssetUploadSessionScalarFieldEnum[]
+  }
+
+  /**
+   * AssetUploadSession create
+   */
+  export type AssetUploadSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AssetUploadSession.
+     */
+    data: XOR<AssetUploadSessionCreateInput, AssetUploadSessionUncheckedCreateInput>
+  }
+
+  /**
+   * AssetUploadSession createMany
+   */
+  export type AssetUploadSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AssetUploadSessions.
+     */
+    data: AssetUploadSessionCreateManyInput | AssetUploadSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AssetUploadSession createManyAndReturn
+   */
+  export type AssetUploadSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many AssetUploadSessions.
+     */
+    data: AssetUploadSessionCreateManyInput | AssetUploadSessionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AssetUploadSession update
+   */
+  export type AssetUploadSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AssetUploadSession.
+     */
+    data: XOR<AssetUploadSessionUpdateInput, AssetUploadSessionUncheckedUpdateInput>
+    /**
+     * Choose, which AssetUploadSession to update.
+     */
+    where: AssetUploadSessionWhereUniqueInput
+  }
+
+  /**
+   * AssetUploadSession updateMany
+   */
+  export type AssetUploadSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AssetUploadSessions.
+     */
+    data: XOR<AssetUploadSessionUpdateManyMutationInput, AssetUploadSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which AssetUploadSessions to update
+     */
+    where?: AssetUploadSessionWhereInput
+    /**
+     * Limit how many AssetUploadSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AssetUploadSession updateManyAndReturn
+   */
+  export type AssetUploadSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * The data used to update AssetUploadSessions.
+     */
+    data: XOR<AssetUploadSessionUpdateManyMutationInput, AssetUploadSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which AssetUploadSessions to update
+     */
+    where?: AssetUploadSessionWhereInput
+    /**
+     * Limit how many AssetUploadSessions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AssetUploadSession upsert
+   */
+  export type AssetUploadSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AssetUploadSession to update in case it exists.
+     */
+    where: AssetUploadSessionWhereUniqueInput
+    /**
+     * In case the AssetUploadSession found by the `where` argument doesn't exist, create a new AssetUploadSession with this data.
+     */
+    create: XOR<AssetUploadSessionCreateInput, AssetUploadSessionUncheckedCreateInput>
+    /**
+     * In case the AssetUploadSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AssetUploadSessionUpdateInput, AssetUploadSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * AssetUploadSession delete
+   */
+  export type AssetUploadSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    /**
+     * Filter which AssetUploadSession to delete.
+     */
+    where: AssetUploadSessionWhereUniqueInput
+  }
+
+  /**
+   * AssetUploadSession deleteMany
+   */
+  export type AssetUploadSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AssetUploadSessions to delete
+     */
+    where?: AssetUploadSessionWhereInput
+    /**
+     * Limit how many AssetUploadSessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AssetUploadSession.activeAsset
+   */
+  export type AssetUploadSession$activeAssetArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    where?: MediaAssetWhereInput
+  }
+
+  /**
+   * AssetUploadSession.lifecycleEvents
+   */
+  export type AssetUploadSession$lifecycleEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    where?: AssetLifecycleEventWhereInput
+    orderBy?: AssetLifecycleEventOrderByWithRelationInput | AssetLifecycleEventOrderByWithRelationInput[]
+    cursor?: AssetLifecycleEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AssetLifecycleEventScalarFieldEnum | AssetLifecycleEventScalarFieldEnum[]
+  }
+
+  /**
+   * AssetUploadSession without action
+   */
+  export type AssetUploadSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AssetLifecycleEvent
+   */
+
+  export type AggregateAssetLifecycleEvent = {
+    _count: AssetLifecycleEventCountAggregateOutputType | null
+    _min: AssetLifecycleEventMinAggregateOutputType | null
+    _max: AssetLifecycleEventMaxAggregateOutputType | null
+  }
+
+  export type AssetLifecycleEventMinAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    assetId: string | null
+    actorId: string | null
+    eventType: $Enums.AssetLifecycleEventType | null
+    requestId: string | null
+    createdAt: Date | null
+  }
+
+  export type AssetLifecycleEventMaxAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    assetId: string | null
+    actorId: string | null
+    eventType: $Enums.AssetLifecycleEventType | null
+    requestId: string | null
+    createdAt: Date | null
+  }
+
+  export type AssetLifecycleEventCountAggregateOutputType = {
+    id: number
+    sessionId: number
+    assetId: number
+    actorId: number
+    eventType: number
+    details: number
+    requestId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AssetLifecycleEventMinAggregateInputType = {
+    id?: true
+    sessionId?: true
+    assetId?: true
+    actorId?: true
+    eventType?: true
+    requestId?: true
+    createdAt?: true
+  }
+
+  export type AssetLifecycleEventMaxAggregateInputType = {
+    id?: true
+    sessionId?: true
+    assetId?: true
+    actorId?: true
+    eventType?: true
+    requestId?: true
+    createdAt?: true
+  }
+
+  export type AssetLifecycleEventCountAggregateInputType = {
+    id?: true
+    sessionId?: true
+    assetId?: true
+    actorId?: true
+    eventType?: true
+    details?: true
+    requestId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AssetLifecycleEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AssetLifecycleEvent to aggregate.
+     */
+    where?: AssetLifecycleEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AssetLifecycleEvents to fetch.
+     */
+    orderBy?: AssetLifecycleEventOrderByWithRelationInput | AssetLifecycleEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AssetLifecycleEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AssetLifecycleEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AssetLifecycleEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AssetLifecycleEvents
+    **/
+    _count?: true | AssetLifecycleEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AssetLifecycleEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AssetLifecycleEventMaxAggregateInputType
+  }
+
+  export type GetAssetLifecycleEventAggregateType<T extends AssetLifecycleEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateAssetLifecycleEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAssetLifecycleEvent[P]>
+      : GetScalarType<T[P], AggregateAssetLifecycleEvent[P]>
+  }
+
+
+
+
+  export type AssetLifecycleEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AssetLifecycleEventWhereInput
+    orderBy?: AssetLifecycleEventOrderByWithAggregationInput | AssetLifecycleEventOrderByWithAggregationInput[]
+    by: AssetLifecycleEventScalarFieldEnum[] | AssetLifecycleEventScalarFieldEnum
+    having?: AssetLifecycleEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AssetLifecycleEventCountAggregateInputType | true
+    _min?: AssetLifecycleEventMinAggregateInputType
+    _max?: AssetLifecycleEventMaxAggregateInputType
+  }
+
+  export type AssetLifecycleEventGroupByOutputType = {
+    id: string
+    sessionId: string | null
+    assetId: string | null
+    actorId: string | null
+    eventType: $Enums.AssetLifecycleEventType
+    details: JsonValue | null
+    requestId: string | null
+    createdAt: Date
+    _count: AssetLifecycleEventCountAggregateOutputType | null
+    _min: AssetLifecycleEventMinAggregateOutputType | null
+    _max: AssetLifecycleEventMaxAggregateOutputType | null
+  }
+
+  type GetAssetLifecycleEventGroupByPayload<T extends AssetLifecycleEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AssetLifecycleEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AssetLifecycleEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AssetLifecycleEventGroupByOutputType[P]>
+            : GetScalarType<T[P], AssetLifecycleEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AssetLifecycleEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    assetId?: boolean
+    actorId?: boolean
+    eventType?: boolean
+    details?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+    session?: boolean | AssetLifecycleEvent$sessionArgs<ExtArgs>
+    asset?: boolean | AssetLifecycleEvent$assetArgs<ExtArgs>
+    actor?: boolean | AssetLifecycleEvent$actorArgs<ExtArgs>
+  }, ExtArgs["result"]["assetLifecycleEvent"]>
+
+  export type AssetLifecycleEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    assetId?: boolean
+    actorId?: boolean
+    eventType?: boolean
+    details?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+    session?: boolean | AssetLifecycleEvent$sessionArgs<ExtArgs>
+    asset?: boolean | AssetLifecycleEvent$assetArgs<ExtArgs>
+    actor?: boolean | AssetLifecycleEvent$actorArgs<ExtArgs>
+  }, ExtArgs["result"]["assetLifecycleEvent"]>
+
+  export type AssetLifecycleEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    assetId?: boolean
+    actorId?: boolean
+    eventType?: boolean
+    details?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+    session?: boolean | AssetLifecycleEvent$sessionArgs<ExtArgs>
+    asset?: boolean | AssetLifecycleEvent$assetArgs<ExtArgs>
+    actor?: boolean | AssetLifecycleEvent$actorArgs<ExtArgs>
+  }, ExtArgs["result"]["assetLifecycleEvent"]>
+
+  export type AssetLifecycleEventSelectScalar = {
+    id?: boolean
+    sessionId?: boolean
+    assetId?: boolean
+    actorId?: boolean
+    eventType?: boolean
+    details?: boolean
+    requestId?: boolean
+    createdAt?: boolean
+  }
+
+  export type AssetLifecycleEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sessionId" | "assetId" | "actorId" | "eventType" | "details" | "requestId" | "createdAt", ExtArgs["result"]["assetLifecycleEvent"]>
+  export type AssetLifecycleEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | AssetLifecycleEvent$sessionArgs<ExtArgs>
+    asset?: boolean | AssetLifecycleEvent$assetArgs<ExtArgs>
+    actor?: boolean | AssetLifecycleEvent$actorArgs<ExtArgs>
+  }
+  export type AssetLifecycleEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | AssetLifecycleEvent$sessionArgs<ExtArgs>
+    asset?: boolean | AssetLifecycleEvent$assetArgs<ExtArgs>
+    actor?: boolean | AssetLifecycleEvent$actorArgs<ExtArgs>
+  }
+  export type AssetLifecycleEventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | AssetLifecycleEvent$sessionArgs<ExtArgs>
+    asset?: boolean | AssetLifecycleEvent$assetArgs<ExtArgs>
+    actor?: boolean | AssetLifecycleEvent$actorArgs<ExtArgs>
+  }
+
+  export type $AssetLifecycleEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AssetLifecycleEvent"
+    objects: {
+      session: Prisma.$AssetUploadSessionPayload<ExtArgs> | null
+      asset: Prisma.$MediaAssetPayload<ExtArgs> | null
+      actor: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sessionId: string | null
+      assetId: string | null
+      actorId: string | null
+      eventType: $Enums.AssetLifecycleEventType
+      details: Prisma.JsonValue | null
+      requestId: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["assetLifecycleEvent"]>
+    composites: {}
+  }
+
+  type AssetLifecycleEventGetPayload<S extends boolean | null | undefined | AssetLifecycleEventDefaultArgs> = $Result.GetResult<Prisma.$AssetLifecycleEventPayload, S>
+
+  type AssetLifecycleEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AssetLifecycleEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AssetLifecycleEventCountAggregateInputType | true
+    }
+
+  export interface AssetLifecycleEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AssetLifecycleEvent'], meta: { name: 'AssetLifecycleEvent' } }
+    /**
+     * Find zero or one AssetLifecycleEvent that matches the filter.
+     * @param {AssetLifecycleEventFindUniqueArgs} args - Arguments to find a AssetLifecycleEvent
+     * @example
+     * // Get one AssetLifecycleEvent
+     * const assetLifecycleEvent = await prisma.assetLifecycleEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AssetLifecycleEventFindUniqueArgs>(args: SelectSubset<T, AssetLifecycleEventFindUniqueArgs<ExtArgs>>): Prisma__AssetLifecycleEventClient<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AssetLifecycleEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AssetLifecycleEventFindUniqueOrThrowArgs} args - Arguments to find a AssetLifecycleEvent
+     * @example
+     * // Get one AssetLifecycleEvent
+     * const assetLifecycleEvent = await prisma.assetLifecycleEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AssetLifecycleEventFindUniqueOrThrowArgs>(args: SelectSubset<T, AssetLifecycleEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AssetLifecycleEventClient<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AssetLifecycleEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetLifecycleEventFindFirstArgs} args - Arguments to find a AssetLifecycleEvent
+     * @example
+     * // Get one AssetLifecycleEvent
+     * const assetLifecycleEvent = await prisma.assetLifecycleEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AssetLifecycleEventFindFirstArgs>(args?: SelectSubset<T, AssetLifecycleEventFindFirstArgs<ExtArgs>>): Prisma__AssetLifecycleEventClient<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AssetLifecycleEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetLifecycleEventFindFirstOrThrowArgs} args - Arguments to find a AssetLifecycleEvent
+     * @example
+     * // Get one AssetLifecycleEvent
+     * const assetLifecycleEvent = await prisma.assetLifecycleEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AssetLifecycleEventFindFirstOrThrowArgs>(args?: SelectSubset<T, AssetLifecycleEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__AssetLifecycleEventClient<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AssetLifecycleEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetLifecycleEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AssetLifecycleEvents
+     * const assetLifecycleEvents = await prisma.assetLifecycleEvent.findMany()
+     * 
+     * // Get first 10 AssetLifecycleEvents
+     * const assetLifecycleEvents = await prisma.assetLifecycleEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const assetLifecycleEventWithIdOnly = await prisma.assetLifecycleEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AssetLifecycleEventFindManyArgs>(args?: SelectSubset<T, AssetLifecycleEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AssetLifecycleEvent.
+     * @param {AssetLifecycleEventCreateArgs} args - Arguments to create a AssetLifecycleEvent.
+     * @example
+     * // Create one AssetLifecycleEvent
+     * const AssetLifecycleEvent = await prisma.assetLifecycleEvent.create({
+     *   data: {
+     *     // ... data to create a AssetLifecycleEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends AssetLifecycleEventCreateArgs>(args: SelectSubset<T, AssetLifecycleEventCreateArgs<ExtArgs>>): Prisma__AssetLifecycleEventClient<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AssetLifecycleEvents.
+     * @param {AssetLifecycleEventCreateManyArgs} args - Arguments to create many AssetLifecycleEvents.
+     * @example
+     * // Create many AssetLifecycleEvents
+     * const assetLifecycleEvent = await prisma.assetLifecycleEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AssetLifecycleEventCreateManyArgs>(args?: SelectSubset<T, AssetLifecycleEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AssetLifecycleEvents and returns the data saved in the database.
+     * @param {AssetLifecycleEventCreateManyAndReturnArgs} args - Arguments to create many AssetLifecycleEvents.
+     * @example
+     * // Create many AssetLifecycleEvents
+     * const assetLifecycleEvent = await prisma.assetLifecycleEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AssetLifecycleEvents and only return the `id`
+     * const assetLifecycleEventWithIdOnly = await prisma.assetLifecycleEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AssetLifecycleEventCreateManyAndReturnArgs>(args?: SelectSubset<T, AssetLifecycleEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AssetLifecycleEvent.
+     * @param {AssetLifecycleEventDeleteArgs} args - Arguments to delete one AssetLifecycleEvent.
+     * @example
+     * // Delete one AssetLifecycleEvent
+     * const AssetLifecycleEvent = await prisma.assetLifecycleEvent.delete({
+     *   where: {
+     *     // ... filter to delete one AssetLifecycleEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AssetLifecycleEventDeleteArgs>(args: SelectSubset<T, AssetLifecycleEventDeleteArgs<ExtArgs>>): Prisma__AssetLifecycleEventClient<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AssetLifecycleEvent.
+     * @param {AssetLifecycleEventUpdateArgs} args - Arguments to update one AssetLifecycleEvent.
+     * @example
+     * // Update one AssetLifecycleEvent
+     * const assetLifecycleEvent = await prisma.assetLifecycleEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AssetLifecycleEventUpdateArgs>(args: SelectSubset<T, AssetLifecycleEventUpdateArgs<ExtArgs>>): Prisma__AssetLifecycleEventClient<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AssetLifecycleEvents.
+     * @param {AssetLifecycleEventDeleteManyArgs} args - Arguments to filter AssetLifecycleEvents to delete.
+     * @example
+     * // Delete a few AssetLifecycleEvents
+     * const { count } = await prisma.assetLifecycleEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AssetLifecycleEventDeleteManyArgs>(args?: SelectSubset<T, AssetLifecycleEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AssetLifecycleEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetLifecycleEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AssetLifecycleEvents
+     * const assetLifecycleEvent = await prisma.assetLifecycleEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AssetLifecycleEventUpdateManyArgs>(args: SelectSubset<T, AssetLifecycleEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AssetLifecycleEvents and returns the data updated in the database.
+     * @param {AssetLifecycleEventUpdateManyAndReturnArgs} args - Arguments to update many AssetLifecycleEvents.
+     * @example
+     * // Update many AssetLifecycleEvents
+     * const assetLifecycleEvent = await prisma.assetLifecycleEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AssetLifecycleEvents and only return the `id`
+     * const assetLifecycleEventWithIdOnly = await prisma.assetLifecycleEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AssetLifecycleEventUpdateManyAndReturnArgs>(args: SelectSubset<T, AssetLifecycleEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AssetLifecycleEvent.
+     * @param {AssetLifecycleEventUpsertArgs} args - Arguments to update or create a AssetLifecycleEvent.
+     * @example
+     * // Update or create a AssetLifecycleEvent
+     * const assetLifecycleEvent = await prisma.assetLifecycleEvent.upsert({
+     *   create: {
+     *     // ... data to create a AssetLifecycleEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AssetLifecycleEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AssetLifecycleEventUpsertArgs>(args: SelectSubset<T, AssetLifecycleEventUpsertArgs<ExtArgs>>): Prisma__AssetLifecycleEventClient<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AssetLifecycleEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetLifecycleEventCountArgs} args - Arguments to filter AssetLifecycleEvents to count.
+     * @example
+     * // Count the number of AssetLifecycleEvents
+     * const count = await prisma.assetLifecycleEvent.count({
+     *   where: {
+     *     // ... the filter for the AssetLifecycleEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends AssetLifecycleEventCountArgs>(
+      args?: Subset<T, AssetLifecycleEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AssetLifecycleEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AssetLifecycleEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetLifecycleEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AssetLifecycleEventAggregateArgs>(args: Subset<T, AssetLifecycleEventAggregateArgs>): Prisma.PrismaPromise<GetAssetLifecycleEventAggregateType<T>>
+
+    /**
+     * Group by AssetLifecycleEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AssetLifecycleEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AssetLifecycleEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AssetLifecycleEventGroupByArgs['orderBy'] }
+        : { orderBy?: AssetLifecycleEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AssetLifecycleEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAssetLifecycleEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AssetLifecycleEvent model
+   */
+  readonly fields: AssetLifecycleEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AssetLifecycleEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AssetLifecycleEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    session<T extends AssetLifecycleEvent$sessionArgs<ExtArgs> = {}>(args?: Subset<T, AssetLifecycleEvent$sessionArgs<ExtArgs>>): Prisma__AssetUploadSessionClient<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    asset<T extends AssetLifecycleEvent$assetArgs<ExtArgs> = {}>(args?: Subset<T, AssetLifecycleEvent$assetArgs<ExtArgs>>): Prisma__MediaAssetClient<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    actor<T extends AssetLifecycleEvent$actorArgs<ExtArgs> = {}>(args?: Subset<T, AssetLifecycleEvent$actorArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AssetLifecycleEvent model
+   */
+  interface AssetLifecycleEventFieldRefs {
+    readonly id: FieldRef<"AssetLifecycleEvent", 'String'>
+    readonly sessionId: FieldRef<"AssetLifecycleEvent", 'String'>
+    readonly assetId: FieldRef<"AssetLifecycleEvent", 'String'>
+    readonly actorId: FieldRef<"AssetLifecycleEvent", 'String'>
+    readonly eventType: FieldRef<"AssetLifecycleEvent", 'AssetLifecycleEventType'>
+    readonly details: FieldRef<"AssetLifecycleEvent", 'Json'>
+    readonly requestId: FieldRef<"AssetLifecycleEvent", 'String'>
+    readonly createdAt: FieldRef<"AssetLifecycleEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AssetLifecycleEvent findUnique
+   */
+  export type AssetLifecycleEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    /**
+     * Filter, which AssetLifecycleEvent to fetch.
+     */
+    where: AssetLifecycleEventWhereUniqueInput
+  }
+
+  /**
+   * AssetLifecycleEvent findUniqueOrThrow
+   */
+  export type AssetLifecycleEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    /**
+     * Filter, which AssetLifecycleEvent to fetch.
+     */
+    where: AssetLifecycleEventWhereUniqueInput
+  }
+
+  /**
+   * AssetLifecycleEvent findFirst
+   */
+  export type AssetLifecycleEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    /**
+     * Filter, which AssetLifecycleEvent to fetch.
+     */
+    where?: AssetLifecycleEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AssetLifecycleEvents to fetch.
+     */
+    orderBy?: AssetLifecycleEventOrderByWithRelationInput | AssetLifecycleEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AssetLifecycleEvents.
+     */
+    cursor?: AssetLifecycleEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AssetLifecycleEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AssetLifecycleEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AssetLifecycleEvents.
+     */
+    distinct?: AssetLifecycleEventScalarFieldEnum | AssetLifecycleEventScalarFieldEnum[]
+  }
+
+  /**
+   * AssetLifecycleEvent findFirstOrThrow
+   */
+  export type AssetLifecycleEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    /**
+     * Filter, which AssetLifecycleEvent to fetch.
+     */
+    where?: AssetLifecycleEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AssetLifecycleEvents to fetch.
+     */
+    orderBy?: AssetLifecycleEventOrderByWithRelationInput | AssetLifecycleEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AssetLifecycleEvents.
+     */
+    cursor?: AssetLifecycleEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AssetLifecycleEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AssetLifecycleEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AssetLifecycleEvents.
+     */
+    distinct?: AssetLifecycleEventScalarFieldEnum | AssetLifecycleEventScalarFieldEnum[]
+  }
+
+  /**
+   * AssetLifecycleEvent findMany
+   */
+  export type AssetLifecycleEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    /**
+     * Filter, which AssetLifecycleEvents to fetch.
+     */
+    where?: AssetLifecycleEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AssetLifecycleEvents to fetch.
+     */
+    orderBy?: AssetLifecycleEventOrderByWithRelationInput | AssetLifecycleEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AssetLifecycleEvents.
+     */
+    cursor?: AssetLifecycleEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AssetLifecycleEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AssetLifecycleEvents.
+     */
+    skip?: number
+    distinct?: AssetLifecycleEventScalarFieldEnum | AssetLifecycleEventScalarFieldEnum[]
+  }
+
+  /**
+   * AssetLifecycleEvent create
+   */
+  export type AssetLifecycleEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AssetLifecycleEvent.
+     */
+    data: XOR<AssetLifecycleEventCreateInput, AssetLifecycleEventUncheckedCreateInput>
+  }
+
+  /**
+   * AssetLifecycleEvent createMany
+   */
+  export type AssetLifecycleEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AssetLifecycleEvents.
+     */
+    data: AssetLifecycleEventCreateManyInput | AssetLifecycleEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AssetLifecycleEvent createManyAndReturn
+   */
+  export type AssetLifecycleEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many AssetLifecycleEvents.
+     */
+    data: AssetLifecycleEventCreateManyInput | AssetLifecycleEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AssetLifecycleEvent update
+   */
+  export type AssetLifecycleEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AssetLifecycleEvent.
+     */
+    data: XOR<AssetLifecycleEventUpdateInput, AssetLifecycleEventUncheckedUpdateInput>
+    /**
+     * Choose, which AssetLifecycleEvent to update.
+     */
+    where: AssetLifecycleEventWhereUniqueInput
+  }
+
+  /**
+   * AssetLifecycleEvent updateMany
+   */
+  export type AssetLifecycleEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AssetLifecycleEvents.
+     */
+    data: XOR<AssetLifecycleEventUpdateManyMutationInput, AssetLifecycleEventUncheckedUpdateManyInput>
+    /**
+     * Filter which AssetLifecycleEvents to update
+     */
+    where?: AssetLifecycleEventWhereInput
+    /**
+     * Limit how many AssetLifecycleEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AssetLifecycleEvent updateManyAndReturn
+   */
+  export type AssetLifecycleEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * The data used to update AssetLifecycleEvents.
+     */
+    data: XOR<AssetLifecycleEventUpdateManyMutationInput, AssetLifecycleEventUncheckedUpdateManyInput>
+    /**
+     * Filter which AssetLifecycleEvents to update
+     */
+    where?: AssetLifecycleEventWhereInput
+    /**
+     * Limit how many AssetLifecycleEvents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AssetLifecycleEvent upsert
+   */
+  export type AssetLifecycleEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AssetLifecycleEvent to update in case it exists.
+     */
+    where: AssetLifecycleEventWhereUniqueInput
+    /**
+     * In case the AssetLifecycleEvent found by the `where` argument doesn't exist, create a new AssetLifecycleEvent with this data.
+     */
+    create: XOR<AssetLifecycleEventCreateInput, AssetLifecycleEventUncheckedCreateInput>
+    /**
+     * In case the AssetLifecycleEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AssetLifecycleEventUpdateInput, AssetLifecycleEventUncheckedUpdateInput>
+  }
+
+  /**
+   * AssetLifecycleEvent delete
+   */
+  export type AssetLifecycleEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
+    /**
+     * Filter which AssetLifecycleEvent to delete.
+     */
+    where: AssetLifecycleEventWhereUniqueInput
+  }
+
+  /**
+   * AssetLifecycleEvent deleteMany
+   */
+  export type AssetLifecycleEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AssetLifecycleEvents to delete
+     */
+    where?: AssetLifecycleEventWhereInput
+    /**
+     * Limit how many AssetLifecycleEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AssetLifecycleEvent.session
+   */
+  export type AssetLifecycleEvent$sessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetUploadSession
+     */
+    select?: AssetUploadSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetUploadSession
+     */
+    omit?: AssetUploadSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetUploadSessionInclude<ExtArgs> | null
+    where?: AssetUploadSessionWhereInput
+  }
+
+  /**
+   * AssetLifecycleEvent.asset
+   */
+  export type AssetLifecycleEvent$assetArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaAsset
+     */
+    select?: MediaAssetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaAsset
+     */
+    omit?: MediaAssetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaAssetInclude<ExtArgs> | null
+    where?: MediaAssetWhereInput
+  }
+
+  /**
+   * AssetLifecycleEvent.actor
+   */
+  export type AssetLifecycleEvent$actorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * AssetLifecycleEvent without action
+   */
+  export type AssetLifecycleEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AssetLifecycleEvent
+     */
+    select?: AssetLifecycleEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AssetLifecycleEvent
+     */
+    omit?: AssetLifecycleEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AssetLifecycleEventInclude<ExtArgs> | null
   }
 
 
@@ -28832,6 +33208,7 @@ export namespace Prisma {
     category: 'category',
     description: 'description',
     screenshotUrl: 'screenshotUrl',
+    screenshotAssetId: 'screenshotAssetId',
     contactEmail: 'contactEmail',
     status: 'status',
     adminNotes: 'adminNotes',
@@ -28841,6 +33218,67 @@ export namespace Prisma {
   };
 
   export type BugReportScalarFieldEnum = (typeof BugReportScalarFieldEnum)[keyof typeof BugReportScalarFieldEnum]
+
+
+  export const MediaAssetScalarFieldEnum: {
+    id: 'id',
+    ownerId: 'ownerId',
+    domain: 'domain',
+    provider: 'provider',
+    state: 'state',
+    publicId: 'publicId',
+    secureUrl: 'secureUrl',
+    resourceType: 'resourceType',
+    format: 'format',
+    bytes: 'bytes',
+    width: 'width',
+    height: 'height',
+    mimeType: 'mimeType',
+    originalFileName: 'originalFileName',
+    folder: 'folder',
+    metadata: 'metadata',
+    requestId: 'requestId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    finalizedAt: 'finalizedAt',
+    discardedAt: 'discardedAt',
+    expiresAt: 'expiresAt'
+  };
+
+  export type MediaAssetScalarFieldEnum = (typeof MediaAssetScalarFieldEnum)[keyof typeof MediaAssetScalarFieldEnum]
+
+
+  export const AssetUploadSessionScalarFieldEnum: {
+    id: 'id',
+    ownerId: 'ownerId',
+    domain: 'domain',
+    mode: 'mode',
+    state: 'state',
+    activeAssetId: 'activeAssetId',
+    idempotencyKey: 'idempotencyKey',
+    requestId: 'requestId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    finalizedAt: 'finalizedAt',
+    discardedAt: 'discardedAt',
+    expiresAt: 'expiresAt'
+  };
+
+  export type AssetUploadSessionScalarFieldEnum = (typeof AssetUploadSessionScalarFieldEnum)[keyof typeof AssetUploadSessionScalarFieldEnum]
+
+
+  export const AssetLifecycleEventScalarFieldEnum: {
+    id: 'id',
+    sessionId: 'sessionId',
+    assetId: 'assetId',
+    actorId: 'actorId',
+    eventType: 'eventType',
+    details: 'details',
+    requestId: 'requestId',
+    createdAt: 'createdAt'
+  };
+
+  export type AssetLifecycleEventScalarFieldEnum = (typeof AssetLifecycleEventScalarFieldEnum)[keyof typeof AssetLifecycleEventScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -28856,6 +33294,14 @@ export namespace Prisma {
   };
 
   export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -29187,6 +33633,90 @@ export namespace Prisma {
    */
   export type ListEnumBugReportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BugReportStatus[]'>
     
+
+
+  /**
+   * Reference to a field of type 'AssetDomain'
+   */
+  export type EnumAssetDomainFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetDomain'>
+    
+
+
+  /**
+   * Reference to a field of type 'AssetDomain[]'
+   */
+  export type ListEnumAssetDomainFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetDomain[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AssetProvider'
+   */
+  export type EnumAssetProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetProvider'>
+    
+
+
+  /**
+   * Reference to a field of type 'AssetProvider[]'
+   */
+  export type ListEnumAssetProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetProvider[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AssetState'
+   */
+  export type EnumAssetStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetState'>
+    
+
+
+  /**
+   * Reference to a field of type 'AssetState[]'
+   */
+  export type ListEnumAssetStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetState[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AssetUploadMode'
+   */
+  export type EnumAssetUploadModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetUploadMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'AssetUploadMode[]'
+   */
+  export type ListEnumAssetUploadModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetUploadMode[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AssetSessionState'
+   */
+  export type EnumAssetSessionStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetSessionState'>
+    
+
+
+  /**
+   * Reference to a field of type 'AssetSessionState[]'
+   */
+  export type ListEnumAssetSessionStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetSessionState[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AssetLifecycleEventType'
+   */
+  export type EnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetLifecycleEventType'>
+    
+
+
+  /**
+   * Reference to a field of type 'AssetLifecycleEventType[]'
+   */
+  export type ListEnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetLifecycleEventType[]'>
+    
   /**
    * Deep Input Types
    */
@@ -29219,6 +33749,9 @@ export namespace Prisma {
     goals?: GoalListRelationFilter
     lockedGoals?: GoalListRelationFilter
     createdInviteLinks?: InviteLinkListRelationFilter
+    mediaAssets?: MediaAssetListRelationFilter
+    assetUploadSessions?: AssetUploadSessionListRelationFilter
+    assetLifecycleEvents?: AssetLifecycleEventListRelationFilter
     notifications?: NotificationListRelationFilter
     ledOrgGroups?: OrgGroupListRelationFilter
     reviewedEdits?: ReportEditListRelationFilter
@@ -29263,6 +33796,9 @@ export namespace Prisma {
     goals?: GoalOrderByRelationAggregateInput
     lockedGoals?: GoalOrderByRelationAggregateInput
     createdInviteLinks?: InviteLinkOrderByRelationAggregateInput
+    mediaAssets?: MediaAssetOrderByRelationAggregateInput
+    assetUploadSessions?: AssetUploadSessionOrderByRelationAggregateInput
+    assetLifecycleEvents?: AssetLifecycleEventOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     ledOrgGroups?: OrgGroupOrderByRelationAggregateInput
     reviewedEdits?: ReportEditOrderByRelationAggregateInput
@@ -29310,6 +33846,9 @@ export namespace Prisma {
     goals?: GoalListRelationFilter
     lockedGoals?: GoalListRelationFilter
     createdInviteLinks?: InviteLinkListRelationFilter
+    mediaAssets?: MediaAssetListRelationFilter
+    assetUploadSessions?: AssetUploadSessionListRelationFilter
+    assetLifecycleEvents?: AssetLifecycleEventListRelationFilter
     notifications?: NotificationListRelationFilter
     ledOrgGroups?: OrgGroupListRelationFilter
     reviewedEdits?: ReportEditListRelationFilter
@@ -31084,6 +35623,7 @@ export namespace Prisma {
     category?: EnumBugReportCategoryFilter<"BugReport"> | $Enums.BugReportCategory
     description?: StringFilter<"BugReport"> | string
     screenshotUrl?: StringNullableFilter<"BugReport"> | string | null
+    screenshotAssetId?: StringNullableFilter<"BugReport"> | string | null
     contactEmail?: StringFilter<"BugReport"> | string
     status?: EnumBugReportStatusFilter<"BugReport"> | $Enums.BugReportStatus
     adminNotes?: StringNullableFilter<"BugReport"> | string | null
@@ -31091,6 +35631,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"BugReport"> | Date | string
     updatedAt?: DateTimeFilter<"BugReport"> | Date | string
     createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    screenshotAsset?: XOR<MediaAssetNullableScalarRelationFilter, MediaAssetWhereInput> | null
   }
 
   export type BugReportOrderByWithRelationInput = {
@@ -31098,6 +35639,7 @@ export namespace Prisma {
     category?: SortOrder
     description?: SortOrder
     screenshotUrl?: SortOrderInput | SortOrder
+    screenshotAssetId?: SortOrderInput | SortOrder
     contactEmail?: SortOrder
     status?: SortOrder
     adminNotes?: SortOrderInput | SortOrder
@@ -31105,6 +35647,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     createdBy?: UserOrderByWithRelationInput
+    screenshotAsset?: MediaAssetOrderByWithRelationInput
   }
 
   export type BugReportWhereUniqueInput = Prisma.AtLeast<{
@@ -31115,6 +35658,7 @@ export namespace Prisma {
     category?: EnumBugReportCategoryFilter<"BugReport"> | $Enums.BugReportCategory
     description?: StringFilter<"BugReport"> | string
     screenshotUrl?: StringNullableFilter<"BugReport"> | string | null
+    screenshotAssetId?: StringNullableFilter<"BugReport"> | string | null
     contactEmail?: StringFilter<"BugReport"> | string
     status?: EnumBugReportStatusFilter<"BugReport"> | $Enums.BugReportStatus
     adminNotes?: StringNullableFilter<"BugReport"> | string | null
@@ -31122,6 +35666,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"BugReport"> | Date | string
     updatedAt?: DateTimeFilter<"BugReport"> | Date | string
     createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    screenshotAsset?: XOR<MediaAssetNullableScalarRelationFilter, MediaAssetWhereInput> | null
   }, "id">
 
   export type BugReportOrderByWithAggregationInput = {
@@ -31129,6 +35674,7 @@ export namespace Prisma {
     category?: SortOrder
     description?: SortOrder
     screenshotUrl?: SortOrderInput | SortOrder
+    screenshotAssetId?: SortOrderInput | SortOrder
     contactEmail?: SortOrder
     status?: SortOrder
     adminNotes?: SortOrderInput | SortOrder
@@ -31148,12 +35694,342 @@ export namespace Prisma {
     category?: EnumBugReportCategoryWithAggregatesFilter<"BugReport"> | $Enums.BugReportCategory
     description?: StringWithAggregatesFilter<"BugReport"> | string
     screenshotUrl?: StringNullableWithAggregatesFilter<"BugReport"> | string | null
+    screenshotAssetId?: StringNullableWithAggregatesFilter<"BugReport"> | string | null
     contactEmail?: StringWithAggregatesFilter<"BugReport"> | string
     status?: EnumBugReportStatusWithAggregatesFilter<"BugReport"> | $Enums.BugReportStatus
     adminNotes?: StringNullableWithAggregatesFilter<"BugReport"> | string | null
     createdById?: StringWithAggregatesFilter<"BugReport"> | string
     createdAt?: DateTimeWithAggregatesFilter<"BugReport"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"BugReport"> | Date | string
+  }
+
+  export type MediaAssetWhereInput = {
+    AND?: MediaAssetWhereInput | MediaAssetWhereInput[]
+    OR?: MediaAssetWhereInput[]
+    NOT?: MediaAssetWhereInput | MediaAssetWhereInput[]
+    id?: StringFilter<"MediaAsset"> | string
+    ownerId?: StringFilter<"MediaAsset"> | string
+    domain?: EnumAssetDomainFilter<"MediaAsset"> | $Enums.AssetDomain
+    provider?: EnumAssetProviderFilter<"MediaAsset"> | $Enums.AssetProvider
+    state?: EnumAssetStateFilter<"MediaAsset"> | $Enums.AssetState
+    publicId?: StringNullableFilter<"MediaAsset"> | string | null
+    secureUrl?: StringNullableFilter<"MediaAsset"> | string | null
+    resourceType?: StringNullableFilter<"MediaAsset"> | string | null
+    format?: StringNullableFilter<"MediaAsset"> | string | null
+    bytes?: IntNullableFilter<"MediaAsset"> | number | null
+    width?: IntNullableFilter<"MediaAsset"> | number | null
+    height?: IntNullableFilter<"MediaAsset"> | number | null
+    mimeType?: StringNullableFilter<"MediaAsset"> | string | null
+    originalFileName?: StringNullableFilter<"MediaAsset"> | string | null
+    folder?: StringNullableFilter<"MediaAsset"> | string | null
+    metadata?: JsonNullableFilter<"MediaAsset">
+    requestId?: StringNullableFilter<"MediaAsset"> | string | null
+    createdAt?: DateTimeFilter<"MediaAsset"> | Date | string
+    updatedAt?: DateTimeFilter<"MediaAsset"> | Date | string
+    finalizedAt?: DateTimeNullableFilter<"MediaAsset"> | Date | string | null
+    discardedAt?: DateTimeNullableFilter<"MediaAsset"> | Date | string | null
+    expiresAt?: DateTimeNullableFilter<"MediaAsset"> | Date | string | null
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    bugReportsAsScreenshot?: BugReportListRelationFilter
+    uploadSessions?: AssetUploadSessionListRelationFilter
+    lifecycleEvents?: AssetLifecycleEventListRelationFilter
+  }
+
+  export type MediaAssetOrderByWithRelationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    domain?: SortOrder
+    provider?: SortOrder
+    state?: SortOrder
+    publicId?: SortOrderInput | SortOrder
+    secureUrl?: SortOrderInput | SortOrder
+    resourceType?: SortOrderInput | SortOrder
+    format?: SortOrderInput | SortOrder
+    bytes?: SortOrderInput | SortOrder
+    width?: SortOrderInput | SortOrder
+    height?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
+    originalFileName?: SortOrderInput | SortOrder
+    folder?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    requestId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    finalizedAt?: SortOrderInput | SortOrder
+    discardedAt?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    owner?: UserOrderByWithRelationInput
+    bugReportsAsScreenshot?: BugReportOrderByRelationAggregateInput
+    uploadSessions?: AssetUploadSessionOrderByRelationAggregateInput
+    lifecycleEvents?: AssetLifecycleEventOrderByRelationAggregateInput
+  }
+
+  export type MediaAssetWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    publicId?: string
+    AND?: MediaAssetWhereInput | MediaAssetWhereInput[]
+    OR?: MediaAssetWhereInput[]
+    NOT?: MediaAssetWhereInput | MediaAssetWhereInput[]
+    ownerId?: StringFilter<"MediaAsset"> | string
+    domain?: EnumAssetDomainFilter<"MediaAsset"> | $Enums.AssetDomain
+    provider?: EnumAssetProviderFilter<"MediaAsset"> | $Enums.AssetProvider
+    state?: EnumAssetStateFilter<"MediaAsset"> | $Enums.AssetState
+    secureUrl?: StringNullableFilter<"MediaAsset"> | string | null
+    resourceType?: StringNullableFilter<"MediaAsset"> | string | null
+    format?: StringNullableFilter<"MediaAsset"> | string | null
+    bytes?: IntNullableFilter<"MediaAsset"> | number | null
+    width?: IntNullableFilter<"MediaAsset"> | number | null
+    height?: IntNullableFilter<"MediaAsset"> | number | null
+    mimeType?: StringNullableFilter<"MediaAsset"> | string | null
+    originalFileName?: StringNullableFilter<"MediaAsset"> | string | null
+    folder?: StringNullableFilter<"MediaAsset"> | string | null
+    metadata?: JsonNullableFilter<"MediaAsset">
+    requestId?: StringNullableFilter<"MediaAsset"> | string | null
+    createdAt?: DateTimeFilter<"MediaAsset"> | Date | string
+    updatedAt?: DateTimeFilter<"MediaAsset"> | Date | string
+    finalizedAt?: DateTimeNullableFilter<"MediaAsset"> | Date | string | null
+    discardedAt?: DateTimeNullableFilter<"MediaAsset"> | Date | string | null
+    expiresAt?: DateTimeNullableFilter<"MediaAsset"> | Date | string | null
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    bugReportsAsScreenshot?: BugReportListRelationFilter
+    uploadSessions?: AssetUploadSessionListRelationFilter
+    lifecycleEvents?: AssetLifecycleEventListRelationFilter
+  }, "id" | "publicId">
+
+  export type MediaAssetOrderByWithAggregationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    domain?: SortOrder
+    provider?: SortOrder
+    state?: SortOrder
+    publicId?: SortOrderInput | SortOrder
+    secureUrl?: SortOrderInput | SortOrder
+    resourceType?: SortOrderInput | SortOrder
+    format?: SortOrderInput | SortOrder
+    bytes?: SortOrderInput | SortOrder
+    width?: SortOrderInput | SortOrder
+    height?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
+    originalFileName?: SortOrderInput | SortOrder
+    folder?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    requestId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    finalizedAt?: SortOrderInput | SortOrder
+    discardedAt?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    _count?: MediaAssetCountOrderByAggregateInput
+    _avg?: MediaAssetAvgOrderByAggregateInput
+    _max?: MediaAssetMaxOrderByAggregateInput
+    _min?: MediaAssetMinOrderByAggregateInput
+    _sum?: MediaAssetSumOrderByAggregateInput
+  }
+
+  export type MediaAssetScalarWhereWithAggregatesInput = {
+    AND?: MediaAssetScalarWhereWithAggregatesInput | MediaAssetScalarWhereWithAggregatesInput[]
+    OR?: MediaAssetScalarWhereWithAggregatesInput[]
+    NOT?: MediaAssetScalarWhereWithAggregatesInput | MediaAssetScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MediaAsset"> | string
+    ownerId?: StringWithAggregatesFilter<"MediaAsset"> | string
+    domain?: EnumAssetDomainWithAggregatesFilter<"MediaAsset"> | $Enums.AssetDomain
+    provider?: EnumAssetProviderWithAggregatesFilter<"MediaAsset"> | $Enums.AssetProvider
+    state?: EnumAssetStateWithAggregatesFilter<"MediaAsset"> | $Enums.AssetState
+    publicId?: StringNullableWithAggregatesFilter<"MediaAsset"> | string | null
+    secureUrl?: StringNullableWithAggregatesFilter<"MediaAsset"> | string | null
+    resourceType?: StringNullableWithAggregatesFilter<"MediaAsset"> | string | null
+    format?: StringNullableWithAggregatesFilter<"MediaAsset"> | string | null
+    bytes?: IntNullableWithAggregatesFilter<"MediaAsset"> | number | null
+    width?: IntNullableWithAggregatesFilter<"MediaAsset"> | number | null
+    height?: IntNullableWithAggregatesFilter<"MediaAsset"> | number | null
+    mimeType?: StringNullableWithAggregatesFilter<"MediaAsset"> | string | null
+    originalFileName?: StringNullableWithAggregatesFilter<"MediaAsset"> | string | null
+    folder?: StringNullableWithAggregatesFilter<"MediaAsset"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"MediaAsset">
+    requestId?: StringNullableWithAggregatesFilter<"MediaAsset"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"MediaAsset"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"MediaAsset"> | Date | string
+    finalizedAt?: DateTimeNullableWithAggregatesFilter<"MediaAsset"> | Date | string | null
+    discardedAt?: DateTimeNullableWithAggregatesFilter<"MediaAsset"> | Date | string | null
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"MediaAsset"> | Date | string | null
+  }
+
+  export type AssetUploadSessionWhereInput = {
+    AND?: AssetUploadSessionWhereInput | AssetUploadSessionWhereInput[]
+    OR?: AssetUploadSessionWhereInput[]
+    NOT?: AssetUploadSessionWhereInput | AssetUploadSessionWhereInput[]
+    id?: StringFilter<"AssetUploadSession"> | string
+    ownerId?: StringFilter<"AssetUploadSession"> | string
+    domain?: EnumAssetDomainFilter<"AssetUploadSession"> | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFilter<"AssetUploadSession"> | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFilter<"AssetUploadSession"> | $Enums.AssetSessionState
+    activeAssetId?: StringNullableFilter<"AssetUploadSession"> | string | null
+    idempotencyKey?: StringNullableFilter<"AssetUploadSession"> | string | null
+    requestId?: StringNullableFilter<"AssetUploadSession"> | string | null
+    createdAt?: DateTimeFilter<"AssetUploadSession"> | Date | string
+    updatedAt?: DateTimeFilter<"AssetUploadSession"> | Date | string
+    finalizedAt?: DateTimeNullableFilter<"AssetUploadSession"> | Date | string | null
+    discardedAt?: DateTimeNullableFilter<"AssetUploadSession"> | Date | string | null
+    expiresAt?: DateTimeNullableFilter<"AssetUploadSession"> | Date | string | null
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    activeAsset?: XOR<MediaAssetNullableScalarRelationFilter, MediaAssetWhereInput> | null
+    lifecycleEvents?: AssetLifecycleEventListRelationFilter
+  }
+
+  export type AssetUploadSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    domain?: SortOrder
+    mode?: SortOrder
+    state?: SortOrder
+    activeAssetId?: SortOrderInput | SortOrder
+    idempotencyKey?: SortOrderInput | SortOrder
+    requestId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    finalizedAt?: SortOrderInput | SortOrder
+    discardedAt?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    owner?: UserOrderByWithRelationInput
+    activeAsset?: MediaAssetOrderByWithRelationInput
+    lifecycleEvents?: AssetLifecycleEventOrderByRelationAggregateInput
+  }
+
+  export type AssetUploadSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    ownerId_idempotencyKey?: AssetUploadSessionOwnerIdIdempotencyKeyCompoundUniqueInput
+    AND?: AssetUploadSessionWhereInput | AssetUploadSessionWhereInput[]
+    OR?: AssetUploadSessionWhereInput[]
+    NOT?: AssetUploadSessionWhereInput | AssetUploadSessionWhereInput[]
+    ownerId?: StringFilter<"AssetUploadSession"> | string
+    domain?: EnumAssetDomainFilter<"AssetUploadSession"> | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFilter<"AssetUploadSession"> | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFilter<"AssetUploadSession"> | $Enums.AssetSessionState
+    activeAssetId?: StringNullableFilter<"AssetUploadSession"> | string | null
+    idempotencyKey?: StringNullableFilter<"AssetUploadSession"> | string | null
+    requestId?: StringNullableFilter<"AssetUploadSession"> | string | null
+    createdAt?: DateTimeFilter<"AssetUploadSession"> | Date | string
+    updatedAt?: DateTimeFilter<"AssetUploadSession"> | Date | string
+    finalizedAt?: DateTimeNullableFilter<"AssetUploadSession"> | Date | string | null
+    discardedAt?: DateTimeNullableFilter<"AssetUploadSession"> | Date | string | null
+    expiresAt?: DateTimeNullableFilter<"AssetUploadSession"> | Date | string | null
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    activeAsset?: XOR<MediaAssetNullableScalarRelationFilter, MediaAssetWhereInput> | null
+    lifecycleEvents?: AssetLifecycleEventListRelationFilter
+  }, "id" | "ownerId_idempotencyKey">
+
+  export type AssetUploadSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    domain?: SortOrder
+    mode?: SortOrder
+    state?: SortOrder
+    activeAssetId?: SortOrderInput | SortOrder
+    idempotencyKey?: SortOrderInput | SortOrder
+    requestId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    finalizedAt?: SortOrderInput | SortOrder
+    discardedAt?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    _count?: AssetUploadSessionCountOrderByAggregateInput
+    _max?: AssetUploadSessionMaxOrderByAggregateInput
+    _min?: AssetUploadSessionMinOrderByAggregateInput
+  }
+
+  export type AssetUploadSessionScalarWhereWithAggregatesInput = {
+    AND?: AssetUploadSessionScalarWhereWithAggregatesInput | AssetUploadSessionScalarWhereWithAggregatesInput[]
+    OR?: AssetUploadSessionScalarWhereWithAggregatesInput[]
+    NOT?: AssetUploadSessionScalarWhereWithAggregatesInput | AssetUploadSessionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AssetUploadSession"> | string
+    ownerId?: StringWithAggregatesFilter<"AssetUploadSession"> | string
+    domain?: EnumAssetDomainWithAggregatesFilter<"AssetUploadSession"> | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeWithAggregatesFilter<"AssetUploadSession"> | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateWithAggregatesFilter<"AssetUploadSession"> | $Enums.AssetSessionState
+    activeAssetId?: StringNullableWithAggregatesFilter<"AssetUploadSession"> | string | null
+    idempotencyKey?: StringNullableWithAggregatesFilter<"AssetUploadSession"> | string | null
+    requestId?: StringNullableWithAggregatesFilter<"AssetUploadSession"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AssetUploadSession"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AssetUploadSession"> | Date | string
+    finalizedAt?: DateTimeNullableWithAggregatesFilter<"AssetUploadSession"> | Date | string | null
+    discardedAt?: DateTimeNullableWithAggregatesFilter<"AssetUploadSession"> | Date | string | null
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"AssetUploadSession"> | Date | string | null
+  }
+
+  export type AssetLifecycleEventWhereInput = {
+    AND?: AssetLifecycleEventWhereInput | AssetLifecycleEventWhereInput[]
+    OR?: AssetLifecycleEventWhereInput[]
+    NOT?: AssetLifecycleEventWhereInput | AssetLifecycleEventWhereInput[]
+    id?: StringFilter<"AssetLifecycleEvent"> | string
+    sessionId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    assetId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    actorId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    eventType?: EnumAssetLifecycleEventTypeFilter<"AssetLifecycleEvent"> | $Enums.AssetLifecycleEventType
+    details?: JsonNullableFilter<"AssetLifecycleEvent">
+    requestId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    createdAt?: DateTimeFilter<"AssetLifecycleEvent"> | Date | string
+    session?: XOR<AssetUploadSessionNullableScalarRelationFilter, AssetUploadSessionWhereInput> | null
+    asset?: XOR<MediaAssetNullableScalarRelationFilter, MediaAssetWhereInput> | null
+    actor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type AssetLifecycleEventOrderByWithRelationInput = {
+    id?: SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    assetId?: SortOrderInput | SortOrder
+    actorId?: SortOrderInput | SortOrder
+    eventType?: SortOrder
+    details?: SortOrderInput | SortOrder
+    requestId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    session?: AssetUploadSessionOrderByWithRelationInput
+    asset?: MediaAssetOrderByWithRelationInput
+    actor?: UserOrderByWithRelationInput
+  }
+
+  export type AssetLifecycleEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AssetLifecycleEventWhereInput | AssetLifecycleEventWhereInput[]
+    OR?: AssetLifecycleEventWhereInput[]
+    NOT?: AssetLifecycleEventWhereInput | AssetLifecycleEventWhereInput[]
+    sessionId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    assetId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    actorId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    eventType?: EnumAssetLifecycleEventTypeFilter<"AssetLifecycleEvent"> | $Enums.AssetLifecycleEventType
+    details?: JsonNullableFilter<"AssetLifecycleEvent">
+    requestId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    createdAt?: DateTimeFilter<"AssetLifecycleEvent"> | Date | string
+    session?: XOR<AssetUploadSessionNullableScalarRelationFilter, AssetUploadSessionWhereInput> | null
+    asset?: XOR<MediaAssetNullableScalarRelationFilter, MediaAssetWhereInput> | null
+    actor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type AssetLifecycleEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    assetId?: SortOrderInput | SortOrder
+    actorId?: SortOrderInput | SortOrder
+    eventType?: SortOrder
+    details?: SortOrderInput | SortOrder
+    requestId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: AssetLifecycleEventCountOrderByAggregateInput
+    _max?: AssetLifecycleEventMaxOrderByAggregateInput
+    _min?: AssetLifecycleEventMinOrderByAggregateInput
+  }
+
+  export type AssetLifecycleEventScalarWhereWithAggregatesInput = {
+    AND?: AssetLifecycleEventScalarWhereWithAggregatesInput | AssetLifecycleEventScalarWhereWithAggregatesInput[]
+    OR?: AssetLifecycleEventScalarWhereWithAggregatesInput[]
+    NOT?: AssetLifecycleEventScalarWhereWithAggregatesInput | AssetLifecycleEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AssetLifecycleEvent"> | string
+    sessionId?: StringNullableWithAggregatesFilter<"AssetLifecycleEvent"> | string | null
+    assetId?: StringNullableWithAggregatesFilter<"AssetLifecycleEvent"> | string | null
+    actorId?: StringNullableWithAggregatesFilter<"AssetLifecycleEvent"> | string | null
+    eventType?: EnumAssetLifecycleEventTypeWithAggregatesFilter<"AssetLifecycleEvent"> | $Enums.AssetLifecycleEventType
+    details?: JsonNullableWithAggregatesFilter<"AssetLifecycleEvent">
+    requestId?: StringNullableWithAggregatesFilter<"AssetLifecycleEvent"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AssetLifecycleEvent"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -31178,6 +36054,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -31222,6 +36101,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -31262,6 +36144,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -31306,6 +36191,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -33210,6 +38098,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     createdBy: UserCreateNestedOneWithoutBugReportsInput
+    screenshotAsset?: MediaAssetCreateNestedOneWithoutBugReportsAsScreenshotInput
   }
 
   export type BugReportUncheckedCreateInput = {
@@ -33217,6 +38106,7 @@ export namespace Prisma {
     category: $Enums.BugReportCategory
     description: string
     screenshotUrl?: string | null
+    screenshotAssetId?: string | null
     contactEmail: string
     status?: $Enums.BugReportStatus
     adminNotes?: string | null
@@ -33236,6 +38126,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: UserUpdateOneRequiredWithoutBugReportsNestedInput
+    screenshotAsset?: MediaAssetUpdateOneWithoutBugReportsAsScreenshotNestedInput
   }
 
   export type BugReportUncheckedUpdateInput = {
@@ -33243,6 +38134,7 @@ export namespace Prisma {
     category?: EnumBugReportCategoryFieldUpdateOperationsInput | $Enums.BugReportCategory
     description?: StringFieldUpdateOperationsInput | string
     screenshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    screenshotAssetId?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
     status?: EnumBugReportStatusFieldUpdateOperationsInput | $Enums.BugReportStatus
     adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33256,6 +38148,7 @@ export namespace Prisma {
     category: $Enums.BugReportCategory
     description: string
     screenshotUrl?: string | null
+    screenshotAssetId?: string | null
     contactEmail: string
     status?: $Enums.BugReportStatus
     adminNotes?: string | null
@@ -33281,12 +38174,387 @@ export namespace Prisma {
     category?: EnumBugReportCategoryFieldUpdateOperationsInput | $Enums.BugReportCategory
     description?: StringFieldUpdateOperationsInput | string
     screenshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    screenshotAssetId?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
     status?: EnumBugReportStatusFieldUpdateOperationsInput | $Enums.BugReportStatus
     adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MediaAssetCreateInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    owner: UserCreateNestedOneWithoutMediaAssetsInput
+    bugReportsAsScreenshot?: BugReportCreateNestedManyWithoutScreenshotAssetInput
+    uploadSessions?: AssetUploadSessionCreateNestedManyWithoutActiveAssetInput
+    lifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutAssetInput
+  }
+
+  export type MediaAssetUncheckedCreateInput = {
+    id?: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    bugReportsAsScreenshot?: BugReportUncheckedCreateNestedManyWithoutScreenshotAssetInput
+    uploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutActiveAssetInput
+    lifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutAssetInput
+  }
+
+  export type MediaAssetUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: UserUpdateOneRequiredWithoutMediaAssetsNestedInput
+    bugReportsAsScreenshot?: BugReportUpdateManyWithoutScreenshotAssetNestedInput
+    uploadSessions?: AssetUploadSessionUpdateManyWithoutActiveAssetNestedInput
+    lifecycleEvents?: AssetLifecycleEventUpdateManyWithoutAssetNestedInput
+  }
+
+  export type MediaAssetUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    bugReportsAsScreenshot?: BugReportUncheckedUpdateManyWithoutScreenshotAssetNestedInput
+    uploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutActiveAssetNestedInput
+    lifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutAssetNestedInput
+  }
+
+  export type MediaAssetCreateManyInput = {
+    id?: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type MediaAssetUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type MediaAssetUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AssetUploadSessionCreateInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    mode?: $Enums.AssetUploadMode
+    state?: $Enums.AssetSessionState
+    idempotencyKey?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    owner: UserCreateNestedOneWithoutAssetUploadSessionsInput
+    activeAsset?: MediaAssetCreateNestedOneWithoutUploadSessionsInput
+    lifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutSessionInput
+  }
+
+  export type AssetUploadSessionUncheckedCreateInput = {
+    id?: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    mode?: $Enums.AssetUploadMode
+    state?: $Enums.AssetSessionState
+    activeAssetId?: string | null
+    idempotencyKey?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    lifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type AssetUploadSessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: UserUpdateOneRequiredWithoutAssetUploadSessionsNestedInput
+    activeAsset?: MediaAssetUpdateOneWithoutUploadSessionsNestedInput
+    lifecycleEvents?: AssetLifecycleEventUpdateManyWithoutSessionNestedInput
+  }
+
+  export type AssetUploadSessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    activeAssetId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type AssetUploadSessionCreateManyInput = {
+    id?: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    mode?: $Enums.AssetUploadMode
+    state?: $Enums.AssetSessionState
+    activeAssetId?: string | null
+    idempotencyKey?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type AssetUploadSessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AssetUploadSessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    activeAssetId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AssetLifecycleEventCreateInput = {
+    id?: string
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    session?: AssetUploadSessionCreateNestedOneWithoutLifecycleEventsInput
+    asset?: MediaAssetCreateNestedOneWithoutLifecycleEventsInput
+    actor?: UserCreateNestedOneWithoutAssetLifecycleEventsInput
+  }
+
+  export type AssetLifecycleEventUncheckedCreateInput = {
+    id?: string
+    sessionId?: string | null
+    assetId?: string | null
+    actorId?: string | null
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AssetLifecycleEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: AssetUploadSessionUpdateOneWithoutLifecycleEventsNestedInput
+    asset?: MediaAssetUpdateOneWithoutLifecycleEventsNestedInput
+    actor?: UserUpdateOneWithoutAssetLifecycleEventsNestedInput
+  }
+
+  export type AssetLifecycleEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    assetId?: NullableStringFieldUpdateOperationsInput | string | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AssetLifecycleEventCreateManyInput = {
+    id?: string
+    sessionId?: string | null
+    assetId?: string | null
+    actorId?: string | null
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AssetLifecycleEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AssetLifecycleEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    assetId?: NullableStringFieldUpdateOperationsInput | string | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -33377,6 +38645,24 @@ export namespace Prisma {
     every?: InviteLinkWhereInput
     some?: InviteLinkWhereInput
     none?: InviteLinkWhereInput
+  }
+
+  export type MediaAssetListRelationFilter = {
+    every?: MediaAssetWhereInput
+    some?: MediaAssetWhereInput
+    none?: MediaAssetWhereInput
+  }
+
+  export type AssetUploadSessionListRelationFilter = {
+    every?: AssetUploadSessionWhereInput
+    some?: AssetUploadSessionWhereInput
+    none?: AssetUploadSessionWhereInput
+  }
+
+  export type AssetLifecycleEventListRelationFilter = {
+    every?: AssetLifecycleEventWhereInput
+    some?: AssetLifecycleEventWhereInput
+    none?: AssetLifecycleEventWhereInput
   }
 
   export type NotificationListRelationFilter = {
@@ -33471,6 +38757,18 @@ export namespace Prisma {
   }
 
   export type InviteLinkOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MediaAssetOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AssetUploadSessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AssetLifecycleEventOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -35063,11 +40361,17 @@ export namespace Prisma {
     not?: NestedEnumBugReportStatusFilter<$PrismaModel> | $Enums.BugReportStatus
   }
 
+  export type MediaAssetNullableScalarRelationFilter = {
+    is?: MediaAssetWhereInput | null
+    isNot?: MediaAssetWhereInput | null
+  }
+
   export type BugReportCountOrderByAggregateInput = {
     id?: SortOrder
     category?: SortOrder
     description?: SortOrder
     screenshotUrl?: SortOrder
+    screenshotAssetId?: SortOrder
     contactEmail?: SortOrder
     status?: SortOrder
     adminNotes?: SortOrder
@@ -35081,6 +40385,7 @@ export namespace Prisma {
     category?: SortOrder
     description?: SortOrder
     screenshotUrl?: SortOrder
+    screenshotAssetId?: SortOrder
     contactEmail?: SortOrder
     status?: SortOrder
     adminNotes?: SortOrder
@@ -35094,6 +40399,7 @@ export namespace Prisma {
     category?: SortOrder
     description?: SortOrder
     screenshotUrl?: SortOrder
+    screenshotAssetId?: SortOrder
     contactEmail?: SortOrder
     status?: SortOrder
     adminNotes?: SortOrder
@@ -35120,6 +40426,331 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumBugReportStatusFilter<$PrismaModel>
     _max?: NestedEnumBugReportStatusFilter<$PrismaModel>
+  }
+
+  export type EnumAssetDomainFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetDomain | EnumAssetDomainFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetDomain[] | ListEnumAssetDomainFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetDomain[] | ListEnumAssetDomainFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetDomainFilter<$PrismaModel> | $Enums.AssetDomain
+  }
+
+  export type EnumAssetProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetProvider | EnumAssetProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetProvider[] | ListEnumAssetProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetProvider[] | ListEnumAssetProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetProviderFilter<$PrismaModel> | $Enums.AssetProvider
+  }
+
+  export type EnumAssetStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetState | EnumAssetStateFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetState[] | ListEnumAssetStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetState[] | ListEnumAssetStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetStateFilter<$PrismaModel> | $Enums.AssetState
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type MediaAssetCountOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    domain?: SortOrder
+    provider?: SortOrder
+    state?: SortOrder
+    publicId?: SortOrder
+    secureUrl?: SortOrder
+    resourceType?: SortOrder
+    format?: SortOrder
+    bytes?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    mimeType?: SortOrder
+    originalFileName?: SortOrder
+    folder?: SortOrder
+    metadata?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    finalizedAt?: SortOrder
+    discardedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type MediaAssetAvgOrderByAggregateInput = {
+    bytes?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+  }
+
+  export type MediaAssetMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    domain?: SortOrder
+    provider?: SortOrder
+    state?: SortOrder
+    publicId?: SortOrder
+    secureUrl?: SortOrder
+    resourceType?: SortOrder
+    format?: SortOrder
+    bytes?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    mimeType?: SortOrder
+    originalFileName?: SortOrder
+    folder?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    finalizedAt?: SortOrder
+    discardedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type MediaAssetMinOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    domain?: SortOrder
+    provider?: SortOrder
+    state?: SortOrder
+    publicId?: SortOrder
+    secureUrl?: SortOrder
+    resourceType?: SortOrder
+    format?: SortOrder
+    bytes?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    mimeType?: SortOrder
+    originalFileName?: SortOrder
+    folder?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    finalizedAt?: SortOrder
+    discardedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type MediaAssetSumOrderByAggregateInput = {
+    bytes?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+  }
+
+  export type EnumAssetDomainWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetDomain | EnumAssetDomainFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetDomain[] | ListEnumAssetDomainFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetDomain[] | ListEnumAssetDomainFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetDomainWithAggregatesFilter<$PrismaModel> | $Enums.AssetDomain
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetDomainFilter<$PrismaModel>
+    _max?: NestedEnumAssetDomainFilter<$PrismaModel>
+  }
+
+  export type EnumAssetProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetProvider | EnumAssetProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetProvider[] | ListEnumAssetProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetProvider[] | ListEnumAssetProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetProviderWithAggregatesFilter<$PrismaModel> | $Enums.AssetProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetProviderFilter<$PrismaModel>
+    _max?: NestedEnumAssetProviderFilter<$PrismaModel>
+  }
+
+  export type EnumAssetStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetState | EnumAssetStateFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetState[] | ListEnumAssetStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetState[] | ListEnumAssetStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetStateWithAggregatesFilter<$PrismaModel> | $Enums.AssetState
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetStateFilter<$PrismaModel>
+    _max?: NestedEnumAssetStateFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type EnumAssetUploadModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetUploadMode | EnumAssetUploadModeFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetUploadMode[] | ListEnumAssetUploadModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetUploadMode[] | ListEnumAssetUploadModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetUploadModeFilter<$PrismaModel> | $Enums.AssetUploadMode
+  }
+
+  export type EnumAssetSessionStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetSessionState | EnumAssetSessionStateFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetSessionState[] | ListEnumAssetSessionStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetSessionState[] | ListEnumAssetSessionStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetSessionStateFilter<$PrismaModel> | $Enums.AssetSessionState
+  }
+
+  export type AssetUploadSessionOwnerIdIdempotencyKeyCompoundUniqueInput = {
+    ownerId: string
+    idempotencyKey: string
+  }
+
+  export type AssetUploadSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    domain?: SortOrder
+    mode?: SortOrder
+    state?: SortOrder
+    activeAssetId?: SortOrder
+    idempotencyKey?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    finalizedAt?: SortOrder
+    discardedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type AssetUploadSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    domain?: SortOrder
+    mode?: SortOrder
+    state?: SortOrder
+    activeAssetId?: SortOrder
+    idempotencyKey?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    finalizedAt?: SortOrder
+    discardedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type AssetUploadSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    domain?: SortOrder
+    mode?: SortOrder
+    state?: SortOrder
+    activeAssetId?: SortOrder
+    idempotencyKey?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    finalizedAt?: SortOrder
+    discardedAt?: SortOrder
+    expiresAt?: SortOrder
+  }
+
+  export type EnumAssetUploadModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetUploadMode | EnumAssetUploadModeFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetUploadMode[] | ListEnumAssetUploadModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetUploadMode[] | ListEnumAssetUploadModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetUploadModeWithAggregatesFilter<$PrismaModel> | $Enums.AssetUploadMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetUploadModeFilter<$PrismaModel>
+    _max?: NestedEnumAssetUploadModeFilter<$PrismaModel>
+  }
+
+  export type EnumAssetSessionStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetSessionState | EnumAssetSessionStateFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetSessionState[] | ListEnumAssetSessionStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetSessionState[] | ListEnumAssetSessionStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetSessionStateWithAggregatesFilter<$PrismaModel> | $Enums.AssetSessionState
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetSessionStateFilter<$PrismaModel>
+    _max?: NestedEnumAssetSessionStateFilter<$PrismaModel>
+  }
+
+  export type EnumAssetLifecycleEventTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetLifecycleEventType | EnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetLifecycleEventType[] | ListEnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetLifecycleEventType[] | ListEnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetLifecycleEventTypeFilter<$PrismaModel> | $Enums.AssetLifecycleEventType
+  }
+
+  export type AssetUploadSessionNullableScalarRelationFilter = {
+    is?: AssetUploadSessionWhereInput | null
+    isNot?: AssetUploadSessionWhereInput | null
+  }
+
+  export type AssetLifecycleEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    assetId?: SortOrder
+    actorId?: SortOrder
+    eventType?: SortOrder
+    details?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AssetLifecycleEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    assetId?: SortOrder
+    actorId?: SortOrder
+    eventType?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AssetLifecycleEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    assetId?: SortOrder
+    actorId?: SortOrder
+    eventType?: SortOrder
+    requestId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumAssetLifecycleEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetLifecycleEventType | EnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetLifecycleEventType[] | ListEnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetLifecycleEventType[] | ListEnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetLifecycleEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.AssetLifecycleEventType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetLifecycleEventTypeFilter<$PrismaModel>
+    _max?: NestedEnumAssetLifecycleEventTypeFilter<$PrismaModel>
   }
 
   export type BugReportCreateNestedManyWithoutCreatedByInput = {
@@ -35169,6 +40800,27 @@ export namespace Prisma {
     connectOrCreate?: InviteLinkCreateOrConnectWithoutCreatedByInput | InviteLinkCreateOrConnectWithoutCreatedByInput[]
     createMany?: InviteLinkCreateManyCreatedByInputEnvelope
     connect?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+  }
+
+  export type MediaAssetCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<MediaAssetCreateWithoutOwnerInput, MediaAssetUncheckedCreateWithoutOwnerInput> | MediaAssetCreateWithoutOwnerInput[] | MediaAssetUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: MediaAssetCreateOrConnectWithoutOwnerInput | MediaAssetCreateOrConnectWithoutOwnerInput[]
+    createMany?: MediaAssetCreateManyOwnerInputEnvelope
+    connect?: MediaAssetWhereUniqueInput | MediaAssetWhereUniqueInput[]
+  }
+
+  export type AssetUploadSessionCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<AssetUploadSessionCreateWithoutOwnerInput, AssetUploadSessionUncheckedCreateWithoutOwnerInput> | AssetUploadSessionCreateWithoutOwnerInput[] | AssetUploadSessionUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: AssetUploadSessionCreateOrConnectWithoutOwnerInput | AssetUploadSessionCreateOrConnectWithoutOwnerInput[]
+    createMany?: AssetUploadSessionCreateManyOwnerInputEnvelope
+    connect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+  }
+
+  export type AssetLifecycleEventCreateNestedManyWithoutActorInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutActorInput, AssetLifecycleEventUncheckedCreateWithoutActorInput> | AssetLifecycleEventCreateWithoutActorInput[] | AssetLifecycleEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutActorInput | AssetLifecycleEventCreateOrConnectWithoutActorInput[]
+    createMany?: AssetLifecycleEventCreateManyActorInputEnvelope
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
   }
 
   export type NotificationCreateNestedManyWithoutUserInput = {
@@ -35342,6 +40994,27 @@ export namespace Prisma {
     connectOrCreate?: InviteLinkCreateOrConnectWithoutCreatedByInput | InviteLinkCreateOrConnectWithoutCreatedByInput[]
     createMany?: InviteLinkCreateManyCreatedByInputEnvelope
     connect?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+  }
+
+  export type MediaAssetUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<MediaAssetCreateWithoutOwnerInput, MediaAssetUncheckedCreateWithoutOwnerInput> | MediaAssetCreateWithoutOwnerInput[] | MediaAssetUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: MediaAssetCreateOrConnectWithoutOwnerInput | MediaAssetCreateOrConnectWithoutOwnerInput[]
+    createMany?: MediaAssetCreateManyOwnerInputEnvelope
+    connect?: MediaAssetWhereUniqueInput | MediaAssetWhereUniqueInput[]
+  }
+
+  export type AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<AssetUploadSessionCreateWithoutOwnerInput, AssetUploadSessionUncheckedCreateWithoutOwnerInput> | AssetUploadSessionCreateWithoutOwnerInput[] | AssetUploadSessionUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: AssetUploadSessionCreateOrConnectWithoutOwnerInput | AssetUploadSessionCreateOrConnectWithoutOwnerInput[]
+    createMany?: AssetUploadSessionCreateManyOwnerInputEnvelope
+    connect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+  }
+
+  export type AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutActorInput, AssetLifecycleEventUncheckedCreateWithoutActorInput> | AssetLifecycleEventCreateWithoutActorInput[] | AssetLifecycleEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutActorInput | AssetLifecycleEventCreateOrConnectWithoutActorInput[]
+    createMany?: AssetLifecycleEventCreateManyActorInputEnvelope
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
   }
 
   export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
@@ -35576,6 +41249,48 @@ export namespace Prisma {
     update?: InviteLinkUpdateWithWhereUniqueWithoutCreatedByInput | InviteLinkUpdateWithWhereUniqueWithoutCreatedByInput[]
     updateMany?: InviteLinkUpdateManyWithWhereWithoutCreatedByInput | InviteLinkUpdateManyWithWhereWithoutCreatedByInput[]
     deleteMany?: InviteLinkScalarWhereInput | InviteLinkScalarWhereInput[]
+  }
+
+  export type MediaAssetUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<MediaAssetCreateWithoutOwnerInput, MediaAssetUncheckedCreateWithoutOwnerInput> | MediaAssetCreateWithoutOwnerInput[] | MediaAssetUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: MediaAssetCreateOrConnectWithoutOwnerInput | MediaAssetCreateOrConnectWithoutOwnerInput[]
+    upsert?: MediaAssetUpsertWithWhereUniqueWithoutOwnerInput | MediaAssetUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: MediaAssetCreateManyOwnerInputEnvelope
+    set?: MediaAssetWhereUniqueInput | MediaAssetWhereUniqueInput[]
+    disconnect?: MediaAssetWhereUniqueInput | MediaAssetWhereUniqueInput[]
+    delete?: MediaAssetWhereUniqueInput | MediaAssetWhereUniqueInput[]
+    connect?: MediaAssetWhereUniqueInput | MediaAssetWhereUniqueInput[]
+    update?: MediaAssetUpdateWithWhereUniqueWithoutOwnerInput | MediaAssetUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: MediaAssetUpdateManyWithWhereWithoutOwnerInput | MediaAssetUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: MediaAssetScalarWhereInput | MediaAssetScalarWhereInput[]
+  }
+
+  export type AssetUploadSessionUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<AssetUploadSessionCreateWithoutOwnerInput, AssetUploadSessionUncheckedCreateWithoutOwnerInput> | AssetUploadSessionCreateWithoutOwnerInput[] | AssetUploadSessionUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: AssetUploadSessionCreateOrConnectWithoutOwnerInput | AssetUploadSessionCreateOrConnectWithoutOwnerInput[]
+    upsert?: AssetUploadSessionUpsertWithWhereUniqueWithoutOwnerInput | AssetUploadSessionUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: AssetUploadSessionCreateManyOwnerInputEnvelope
+    set?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    disconnect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    delete?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    connect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    update?: AssetUploadSessionUpdateWithWhereUniqueWithoutOwnerInput | AssetUploadSessionUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: AssetUploadSessionUpdateManyWithWhereWithoutOwnerInput | AssetUploadSessionUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: AssetUploadSessionScalarWhereInput | AssetUploadSessionScalarWhereInput[]
+  }
+
+  export type AssetLifecycleEventUpdateManyWithoutActorNestedInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutActorInput, AssetLifecycleEventUncheckedCreateWithoutActorInput> | AssetLifecycleEventCreateWithoutActorInput[] | AssetLifecycleEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutActorInput | AssetLifecycleEventCreateOrConnectWithoutActorInput[]
+    upsert?: AssetLifecycleEventUpsertWithWhereUniqueWithoutActorInput | AssetLifecycleEventUpsertWithWhereUniqueWithoutActorInput[]
+    createMany?: AssetLifecycleEventCreateManyActorInputEnvelope
+    set?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    disconnect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    delete?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    update?: AssetLifecycleEventUpdateWithWhereUniqueWithoutActorInput | AssetLifecycleEventUpdateWithWhereUniqueWithoutActorInput[]
+    updateMany?: AssetLifecycleEventUpdateManyWithWhereWithoutActorInput | AssetLifecycleEventUpdateManyWithWhereWithoutActorInput[]
+    deleteMany?: AssetLifecycleEventScalarWhereInput | AssetLifecycleEventScalarWhereInput[]
   }
 
   export type NotificationUpdateManyWithoutUserNestedInput = {
@@ -35918,6 +41633,48 @@ export namespace Prisma {
     update?: InviteLinkUpdateWithWhereUniqueWithoutCreatedByInput | InviteLinkUpdateWithWhereUniqueWithoutCreatedByInput[]
     updateMany?: InviteLinkUpdateManyWithWhereWithoutCreatedByInput | InviteLinkUpdateManyWithWhereWithoutCreatedByInput[]
     deleteMany?: InviteLinkScalarWhereInput | InviteLinkScalarWhereInput[]
+  }
+
+  export type MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<MediaAssetCreateWithoutOwnerInput, MediaAssetUncheckedCreateWithoutOwnerInput> | MediaAssetCreateWithoutOwnerInput[] | MediaAssetUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: MediaAssetCreateOrConnectWithoutOwnerInput | MediaAssetCreateOrConnectWithoutOwnerInput[]
+    upsert?: MediaAssetUpsertWithWhereUniqueWithoutOwnerInput | MediaAssetUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: MediaAssetCreateManyOwnerInputEnvelope
+    set?: MediaAssetWhereUniqueInput | MediaAssetWhereUniqueInput[]
+    disconnect?: MediaAssetWhereUniqueInput | MediaAssetWhereUniqueInput[]
+    delete?: MediaAssetWhereUniqueInput | MediaAssetWhereUniqueInput[]
+    connect?: MediaAssetWhereUniqueInput | MediaAssetWhereUniqueInput[]
+    update?: MediaAssetUpdateWithWhereUniqueWithoutOwnerInput | MediaAssetUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: MediaAssetUpdateManyWithWhereWithoutOwnerInput | MediaAssetUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: MediaAssetScalarWhereInput | MediaAssetScalarWhereInput[]
+  }
+
+  export type AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<AssetUploadSessionCreateWithoutOwnerInput, AssetUploadSessionUncheckedCreateWithoutOwnerInput> | AssetUploadSessionCreateWithoutOwnerInput[] | AssetUploadSessionUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: AssetUploadSessionCreateOrConnectWithoutOwnerInput | AssetUploadSessionCreateOrConnectWithoutOwnerInput[]
+    upsert?: AssetUploadSessionUpsertWithWhereUniqueWithoutOwnerInput | AssetUploadSessionUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: AssetUploadSessionCreateManyOwnerInputEnvelope
+    set?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    disconnect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    delete?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    connect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    update?: AssetUploadSessionUpdateWithWhereUniqueWithoutOwnerInput | AssetUploadSessionUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: AssetUploadSessionUpdateManyWithWhereWithoutOwnerInput | AssetUploadSessionUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: AssetUploadSessionScalarWhereInput | AssetUploadSessionScalarWhereInput[]
+  }
+
+  export type AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutActorInput, AssetLifecycleEventUncheckedCreateWithoutActorInput> | AssetLifecycleEventCreateWithoutActorInput[] | AssetLifecycleEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutActorInput | AssetLifecycleEventCreateOrConnectWithoutActorInput[]
+    upsert?: AssetLifecycleEventUpsertWithWhereUniqueWithoutActorInput | AssetLifecycleEventUpsertWithWhereUniqueWithoutActorInput[]
+    createMany?: AssetLifecycleEventCreateManyActorInputEnvelope
+    set?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    disconnect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    delete?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    update?: AssetLifecycleEventUpdateWithWhereUniqueWithoutActorInput | AssetLifecycleEventUpdateWithWhereUniqueWithoutActorInput[]
+    updateMany?: AssetLifecycleEventUpdateManyWithWhereWithoutActorInput | AssetLifecycleEventUpdateManyWithWhereWithoutActorInput[]
+    deleteMany?: AssetLifecycleEventScalarWhereInput | AssetLifecycleEventScalarWhereInput[]
   }
 
   export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
@@ -37838,6 +43595,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type MediaAssetCreateNestedOneWithoutBugReportsAsScreenshotInput = {
+    create?: XOR<MediaAssetCreateWithoutBugReportsAsScreenshotInput, MediaAssetUncheckedCreateWithoutBugReportsAsScreenshotInput>
+    connectOrCreate?: MediaAssetCreateOrConnectWithoutBugReportsAsScreenshotInput
+    connect?: MediaAssetWhereUniqueInput
+  }
+
   export type EnumBugReportCategoryFieldUpdateOperationsInput = {
     set?: $Enums.BugReportCategory
   }
@@ -37852,6 +43615,300 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutBugReportsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBugReportsInput, UserUpdateWithoutBugReportsInput>, UserUncheckedUpdateWithoutBugReportsInput>
+  }
+
+  export type MediaAssetUpdateOneWithoutBugReportsAsScreenshotNestedInput = {
+    create?: XOR<MediaAssetCreateWithoutBugReportsAsScreenshotInput, MediaAssetUncheckedCreateWithoutBugReportsAsScreenshotInput>
+    connectOrCreate?: MediaAssetCreateOrConnectWithoutBugReportsAsScreenshotInput
+    upsert?: MediaAssetUpsertWithoutBugReportsAsScreenshotInput
+    disconnect?: MediaAssetWhereInput | boolean
+    delete?: MediaAssetWhereInput | boolean
+    connect?: MediaAssetWhereUniqueInput
+    update?: XOR<XOR<MediaAssetUpdateToOneWithWhereWithoutBugReportsAsScreenshotInput, MediaAssetUpdateWithoutBugReportsAsScreenshotInput>, MediaAssetUncheckedUpdateWithoutBugReportsAsScreenshotInput>
+  }
+
+  export type UserCreateNestedOneWithoutMediaAssetsInput = {
+    create?: XOR<UserCreateWithoutMediaAssetsInput, UserUncheckedCreateWithoutMediaAssetsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMediaAssetsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BugReportCreateNestedManyWithoutScreenshotAssetInput = {
+    create?: XOR<BugReportCreateWithoutScreenshotAssetInput, BugReportUncheckedCreateWithoutScreenshotAssetInput> | BugReportCreateWithoutScreenshotAssetInput[] | BugReportUncheckedCreateWithoutScreenshotAssetInput[]
+    connectOrCreate?: BugReportCreateOrConnectWithoutScreenshotAssetInput | BugReportCreateOrConnectWithoutScreenshotAssetInput[]
+    createMany?: BugReportCreateManyScreenshotAssetInputEnvelope
+    connect?: BugReportWhereUniqueInput | BugReportWhereUniqueInput[]
+  }
+
+  export type AssetUploadSessionCreateNestedManyWithoutActiveAssetInput = {
+    create?: XOR<AssetUploadSessionCreateWithoutActiveAssetInput, AssetUploadSessionUncheckedCreateWithoutActiveAssetInput> | AssetUploadSessionCreateWithoutActiveAssetInput[] | AssetUploadSessionUncheckedCreateWithoutActiveAssetInput[]
+    connectOrCreate?: AssetUploadSessionCreateOrConnectWithoutActiveAssetInput | AssetUploadSessionCreateOrConnectWithoutActiveAssetInput[]
+    createMany?: AssetUploadSessionCreateManyActiveAssetInputEnvelope
+    connect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+  }
+
+  export type AssetLifecycleEventCreateNestedManyWithoutAssetInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutAssetInput, AssetLifecycleEventUncheckedCreateWithoutAssetInput> | AssetLifecycleEventCreateWithoutAssetInput[] | AssetLifecycleEventUncheckedCreateWithoutAssetInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutAssetInput | AssetLifecycleEventCreateOrConnectWithoutAssetInput[]
+    createMany?: AssetLifecycleEventCreateManyAssetInputEnvelope
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+  }
+
+  export type BugReportUncheckedCreateNestedManyWithoutScreenshotAssetInput = {
+    create?: XOR<BugReportCreateWithoutScreenshotAssetInput, BugReportUncheckedCreateWithoutScreenshotAssetInput> | BugReportCreateWithoutScreenshotAssetInput[] | BugReportUncheckedCreateWithoutScreenshotAssetInput[]
+    connectOrCreate?: BugReportCreateOrConnectWithoutScreenshotAssetInput | BugReportCreateOrConnectWithoutScreenshotAssetInput[]
+    createMany?: BugReportCreateManyScreenshotAssetInputEnvelope
+    connect?: BugReportWhereUniqueInput | BugReportWhereUniqueInput[]
+  }
+
+  export type AssetUploadSessionUncheckedCreateNestedManyWithoutActiveAssetInput = {
+    create?: XOR<AssetUploadSessionCreateWithoutActiveAssetInput, AssetUploadSessionUncheckedCreateWithoutActiveAssetInput> | AssetUploadSessionCreateWithoutActiveAssetInput[] | AssetUploadSessionUncheckedCreateWithoutActiveAssetInput[]
+    connectOrCreate?: AssetUploadSessionCreateOrConnectWithoutActiveAssetInput | AssetUploadSessionCreateOrConnectWithoutActiveAssetInput[]
+    createMany?: AssetUploadSessionCreateManyActiveAssetInputEnvelope
+    connect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+  }
+
+  export type AssetLifecycleEventUncheckedCreateNestedManyWithoutAssetInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutAssetInput, AssetLifecycleEventUncheckedCreateWithoutAssetInput> | AssetLifecycleEventCreateWithoutAssetInput[] | AssetLifecycleEventUncheckedCreateWithoutAssetInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutAssetInput | AssetLifecycleEventCreateOrConnectWithoutAssetInput[]
+    createMany?: AssetLifecycleEventCreateManyAssetInputEnvelope
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+  }
+
+  export type EnumAssetDomainFieldUpdateOperationsInput = {
+    set?: $Enums.AssetDomain
+  }
+
+  export type EnumAssetProviderFieldUpdateOperationsInput = {
+    set?: $Enums.AssetProvider
+  }
+
+  export type EnumAssetStateFieldUpdateOperationsInput = {
+    set?: $Enums.AssetState
+  }
+
+  export type UserUpdateOneRequiredWithoutMediaAssetsNestedInput = {
+    create?: XOR<UserCreateWithoutMediaAssetsInput, UserUncheckedCreateWithoutMediaAssetsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMediaAssetsInput
+    upsert?: UserUpsertWithoutMediaAssetsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMediaAssetsInput, UserUpdateWithoutMediaAssetsInput>, UserUncheckedUpdateWithoutMediaAssetsInput>
+  }
+
+  export type BugReportUpdateManyWithoutScreenshotAssetNestedInput = {
+    create?: XOR<BugReportCreateWithoutScreenshotAssetInput, BugReportUncheckedCreateWithoutScreenshotAssetInput> | BugReportCreateWithoutScreenshotAssetInput[] | BugReportUncheckedCreateWithoutScreenshotAssetInput[]
+    connectOrCreate?: BugReportCreateOrConnectWithoutScreenshotAssetInput | BugReportCreateOrConnectWithoutScreenshotAssetInput[]
+    upsert?: BugReportUpsertWithWhereUniqueWithoutScreenshotAssetInput | BugReportUpsertWithWhereUniqueWithoutScreenshotAssetInput[]
+    createMany?: BugReportCreateManyScreenshotAssetInputEnvelope
+    set?: BugReportWhereUniqueInput | BugReportWhereUniqueInput[]
+    disconnect?: BugReportWhereUniqueInput | BugReportWhereUniqueInput[]
+    delete?: BugReportWhereUniqueInput | BugReportWhereUniqueInput[]
+    connect?: BugReportWhereUniqueInput | BugReportWhereUniqueInput[]
+    update?: BugReportUpdateWithWhereUniqueWithoutScreenshotAssetInput | BugReportUpdateWithWhereUniqueWithoutScreenshotAssetInput[]
+    updateMany?: BugReportUpdateManyWithWhereWithoutScreenshotAssetInput | BugReportUpdateManyWithWhereWithoutScreenshotAssetInput[]
+    deleteMany?: BugReportScalarWhereInput | BugReportScalarWhereInput[]
+  }
+
+  export type AssetUploadSessionUpdateManyWithoutActiveAssetNestedInput = {
+    create?: XOR<AssetUploadSessionCreateWithoutActiveAssetInput, AssetUploadSessionUncheckedCreateWithoutActiveAssetInput> | AssetUploadSessionCreateWithoutActiveAssetInput[] | AssetUploadSessionUncheckedCreateWithoutActiveAssetInput[]
+    connectOrCreate?: AssetUploadSessionCreateOrConnectWithoutActiveAssetInput | AssetUploadSessionCreateOrConnectWithoutActiveAssetInput[]
+    upsert?: AssetUploadSessionUpsertWithWhereUniqueWithoutActiveAssetInput | AssetUploadSessionUpsertWithWhereUniqueWithoutActiveAssetInput[]
+    createMany?: AssetUploadSessionCreateManyActiveAssetInputEnvelope
+    set?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    disconnect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    delete?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    connect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    update?: AssetUploadSessionUpdateWithWhereUniqueWithoutActiveAssetInput | AssetUploadSessionUpdateWithWhereUniqueWithoutActiveAssetInput[]
+    updateMany?: AssetUploadSessionUpdateManyWithWhereWithoutActiveAssetInput | AssetUploadSessionUpdateManyWithWhereWithoutActiveAssetInput[]
+    deleteMany?: AssetUploadSessionScalarWhereInput | AssetUploadSessionScalarWhereInput[]
+  }
+
+  export type AssetLifecycleEventUpdateManyWithoutAssetNestedInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutAssetInput, AssetLifecycleEventUncheckedCreateWithoutAssetInput> | AssetLifecycleEventCreateWithoutAssetInput[] | AssetLifecycleEventUncheckedCreateWithoutAssetInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutAssetInput | AssetLifecycleEventCreateOrConnectWithoutAssetInput[]
+    upsert?: AssetLifecycleEventUpsertWithWhereUniqueWithoutAssetInput | AssetLifecycleEventUpsertWithWhereUniqueWithoutAssetInput[]
+    createMany?: AssetLifecycleEventCreateManyAssetInputEnvelope
+    set?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    disconnect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    delete?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    update?: AssetLifecycleEventUpdateWithWhereUniqueWithoutAssetInput | AssetLifecycleEventUpdateWithWhereUniqueWithoutAssetInput[]
+    updateMany?: AssetLifecycleEventUpdateManyWithWhereWithoutAssetInput | AssetLifecycleEventUpdateManyWithWhereWithoutAssetInput[]
+    deleteMany?: AssetLifecycleEventScalarWhereInput | AssetLifecycleEventScalarWhereInput[]
+  }
+
+  export type BugReportUncheckedUpdateManyWithoutScreenshotAssetNestedInput = {
+    create?: XOR<BugReportCreateWithoutScreenshotAssetInput, BugReportUncheckedCreateWithoutScreenshotAssetInput> | BugReportCreateWithoutScreenshotAssetInput[] | BugReportUncheckedCreateWithoutScreenshotAssetInput[]
+    connectOrCreate?: BugReportCreateOrConnectWithoutScreenshotAssetInput | BugReportCreateOrConnectWithoutScreenshotAssetInput[]
+    upsert?: BugReportUpsertWithWhereUniqueWithoutScreenshotAssetInput | BugReportUpsertWithWhereUniqueWithoutScreenshotAssetInput[]
+    createMany?: BugReportCreateManyScreenshotAssetInputEnvelope
+    set?: BugReportWhereUniqueInput | BugReportWhereUniqueInput[]
+    disconnect?: BugReportWhereUniqueInput | BugReportWhereUniqueInput[]
+    delete?: BugReportWhereUniqueInput | BugReportWhereUniqueInput[]
+    connect?: BugReportWhereUniqueInput | BugReportWhereUniqueInput[]
+    update?: BugReportUpdateWithWhereUniqueWithoutScreenshotAssetInput | BugReportUpdateWithWhereUniqueWithoutScreenshotAssetInput[]
+    updateMany?: BugReportUpdateManyWithWhereWithoutScreenshotAssetInput | BugReportUpdateManyWithWhereWithoutScreenshotAssetInput[]
+    deleteMany?: BugReportScalarWhereInput | BugReportScalarWhereInput[]
+  }
+
+  export type AssetUploadSessionUncheckedUpdateManyWithoutActiveAssetNestedInput = {
+    create?: XOR<AssetUploadSessionCreateWithoutActiveAssetInput, AssetUploadSessionUncheckedCreateWithoutActiveAssetInput> | AssetUploadSessionCreateWithoutActiveAssetInput[] | AssetUploadSessionUncheckedCreateWithoutActiveAssetInput[]
+    connectOrCreate?: AssetUploadSessionCreateOrConnectWithoutActiveAssetInput | AssetUploadSessionCreateOrConnectWithoutActiveAssetInput[]
+    upsert?: AssetUploadSessionUpsertWithWhereUniqueWithoutActiveAssetInput | AssetUploadSessionUpsertWithWhereUniqueWithoutActiveAssetInput[]
+    createMany?: AssetUploadSessionCreateManyActiveAssetInputEnvelope
+    set?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    disconnect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    delete?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    connect?: AssetUploadSessionWhereUniqueInput | AssetUploadSessionWhereUniqueInput[]
+    update?: AssetUploadSessionUpdateWithWhereUniqueWithoutActiveAssetInput | AssetUploadSessionUpdateWithWhereUniqueWithoutActiveAssetInput[]
+    updateMany?: AssetUploadSessionUpdateManyWithWhereWithoutActiveAssetInput | AssetUploadSessionUpdateManyWithWhereWithoutActiveAssetInput[]
+    deleteMany?: AssetUploadSessionScalarWhereInput | AssetUploadSessionScalarWhereInput[]
+  }
+
+  export type AssetLifecycleEventUncheckedUpdateManyWithoutAssetNestedInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutAssetInput, AssetLifecycleEventUncheckedCreateWithoutAssetInput> | AssetLifecycleEventCreateWithoutAssetInput[] | AssetLifecycleEventUncheckedCreateWithoutAssetInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutAssetInput | AssetLifecycleEventCreateOrConnectWithoutAssetInput[]
+    upsert?: AssetLifecycleEventUpsertWithWhereUniqueWithoutAssetInput | AssetLifecycleEventUpsertWithWhereUniqueWithoutAssetInput[]
+    createMany?: AssetLifecycleEventCreateManyAssetInputEnvelope
+    set?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    disconnect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    delete?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    update?: AssetLifecycleEventUpdateWithWhereUniqueWithoutAssetInput | AssetLifecycleEventUpdateWithWhereUniqueWithoutAssetInput[]
+    updateMany?: AssetLifecycleEventUpdateManyWithWhereWithoutAssetInput | AssetLifecycleEventUpdateManyWithWhereWithoutAssetInput[]
+    deleteMany?: AssetLifecycleEventScalarWhereInput | AssetLifecycleEventScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutAssetUploadSessionsInput = {
+    create?: XOR<UserCreateWithoutAssetUploadSessionsInput, UserUncheckedCreateWithoutAssetUploadSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssetUploadSessionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type MediaAssetCreateNestedOneWithoutUploadSessionsInput = {
+    create?: XOR<MediaAssetCreateWithoutUploadSessionsInput, MediaAssetUncheckedCreateWithoutUploadSessionsInput>
+    connectOrCreate?: MediaAssetCreateOrConnectWithoutUploadSessionsInput
+    connect?: MediaAssetWhereUniqueInput
+  }
+
+  export type AssetLifecycleEventCreateNestedManyWithoutSessionInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutSessionInput, AssetLifecycleEventUncheckedCreateWithoutSessionInput> | AssetLifecycleEventCreateWithoutSessionInput[] | AssetLifecycleEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutSessionInput | AssetLifecycleEventCreateOrConnectWithoutSessionInput[]
+    createMany?: AssetLifecycleEventCreateManySessionInputEnvelope
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+  }
+
+  export type AssetLifecycleEventUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutSessionInput, AssetLifecycleEventUncheckedCreateWithoutSessionInput> | AssetLifecycleEventCreateWithoutSessionInput[] | AssetLifecycleEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutSessionInput | AssetLifecycleEventCreateOrConnectWithoutSessionInput[]
+    createMany?: AssetLifecycleEventCreateManySessionInputEnvelope
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+  }
+
+  export type EnumAssetUploadModeFieldUpdateOperationsInput = {
+    set?: $Enums.AssetUploadMode
+  }
+
+  export type EnumAssetSessionStateFieldUpdateOperationsInput = {
+    set?: $Enums.AssetSessionState
+  }
+
+  export type UserUpdateOneRequiredWithoutAssetUploadSessionsNestedInput = {
+    create?: XOR<UserCreateWithoutAssetUploadSessionsInput, UserUncheckedCreateWithoutAssetUploadSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssetUploadSessionsInput
+    upsert?: UserUpsertWithoutAssetUploadSessionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssetUploadSessionsInput, UserUpdateWithoutAssetUploadSessionsInput>, UserUncheckedUpdateWithoutAssetUploadSessionsInput>
+  }
+
+  export type MediaAssetUpdateOneWithoutUploadSessionsNestedInput = {
+    create?: XOR<MediaAssetCreateWithoutUploadSessionsInput, MediaAssetUncheckedCreateWithoutUploadSessionsInput>
+    connectOrCreate?: MediaAssetCreateOrConnectWithoutUploadSessionsInput
+    upsert?: MediaAssetUpsertWithoutUploadSessionsInput
+    disconnect?: MediaAssetWhereInput | boolean
+    delete?: MediaAssetWhereInput | boolean
+    connect?: MediaAssetWhereUniqueInput
+    update?: XOR<XOR<MediaAssetUpdateToOneWithWhereWithoutUploadSessionsInput, MediaAssetUpdateWithoutUploadSessionsInput>, MediaAssetUncheckedUpdateWithoutUploadSessionsInput>
+  }
+
+  export type AssetLifecycleEventUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutSessionInput, AssetLifecycleEventUncheckedCreateWithoutSessionInput> | AssetLifecycleEventCreateWithoutSessionInput[] | AssetLifecycleEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutSessionInput | AssetLifecycleEventCreateOrConnectWithoutSessionInput[]
+    upsert?: AssetLifecycleEventUpsertWithWhereUniqueWithoutSessionInput | AssetLifecycleEventUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: AssetLifecycleEventCreateManySessionInputEnvelope
+    set?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    disconnect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    delete?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    update?: AssetLifecycleEventUpdateWithWhereUniqueWithoutSessionInput | AssetLifecycleEventUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: AssetLifecycleEventUpdateManyWithWhereWithoutSessionInput | AssetLifecycleEventUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: AssetLifecycleEventScalarWhereInput | AssetLifecycleEventScalarWhereInput[]
+  }
+
+  export type AssetLifecycleEventUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<AssetLifecycleEventCreateWithoutSessionInput, AssetLifecycleEventUncheckedCreateWithoutSessionInput> | AssetLifecycleEventCreateWithoutSessionInput[] | AssetLifecycleEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: AssetLifecycleEventCreateOrConnectWithoutSessionInput | AssetLifecycleEventCreateOrConnectWithoutSessionInput[]
+    upsert?: AssetLifecycleEventUpsertWithWhereUniqueWithoutSessionInput | AssetLifecycleEventUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: AssetLifecycleEventCreateManySessionInputEnvelope
+    set?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    disconnect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    delete?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
+    update?: AssetLifecycleEventUpdateWithWhereUniqueWithoutSessionInput | AssetLifecycleEventUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: AssetLifecycleEventUpdateManyWithWhereWithoutSessionInput | AssetLifecycleEventUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: AssetLifecycleEventScalarWhereInput | AssetLifecycleEventScalarWhereInput[]
+  }
+
+  export type AssetUploadSessionCreateNestedOneWithoutLifecycleEventsInput = {
+    create?: XOR<AssetUploadSessionCreateWithoutLifecycleEventsInput, AssetUploadSessionUncheckedCreateWithoutLifecycleEventsInput>
+    connectOrCreate?: AssetUploadSessionCreateOrConnectWithoutLifecycleEventsInput
+    connect?: AssetUploadSessionWhereUniqueInput
+  }
+
+  export type MediaAssetCreateNestedOneWithoutLifecycleEventsInput = {
+    create?: XOR<MediaAssetCreateWithoutLifecycleEventsInput, MediaAssetUncheckedCreateWithoutLifecycleEventsInput>
+    connectOrCreate?: MediaAssetCreateOrConnectWithoutLifecycleEventsInput
+    connect?: MediaAssetWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutAssetLifecycleEventsInput = {
+    create?: XOR<UserCreateWithoutAssetLifecycleEventsInput, UserUncheckedCreateWithoutAssetLifecycleEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssetLifecycleEventsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumAssetLifecycleEventTypeFieldUpdateOperationsInput = {
+    set?: $Enums.AssetLifecycleEventType
+  }
+
+  export type AssetUploadSessionUpdateOneWithoutLifecycleEventsNestedInput = {
+    create?: XOR<AssetUploadSessionCreateWithoutLifecycleEventsInput, AssetUploadSessionUncheckedCreateWithoutLifecycleEventsInput>
+    connectOrCreate?: AssetUploadSessionCreateOrConnectWithoutLifecycleEventsInput
+    upsert?: AssetUploadSessionUpsertWithoutLifecycleEventsInput
+    disconnect?: AssetUploadSessionWhereInput | boolean
+    delete?: AssetUploadSessionWhereInput | boolean
+    connect?: AssetUploadSessionWhereUniqueInput
+    update?: XOR<XOR<AssetUploadSessionUpdateToOneWithWhereWithoutLifecycleEventsInput, AssetUploadSessionUpdateWithoutLifecycleEventsInput>, AssetUploadSessionUncheckedUpdateWithoutLifecycleEventsInput>
+  }
+
+  export type MediaAssetUpdateOneWithoutLifecycleEventsNestedInput = {
+    create?: XOR<MediaAssetCreateWithoutLifecycleEventsInput, MediaAssetUncheckedCreateWithoutLifecycleEventsInput>
+    connectOrCreate?: MediaAssetCreateOrConnectWithoutLifecycleEventsInput
+    upsert?: MediaAssetUpsertWithoutLifecycleEventsInput
+    disconnect?: MediaAssetWhereInput | boolean
+    delete?: MediaAssetWhereInput | boolean
+    connect?: MediaAssetWhereUniqueInput
+    update?: XOR<XOR<MediaAssetUpdateToOneWithWhereWithoutLifecycleEventsInput, MediaAssetUpdateWithoutLifecycleEventsInput>, MediaAssetUncheckedUpdateWithoutLifecycleEventsInput>
+  }
+
+  export type UserUpdateOneWithoutAssetLifecycleEventsNestedInput = {
+    create?: XOR<UserCreateWithoutAssetLifecycleEventsInput, UserUncheckedCreateWithoutAssetLifecycleEventsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssetLifecycleEventsInput
+    upsert?: UserUpsertWithoutAssetLifecycleEventsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssetLifecycleEventsInput, UserUpdateWithoutAssetLifecycleEventsInput>, UserUncheckedUpdateWithoutAssetLifecycleEventsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -38416,6 +44473,131 @@ export namespace Prisma {
     _max?: NestedEnumBugReportStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumAssetDomainFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetDomain | EnumAssetDomainFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetDomain[] | ListEnumAssetDomainFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetDomain[] | ListEnumAssetDomainFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetDomainFilter<$PrismaModel> | $Enums.AssetDomain
+  }
+
+  export type NestedEnumAssetProviderFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetProvider | EnumAssetProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetProvider[] | ListEnumAssetProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetProvider[] | ListEnumAssetProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetProviderFilter<$PrismaModel> | $Enums.AssetProvider
+  }
+
+  export type NestedEnumAssetStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetState | EnumAssetStateFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetState[] | ListEnumAssetStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetState[] | ListEnumAssetStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetStateFilter<$PrismaModel> | $Enums.AssetState
+  }
+
+  export type NestedEnumAssetDomainWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetDomain | EnumAssetDomainFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetDomain[] | ListEnumAssetDomainFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetDomain[] | ListEnumAssetDomainFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetDomainWithAggregatesFilter<$PrismaModel> | $Enums.AssetDomain
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetDomainFilter<$PrismaModel>
+    _max?: NestedEnumAssetDomainFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAssetProviderWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetProvider | EnumAssetProviderFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetProvider[] | ListEnumAssetProviderFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetProvider[] | ListEnumAssetProviderFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetProviderWithAggregatesFilter<$PrismaModel> | $Enums.AssetProvider
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetProviderFilter<$PrismaModel>
+    _max?: NestedEnumAssetProviderFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAssetStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetState | EnumAssetStateFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetState[] | ListEnumAssetStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetState[] | ListEnumAssetStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetStateWithAggregatesFilter<$PrismaModel> | $Enums.AssetState
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetStateFilter<$PrismaModel>
+    _max?: NestedEnumAssetStateFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumAssetUploadModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetUploadMode | EnumAssetUploadModeFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetUploadMode[] | ListEnumAssetUploadModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetUploadMode[] | ListEnumAssetUploadModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetUploadModeFilter<$PrismaModel> | $Enums.AssetUploadMode
+  }
+
+  export type NestedEnumAssetSessionStateFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetSessionState | EnumAssetSessionStateFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetSessionState[] | ListEnumAssetSessionStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetSessionState[] | ListEnumAssetSessionStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetSessionStateFilter<$PrismaModel> | $Enums.AssetSessionState
+  }
+
+  export type NestedEnumAssetUploadModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetUploadMode | EnumAssetUploadModeFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetUploadMode[] | ListEnumAssetUploadModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetUploadMode[] | ListEnumAssetUploadModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetUploadModeWithAggregatesFilter<$PrismaModel> | $Enums.AssetUploadMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetUploadModeFilter<$PrismaModel>
+    _max?: NestedEnumAssetUploadModeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAssetSessionStateWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetSessionState | EnumAssetSessionStateFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetSessionState[] | ListEnumAssetSessionStateFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetSessionState[] | ListEnumAssetSessionStateFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetSessionStateWithAggregatesFilter<$PrismaModel> | $Enums.AssetSessionState
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetSessionStateFilter<$PrismaModel>
+    _max?: NestedEnumAssetSessionStateFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAssetLifecycleEventTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetLifecycleEventType | EnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetLifecycleEventType[] | ListEnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetLifecycleEventType[] | ListEnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetLifecycleEventTypeFilter<$PrismaModel> | $Enums.AssetLifecycleEventType
+  }
+
+  export type NestedEnumAssetLifecycleEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AssetLifecycleEventType | EnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AssetLifecycleEventType[] | ListEnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AssetLifecycleEventType[] | ListEnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAssetLifecycleEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.AssetLifecycleEventType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAssetLifecycleEventTypeFilter<$PrismaModel>
+    _max?: NestedEnumAssetLifecycleEventTypeFilter<$PrismaModel>
+  }
+
   export type BugReportCreateWithoutCreatedByInput = {
     id?: string
     category: $Enums.BugReportCategory
@@ -38426,6 +44608,7 @@ export namespace Prisma {
     adminNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    screenshotAsset?: MediaAssetCreateNestedOneWithoutBugReportsAsScreenshotInput
   }
 
   export type BugReportUncheckedCreateWithoutCreatedByInput = {
@@ -38433,6 +44616,7 @@ export namespace Prisma {
     category: $Enums.BugReportCategory
     description: string
     screenshotUrl?: string | null
+    screenshotAssetId?: string | null
     contactEmail: string
     status?: $Enums.BugReportStatus
     adminNotes?: string | null
@@ -38701,6 +44885,142 @@ export namespace Prisma {
 
   export type InviteLinkCreateManyCreatedByInputEnvelope = {
     data: InviteLinkCreateManyCreatedByInput | InviteLinkCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MediaAssetCreateWithoutOwnerInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    bugReportsAsScreenshot?: BugReportCreateNestedManyWithoutScreenshotAssetInput
+    uploadSessions?: AssetUploadSessionCreateNestedManyWithoutActiveAssetInput
+    lifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutAssetInput
+  }
+
+  export type MediaAssetUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    bugReportsAsScreenshot?: BugReportUncheckedCreateNestedManyWithoutScreenshotAssetInput
+    uploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutActiveAssetInput
+    lifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutAssetInput
+  }
+
+  export type MediaAssetCreateOrConnectWithoutOwnerInput = {
+    where: MediaAssetWhereUniqueInput
+    create: XOR<MediaAssetCreateWithoutOwnerInput, MediaAssetUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type MediaAssetCreateManyOwnerInputEnvelope = {
+    data: MediaAssetCreateManyOwnerInput | MediaAssetCreateManyOwnerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AssetUploadSessionCreateWithoutOwnerInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    mode?: $Enums.AssetUploadMode
+    state?: $Enums.AssetSessionState
+    idempotencyKey?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    activeAsset?: MediaAssetCreateNestedOneWithoutUploadSessionsInput
+    lifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutSessionInput
+  }
+
+  export type AssetUploadSessionUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    mode?: $Enums.AssetUploadMode
+    state?: $Enums.AssetSessionState
+    activeAssetId?: string | null
+    idempotencyKey?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    lifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type AssetUploadSessionCreateOrConnectWithoutOwnerInput = {
+    where: AssetUploadSessionWhereUniqueInput
+    create: XOR<AssetUploadSessionCreateWithoutOwnerInput, AssetUploadSessionUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type AssetUploadSessionCreateManyOwnerInputEnvelope = {
+    data: AssetUploadSessionCreateManyOwnerInput | AssetUploadSessionCreateManyOwnerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AssetLifecycleEventCreateWithoutActorInput = {
+    id?: string
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    session?: AssetUploadSessionCreateNestedOneWithoutLifecycleEventsInput
+    asset?: MediaAssetCreateNestedOneWithoutLifecycleEventsInput
+  }
+
+  export type AssetLifecycleEventUncheckedCreateWithoutActorInput = {
+    id?: string
+    sessionId?: string | null
+    assetId?: string | null
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AssetLifecycleEventCreateOrConnectWithoutActorInput = {
+    where: AssetLifecycleEventWhereUniqueInput
+    create: XOR<AssetLifecycleEventCreateWithoutActorInput, AssetLifecycleEventUncheckedCreateWithoutActorInput>
+  }
+
+  export type AssetLifecycleEventCreateManyActorInputEnvelope = {
+    data: AssetLifecycleEventCreateManyActorInput | AssetLifecycleEventCreateManyActorInput[]
     skipDuplicates?: boolean
   }
 
@@ -39560,6 +45880,7 @@ export namespace Prisma {
     category?: EnumBugReportCategoryFilter<"BugReport"> | $Enums.BugReportCategory
     description?: StringFilter<"BugReport"> | string
     screenshotUrl?: StringNullableFilter<"BugReport"> | string | null
+    screenshotAssetId?: StringNullableFilter<"BugReport"> | string | null
     contactEmail?: StringFilter<"BugReport"> | string
     status?: EnumBugReportStatusFilter<"BugReport"> | $Enums.BugReportStatus
     adminNotes?: StringNullableFilter<"BugReport"> | string | null
@@ -39739,6 +46060,115 @@ export namespace Prisma {
     expiresAt?: DateTimeNullableFilter<"InviteLink"> | Date | string | null
     isActive?: BoolFilter<"InviteLink"> | boolean
     createdAt?: DateTimeFilter<"InviteLink"> | Date | string
+  }
+
+  export type MediaAssetUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: MediaAssetWhereUniqueInput
+    update: XOR<MediaAssetUpdateWithoutOwnerInput, MediaAssetUncheckedUpdateWithoutOwnerInput>
+    create: XOR<MediaAssetCreateWithoutOwnerInput, MediaAssetUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type MediaAssetUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: MediaAssetWhereUniqueInput
+    data: XOR<MediaAssetUpdateWithoutOwnerInput, MediaAssetUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type MediaAssetUpdateManyWithWhereWithoutOwnerInput = {
+    where: MediaAssetScalarWhereInput
+    data: XOR<MediaAssetUpdateManyMutationInput, MediaAssetUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type MediaAssetScalarWhereInput = {
+    AND?: MediaAssetScalarWhereInput | MediaAssetScalarWhereInput[]
+    OR?: MediaAssetScalarWhereInput[]
+    NOT?: MediaAssetScalarWhereInput | MediaAssetScalarWhereInput[]
+    id?: StringFilter<"MediaAsset"> | string
+    ownerId?: StringFilter<"MediaAsset"> | string
+    domain?: EnumAssetDomainFilter<"MediaAsset"> | $Enums.AssetDomain
+    provider?: EnumAssetProviderFilter<"MediaAsset"> | $Enums.AssetProvider
+    state?: EnumAssetStateFilter<"MediaAsset"> | $Enums.AssetState
+    publicId?: StringNullableFilter<"MediaAsset"> | string | null
+    secureUrl?: StringNullableFilter<"MediaAsset"> | string | null
+    resourceType?: StringNullableFilter<"MediaAsset"> | string | null
+    format?: StringNullableFilter<"MediaAsset"> | string | null
+    bytes?: IntNullableFilter<"MediaAsset"> | number | null
+    width?: IntNullableFilter<"MediaAsset"> | number | null
+    height?: IntNullableFilter<"MediaAsset"> | number | null
+    mimeType?: StringNullableFilter<"MediaAsset"> | string | null
+    originalFileName?: StringNullableFilter<"MediaAsset"> | string | null
+    folder?: StringNullableFilter<"MediaAsset"> | string | null
+    metadata?: JsonNullableFilter<"MediaAsset">
+    requestId?: StringNullableFilter<"MediaAsset"> | string | null
+    createdAt?: DateTimeFilter<"MediaAsset"> | Date | string
+    updatedAt?: DateTimeFilter<"MediaAsset"> | Date | string
+    finalizedAt?: DateTimeNullableFilter<"MediaAsset"> | Date | string | null
+    discardedAt?: DateTimeNullableFilter<"MediaAsset"> | Date | string | null
+    expiresAt?: DateTimeNullableFilter<"MediaAsset"> | Date | string | null
+  }
+
+  export type AssetUploadSessionUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: AssetUploadSessionWhereUniqueInput
+    update: XOR<AssetUploadSessionUpdateWithoutOwnerInput, AssetUploadSessionUncheckedUpdateWithoutOwnerInput>
+    create: XOR<AssetUploadSessionCreateWithoutOwnerInput, AssetUploadSessionUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type AssetUploadSessionUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: AssetUploadSessionWhereUniqueInput
+    data: XOR<AssetUploadSessionUpdateWithoutOwnerInput, AssetUploadSessionUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type AssetUploadSessionUpdateManyWithWhereWithoutOwnerInput = {
+    where: AssetUploadSessionScalarWhereInput
+    data: XOR<AssetUploadSessionUpdateManyMutationInput, AssetUploadSessionUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type AssetUploadSessionScalarWhereInput = {
+    AND?: AssetUploadSessionScalarWhereInput | AssetUploadSessionScalarWhereInput[]
+    OR?: AssetUploadSessionScalarWhereInput[]
+    NOT?: AssetUploadSessionScalarWhereInput | AssetUploadSessionScalarWhereInput[]
+    id?: StringFilter<"AssetUploadSession"> | string
+    ownerId?: StringFilter<"AssetUploadSession"> | string
+    domain?: EnumAssetDomainFilter<"AssetUploadSession"> | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFilter<"AssetUploadSession"> | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFilter<"AssetUploadSession"> | $Enums.AssetSessionState
+    activeAssetId?: StringNullableFilter<"AssetUploadSession"> | string | null
+    idempotencyKey?: StringNullableFilter<"AssetUploadSession"> | string | null
+    requestId?: StringNullableFilter<"AssetUploadSession"> | string | null
+    createdAt?: DateTimeFilter<"AssetUploadSession"> | Date | string
+    updatedAt?: DateTimeFilter<"AssetUploadSession"> | Date | string
+    finalizedAt?: DateTimeNullableFilter<"AssetUploadSession"> | Date | string | null
+    discardedAt?: DateTimeNullableFilter<"AssetUploadSession"> | Date | string | null
+    expiresAt?: DateTimeNullableFilter<"AssetUploadSession"> | Date | string | null
+  }
+
+  export type AssetLifecycleEventUpsertWithWhereUniqueWithoutActorInput = {
+    where: AssetLifecycleEventWhereUniqueInput
+    update: XOR<AssetLifecycleEventUpdateWithoutActorInput, AssetLifecycleEventUncheckedUpdateWithoutActorInput>
+    create: XOR<AssetLifecycleEventCreateWithoutActorInput, AssetLifecycleEventUncheckedCreateWithoutActorInput>
+  }
+
+  export type AssetLifecycleEventUpdateWithWhereUniqueWithoutActorInput = {
+    where: AssetLifecycleEventWhereUniqueInput
+    data: XOR<AssetLifecycleEventUpdateWithoutActorInput, AssetLifecycleEventUncheckedUpdateWithoutActorInput>
+  }
+
+  export type AssetLifecycleEventUpdateManyWithWhereWithoutActorInput = {
+    where: AssetLifecycleEventScalarWhereInput
+    data: XOR<AssetLifecycleEventUpdateManyMutationInput, AssetLifecycleEventUncheckedUpdateManyWithoutActorInput>
+  }
+
+  export type AssetLifecycleEventScalarWhereInput = {
+    AND?: AssetLifecycleEventScalarWhereInput | AssetLifecycleEventScalarWhereInput[]
+    OR?: AssetLifecycleEventScalarWhereInput[]
+    NOT?: AssetLifecycleEventScalarWhereInput | AssetLifecycleEventScalarWhereInput[]
+    id?: StringFilter<"AssetLifecycleEvent"> | string
+    sessionId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    assetId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    actorId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    eventType?: EnumAssetLifecycleEventTypeFilter<"AssetLifecycleEvent"> | $Enums.AssetLifecycleEventType
+    details?: JsonNullableFilter<"AssetLifecycleEvent">
+    requestId?: StringNullableFilter<"AssetLifecycleEvent"> | string | null
+    createdAt?: DateTimeFilter<"AssetLifecycleEvent"> | Date | string
   }
 
   export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
@@ -40379,6 +46809,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
     reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
@@ -40422,6 +46855,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
     reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
@@ -40540,6 +46976,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -40582,6 +47021,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -40675,6 +47117,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
     reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
@@ -40718,6 +47163,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
     reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
@@ -40810,6 +47258,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -40853,6 +47304,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -41089,6 +47543,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -41131,6 +47588,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -41191,6 +47651,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -41234,6 +47697,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -41496,6 +47962,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -41539,6 +48008,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -41728,6 +48200,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -41771,6 +48246,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -42227,6 +48705,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -42270,6 +48751,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -42370,6 +48854,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -42413,6 +48900,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -42655,6 +49145,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -42698,6 +49191,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -42787,6 +49283,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -42830,6 +49329,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -42874,6 +49376,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -42917,6 +49422,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -42994,6 +49502,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -43037,6 +49548,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -43081,6 +49595,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -43124,6 +49641,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -43314,6 +49834,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -43357,6 +49880,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -43458,6 +49984,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -43501,6 +50030,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -43551,6 +50083,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -43594,6 +50129,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -43683,6 +50221,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -43726,6 +50267,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -43776,6 +50320,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -43819,6 +50366,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -44109,6 +50659,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -44152,6 +50705,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -44267,6 +50823,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -44310,6 +50869,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -44490,6 +51052,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
@@ -44533,6 +51098,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
@@ -44577,6 +51145,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -44620,6 +51191,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -44750,6 +51324,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
@@ -44793,6 +51370,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
@@ -44843,6 +51423,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -44886,6 +51469,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -44994,6 +51580,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -45037,6 +51626,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -45081,6 +51673,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -45124,6 +51719,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -45254,6 +51852,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -45297,6 +51898,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -45347,6 +51951,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -45390,6 +51997,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -45429,6 +52039,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -45472,6 +52085,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -45596,6 +52212,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -45639,6 +52258,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -45753,6 +52375,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -45796,6 +52421,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -45920,6 +52548,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -45963,6 +52594,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -46155,6 +52789,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -46198,6 +52835,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -46242,6 +52882,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -46285,6 +52928,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -46526,6 +53172,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -46569,6 +53218,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -46619,6 +53271,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -46662,6 +53317,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -46881,6 +53539,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -46924,6 +53585,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -46968,6 +53632,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -47011,6 +53678,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -47115,6 +53785,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -47158,6 +53831,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -47208,6 +53884,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -47251,6 +53930,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -47475,6 +54157,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
     reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
@@ -47518,6 +54203,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
     reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
@@ -47573,6 +54261,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
     reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
@@ -47616,6 +54307,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
     reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
@@ -47654,6 +54348,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -47697,6 +54394,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -47752,6 +54452,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -47795,6 +54498,9 @@ export namespace Prisma {
     reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -47834,6 +54540,9 @@ export namespace Prisma {
     goals?: GoalCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -47877,6 +54586,9 @@ export namespace Prisma {
     goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
     lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -47898,6 +54610,65 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutBugReportsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutBugReportsInput, UserUncheckedCreateWithoutBugReportsInput>
+  }
+
+  export type MediaAssetCreateWithoutBugReportsAsScreenshotInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    owner: UserCreateNestedOneWithoutMediaAssetsInput
+    uploadSessions?: AssetUploadSessionCreateNestedManyWithoutActiveAssetInput
+    lifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutAssetInput
+  }
+
+  export type MediaAssetUncheckedCreateWithoutBugReportsAsScreenshotInput = {
+    id?: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    uploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutActiveAssetInput
+    lifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutAssetInput
+  }
+
+  export type MediaAssetCreateOrConnectWithoutBugReportsAsScreenshotInput = {
+    where: MediaAssetWhereUniqueInput
+    create: XOR<MediaAssetCreateWithoutBugReportsAsScreenshotInput, MediaAssetUncheckedCreateWithoutBugReportsAsScreenshotInput>
   }
 
   export type UserUpsertWithoutBugReportsInput = {
@@ -47932,6 +54703,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -47975,6 +54749,1180 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+  }
+
+  export type MediaAssetUpsertWithoutBugReportsAsScreenshotInput = {
+    update: XOR<MediaAssetUpdateWithoutBugReportsAsScreenshotInput, MediaAssetUncheckedUpdateWithoutBugReportsAsScreenshotInput>
+    create: XOR<MediaAssetCreateWithoutBugReportsAsScreenshotInput, MediaAssetUncheckedCreateWithoutBugReportsAsScreenshotInput>
+    where?: MediaAssetWhereInput
+  }
+
+  export type MediaAssetUpdateToOneWithWhereWithoutBugReportsAsScreenshotInput = {
+    where?: MediaAssetWhereInput
+    data: XOR<MediaAssetUpdateWithoutBugReportsAsScreenshotInput, MediaAssetUncheckedUpdateWithoutBugReportsAsScreenshotInput>
+  }
+
+  export type MediaAssetUpdateWithoutBugReportsAsScreenshotInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: UserUpdateOneRequiredWithoutMediaAssetsNestedInput
+    uploadSessions?: AssetUploadSessionUpdateManyWithoutActiveAssetNestedInput
+    lifecycleEvents?: AssetLifecycleEventUpdateManyWithoutAssetNestedInput
+  }
+
+  export type MediaAssetUncheckedUpdateWithoutBugReportsAsScreenshotInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    uploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutActiveAssetNestedInput
+    lifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutAssetNestedInput
+  }
+
+  export type UserCreateWithoutMediaAssetsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutMediaAssetsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+  }
+
+  export type UserCreateOrConnectWithoutMediaAssetsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMediaAssetsInput, UserUncheckedCreateWithoutMediaAssetsInput>
+  }
+
+  export type BugReportCreateWithoutScreenshotAssetInput = {
+    id?: string
+    category: $Enums.BugReportCategory
+    description: string
+    screenshotUrl?: string | null
+    contactEmail: string
+    status?: $Enums.BugReportStatus
+    adminNotes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy: UserCreateNestedOneWithoutBugReportsInput
+  }
+
+  export type BugReportUncheckedCreateWithoutScreenshotAssetInput = {
+    id?: string
+    category: $Enums.BugReportCategory
+    description: string
+    screenshotUrl?: string | null
+    contactEmail: string
+    status?: $Enums.BugReportStatus
+    adminNotes?: string | null
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BugReportCreateOrConnectWithoutScreenshotAssetInput = {
+    where: BugReportWhereUniqueInput
+    create: XOR<BugReportCreateWithoutScreenshotAssetInput, BugReportUncheckedCreateWithoutScreenshotAssetInput>
+  }
+
+  export type BugReportCreateManyScreenshotAssetInputEnvelope = {
+    data: BugReportCreateManyScreenshotAssetInput | BugReportCreateManyScreenshotAssetInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AssetUploadSessionCreateWithoutActiveAssetInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    mode?: $Enums.AssetUploadMode
+    state?: $Enums.AssetSessionState
+    idempotencyKey?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    owner: UserCreateNestedOneWithoutAssetUploadSessionsInput
+    lifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutSessionInput
+  }
+
+  export type AssetUploadSessionUncheckedCreateWithoutActiveAssetInput = {
+    id?: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    mode?: $Enums.AssetUploadMode
+    state?: $Enums.AssetSessionState
+    idempotencyKey?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    lifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type AssetUploadSessionCreateOrConnectWithoutActiveAssetInput = {
+    where: AssetUploadSessionWhereUniqueInput
+    create: XOR<AssetUploadSessionCreateWithoutActiveAssetInput, AssetUploadSessionUncheckedCreateWithoutActiveAssetInput>
+  }
+
+  export type AssetUploadSessionCreateManyActiveAssetInputEnvelope = {
+    data: AssetUploadSessionCreateManyActiveAssetInput | AssetUploadSessionCreateManyActiveAssetInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AssetLifecycleEventCreateWithoutAssetInput = {
+    id?: string
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    session?: AssetUploadSessionCreateNestedOneWithoutLifecycleEventsInput
+    actor?: UserCreateNestedOneWithoutAssetLifecycleEventsInput
+  }
+
+  export type AssetLifecycleEventUncheckedCreateWithoutAssetInput = {
+    id?: string
+    sessionId?: string | null
+    actorId?: string | null
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AssetLifecycleEventCreateOrConnectWithoutAssetInput = {
+    where: AssetLifecycleEventWhereUniqueInput
+    create: XOR<AssetLifecycleEventCreateWithoutAssetInput, AssetLifecycleEventUncheckedCreateWithoutAssetInput>
+  }
+
+  export type AssetLifecycleEventCreateManyAssetInputEnvelope = {
+    data: AssetLifecycleEventCreateManyAssetInput | AssetLifecycleEventCreateManyAssetInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutMediaAssetsInput = {
+    update: XOR<UserUpdateWithoutMediaAssetsInput, UserUncheckedUpdateWithoutMediaAssetsInput>
+    create: XOR<UserCreateWithoutMediaAssetsInput, UserUncheckedCreateWithoutMediaAssetsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMediaAssetsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMediaAssetsInput, UserUncheckedUpdateWithoutMediaAssetsInput>
+  }
+
+  export type UserUpdateWithoutMediaAssetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMediaAssetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+  }
+
+  export type BugReportUpsertWithWhereUniqueWithoutScreenshotAssetInput = {
+    where: BugReportWhereUniqueInput
+    update: XOR<BugReportUpdateWithoutScreenshotAssetInput, BugReportUncheckedUpdateWithoutScreenshotAssetInput>
+    create: XOR<BugReportCreateWithoutScreenshotAssetInput, BugReportUncheckedCreateWithoutScreenshotAssetInput>
+  }
+
+  export type BugReportUpdateWithWhereUniqueWithoutScreenshotAssetInput = {
+    where: BugReportWhereUniqueInput
+    data: XOR<BugReportUpdateWithoutScreenshotAssetInput, BugReportUncheckedUpdateWithoutScreenshotAssetInput>
+  }
+
+  export type BugReportUpdateManyWithWhereWithoutScreenshotAssetInput = {
+    where: BugReportScalarWhereInput
+    data: XOR<BugReportUpdateManyMutationInput, BugReportUncheckedUpdateManyWithoutScreenshotAssetInput>
+  }
+
+  export type AssetUploadSessionUpsertWithWhereUniqueWithoutActiveAssetInput = {
+    where: AssetUploadSessionWhereUniqueInput
+    update: XOR<AssetUploadSessionUpdateWithoutActiveAssetInput, AssetUploadSessionUncheckedUpdateWithoutActiveAssetInput>
+    create: XOR<AssetUploadSessionCreateWithoutActiveAssetInput, AssetUploadSessionUncheckedCreateWithoutActiveAssetInput>
+  }
+
+  export type AssetUploadSessionUpdateWithWhereUniqueWithoutActiveAssetInput = {
+    where: AssetUploadSessionWhereUniqueInput
+    data: XOR<AssetUploadSessionUpdateWithoutActiveAssetInput, AssetUploadSessionUncheckedUpdateWithoutActiveAssetInput>
+  }
+
+  export type AssetUploadSessionUpdateManyWithWhereWithoutActiveAssetInput = {
+    where: AssetUploadSessionScalarWhereInput
+    data: XOR<AssetUploadSessionUpdateManyMutationInput, AssetUploadSessionUncheckedUpdateManyWithoutActiveAssetInput>
+  }
+
+  export type AssetLifecycleEventUpsertWithWhereUniqueWithoutAssetInput = {
+    where: AssetLifecycleEventWhereUniqueInput
+    update: XOR<AssetLifecycleEventUpdateWithoutAssetInput, AssetLifecycleEventUncheckedUpdateWithoutAssetInput>
+    create: XOR<AssetLifecycleEventCreateWithoutAssetInput, AssetLifecycleEventUncheckedCreateWithoutAssetInput>
+  }
+
+  export type AssetLifecycleEventUpdateWithWhereUniqueWithoutAssetInput = {
+    where: AssetLifecycleEventWhereUniqueInput
+    data: XOR<AssetLifecycleEventUpdateWithoutAssetInput, AssetLifecycleEventUncheckedUpdateWithoutAssetInput>
+  }
+
+  export type AssetLifecycleEventUpdateManyWithWhereWithoutAssetInput = {
+    where: AssetLifecycleEventScalarWhereInput
+    data: XOR<AssetLifecycleEventUpdateManyMutationInput, AssetLifecycleEventUncheckedUpdateManyWithoutAssetInput>
+  }
+
+  export type UserCreateWithoutAssetUploadSessionsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutAssetUploadSessionsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+  }
+
+  export type UserCreateOrConnectWithoutAssetUploadSessionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAssetUploadSessionsInput, UserUncheckedCreateWithoutAssetUploadSessionsInput>
+  }
+
+  export type MediaAssetCreateWithoutUploadSessionsInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    owner: UserCreateNestedOneWithoutMediaAssetsInput
+    bugReportsAsScreenshot?: BugReportCreateNestedManyWithoutScreenshotAssetInput
+    lifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutAssetInput
+  }
+
+  export type MediaAssetUncheckedCreateWithoutUploadSessionsInput = {
+    id?: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    bugReportsAsScreenshot?: BugReportUncheckedCreateNestedManyWithoutScreenshotAssetInput
+    lifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutAssetInput
+  }
+
+  export type MediaAssetCreateOrConnectWithoutUploadSessionsInput = {
+    where: MediaAssetWhereUniqueInput
+    create: XOR<MediaAssetCreateWithoutUploadSessionsInput, MediaAssetUncheckedCreateWithoutUploadSessionsInput>
+  }
+
+  export type AssetLifecycleEventCreateWithoutSessionInput = {
+    id?: string
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    asset?: MediaAssetCreateNestedOneWithoutLifecycleEventsInput
+    actor?: UserCreateNestedOneWithoutAssetLifecycleEventsInput
+  }
+
+  export type AssetLifecycleEventUncheckedCreateWithoutSessionInput = {
+    id?: string
+    assetId?: string | null
+    actorId?: string | null
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AssetLifecycleEventCreateOrConnectWithoutSessionInput = {
+    where: AssetLifecycleEventWhereUniqueInput
+    create: XOR<AssetLifecycleEventCreateWithoutSessionInput, AssetLifecycleEventUncheckedCreateWithoutSessionInput>
+  }
+
+  export type AssetLifecycleEventCreateManySessionInputEnvelope = {
+    data: AssetLifecycleEventCreateManySessionInput | AssetLifecycleEventCreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutAssetUploadSessionsInput = {
+    update: XOR<UserUpdateWithoutAssetUploadSessionsInput, UserUncheckedUpdateWithoutAssetUploadSessionsInput>
+    create: XOR<UserCreateWithoutAssetUploadSessionsInput, UserUncheckedCreateWithoutAssetUploadSessionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAssetUploadSessionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAssetUploadSessionsInput, UserUncheckedUpdateWithoutAssetUploadSessionsInput>
+  }
+
+  export type UserUpdateWithoutAssetUploadSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAssetUploadSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+  }
+
+  export type MediaAssetUpsertWithoutUploadSessionsInput = {
+    update: XOR<MediaAssetUpdateWithoutUploadSessionsInput, MediaAssetUncheckedUpdateWithoutUploadSessionsInput>
+    create: XOR<MediaAssetCreateWithoutUploadSessionsInput, MediaAssetUncheckedCreateWithoutUploadSessionsInput>
+    where?: MediaAssetWhereInput
+  }
+
+  export type MediaAssetUpdateToOneWithWhereWithoutUploadSessionsInput = {
+    where?: MediaAssetWhereInput
+    data: XOR<MediaAssetUpdateWithoutUploadSessionsInput, MediaAssetUncheckedUpdateWithoutUploadSessionsInput>
+  }
+
+  export type MediaAssetUpdateWithoutUploadSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: UserUpdateOneRequiredWithoutMediaAssetsNestedInput
+    bugReportsAsScreenshot?: BugReportUpdateManyWithoutScreenshotAssetNestedInput
+    lifecycleEvents?: AssetLifecycleEventUpdateManyWithoutAssetNestedInput
+  }
+
+  export type MediaAssetUncheckedUpdateWithoutUploadSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    bugReportsAsScreenshot?: BugReportUncheckedUpdateManyWithoutScreenshotAssetNestedInput
+    lifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutAssetNestedInput
+  }
+
+  export type AssetLifecycleEventUpsertWithWhereUniqueWithoutSessionInput = {
+    where: AssetLifecycleEventWhereUniqueInput
+    update: XOR<AssetLifecycleEventUpdateWithoutSessionInput, AssetLifecycleEventUncheckedUpdateWithoutSessionInput>
+    create: XOR<AssetLifecycleEventCreateWithoutSessionInput, AssetLifecycleEventUncheckedCreateWithoutSessionInput>
+  }
+
+  export type AssetLifecycleEventUpdateWithWhereUniqueWithoutSessionInput = {
+    where: AssetLifecycleEventWhereUniqueInput
+    data: XOR<AssetLifecycleEventUpdateWithoutSessionInput, AssetLifecycleEventUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type AssetLifecycleEventUpdateManyWithWhereWithoutSessionInput = {
+    where: AssetLifecycleEventScalarWhereInput
+    data: XOR<AssetLifecycleEventUpdateManyMutationInput, AssetLifecycleEventUncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type AssetUploadSessionCreateWithoutLifecycleEventsInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    mode?: $Enums.AssetUploadMode
+    state?: $Enums.AssetSessionState
+    idempotencyKey?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    owner: UserCreateNestedOneWithoutAssetUploadSessionsInput
+    activeAsset?: MediaAssetCreateNestedOneWithoutUploadSessionsInput
+  }
+
+  export type AssetUploadSessionUncheckedCreateWithoutLifecycleEventsInput = {
+    id?: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    mode?: $Enums.AssetUploadMode
+    state?: $Enums.AssetSessionState
+    activeAssetId?: string | null
+    idempotencyKey?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type AssetUploadSessionCreateOrConnectWithoutLifecycleEventsInput = {
+    where: AssetUploadSessionWhereUniqueInput
+    create: XOR<AssetUploadSessionCreateWithoutLifecycleEventsInput, AssetUploadSessionUncheckedCreateWithoutLifecycleEventsInput>
+  }
+
+  export type MediaAssetCreateWithoutLifecycleEventsInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    owner: UserCreateNestedOneWithoutMediaAssetsInput
+    bugReportsAsScreenshot?: BugReportCreateNestedManyWithoutScreenshotAssetInput
+    uploadSessions?: AssetUploadSessionCreateNestedManyWithoutActiveAssetInput
+  }
+
+  export type MediaAssetUncheckedCreateWithoutLifecycleEventsInput = {
+    id?: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    bugReportsAsScreenshot?: BugReportUncheckedCreateNestedManyWithoutScreenshotAssetInput
+    uploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutActiveAssetInput
+  }
+
+  export type MediaAssetCreateOrConnectWithoutLifecycleEventsInput = {
+    where: MediaAssetWhereUniqueInput
+    create: XOR<MediaAssetCreateWithoutLifecycleEventsInput, MediaAssetUncheckedCreateWithoutLifecycleEventsInput>
+  }
+
+  export type UserCreateWithoutAssetLifecycleEventsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutAssetLifecycleEventsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+  }
+
+  export type UserCreateOrConnectWithoutAssetLifecycleEventsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAssetLifecycleEventsInput, UserUncheckedCreateWithoutAssetLifecycleEventsInput>
+  }
+
+  export type AssetUploadSessionUpsertWithoutLifecycleEventsInput = {
+    update: XOR<AssetUploadSessionUpdateWithoutLifecycleEventsInput, AssetUploadSessionUncheckedUpdateWithoutLifecycleEventsInput>
+    create: XOR<AssetUploadSessionCreateWithoutLifecycleEventsInput, AssetUploadSessionUncheckedCreateWithoutLifecycleEventsInput>
+    where?: AssetUploadSessionWhereInput
+  }
+
+  export type AssetUploadSessionUpdateToOneWithWhereWithoutLifecycleEventsInput = {
+    where?: AssetUploadSessionWhereInput
+    data: XOR<AssetUploadSessionUpdateWithoutLifecycleEventsInput, AssetUploadSessionUncheckedUpdateWithoutLifecycleEventsInput>
+  }
+
+  export type AssetUploadSessionUpdateWithoutLifecycleEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: UserUpdateOneRequiredWithoutAssetUploadSessionsNestedInput
+    activeAsset?: MediaAssetUpdateOneWithoutUploadSessionsNestedInput
+  }
+
+  export type AssetUploadSessionUncheckedUpdateWithoutLifecycleEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    activeAssetId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type MediaAssetUpsertWithoutLifecycleEventsInput = {
+    update: XOR<MediaAssetUpdateWithoutLifecycleEventsInput, MediaAssetUncheckedUpdateWithoutLifecycleEventsInput>
+    create: XOR<MediaAssetCreateWithoutLifecycleEventsInput, MediaAssetUncheckedCreateWithoutLifecycleEventsInput>
+    where?: MediaAssetWhereInput
+  }
+
+  export type MediaAssetUpdateToOneWithWhereWithoutLifecycleEventsInput = {
+    where?: MediaAssetWhereInput
+    data: XOR<MediaAssetUpdateWithoutLifecycleEventsInput, MediaAssetUncheckedUpdateWithoutLifecycleEventsInput>
+  }
+
+  export type MediaAssetUpdateWithoutLifecycleEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: UserUpdateOneRequiredWithoutMediaAssetsNestedInput
+    bugReportsAsScreenshot?: BugReportUpdateManyWithoutScreenshotAssetNestedInput
+    uploadSessions?: AssetUploadSessionUpdateManyWithoutActiveAssetNestedInput
+  }
+
+  export type MediaAssetUncheckedUpdateWithoutLifecycleEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    bugReportsAsScreenshot?: BugReportUncheckedUpdateManyWithoutScreenshotAssetNestedInput
+    uploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutActiveAssetNestedInput
+  }
+
+  export type UserUpsertWithoutAssetLifecycleEventsInput = {
+    update: XOR<UserUpdateWithoutAssetLifecycleEventsInput, UserUncheckedUpdateWithoutAssetLifecycleEventsInput>
+    create: XOR<UserCreateWithoutAssetLifecycleEventsInput, UserUncheckedCreateWithoutAssetLifecycleEventsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAssetLifecycleEventsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAssetLifecycleEventsInput, UserUncheckedUpdateWithoutAssetLifecycleEventsInput>
+  }
+
+  export type UserUpdateWithoutAssetLifecycleEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAssetLifecycleEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -47998,6 +55946,7 @@ export namespace Prisma {
     category: $Enums.BugReportCategory
     description: string
     screenshotUrl?: string | null
+    screenshotAssetId?: string | null
     contactEmail: string
     status?: $Enums.BugReportStatus
     adminNotes?: string | null
@@ -48093,6 +56042,55 @@ export namespace Prisma {
     usedAt?: Date | string | null
     expiresAt?: Date | string | null
     isActive?: boolean
+    createdAt?: Date | string
+  }
+
+  export type MediaAssetCreateManyOwnerInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    provider?: $Enums.AssetProvider
+    state?: $Enums.AssetState
+    publicId?: string | null
+    secureUrl?: string | null
+    resourceType?: string | null
+    format?: string | null
+    bytes?: number | null
+    width?: number | null
+    height?: number | null
+    mimeType?: string | null
+    originalFileName?: string | null
+    folder?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type AssetUploadSessionCreateManyOwnerInput = {
+    id?: string
+    domain: $Enums.AssetDomain
+    mode?: $Enums.AssetUploadMode
+    state?: $Enums.AssetSessionState
+    activeAssetId?: string | null
+    idempotencyKey?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type AssetLifecycleEventCreateManyActorInput = {
+    id?: string
+    sessionId?: string | null
+    assetId?: string | null
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
     createdAt?: Date | string
   }
 
@@ -48370,6 +56368,7 @@ export namespace Prisma {
     adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    screenshotAsset?: MediaAssetUpdateOneWithoutBugReportsAsScreenshotNestedInput
   }
 
   export type BugReportUncheckedUpdateWithoutCreatedByInput = {
@@ -48377,6 +56376,7 @@ export namespace Prisma {
     category?: EnumBugReportCategoryFieldUpdateOperationsInput | $Enums.BugReportCategory
     description?: StringFieldUpdateOperationsInput | string
     screenshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    screenshotAssetId?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
     status?: EnumBugReportStatusFieldUpdateOperationsInput | $Enums.BugReportStatus
     adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48389,6 +56389,7 @@ export namespace Prisma {
     category?: EnumBugReportCategoryFieldUpdateOperationsInput | $Enums.BugReportCategory
     description?: StringFieldUpdateOperationsInput | string
     screenshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    screenshotAssetId?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
     status?: EnumBugReportStatusFieldUpdateOperationsInput | $Enums.BugReportStatus
     adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48678,6 +56679,161 @@ export namespace Prisma {
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MediaAssetUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    bugReportsAsScreenshot?: BugReportUpdateManyWithoutScreenshotAssetNestedInput
+    uploadSessions?: AssetUploadSessionUpdateManyWithoutActiveAssetNestedInput
+    lifecycleEvents?: AssetLifecycleEventUpdateManyWithoutAssetNestedInput
+  }
+
+  export type MediaAssetUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    bugReportsAsScreenshot?: BugReportUncheckedUpdateManyWithoutScreenshotAssetNestedInput
+    uploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutActiveAssetNestedInput
+    lifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutAssetNestedInput
+  }
+
+  export type MediaAssetUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    provider?: EnumAssetProviderFieldUpdateOperationsInput | $Enums.AssetProvider
+    state?: EnumAssetStateFieldUpdateOperationsInput | $Enums.AssetState
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    secureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: NullableStringFieldUpdateOperationsInput | string | null
+    bytes?: NullableIntFieldUpdateOperationsInput | number | null
+    width?: NullableIntFieldUpdateOperationsInput | number | null
+    height?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFileName?: NullableStringFieldUpdateOperationsInput | string | null
+    folder?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AssetUploadSessionUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    activeAsset?: MediaAssetUpdateOneWithoutUploadSessionsNestedInput
+    lifecycleEvents?: AssetLifecycleEventUpdateManyWithoutSessionNestedInput
+  }
+
+  export type AssetUploadSessionUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    activeAssetId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type AssetUploadSessionUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    activeAssetId?: NullableStringFieldUpdateOperationsInput | string | null
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AssetLifecycleEventUpdateWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: AssetUploadSessionUpdateOneWithoutLifecycleEventsNestedInput
+    asset?: MediaAssetUpdateOneWithoutLifecycleEventsNestedInput
+  }
+
+  export type AssetLifecycleEventUncheckedUpdateWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    assetId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AssetLifecycleEventUncheckedUpdateManyWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    assetId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -49843,6 +57999,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -49885,6 +58044,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -50205,6 +58367,9 @@ export namespace Prisma {
     goals?: GoalUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -50247,6 +58412,9 @@ export namespace Prisma {
     goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
     lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -51101,6 +59269,200 @@ export namespace Prisma {
     reviewNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BugReportCreateManyScreenshotAssetInput = {
+    id?: string
+    category: $Enums.BugReportCategory
+    description: string
+    screenshotUrl?: string | null
+    contactEmail: string
+    status?: $Enums.BugReportStatus
+    adminNotes?: string | null
+    createdById: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AssetUploadSessionCreateManyActiveAssetInput = {
+    id?: string
+    ownerId: string
+    domain: $Enums.AssetDomain
+    mode?: $Enums.AssetUploadMode
+    state?: $Enums.AssetSessionState
+    idempotencyKey?: string | null
+    requestId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    finalizedAt?: Date | string | null
+    discardedAt?: Date | string | null
+    expiresAt?: Date | string | null
+  }
+
+  export type AssetLifecycleEventCreateManyAssetInput = {
+    id?: string
+    sessionId?: string | null
+    actorId?: string | null
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type BugReportUpdateWithoutScreenshotAssetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category?: EnumBugReportCategoryFieldUpdateOperationsInput | $Enums.BugReportCategory
+    description?: StringFieldUpdateOperationsInput | string
+    screenshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    status?: EnumBugReportStatusFieldUpdateOperationsInput | $Enums.BugReportStatus
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneRequiredWithoutBugReportsNestedInput
+  }
+
+  export type BugReportUncheckedUpdateWithoutScreenshotAssetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category?: EnumBugReportCategoryFieldUpdateOperationsInput | $Enums.BugReportCategory
+    description?: StringFieldUpdateOperationsInput | string
+    screenshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    status?: EnumBugReportStatusFieldUpdateOperationsInput | $Enums.BugReportStatus
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BugReportUncheckedUpdateManyWithoutScreenshotAssetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    category?: EnumBugReportCategoryFieldUpdateOperationsInput | $Enums.BugReportCategory
+    description?: StringFieldUpdateOperationsInput | string
+    screenshotUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    contactEmail?: StringFieldUpdateOperationsInput | string
+    status?: EnumBugReportStatusFieldUpdateOperationsInput | $Enums.BugReportStatus
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AssetUploadSessionUpdateWithoutActiveAssetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    owner?: UserUpdateOneRequiredWithoutAssetUploadSessionsNestedInput
+    lifecycleEvents?: AssetLifecycleEventUpdateManyWithoutSessionNestedInput
+  }
+
+  export type AssetUploadSessionUncheckedUpdateWithoutActiveAssetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type AssetUploadSessionUncheckedUpdateManyWithoutActiveAssetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    domain?: EnumAssetDomainFieldUpdateOperationsInput | $Enums.AssetDomain
+    mode?: EnumAssetUploadModeFieldUpdateOperationsInput | $Enums.AssetUploadMode
+    state?: EnumAssetSessionStateFieldUpdateOperationsInput | $Enums.AssetSessionState
+    idempotencyKey?: NullableStringFieldUpdateOperationsInput | string | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    finalizedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    discardedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AssetLifecycleEventUpdateWithoutAssetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: AssetUploadSessionUpdateOneWithoutLifecycleEventsNestedInput
+    actor?: UserUpdateOneWithoutAssetLifecycleEventsNestedInput
+  }
+
+  export type AssetLifecycleEventUncheckedUpdateWithoutAssetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AssetLifecycleEventUncheckedUpdateManyWithoutAssetInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AssetLifecycleEventCreateManySessionInput = {
+    id?: string
+    assetId?: string | null
+    actorId?: string | null
+    eventType: $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AssetLifecycleEventUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    asset?: MediaAssetUpdateOneWithoutLifecycleEventsNestedInput
+    actor?: UserUpdateOneWithoutAssetLifecycleEventsNestedInput
+  }
+
+  export type AssetLifecycleEventUncheckedUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    assetId?: NullableStringFieldUpdateOperationsInput | string | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AssetLifecycleEventUncheckedUpdateManyWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    assetId?: NullableStringFieldUpdateOperationsInput | string | null
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
+    details?: NullableJsonNullValueInput | InputJsonValue
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
