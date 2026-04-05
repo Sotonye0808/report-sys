@@ -63,7 +63,7 @@ describe("aggregation calculations", () => {
 
 describe("aggregation scope behavior", () => {
   it("allows campus role only for own campus", () => {
-    const user: AuthUser = {
+    const user = {
       id: "u1",
       email: "campus@example.com",
       firstName: "Campus",
@@ -90,7 +90,7 @@ describe("aggregation scope behavior", () => {
   });
 
   it("allows group role campus scope only inside group campuses", () => {
-    const user: AuthUser = {
+    const user = {
       id: "u2",
       email: "group@example.com",
       firstName: "Group",

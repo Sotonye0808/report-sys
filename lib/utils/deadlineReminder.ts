@@ -48,7 +48,9 @@ export async function dispatchDeadlineReminder(params: {
   const reportTitle = params.report.title ?? reminderContent.fallbackReportTitle;
   const reportUrl = `/reports/${params.report.id}`;
   const formattedDeadline = formatReminderDeadline(deadlineDate);
-  const message = `${reminderContent.messagePrefix} ${reportTitle} ${reminderContent.messageDueOn} ${formattedDeadline}.`;
+  const message = (reminderContent.messageTemplate ?? "Reminder: {reportTitle} is due on {deadline}.")
+    .replace("{reportTitle}", reportTitle)
+    .replace("{deadline}", formattedDeadline);
 
   try {
     const result = await dispatchNotificationChannels({
