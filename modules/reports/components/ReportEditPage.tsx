@@ -8,7 +8,7 @@
  * pre-seeded into the form as read-only goal values with live stat tracking.
  */
 
-import { useState, use, useEffect } from "react";
+import { useState, use, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { message } from "antd";
 import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
@@ -53,6 +53,7 @@ export function ReportEditPage({ params }: PageProps) {
   const [goalsMap, setGoalsMap] = useState<GoalsForReportMap>({});
   const [initialized, setInitialized] = useState(false);
   const [saving, setSaving] = useState(false);
+  const goalFetchKeyRef = useRef<string | null>(null);
 
   const {
     status: draftStatus,
@@ -103,19 +104,27 @@ export function ReportEditPage({ params }: PageProps) {
     template.version !== templateToUse.version,
   );
 
-  /* Initialise form values + load goals once report + template are available */
+  /* Initialise form values once report + template are available */
   useEffect(() => {
-    if (!report || !templateToUse || !initialized) return;
+    if (!report || !templateToUse || initialized) return;
     setTitle(report.title ?? "");
     setNotes(report.notes ?? "");
     setMetricValues(parseSectionsToMetricValues((report.sections ?? []) as unknown[]));
     setInitialized(true);
+  }, [initialized, report, templateToUse]);
 
-    // Load goals for this campus + period
+  /* Load goals for this campus + period */
+  useEffect(() => {
+    if (!report) return;
     const campusId = report.campusId;
     const year = report.periodYear;
     const month = report.periodMonth;
     if (!campusId || !year) return;
+    const nextFetchKey = `${campusId}:${year}:${month ?? 0}`;
+    if (goalFetchKeyRef.current === nextFetchKey) {
+      return;
+    }
+    goalFetchKeyRef.current = nextFetchKey;
 
     const params = new URLSearchParams({ campusId, year: String(year) });
     if (month) params.set("month", String(month));
@@ -128,7 +137,7 @@ export function ReportEditPage({ params }: PageProps) {
       .catch(() => {
         /* non-fatal */
       });
-  }, [report, template, initialized]);
+  }, [report]);
 
   const handleMetricChange = (metricId: string, v: MetricValues) =>
     setMetricValues((prev) => ({ ...prev, [metricId]: v }));

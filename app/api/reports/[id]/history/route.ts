@@ -15,6 +15,7 @@ import {
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole } from "@/types/global";
+import { parseCachedJsonSafe } from "@/lib/utils/cacheJson";
 
 export async function GET(
     req: NextRequest,
@@ -36,7 +37,8 @@ export async function GET(
 
         const cacheKey = `report:${id}:history`;
         const cached = await cache.get(cacheKey);
-        if (cached) return NextResponse.json(successResponse(cached));
+        const parsedCached = parseCachedJsonSafe<ReportEvent[]>(cached);
+        if (parsedCached) return NextResponse.json(successResponse(parsedCached));
 
         const events = await db.reportEvent.findMany({
             where: { reportId: id },

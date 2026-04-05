@@ -17,6 +17,7 @@ import {
 } from "@/lib/utils/api";
 import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole, ReportStatus, ReportEventType, MetricCalculationType } from "@/types/global";
+import { parseCachedJsonSafe } from "@/lib/utils/cacheJson";
 
 /* ── Update schema ─────────────────────────────────────────────────────────── */
 
@@ -40,7 +41,8 @@ export async function GET(
 
         const cacheKey = `report:${id}`;
         const cached = await cache.get(cacheKey);
-        if (cached) return NextResponse.json(successResponse(cached));
+        const parsedCached = parseCachedJsonSafe<Report>(cached);
+        if (parsedCached) return NextResponse.json(successResponse(parsedCached));
 
         const report = await db.report.findUnique({
             where: { id },

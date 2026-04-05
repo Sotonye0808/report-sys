@@ -641,6 +641,7 @@ export const CONTENT = {
         filter: "Filter",
         reset: "Reset",
         export: "Export",
+        refresh: "Refresh",
         loading: "Loading…",
         submitting: "Submitting…",
         required: "Required",
