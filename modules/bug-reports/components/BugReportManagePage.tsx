@@ -10,6 +10,7 @@ import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
 import Table from "@/components/ui/Table";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { apiMutation } from "@/lib/utils/apiMutation";
 
 const STATUS_COLOR_MAP: Record<BugReportStatus, string> = {
   [BugReportStatus.OPEN]: "red",
@@ -51,14 +52,12 @@ export function BugReportManagePage() {
   const handleStatusChange = async (id: string, status: BugReportStatus) => {
     setUpdatingId(id);
     try {
-      const res = await fetch(API_ROUTES.bugReports.detail(id), {
+      const res = await apiMutation<BugReport>(API_ROUTES.bugReports.detail(id), {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
+        body: { status },
       });
-      const json = await res.json();
       if (!res.ok) {
-        message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
+        message.error(res.error ?? (CONTENT.errors as Record<string, string>).generic);
         return;
       }
       message.success(CONTENT.bugReports.updateSuccess as string);
@@ -74,14 +73,12 @@ export function BugReportManagePage() {
     if (!detailReport) return;
     setUpdatingId(detailReport.id);
     try {
-      const res = await fetch(API_ROUTES.bugReports.detail(detailReport.id), {
+      const res = await apiMutation<BugReport>(API_ROUTES.bugReports.detail(detailReport.id), {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ adminNotes }),
+        body: { adminNotes },
       });
-      const json = await res.json();
       if (!res.ok) {
-        message.error(json.error ?? (CONTENT.errors as Record<string, string>).generic);
+        message.error(res.error ?? (CONTENT.errors as Record<string, string>).generic);
         return;
       }
       message.success(CONTENT.bugReports.updateSuccess as string);

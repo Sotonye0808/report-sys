@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { message, Select, Space, Tag, Checkbox } from "antd";
 import { ArrowLeftOutlined, DatabaseOutlined, CheckCircleOutlined } from "@ant-design/icons";
@@ -16,12 +16,6 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ReportPeriodType, ReportStatus, UserRole } from "@/types/global";
 import { exportAggregatedReport } from "@/lib/utils/exportReports";
-
-const SCOPE_OPTIONS = [
-  { value: "campus", label: "Campus" },
-  { value: "group", label: "Group" },
-  { value: "all", label: "All" },
-];
 
 const STATUS_OPTIONS = ["APPROVED", "REVIEWED", "SUBMITTED"] as ReportStatus[];
 
@@ -49,6 +43,21 @@ export function ReportAggregationPage() {
   const [loadingPreview, setLoadingPreview] = useState(false);
   const [loadingGenerate, setLoadingGenerate] = useState(false);
 
+  const aggregationContent = CONTENT.reports.aggregation as Record<string, string>;
+
+  const isCampusRole = role === UserRole.CAMPUS_ADMIN || role === UserRole.CAMPUS_PASTOR;
+  const isGroupRole = role === UserRole.GROUP_ADMIN || role === UserRole.GROUP_PASTOR;
+  const isGlobalRole = !isCampusRole && !isGroupRole;
+
+  const scopeOptions = useMemo(
+    () => [
+      { value: "campus", label: aggregationContent.scopeCampus },
+      { value: "group", label: aggregationContent.scopeGroup },
+      { value: "all", label: aggregationContent.scopeAll },
+    ],
+    [aggregationContent.scopeAll, aggregationContent.scopeCampus, aggregationContent.scopeGroup],
+  );
+
   const { data: templates, loading: templatesLoading } = useApiData<ReportTemplate[]>(
     API_ROUTES.reportTemplates.list,
   );
@@ -69,6 +78,22 @@ export function ReportAggregationPage() {
     return [];
   }, [orgHierarchy, scopeType]);
 
+  useEffect(() => {
+    if (!user || !role || !orgHierarchy) return;
+
+    if (isCampusRole) {
+      setScopeType("campus");
+      setScopeId(user.campusId ?? "");
+      return;
+    }
+
+    if (isGroupRole) {
+      setScopeType("group");
+      setScopeId(user.orgGroupId ?? "");
+      return;
+    }
+  }, [isCampusRole, isGroupRole, orgHierarchy, role, user]);
+
   if (!user || !role) return <LoadingSkeleton rows={6} />;
 
   const roleEnabled = [
@@ -86,7 +111,10 @@ export function ReportAggregationPage() {
   if (!roleEnabled) {
     return (
       <PageLayout>
-        <EmptyState title="Access denied" description="You are not permitted to use aggregation." />
+        <EmptyState
+          title={aggregationContent.accessDeniedTitle}
+          description={aggregationContent.accessDeniedDescription}
+        />
       </PageLayout>
     );
   }
@@ -97,6 +125,10 @@ export function ReportAggregationPage() {
 
   const handlePreview = async () => {
     try {
+      if ((scopeType === "campus" || scopeType === "group") && !scopeId) {
+        message.warning(aggregationContent.scopeRequiredError);
+        return;
+      }
       setLoadingPreview(true);
       setPreviewResult(null);
       const res = await fetch(API_ROUTES.reports.aggregate, {
@@ -117,12 +149,12 @@ export function ReportAggregationPage() {
       });
       const json = await res.json();
       if (!res.ok || !json.success) {
-        throw new Error(json.error || "Preview failed");
+        throw new Error(json.error || (CONTENT.errors as Record<string, string>).previewFailed);
       }
       setPreviewResult(json.data.aggregation ?? json.data);
-      message.success("Preview loaded. Verify details before generating.");
+      message.success(aggregationContent.loadingPreviewSuccess);
     } catch (err: any) {
-      message.error(err?.message ?? "Failed to preview aggregation");
+      message.error(err?.message ?? aggregationContent.loadingPreviewError);
     } finally {
       setLoadingPreview(false);
     }
@@ -130,7 +162,7 @@ export function ReportAggregationPage() {
 
   const handleGenerate = async () => {
     if (!previewResult) {
-      message.warning("Please run preview first.");
+      message.warning(aggregationContent.previewRequiredWarning);
       return;
     }
     try {
@@ -153,13 +185,13 @@ export function ReportAggregationPage() {
       });
       const json = await res.json();
       if (!res.ok || !json.success) {
-        throw new Error(json.error || "Generation failed");
+        throw new Error(json.error || (CONTENT.errors as Record<string, string>).generationFailed);
       }
-      message.success("Aggregated report created successfully.");
+      message.success(aggregationContent.generatedSuccess);
       const createdReportId = json.data.report.id;
       router.push(`/reports/${createdReportId}`);
     } catch (err: any) {
-      message.error(err?.message ?? "Failed to generate report");
+      message.error(err?.message ?? aggregationContent.generatedError);
     } finally {
       setLoadingGenerate(false);
     }
@@ -167,7 +199,7 @@ export function ReportAggregationPage() {
 
   const handleExportAggregatedReport = (preview: any) => {
     if (!preview) {
-      message.warning("No aggregation preview available for export.");
+      message.warning(aggregationContent.exportMissingWarning);
       return;
     }
 
@@ -216,13 +248,17 @@ export function ReportAggregationPage() {
     const { sourceReports, aggregatedSections, templateId: selectedTemplateId } = previewResult;
 
     return (
-      <Card title="Aggregation Preview" className="space-y-3">
+      <Card title={aggregationContent.previewTitle} className="space-y-3">
         <div className="flex flex-wrap gap-2">
           <Tag icon={<DatabaseOutlined />} color="blue">
-            Reports included: {sourceReports.length}
+            {aggregationContent.reportsIncluded}: {sourceReports.length}
           </Tag>
-          <Tag color="green">Template: {selectedTemplateId ?? "N/A"}</Tag>
-          <Tag color="purple">Sections: {aggregatedSections.length}</Tag>
+          <Tag color="green">
+            {aggregationContent.templateTag}: {selectedTemplateId ?? aggregationContent.noTemplate}
+          </Tag>
+          <Tag color="purple">
+            {aggregationContent.sectionsTag}: {aggregatedSections.length}
+          </Tag>
         </div>
         <div className="space-y-1">
           {aggregatedSections.slice(0, 5).map((section: any) => (
@@ -248,7 +284,7 @@ export function ReportAggregationPage() {
             loading={loadingGenerate}
             disabled={loadingGenerate}
           >
-            Generate Aggregated Report
+            {aggregationContent.generateButton}
           </Button>
           <Button
             type="default"
@@ -256,7 +292,7 @@ export function ReportAggregationPage() {
             onClick={() => handleExportAggregatedReport(previewResult)}
             disabled={!previewResult}
           >
-            Export Aggregated Report
+            {aggregationContent.exportButton}
           </Button>
         </div>
       </Card>
@@ -266,38 +302,49 @@ export function ReportAggregationPage() {
   return (
     <PageLayout>
       <PageHeader
-        title="Aggregated Reports"
-        subtitle="Run rollup reporting by campus/group/yearly cycles"
+        title={aggregationContent.pageTitle}
+        subtitle={aggregationContent.pageSubtitle}
         actions={
           <Button icon={<ArrowLeftOutlined />} onClick={() => router.push(APP_ROUTES.reports)}>
-            Back
+            {aggregationContent.back}
           </Button>
         }
       />
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        <Card title="1. Select scope">
+        <Card title={aggregationContent.selectScopeStep}>
           <Space direction="vertical" style={{ width: "100%" }}>
             <Select
               value={scopeType}
-              options={SCOPE_OPTIONS}
+              options={scopeOptions}
               onChange={(value) => {
                 setScopeType(value as "campus" | "group" | "all");
                 setScopeId("");
               }}
+              disabled={!isGlobalRole}
             />
+            {!isGlobalRole && (
+              <span className="text-xs text-ds-text-subtle">
+                {aggregationContent.scopeLockedHint}
+              </span>
+            )}
             {(scopeType === "campus" || scopeType === "group") && (
               <Select
                 value={scopeId || undefined}
                 options={scopeItems}
                 onChange={(value) => setScopeId(value as string)}
-                placeholder={scopeType === "campus" ? "Select campus" : "Select group"}
+                placeholder={
+                  scopeType === "campus"
+                    ? aggregationContent.selectCampus
+                    : aggregationContent.selectGroup
+                }
+                disabled={isCampusRole || isGroupRole}
               />
             )}
           </Space>
         </Card>
 
-        <Card title="2. Select period">
+        <Card title={aggregationContent.selectPeriodStep}>
           <Space direction="vertical" style={{ width: "100%" }}>
             <Select
               value={periodType}
@@ -335,13 +382,13 @@ export function ReportAggregationPage() {
           </Space>
         </Card>
 
-        <Card title="3. Select template + metrics">
+        <Card title={aggregationContent.selectTemplateStep}>
           <Space direction="vertical" style={{ width: "100%" }}>
             <Select
               value={templateId || undefined}
               options={(templates ?? []).map((t) => ({ value: t.id, label: t.name }))}
               onChange={(v) => setTemplateId(v as string)}
-              placeholder="Template"
+              placeholder={aggregationContent.templatePlaceholder}
               loading={templatesLoading}
               showSearch
               optionFilterProp="label"
@@ -350,7 +397,7 @@ export function ReportAggregationPage() {
               mode="multiple"
               value={metricIds}
               options={[]}
-              placeholder="Metrics (optional)"
+              placeholder={aggregationContent.metricsPlaceholder}
               disabled
             />
             <Select
@@ -358,13 +405,13 @@ export function ReportAggregationPage() {
               value={includeStatuses}
               options={STATUS_OPTIONS.map((s) => ({ value: s, label: s }))}
               onChange={(v) => setIncludeStatuses(v as ReportStatus[])}
-              placeholder="Statuses"
+              placeholder={aggregationContent.statusesPlaceholder}
               dropdownMatchSelectWidth={false}
             />
             <Checkbox checked={includeDrafts} onChange={(e) => setIncludeDrafts(e.target.checked)}>
-              Include draft reports
+              {aggregationContent.includeDraftsLabel}
             </Checkbox>
-            <span className="text-xs text-ds-text-subtle">Toggle to include/exclude drafts in rollup and benchmark.</span>
+            <span className="text-xs text-ds-text-subtle">{aggregationContent.includeDraftsHint}</span>
           </Space>
         </Card>
       </div>
@@ -376,7 +423,7 @@ export function ReportAggregationPage() {
           onClick={handlePreview}
           loading={loadingPreview}
         >
-          Preview Aggregation
+          {aggregationContent.previewButton}
         </Button>
       </div>
 

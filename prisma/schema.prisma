@@ -31,6 +31,9 @@ model User {
   goals                   Goal[]                  @relation("GoalCreator")
   lockedGoals             Goal[]                  @relation("GoalLocker")
   createdInviteLinks      InviteLink[]            @relation("InviteLinkCreator")
+  mediaAssets             MediaAsset[]            @relation("MediaAssetOwner")
+  assetUploadSessions     AssetUploadSession[]    @relation("AssetSessionOwner")
+  assetLifecycleEvents    AssetLifecycleEvent[]   @relation("AssetLifecycleActor")
   notifications           Notification[]          @relation("NotificationRecipient")
   ledOrgGroups            OrgGroup[]              @relation("OrgGroupLeader")
   reviewedEdits           ReportEdit[]            @relation("EditReviewer")
@@ -440,6 +443,7 @@ model BugReport {
   category      BugReportCategory
   description   String
   screenshotUrl String?
+  screenshotAssetId String?
   contactEmail  String
   status        BugReportStatus   @default(OPEN)
   adminNotes    String?
@@ -447,10 +451,90 @@ model BugReport {
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
   createdBy     User              @relation("BugReportCreator", fields: [createdById], references: [id])
+  screenshotAsset MediaAsset?     @relation("BugReportScreenshotAsset", fields: [screenshotAssetId], references: [id])
 
   @@index([status])
   @@index([createdById])
+  @@index([screenshotAssetId])
   @@map("bug_reports")
+}
+
+model MediaAsset {
+  id                 String              @id @default(uuid())
+  ownerId            String
+  domain             AssetDomain
+  provider           AssetProvider       @default(CLOUDINARY)
+  state              AssetState          @default(TEMP)
+  publicId           String?             @unique
+  secureUrl          String?
+  resourceType       String?             @default("image")
+  format             String?
+  bytes              Int?
+  width              Int?
+  height             Int?
+  mimeType           String?
+  originalFileName   String?
+  folder             String?
+  metadata           Json?
+  requestId          String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  finalizedAt        DateTime?
+  discardedAt        DateTime?
+  expiresAt          DateTime?
+  owner              User                @relation("MediaAssetOwner", fields: [ownerId], references: [id])
+  bugReportsAsScreenshot BugReport[]     @relation("BugReportScreenshotAsset")
+  uploadSessions     AssetUploadSession[] @relation("AssetSessionAsset")
+  lifecycleEvents    AssetLifecycleEvent[] @relation("AssetEventAsset")
+
+  @@index([ownerId, state])
+  @@index([domain, state])
+  @@index([createdAt])
+  @@map("media_assets")
+}
+
+model AssetUploadSession {
+  id               String               @id @default(uuid())
+  ownerId          String
+  domain           AssetDomain
+  mode             AssetUploadMode      @default(DEFERRED_SUBMIT)
+  state            AssetSessionState    @default(OPEN)
+  activeAssetId    String?
+  idempotencyKey   String?
+  requestId        String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  finalizedAt      DateTime?
+  discardedAt      DateTime?
+  expiresAt        DateTime?
+  owner            User                 @relation("AssetSessionOwner", fields: [ownerId], references: [id])
+  activeAsset      MediaAsset?          @relation("AssetSessionAsset", fields: [activeAssetId], references: [id])
+  lifecycleEvents  AssetLifecycleEvent[] @relation("AssetEventSession")
+
+  @@index([ownerId, state])
+  @@index([domain, state])
+  @@index([expiresAt])
+  @@unique([ownerId, idempotencyKey])
+  @@map("asset_upload_sessions")
+}
+
+model AssetLifecycleEvent {
+  id         String                   @id @default(uuid())
+  sessionId  String?
+  assetId    String?
+  actorId    String?
+  eventType  AssetLifecycleEventType
+  details    Json?
+  requestId  String?
+  createdAt  DateTime                 @default(now())
+  session    AssetUploadSession?      @relation("AssetEventSession", fields: [sessionId], references: [id], onDelete: SetNull)
+  asset      MediaAsset?              @relation("AssetEventAsset", fields: [assetId], references: [id], onDelete: SetNull)
+  actor      User?                    @relation("AssetLifecycleActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([sessionId, createdAt])
+  @@index([assetId, createdAt])
+  @@index([eventType, createdAt])
+  @@map("asset_lifecycle_events")
 }
 
 enum UserRole {
@@ -595,4 +679,46 @@ enum BugReportCategory {
   REPORT_SUBMISSION
   NOTIFICATION
   OTHER
+}
+
+enum AssetDomain {
+  BUG_REPORT_SCREENSHOT
+}
+
+enum AssetProvider {
+  CLOUDINARY
+  LEGACY_URL
+}
+
+enum AssetState {
+  TEMP
+  READY
+  DISCARDED
+  DELETE_PENDING
+  DELETED
+  FAILED
+}
+
+enum AssetUploadMode {
+  DEFERRED_SUBMIT
+  PREUPLOAD_DRAFT
+}
+
+enum AssetSessionState {
+  OPEN
+  TEMP_UPLOADED
+  FINALIZED
+  DISCARDED
+  EXPIRED
+}
+
+enum AssetLifecycleEventType {
+  SESSION_CREATED
+  TEMP_UPLOADED
+  FINALIZED
+  DISCARDED
+  CLEANUP_DELETED
+  CLEANUP_FAILED
+  COMPENSATION_DELETED
+  COMPENSATION_FAILED
 }

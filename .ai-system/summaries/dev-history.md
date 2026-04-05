@@ -266,3 +266,94 @@ Investigated and fixed a regression where profile and org hierarchy write operat
 - Add regression coverage for Redis cursor terminal-value variants and write-route completion timing.
 - Add UI regression tests for immediate post-mutation state updates (no manual refresh).
 - Add push sync matrix tests for permission/subscription/VAPID edge cases.
+
+## 2026-04-04 — Cloudinary Managed Asset Lifecycle for Bug Report Screenshots
+
+**Summary:**
+Implemented a managed screenshot asset lifecycle using Cloudinary for bug reports with transactional DB state handling and compensating external cleanup behavior. Added lifecycle APIs and domain service guards to safely handle cancel, clear, replace, finalize, and stale-temp cleanup paths without regressing existing bug-report flows.
+
+**Completed:**
+
+- Added managed asset schema models and migration:
+  - `MediaAsset`
+  - `AssetUploadSession`
+  - `AssetLifecycleEvent`
+  - Bug report linkage via `screenshotAssetId` (legacy `screenshotUrl` retained)
+- Added Cloudinary adapter with enforced folder contract:
+  - `CLOUDINARY_ROOT_FOLDER/CLOUDINARY_PROJECT_ASSET_FOLDER/domain/year/month`
+- Added lifecycle APIs for session create/upload/finalize/discard and stale cleanup.
+- Updated bug report API and UI to support managed screenshots with deferred-submit default and feature-flagged `preupload_draft` mode.
+- Added request-id structured logging across lifecycle transitions.
+- Added regression tests:
+  - `test/lifecycleStateMachine.test.ts`
+  - `test/bugReportAssetCompatibility.test.ts`
+
+**Key Changes:**
+
+- Asset lifecycle now supports idempotent finalize/discard semantics and ownership checks.
+- Bug report read paths remain migration-compatible by preferring managed asset URL and falling back to legacy `screenshotUrl`.
+- Cleanup path can be invoked by SUPERADMIN or shared-token schedule flow via `ASSET_CLEANUP_TOKEN`.
+
+**Next Sprint Focus:**
+
+- Add deeper failure-injection tests around Cloudinary compensation failures and concurrent session races.
+- Add scheduling/invocation runbook for periodic cleanup endpoint execution in deployment environments.
+
+## 2026-04-05 — Task Queue Gap Audit + Cloud Handoff Pack
+
+**Summary:**
+Performed a repo-backed audit of unchecked task-queue items to distinguish truly incomplete work from stale checkbox status. Corrected two stale unchecked tasks, confirmed aggregated reporting remains partially implemented and still failing in real usage, refreshed RepoMix context, and produced a cloud-session handoff artifact with an execution-ready prompt focused on closing remaining production-readiness gaps.
+
+**Completed:**
+
+- Audited unchecked queue items against current code and tests.
+- Corrected stale queue status for offline sync queue indicator and aggregated export chart embedding.
+- Added aggregation verification note to keep partially implemented tasks open until end-to-end validation passes.
+- Created `.ai-system/planning/temp-task-queue-gap-audit-2026-04-05.md` with:
+  - remaining actionable task inventory,
+  - partial/open classification,
+  - cloud-session implementation prompt.
+- Regenerated `repomix-current.txt` via MCP for up-to-date cloud context.
+
+**Key Changes:**
+
+- Queue now reflects implementation reality more accurately, reducing duplicate work in cloud execution.
+- Cloud handoff now prioritizes the aggregation scope/load failure and missing regression suites with explicit validation gates.
+
+**Next Sprint Focus:**
+
+Execute the cloud session prompt from the gap-audit plan, close remaining actionable tasks, and update architecture/repair docs based on final aggregation and regression outcomes.
+
+## 2026-04-05 — Aggregation Scope Stabilization + Targeted Regression Coverage
+
+**Summary:**
+Stabilized the aggregated-report flow by fixing scope resolution/enforcement across UI and API, added aggregation metadata support, and introduced targeted regression suites for aggregation math/scope behavior, Redis cursor termination, write-completion contract behavior, and push sync matrix variants. Also wired deadline reminder dispatch through the existing notification orchestration path from report creation.
+
+**Completed:**
+
+- Fixed aggregation scope behavior end-to-end for campus/group/global roles in:
+  - `app/api/reports/aggregate/route.ts`
+  - `lib/data/reportAggregation.ts`
+  - `modules/reports/components/ReportAggregationPage.tsx`
+- Added metadata support:
+  - `types/global.ts` (`aggregationSource`, `aggregatedFrom`)
+  - aggregation response persistence metadata in `lib/data/reportAggregation.ts`
+- Added new helper modules:
+  - `lib/data/reportAggregationUtils.ts`
+  - `lib/data/redisCursor.ts`
+  - `lib/utils/deadlineReminder.ts`
+- Added/updated targeted tests:
+  - `test/aggregation.test.ts`
+  - `test/mutationAndPushMatrix.test.ts`
+  - `test/redisAndRoutesContract.test.ts`
+- Updated task queue verification and checkbox status in `.ai-system/planning/task-queue.md`.
+
+**Key Changes:**
+
+- Aggregation preview/generate now fails fast on missing scope and applies role-safe defaults to prevent scope load mismatches.
+- Deadline reminder path is now dispatched (in-app/email/push orchestration) when a report is created within configured reminder lead window.
+- Redis cursor terminal handling is now testable via a pure helper, reducing regression risk for cache invalidation loops.
+
+**Next Sprint Focus:**
+
+- Complete remaining open production-readiness tasks (UI no-refresh regression harness, audit-helper refactor completion, remaining router/report-form fixes) and finish aggregation docs/metric-selector completion.

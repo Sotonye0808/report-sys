@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
 import { successResponse, badRequestResponse, forbiddenResponse, handleApiError } from "@/lib/utils/api";
-import { ReportStatus, ReportPeriodType } from "@/types/global";
+import { ReportStatus, ReportPeriodType, UserRole } from "@/types/global";
 import { calculateAggregation, persistAggregatedReport, AggregationCriteria } from "@/lib/data/reportAggregation";
 
 const AggregationRequestSchema = z.object({
@@ -31,9 +31,22 @@ export async function POST(req: NextRequest) {
         }
 
         const body = AggregationRequestSchema.parse(await req.json());
+        const scopeType = body.scopeType;
+        let scopeId = body.scopeId;
+
+        if (auth.user.role === UserRole.CAMPUS_ADMIN || auth.user.role === UserRole.CAMPUS_PASTOR) {
+            scopeId = auth.user.campusId;
+        }
+
+        if (auth.user.role === UserRole.GROUP_ADMIN || auth.user.role === UserRole.GROUP_PASTOR) {
+            if (scopeType === "group") {
+                scopeId = auth.user.orgGroupId;
+            }
+        }
+
         const criteria: AggregationCriteria = {
             scopeType: body.scopeType,
-            scopeId: body.scopeId,
+            scopeId,
             periodType: body.periodType,
             periodYear: body.periodYear,
             periodMonth: body.periodMonth,

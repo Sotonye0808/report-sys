@@ -311,3 +311,131 @@ Add and run the newly identified regression tests for cache invalidation loop te
 
 - Static diagnostics (`get_errors`) for all touched files are clean.
 - End-to-end browser verification is still required to confirm no pending requests remain under real data volume.
+
+## Session 8 — 2026-04-04
+
+**Completed:**
+
+- Implemented Cloudinary managed screenshot asset lifecycle for bug reports.
+- Added Prisma schema/migration groundwork for managed assets (`MediaAsset`, `AssetUploadSession`, `AssetLifecycleEvent`) and bug-report linkage via `screenshotAssetId` while preserving legacy `screenshotUrl`.
+- Added Cloudinary adapter with enforced folder contract `root/project/domain/year/month` via `CLOUDINARY_ROOT_FOLDER` and `CLOUDINARY_PROJECT_ASSET_FOLDER`.
+- Implemented lifecycle domain service with session state-machine guards and transactional DB updates plus compensating Cloudinary deletes on failure paths.
+- Added lifecycle APIs:
+  - `POST /api/assets/sessions`
+  - `POST /api/assets/sessions/:id/upload`
+  - `POST /api/assets/sessions/:id/finalize`
+  - `POST /api/assets/sessions/:id/discard`
+  - `POST /api/assets/cleanup`
+- Integrated bug-report create/read flows to support managed `screenshotAssetId` and fallback compatibility to legacy `screenshotUrl`.
+- Updated bug-report submit/manage UI to use unified mutation lifecycle handling and avoid stuck loading states.
+- Added regression tests for lifecycle state guards and screenshot migration compatibility.
+
+**Files Modified:**
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260404230000_cloudinary_asset_lifecycle/migration.sql`
+- `lib/assets/cloudinaryAdapter.ts`
+- `lib/assets/lifecycleStateMachine.ts`
+- `lib/assets/lifecycleService.ts`
+- `app/api/assets/sessions/route.ts`
+- `app/api/assets/sessions/[id]/upload/route.ts`
+- `app/api/assets/sessions/[id]/finalize/route.ts`
+- `app/api/assets/sessions/[id]/discard/route.ts`
+- `app/api/assets/cleanup/route.ts`
+- `app/api/bug-reports/route.ts`
+- `app/api/bug-reports/[id]/route.ts`
+- `modules/bug-reports/components/BugReportPage.tsx`
+- `modules/bug-reports/components/BugReportManagePage.tsx`
+- `config/routes.ts`
+- `types/global.ts`
+- `.env.example`
+- `.ai-system/agents/system-architecture.md`
+- `.ai-system/planning/task-queue.md`
+- `test/lifecycleStateMachine.test.ts`
+- `test/bugReportAssetCompatibility.test.ts`
+
+**Next Task:**
+
+Run final validations (`typecheck`, targeted tests, build if possible), run `parallel_validation`, resolve any findings, and open PR.
+
+**Notes / Blockers:**
+
+- Baseline lint remains blocked by ESLint v9 flat-config migration gap (`eslint.config.*` missing).
+- Build may fail in sandbox due blocked Google Fonts fetch (known environment limitation).
+
+## Session 9 — 2026-04-05
+
+**Completed:**
+
+- Audited all unchecked items in `.ai-system/planning/task-queue.md` against current repository implementation to identify true open work vs stale checkboxes.
+- Verified and corrected two stale unchecked tasks:
+  - offline sync indicator + retry queue
+  - aggregated export chart embedding
+- Confirmed aggregation feature is still partially implemented and currently failing in real usage; added explicit verification note in task queue section.
+- Generated a consolidated execution artifact for cloud handoff:
+  - `.ai-system/planning/temp-task-queue-gap-audit-2026-04-05.md`
+  - includes remaining actionable task list (17), partial/open classification, and ready-to-paste cloud prompt.
+- Refreshed RepoMix context snapshot via MCP:
+  - `repomix-current.txt` regenerated.
+
+**Files Modified:**
+
+- `.ai-system/planning/task-queue.md`
+- `.ai-system/planning/temp-task-queue-gap-audit-2026-04-05.md`
+- `repomix-current.txt`
+- `.ai-system/checkpoints/session-log.md`
+- `.ai-system/summaries/dev-history.md`
+
+**Next Task:**
+
+Run a cloud implementation session using the new prompt to close the remaining 17 actionable tasks, prioritizing aggregated report scope/load failures and missing regression coverage.
+
+**Notes / Blockers:**
+
+- `rg` is unavailable in this shell environment; task counting used PowerShell `Select-String` instead.
+- Aggregation path has code present (`route/page/service`) but requires end-to-end correctness fixes before completion check-offs.
+
+## Session 10 — 2026-04-05
+
+**Completed:**
+
+- Fixed aggregated report scope-loading failures by enforcing role-aware defaults/constraints across API + UI:
+  - campus roles are forced to own campus scope
+  - group roles are constrained to own group / own-group campuses
+  - preview now blocks missing scope selection before request dispatch
+- Added aggregation metadata support (`aggregationSource`, `aggregatedFrom`) in shared report types and aggregation service responses.
+- Added aggregation regression suite `test/aggregation.test.ts` covering sum/average/snapshot behavior and role/scope enforcement.
+- Added targeted production-readiness regression coverage:
+  - `test/redisAndRoutesContract.test.ts` (cursor termination + auth/report contract envelope)
+  - `test/mutationAndPushMatrix.test.ts` (write completion contract checks + push sync matrix variants)
+- Wired deadline reminder dispatch path via `lib/utils/deadlineReminder.ts` and invoked it from report creation path (`app/api/reports/route.ts`) using notification orchestration.
+- Updated task queue checkboxes + verification notes for completed and still-open items.
+
+**Files Modified:**
+
+- `app/api/reports/aggregate/route.ts`
+- `app/api/reports/route.ts`
+- `lib/data/reportAggregation.ts`
+- `lib/data/reportAggregationUtils.ts`
+- `lib/data/redis.ts`
+- `lib/data/redisCursor.ts`
+- `lib/utils/deadlineReminder.ts`
+- `modules/reports/components/ReportAggregationPage.tsx`
+- `modules/reports/components/ReportDetailPage.tsx`
+- `types/global.ts`
+- `config/content.ts`
+- `test/aggregation.test.ts`
+- `test/mutationAndPushMatrix.test.ts`
+- `test/redisAndRoutesContract.test.ts`
+- `.ai-system/planning/task-queue.md`
+- `.ai-system/checkpoints/session-log.md`
+- `.ai-system/summaries/dev-history.md`
+
+**Next Task:**
+
+- Complete remaining open task-queue items (UI-level profile/org no-refresh regression harness, central audit helper refactor completion, report/template/router issues, and aggregation docs/metric-selector completion).
+
+**Notes / Blockers:**
+
+- Baseline full test script and build remain environment-blocked in this sandbox (`npm run test` quoted glob issue, build requires unrestricted font fetch); required gate `npm run -s typecheck` passes and targeted updated tests pass.
+- Lint baseline is still blocked by repo ESLint/tooling state in this environment.
