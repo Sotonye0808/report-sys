@@ -124,17 +124,10 @@ export function ReportAggregationPage() {
   useEffect(() => {
     if (!user || !role || !orgHierarchy) return;
 
-      if (isCampusRole) {
-        setScopeType(rollupContext.roleScopeType);
-        setScopeId(rollupContext.roleScopeId);
-        return;
-      }
-
-      if (isGroupRole) {
-        setScopeType(rollupContext.roleScopeType);
-        setScopeId(rollupContext.roleScopeId);
-        return;
-      }
+    if (isCampusRole || isGroupRole) {
+      setScopeType(rollupContext.roleScopeType);
+      setScopeId(rollupContext.roleScopeId);
+    }
   }, [isCampusRole, isGroupRole, orgHierarchy, role, rollupContext.roleScopeId, rollupContext.roleScopeType, user]);
 
   useEffect(() => {

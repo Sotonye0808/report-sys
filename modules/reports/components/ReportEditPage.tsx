@@ -120,7 +120,7 @@ export function ReportEditPage({ params }: PageProps) {
     const year = report.periodYear;
     const month = report.periodMonth;
     if (!campusId || !year) return;
-    const nextFetchKey = `${campusId}:${year}:${month ?? 0}`;
+    const nextFetchKey = `${campusId}:${year}:${month === undefined ? "none" : month}`;
     if (goalFetchKeyRef.current === nextFetchKey) {
       return;
     }
