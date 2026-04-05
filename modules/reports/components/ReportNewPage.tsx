@@ -184,7 +184,7 @@ export function ReportNewPage() {
     };
 
     load();
-  }, [user, form, pickerValue]);
+  }, [user, pickerValue]);
 
   /* Load goals whenever campus + period changes */
   useEffect(() => {

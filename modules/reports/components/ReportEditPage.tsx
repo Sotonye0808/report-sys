@@ -51,7 +51,7 @@ export function ReportEditPage({ params }: PageProps) {
   const [notes, setNotes] = useState("");
   const [metricValues, setMetricValues] = useState<Record<string, MetricValues>>({});
   const [goalsMap, setGoalsMap] = useState<GoalsForReportMap>({});
-  const [initialized, setInitialized] = useState(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
   const [saving, setSaving] = useState(false);
   const goalFetchKeyRef = useRef<string | null>(null);
 
@@ -72,7 +72,7 @@ export function ReportEditPage({ params }: PageProps) {
       setNotes(draft.notes);
       setMetricValues(draft.metricValues);
       setGoalsMap(draft.goalsMap);
-      setInitialized(true);
+      setHasInitialized(true);
     },
     enabled: true,
   });
@@ -106,12 +106,12 @@ export function ReportEditPage({ params }: PageProps) {
 
   /* Initialise form values once report + template are available */
   useEffect(() => {
-    if (!report || !templateToUse || initialized) return;
+    if (!report || !templateToUse || hasInitialized) return;
     setTitle(report.title ?? "");
     setNotes(report.notes ?? "");
     setMetricValues(parseSectionsToMetricValues((report.sections ?? []) as unknown[]));
-    setInitialized(true);
-  }, [initialized, report, templateToUse]);
+    setHasInitialized(true);
+  }, [hasInitialized, report, templateToUse]);
 
   /* Load goals for this campus + period */
   useEffect(() => {
