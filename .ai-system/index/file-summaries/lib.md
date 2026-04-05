@@ -2,21 +2,20 @@
 
 ## Purpose
 
-Shared libraries and utilities used across the application. This is the common code layer that keeps feature modules small and focused.
+Shared platform layer for data access, server utilities, hooks, email/asset infrastructure, and cross-cutting helpers used by feature modules and route handlers.
 
 ## Key Areas
 
-- `lib/data/` — Data access adapters:
-  - `prisma.ts` (PostgreSQL via Prisma)
-  - `redis.ts` (Upstash Redis client)
-  - `db.ts` (runtime selector between mock DB and real DB)
-- `lib/hooks/` — React hooks for auth (`useRole`), data fetching (`useApiData`), offline sync, and service worker integration.
-- `lib/utils/` — Pure utility functions: API wrapper, auth helpers, export/report generation, date formatting, offline caching, notifications.
-- `lib/email/` — Email sending helper (`resend` provider) used for transactional emails.
-- `lib/design-system/` — Token helpers and theme mapping for Ant Design.
+- `lib/data/` - Prisma + Redis access (`db.ts`, `prisma.ts`, `redis.ts`) and aggregation helpers (`reportAggregation.ts`, `orgHierarchy.ts`).
+- `lib/assets/` - Managed Cloudinary lifecycle adapters/services and lifecycle state machine.
+- `lib/server/` - Request context utilities (correlation IDs and request metadata).
+- `lib/hooks/` - Shared React hooks (`useApiData`, offline sync, draft cache helpers, role/auth helpers).
+- `lib/utils/` - API response helpers, client mutation lifecycle, auth utilities, server logging, offline queue/cache, export/report helpers, notifications.
+- `lib/email/` - Resend integration and template registry/layout.
+- `lib/design-system/` - Ant Design token and theme mapping.
 
 ## Notes
 
-- The `lib/data` layer is the only place that should directly import `@prisma/client`.
-- If service modules require prisma types, use shared aliases or `unknown`/`any` casts at module boundary (avoid importing `@prisma/client` directly in modules/).
-- Hooks in `lib/hooks` are lightweight and avoid heavy dependencies to stay reusable across modules.
+- `lib/data/*` owns database boundary concerns; avoid direct Prisma client usage from UI modules.
+- New write paths should use shared API envelope helpers and request-context logging utilities.
+- Asset lifecycle operations should route through `lib/assets/lifecycleService.ts` to preserve transactional state and cleanup semantics.

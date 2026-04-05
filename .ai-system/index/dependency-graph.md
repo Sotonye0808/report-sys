@@ -8,52 +8,65 @@
 
 ```
 app/layout.tsx
-  → providers/ThemeProvider (theme context)
-  → providers/AntdProvider (design tokens)
-  → providers/AuthProvider (auth context)
+  → providers/ThemeProvider
+  → providers/AntdProvider
+  → providers/AuthProvider
 
 providers/AuthProvider
-  → lib/utils/api (fetch wrapper)
-  → lib/utils/auth (auth helper functions)
-  → app/api/auth routes
+  → lib/utils/api
+  → app/api/auth/me + app/api/auth/refresh
 
 app/(dashboard)/... pages
   → modules/* UI components
-  → lib/hooks/useApiData (data fetching)
-  → config/routes (navigation)
-  → config/roles (permission logic)
+  → lib/hooks/useApiData
+  → lib/utils/apiMutation (write actions)
+  → config/routes + config/nav + config/roles
 
 modules/reports
-  → lib/utils/api
-  → config/reports (template definitions, workflow rules)
-  → lib/data/prisma (server-side DB access)
-  → lib/utils/exportReports (export logic)
+  → lib/utils/api + lib/utils/exportReports
+  → lib/data/reportAggregation + lib/data/orgHierarchy
+  → modules/reports/services/reportWorkflow
+  → config/reports + config/content
 
 modules/analytics
   → lib/utils/api
-  → lib/data/prisma
-  → config/reports (report definitions)
-  → app/api/analytics/overview and app/api/analytics/metrics route handlers (draft/status filtering)
+  → modules/analytics/chartUtils
+  → app/api/analytics/* route handlers
 
-lib/data/prisma.ts
-  → prisma/ (schema & generated client)
-  → lib/data/redis.ts (cache layer; optional)
+app/api/* (write routes)
+  → lib/server/requestContext
+  → lib/utils/serverLogger
+  → lib/utils/api (standard envelope helpers)
+  → modules/*/services or lib/data/*
+
+app/api/bug-reports/* + app/api/assets/*
+  → lib/assets/lifecycleService
+  → lib/assets/lifecycleStateMachine
+  → lib/assets/cloudinaryAdapter
+  → prisma MediaAsset / AssetUploadSession / AssetLifecycleEvent models
+
+lib/data/db.ts
+  → lib/data/prisma.ts
+  → lib/data/redis.ts
+  → prisma/generated client
 
 lib/data/redis.ts
-  → @upstash/redis (remote Redis client)
+  → @upstash/redis
 
 lib/email/resend.ts
-  → resend (email provider)
+  → resend
+  → lib/email/templates/registry
 
 lib/hooks/useOfflineSync.ts
-  → lib/utils/offlineCache (localStorage wrapper)
-  → service worker (public/sw.js)
+  → lib/utils/offlineQueue + lib/utils/offlineFetch
+  → public/sw.js
 
 config/*
-  → types/global.d.ts (shared types)
+  → types/global.ts
 
 modules/*
-  → components/ui/* (shared UI primitives)
+  → components/ui/*
+  → lib/*
 ```
 
 ---
@@ -62,21 +75,21 @@ modules/*
 
 > **Section summary:** Third-party packages and what they're used for. Review before adding new packages.
 
-| Package                        | Purpose                                          | Used In                               |
-| ------------------------------ | ------------------------------------------------ | ------------------------------------- |
-| `next`                         | React framework with app router + server actions | `app/` routes, API handlers           |
-| `react` / `react-dom`          | UI rendering                                     | frontend components                   |
-| `antd` / `@ant-design/cssinjs` | Component library and theming                    | UI components                         |
-| `prisma` / `@prisma/client`    | ORM and database access                          | `lib/data/prisma.ts`, `prisma/*`      |
-| `@upstash/redis`               | Redis cache for rate limiting and caching        | `lib/data/redis.ts`                   |
-| `@upstash/ratelimit`           | Rate limiting helper for API routes              | `lib/api` route handlers              |
-| `resend`                       | Email delivery (transactional emails)            | `lib/email/resend.ts`                 |
-| `jose`, `jsonwebtoken`         | JWT creation/verification                        | Auth API routes                       |
-| `bcryptjs`                     | Password hashing                                 | Auth API routes                       |
-| `zod`                          | Input validation / schemas                       | API route validation                  |
-| `date-fns`, `dayjs`            | Date manipulation                                | analytics, report filters, formatting |
-| `xlsx`                         | Export reports to Excel                          | `lib/utils/exportReports.ts`          |
-| `idb-keyval`                   | Browser storage for offline caching              | `lib/utils/offlineCache.ts`           |
+| Package                                            | Purpose                                          | Used In                                            |
+| -------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------- |
+| `next`                                             | React framework with app router + server actions | `app/` routes, API handlers                        |
+| `react` / `react-dom`                              | UI rendering                                     | frontend components                                |
+| `antd` / `@ant-design/cssinjs`                     | Component library and theming                    | UI components                                      |
+| `prisma` / `@prisma/client` / `@prisma/adapter-pg` | ORM and PostgreSQL adapter                       | `lib/data/prisma.ts`, `lib/data/db.ts`, `prisma/*` |
+| `@upstash/redis`                                   | Redis cache for rate limiting and caching        | `lib/data/redis.ts`                                |
+| `@upstash/ratelimit`                               | Rate limiting helper for API routes              | `lib/api` route handlers                           |
+| `resend`                                           | Email delivery (transactional emails)            | `lib/email/resend.ts`                              |
+| `jose`, `jsonwebtoken`                             | JWT creation/verification                        | Auth API routes                                    |
+| `bcryptjs`                                         | Password hashing                                 | Auth API routes                                    |
+| `zod`                                              | Input validation / schemas                       | API route validation                               |
+| `date-fns`, `dayjs`                                | Date manipulation                                | analytics, report filters, formatting              |
+| `xlsx`                                             | Export reports to Excel                          | `lib/utils/exportReports.ts`                       |
+| `idb-keyval`                                       | Browser storage for offline caching              | `lib/utils/offlineCache.ts`                        |
 
 ---
 
@@ -96,3 +109,4 @@ modules/*
 - Feature modules may depend on `lib/` and `config/`, but core libs (`lib/`) must not depend on feature modules.
 - `config/` files should not depend on React or UI layer.
 - API route handlers (`app/api/*`) can depend on `lib/data` and `lib/utils`, but must avoid importing client-only modules.
+- Asset lifecycle transitions must go through `lib/assets/*` services to keep DB state and Cloudinary cleanup consistent.

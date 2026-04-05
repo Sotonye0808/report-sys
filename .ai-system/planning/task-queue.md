@@ -26,7 +26,7 @@
 - [x] Add offline sync indicator + retry queue for pending offline submissions
 - [x] Fix offline/online redirect loop (dashboard loading stuck) by restoring pre-navigation state
 - [x] Implement draft persistence for goals page and templates editing
-- [ ] Implement central audit trail helper (`lib/utils/audit.ts`) and refactor report events + template version snapshots to use it
+- [ ] Complete audit trail refactor by moving template version snapshot events to central helper (`lib/utils/audit.ts`) (report workflow events already migrated)
 - [ ] Fix report form stuck period/template selection (cached state rehydration issue) and repetitive goals loading by stabilizing loader effects and value tracking
 - [ ] Fix router navigation failure where page transitions require reload before working
 - [x] Wire Resend email service into invite creation, password reset, report workflow events (submission/approval/lock/reminder)
@@ -109,10 +109,12 @@ Verification note (2026-04-05): aggregate route/page/service are present but fea
 - [ ] Add `modules/reports/components/ReportAggregationPage.tsx` with interactive stepper: choose scope (campus/group/CEO), date range, template/version, status filter, metric selector/deselector, and preview metrics.
 - [x] Add data visualization embedding to export (spreadsheet charts/worksheet summary) in `modules/analytics/components/AnalyticsPage.tsx`/export utility.
 - [x] Add automated tests for aggregation correctness (sum/average/snapshot logic, mismatch template versions fallback strategy) in `test/aggregation.test.ts`.
-- [ ] Update `config/routes.ts` nav to include Aggregated reports route; update breadcrumbs in `modules/reports`.
-- [ ] Document aggregation behavior in `docs/` and `hypersystem` architecture notes.
+- [ ] Add Aggregated reports nav entry + breadcrumbs coverage in `modules/reports`.
+- [ ] Document aggregation behavior in `.ai-system` architecture/project notes (and product docs when introduced).
 
 Verification note (2026-04-05, this session): aggregation scope defaulting/locking was fixed for campus/group roles and preview/generate now guard missing scope; metadata fields (`aggregationSource`, `aggregatedFrom`) were added in shared types + aggregation responses; `test/aggregation.test.ts` now covers sum/average/snapshot and role/scope enforcement. Remaining aggregation UI/doc tasks stay open due metric selector and docs backlog.
+
+Verification note (2026-04-05, this session): aggregation no-result behavior now returns domain `404` instead of generic `500`, and group-scope query matching now checks both `orgGroupId` and group campus IDs to reduce false-negative “no reports” matches on mixed legacy/current data paths.
 
 Verification note (2026-04-05, this session): Redis cursor termination and push sync matrix tests were added as targeted regressions; profile/org no-refresh remains open for full UI-level regression harness.
 

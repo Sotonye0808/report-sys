@@ -439,3 +439,45 @@ Run a cloud implementation session using the new prompt to close the remaining 1
 
 - Baseline full test script and build remain environment-blocked in this sandbox (`npm run test` quoted glob issue, build requires unrestricted font fetch); required gate `npm run -s typecheck` passes and targeted updated tests pass.
 - Lint baseline is still blocked by repo ESLint/tooling state in this environment.
+
+## Session 11 — 2026-04-05
+
+**Completed:**
+
+- Hardened aggregation no-result handling so API returns domain `404` (`not found`) instead of generic `500` when no matching reports exist.
+- Improved group-scope aggregation query resilience by matching both `orgGroupId` and campuses under the selected group.
+- Refreshed `.ai-system` queue/status artifacts:
+  - updated task wording/verification notes in `.ai-system/planning/task-queue.md`
+  - refreshed counts + remaining actionable set in `.ai-system/planning/temp-task-queue-gap-audit-2026-04-05.md` (now 10 actionable, excluding placeholders)
+- Completed index/architecture sync pass:
+  - `.ai-system/index/repo-map.md`
+  - `.ai-system/index/dependency-graph.md`
+  - `.ai-system/index/file-summaries/{app,config,lib,modules,prisma}.md`
+  - `.ai-system/agents/system-architecture.md`
+- Ran targeted aggregation regression test:
+  - `npx tsx test/aggregation.test.ts` ✅
+
+**Files Modified:**
+
+- `app/api/reports/aggregate/route.ts`
+- `lib/data/reportAggregation.ts`
+- `.ai-system/planning/task-queue.md`
+- `.ai-system/planning/temp-task-queue-gap-audit-2026-04-05.md`
+- `.ai-system/index/repo-map.md`
+- `.ai-system/index/dependency-graph.md`
+- `.ai-system/index/file-summaries/app.md`
+- `.ai-system/index/file-summaries/config.md`
+- `.ai-system/index/file-summaries/lib.md`
+- `.ai-system/index/file-summaries/modules.md`
+- `.ai-system/index/file-summaries/prisma.md`
+- `.ai-system/agents/system-architecture.md`
+- `.ai-system/checkpoints/session-log.md`
+
+**Next Task:**
+
+- Execute remaining 10 actionable queue items, prioritizing aggregation UI completion (metric selector/stepper + nav/breadcrumb) and the open regression suites.
+
+**Notes / Blockers:**
+
+- Aggregation query/response behavior is improved, but full integrated runtime validation across campus/group/global user journeys is still pending.
+- Baseline lint/build environment constraints remain unchanged in this sandbox.

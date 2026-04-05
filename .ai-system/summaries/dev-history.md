@@ -357,3 +357,33 @@ Stabilized the aggregated-report flow by fixing scope resolution/enforcement acr
 **Next Sprint Focus:**
 
 - Complete remaining open production-readiness tasks (UI no-refresh regression harness, audit-helper refactor completion, remaining router/report-form fixes) and finish aggregation docs/metric-selector completion.
+
+## 2026-04-05 — Update-AI-System Sync + Aggregation No-Result Hardening
+
+**Summary:**
+Completed a follow-up synchronization pass to align `.ai-system` documentation and queue state with current repository reality, and patched the aggregation endpoint to avoid misclassifying no-data scenarios as server errors. Group-scope report matching was also hardened to reduce false-negative aggregation results on mixed data paths.
+
+**Completed:**
+
+- Updated aggregation behavior:
+  - `app/api/reports/aggregate/route.ts` now maps no-source-report conditions to `404`.
+  - `lib/data/reportAggregation.ts` now uses domain `AggregationNoReportsError` and broadens group scope matching (`orgGroupId` OR group campus IDs).
+- Refreshed planning/docs artifacts:
+  - `.ai-system/planning/task-queue.md`
+  - `.ai-system/planning/temp-task-queue-gap-audit-2026-04-05.md`
+  - `.ai-system/index/repo-map.md`
+  - `.ai-system/index/dependency-graph.md`
+  - `.ai-system/index/file-summaries/*`
+  - `.ai-system/agents/system-architecture.md`
+- Revalidated aggregation unit coverage:
+  - `npx tsx test/aggregation.test.ts` passed.
+
+**Key Changes:**
+
+- API consumers now get an actionable no-data response (`404`) instead of misleading `500` for empty aggregation criteria.
+- Task queue reconciliation now reflects the reduced open scope (10 actionable items excluding placeholder backlog entries).
+- Index/architecture docs now include managed assets, request-context logging utilities, and updated aggregation behavior.
+
+**Next Sprint Focus:**
+
+Complete remaining queue items: aggregation UI completion (metric selector/stepper + nav/breadcrumb), open regression suites, and template snapshot audit-helper refactor finalization.

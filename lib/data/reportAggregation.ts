@@ -56,6 +56,13 @@ export interface AggregationResult {
     periodWeek?: number;
 }
 
+export class AggregationNoReportsError extends Error {
+    constructor(message = "No reports found for the selected scope and period.") {
+        super(message);
+        this.name = "AggregationNoReportsError";
+    }
+}
+
 /** Determine campus IDs available for user scope. */
 export async function resolveScopeCampusIds(user: AuthUser): Promise<string[] | null> {
     if (!user || !user.role) return null;
@@ -110,7 +117,20 @@ export async function buildReportQuery(
     if (criteria.scopeType === "campus" && criteria.scopeId) {
         where.campusId = criteria.scopeId;
     } else if (criteria.scopeType === "group" && criteria.scopeId) {
-        where.orgGroupId = criteria.scopeId;
+        const selectedGroup = await db.orgGroup.findUnique({
+            where: { id: criteria.scopeId },
+            include: { campuses: { select: { id: true } } },
+        });
+
+        const selectedGroupCampusIds = selectedGroup?.campuses.map((campus) => campus.id) ?? [];
+        if (selectedGroupCampusIds.length > 0) {
+            where.OR = [
+                { orgGroupId: criteria.scopeId },
+                { campusId: { in: selectedGroupCampusIds } },
+            ];
+        } else {
+            where.orgGroupId = criteria.scopeId;
+        }
     } else if (campusScope && campusScope.length > 0) {
         where.campusId = { in: campusScope };
     }
@@ -139,7 +159,7 @@ export async function calculateAggregation(
     });
 
     if (reports.length === 0) {
-        throw new Error("No reports found for the selected scope and period.");
+        throw new AggregationNoReportsError();
     }
 
     const templateIds = Array.from(new Set(reports.map((r) => r.templateId)));

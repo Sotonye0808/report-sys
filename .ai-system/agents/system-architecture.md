@@ -17,7 +17,7 @@ API Layer (app/api/*) → Auth / Reports / Users / Org / Notifications / Assets
         ↓
 Business logic (modules/* + config/* + lib/utils)
         ↓
-Data layer (Prisma / Redis cache / mock DB)
+Data layer (Prisma client + Redis cache + query services)
         ↓
 PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 ```
@@ -28,23 +28,21 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 
 > **Section summary:** Each module listed here has a single defined responsibility. Agents should not modify a module's scope without updating this document.
 
-| Module                 | Responsibility                                                                                                                                  | Key Files                                                                                                                                  | Dependencies                           |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- | --- | -------------------------- | ---------------------------------------------------------------------- | -------------------------- | -------------------------------------------- |
-| `app/`                 | Next.js App Router routes + layouts + global error handling                                                                                     | `app/layout.tsx`, `app/page.tsx`, `app/(dashboard)/`                                                                                       | `providers/*`, `modules/*`, `config/*` |
-| `components/ui/`       | Shared UI primitives and design system components                                                                                               | `components/ui/*`                                                                                                                          | `antd`, config tokens                  |
-| `providers/`           | React context providers for theme, Ant Design, and auth                                                                                         | `providers/ThemeProvider.tsx`, `providers/AntdProvider.tsx`, `providers/AuthProvider.tsx`                                                  | `next-themes`, `antd`, `lib/utils/api` |
-| `config/`              | Business configuration and content definition (routes, roles, templates)                                                                        | `config/routes.ts`, `config/roles.ts`, `config/reports.ts`                                                                                 | Types, constants                       |
-| `modules/`             | Feature modules that implement UI + domain logic for reports, analytics, users, etc.                                                            | `modules/reports/*`, `modules/analytics/*`                                                                                                 | `lib/hooks`, `lib/utils`, `config/*`   |
-| `modules/analytics`    | Interactive analytics, configurable UI charts, axis label mode support (auto/short/full), tooltips, and export with trend/pie/line/area toolset | `modules/analytics/components/AnalyticsPage.tsx`, `modules/reports/components/ReportAnalyticsPage.tsx`, `modules/analytics/chartUtils.tsx` | `lib/utils/exportReports`, `lib/data`  |
-| `modules/org/`         | Organization hierarchy management (groups, campuses, future multi-level org structure)                                                          | `modules/org/*`                                                                                                                            | `lib/data`, `config/*`, `lib/hooks/*`  |     | `lib/data/orgHierarchy.ts` | Org hierarchy helper service (role scope filtering, hierarchical tree) | `lib/data/orgHierarchy.ts` | `lib/data`, `modules/org`, `modules/reports` |
-| `lib/data/`            | Data access layer with Prisma, Redis, and mock DB adapters                                                                                      | `lib/data/prisma.ts`, `lib/data/redis.ts`, `lib/data/db.ts`                                                                                | `prisma`, `@upstash/redis`             |
-| `lib/email/`           | Email delivery via Resend                                                                                                                       | `lib/email/resend.ts`                                                                                                                      | `resend`                               |
-| `lib/email/templates/` | Config-driven email template registry and shared HTML layout shell                                                                              | `lib/email/templates/registry.ts`, `lib/email/templates/layout.ts`                                                                         | `lib/email`, `config/*`                |
-| `lib/hooks/`           | Shared React hooks (auth, offline sync, data fetching)                                                                                          | `lib/hooks/*`                                                                                                                              | `lib/utils/*`                          |
-| `lib/server/`          | Server request-scoped helpers (correlation IDs, request metadata context)                                                                       | `lib/server/requestContext.ts`                                                                                                             | `app/api/*`                            |
-| `lib/utils/`           | Shared cross-cutting utilities (response helpers, logging, notifications, client mutation lifecycle)                                            | `lib/utils/api.ts`, `lib/utils/serverLogger.ts`, `lib/utils/apiMutation.ts`, `lib/utils/notificationOrchestrator.ts`                       | `modules/*`, `app/api/*`               |
-| `lib/assets/`          | Managed Cloudinary asset lifecycle (folders, session state machine, ACID + compensating cleanup)                                                | `lib/assets/cloudinaryAdapter.ts`, `lib/assets/lifecycleStateMachine.ts`, `lib/assets/lifecycleService.ts`                                  | `app/api/assets/*`, `app/api/bug-reports/*`, `prisma/*` |
-| `prisma/`              | Database schema, migrations, and seed data                                                                                                      | `prisma/schema.prisma`, `prisma/seed.ts`                                                                                                   | `@prisma/client`                       |
+| Module              | Responsibility                                                            | Key Files                                                                                                            | Dependencies                                            |
+| ------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `app/`              | Next.js routes, layouts, and API handlers                                 | `app/layout.tsx`, `app/page.tsx`, `app/api/*`, `app/(dashboard)/*`                                                   | `providers/*`, `modules/*`, `config/*`, `lib/*`         |
+| `components/ui/`    | Shared UI primitives and composable building blocks                       | `components/ui/*`                                                                                                    | `antd`, tokens/content config                           |
+| `providers/`        | Theme, UI framework, and auth context composition                         | `providers/ThemeProvider.tsx`, `providers/AntdProvider.tsx`, `providers/AuthProvider.tsx`                            | `next-themes`, `antd`, `lib/utils/api`                  |
+| `config/`           | Routes, roles, navigation, report settings, and copy                      | `config/routes.ts`, `config/nav.ts`, `config/roles.ts`, `config/reports.ts`, `config/content.ts`                     | `types/global.ts`                                       |
+| `modules/reports`   | Report workflows, detail/edit/analytics/aggregation UI, workflow services | `modules/reports/components/*`, `modules/reports/services/reportWorkflow.ts`                                         | `lib/data`, `lib/utils`, `config/*`                     |
+| `modules/analytics` | Analytics pages/charts and chart utility logic                            | `modules/analytics/components/AnalyticsPage.tsx`, `modules/analytics/chartUtils.ts`                                  | `lib/utils/exportReports`, `app/api/analytics/*`        |
+| `modules/org`       | Group/campus hierarchy management and write operations                    | `modules/org/components/OrgPage.tsx`, `modules/org/services/orgWriteService.ts`                                      | `lib/data`, `lib/utils`, `config/*`                     |
+| `lib/data/`         | Prisma/Redis data boundary and query helpers                              | `lib/data/prisma.ts`, `lib/data/db.ts`, `lib/data/redis.ts`, `lib/data/reportAggregation.ts`                         | `prisma/generated`, `@upstash/redis`                    |
+| `lib/assets/`       | Managed Cloudinary upload session lifecycle and cleanup                   | `lib/assets/cloudinaryAdapter.ts`, `lib/assets/lifecycleService.ts`, `lib/assets/lifecycleStateMachine.ts`           | `app/api/assets/*`, `app/api/bug-reports/*`, `prisma/*` |
+| `lib/server/`       | Request context metadata (request IDs, route context)                     | `lib/server/requestContext.ts`                                                                                       | `app/api/*`                                             |
+| `lib/utils/`        | API envelope helpers, logging, mutation lifecycle, offline, notifications | `lib/utils/api.ts`, `lib/utils/serverLogger.ts`, `lib/utils/apiMutation.ts`, `lib/utils/notificationOrchestrator.ts` | `modules/*`, `app/api/*`                                |
+| `lib/email/`        | Resend delivery and templated email generation                            | `lib/email/resend.ts`, `lib/email/templates/registry.ts`                                                             | `resend`, `config/content.ts`                           |
+| `prisma/`           | Schema, migrations, generated client, seed                                | `prisma/schema.prisma`, `prisma/migrations/*`, `prisma/generated/*`, `prisma/seed.ts`                                | `@prisma/client`, `@prisma/adapter-pg`                  |
 
 ---
 
@@ -67,6 +65,7 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 10) Notification fan-out is orchestrated by channel preference: in-app first, email when `RESEND_API_KEY` + user preference allow, and push when subscription exists.
 11) Bug report screenshots now use managed asset lifecycle sessions (`/api/assets/sessions`): create → optional temp upload (`preupload_draft`) → finalize/discard, with deferred submit as default mode.
 12) Asset lifecycle writes use DB transactions for state and compensating Cloudinary deletes on downstream DB failures; stale TEMP assets are cleaned by `/api/assets/cleanup`.
+13) Aggregation preview/generate treats no matching source reports as domain not-found (`404`) rather than generic server failure, improving user error handling.
 ```
 
 ### Authentication Flow
@@ -93,24 +92,26 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 
 > **Section summary:** All configurable values are listed here. Nothing should be hardcoded in source files that appears in this section.
 
-| Config Key                     | Purpose                                   | Location | Default                               |
-| ------------------------------ | ----------------------------------------- | -------- | ------------------------------------- |
-| `NEXT_PUBLIC_API_URL`          | Base URL for client API calls (if needed) | `.env*`  | `undefined` (defaults to same origin) |
-| `DATABASE_URL`                 | Prisma database connection string         | `.env*`  | Not set (required for production)     |
-| `REDIS_URL`                    | Upstash Redis connection                  | `.env*`  | Not set (optional)                    |
-| `RESEND_API_KEY`               | Resend email API key                      | `.env*`  | Not set (optional)                    |
-| `EMAIL_FROM`                   | Sender identity for outbound email        | `.env*`  | `Harvesters Reporting <noreply@...>`  |
-| `JWT_SECRET`                   | JWT signing secret                        | `.env*`  | Not set (required for auth)           |
-| `NEXTAUTH_URL`                 | NextAuth base URL (if used)               | `.env*`  | Not set                               |
-| `NEXT_PUBLIC_APP_URL`          | Absolute app URL for email deep links     | `.env*`  | Not set (recommended in production)   |
-| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Browser push subscription public key      | `.env*`  | Not set (optional, required for push) |
-| `NEXT_PUBLIC_BUG_REPORT_ASSET_UPLOAD_MODE` | Bug screenshot upload mode (`deferred_submit` default, `preupload_draft` feature mode) | `.env*`  | `deferred_submit` |
-| `CLOUDINARY_CLOUD_NAME`        | Cloudinary cloud name                     | `.env*`  | Not set (required for managed assets) |
-| `CLOUDINARY_API_KEY`           | Cloudinary API key                        | `.env*`  | Not set (required for managed assets) |
-| `CLOUDINARY_API_SECRET`        | Cloudinary API secret                     | `.env*`  | Not set (required for managed assets) |
-| `CLOUDINARY_ROOT_FOLDER`       | Root folder segment for managed assets    | `.env*`  | Not set (required for managed assets) |
-| `CLOUDINARY_PROJECT_ASSET_FOLDER` | Project folder segment for managed assets | `.env*`  | Not set (required for managed assets) |
-| `ASSET_CLEANUP_TOKEN`          | Optional shared secret for cleanup endpoint invocation | `.env*`  | Not set                               |
+| Config Key                                 | Purpose                                                                                | Location | Default                               |
+| ------------------------------------------ | -------------------------------------------------------------------------------------- | -------- | ------------------------------------- |
+| `NEXT_PUBLIC_API_URL`                      | Base URL for client API calls (if needed)                                              | `.env*`  | `undefined` (defaults to same origin) |
+| `DATABASE_URL`                             | Prisma database connection string                                                      | `.env*`  | Not set (required for production)     |
+| `REDIS_URL`                                | Upstash Redis connection                                                               | `.env*`  | Not set (optional)                    |
+| `RESEND_API_KEY`                           | Resend email API key                                                                   | `.env*`  | Not set (optional)                    |
+| `EMAIL_FROM`                               | Sender identity for outbound email                                                     | `.env*`  | `Harvesters Reporting <noreply@...>`  |
+| `JWT_SECRET`                               | JWT signing secret                                                                     | `.env*`  | Not set (required for auth)           |
+| `NEXTAUTH_URL`                             | NextAuth base URL (if used)                                                            | `.env*`  | Not set                               |
+| `NEXT_PUBLIC_APP_URL`                      | Absolute app URL for email deep links                                                  | `.env*`  | Not set (recommended in production)   |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY`             | Browser push subscription public key                                                   | `.env*`  | Not set (optional, required for push) |
+| `NEXT_PUBLIC_BUG_REPORT_ASSET_UPLOAD_MODE` | Bug screenshot upload mode (`deferred_submit` default, `preupload_draft` feature mode) | `.env*`  | `deferred_submit`                     |
+| `CLOUDINARY_CLOUD_NAME`                    | Cloudinary cloud name                                                                  | `.env*`  | Not set (required for managed assets) |
+| `CLOUDINARY_API_KEY`                       | Cloudinary API key                                                                     | `.env*`  | Not set (required for managed assets) |
+| `CLOUDINARY_API_SECRET`                    | Cloudinary API secret                                                                  | `.env*`  | Not set (required for managed assets) |
+| `CLOUDINARY_ROOT_FOLDER`                   | Root folder segment for managed assets                                                 | `.env*`  | Not set (required for managed assets) |
+| `CLOUDINARY_PROJECT_ASSET_FOLDER`          | Project folder segment for managed assets                                              | `.env*`  | Not set (required for managed assets) |
+| `ASSET_CLEANUP_TOKEN`                      | Optional shared secret for cleanup endpoint invocation                                 | `.env*`  | Not set                               |
+| `PRISMA_ACCELERATE_URL`                    | Optional Prisma Accelerate URL (when used)                                             | `.env*`  | Not set                               |
+| `REPORT_REMINDER_HOURS`                    | Deadline reminder lead-time in hours                                                   | `.env*`  | `24`                                  |
 
 ---
 
@@ -135,7 +136,7 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 
 > **Section summary:** Limitations and known issues that affect architecture decisions. Agents should be aware of these before proposing changes.
 
-- The system currently uses a mock database for local development; production relies on Prisma + PostgreSQL.
+- The runtime data layer now expects Prisma-backed PostgreSQL connectivity (`DATABASE_URL` and optional `PRISMA_ACCELERATE_URL`).
 - Auth and access control are role-based; permissions are defined in `config/roles.ts` and must be updated when adding new roles or capabilities.
 - Some feature modules still rely on `any` types due to legacy data shapes; type tightening is a priority before release.
 - Offline sync is experimental and depends on service worker support; current implementation is a best-effort cache.
@@ -149,6 +150,7 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 - Notification preference and push-subscription persistence currently uses cache-backed storage (`lib/utils/notificationPreferences.ts`) as a transitional durability layer; migration to relational persistence is recommended for long-term reliability.
 - Write-route diagnostics now depend on request ID propagation and structured logging; all new write endpoints should include request context via `lib/server/requestContext.ts`.
 - Bug report migration currently supports both legacy `screenshotUrl` and managed `screenshotAssetId`; read paths should continue preferring managed asset URL when present.
+- Aggregation still has pending UX polish (stepper completeness, metric selector ergonomics, and nav/breadcrumb discoverability) even after query/response hardening.
 
 ---
 

@@ -291,3 +291,30 @@ UI initialization did not fully reconcile browser permission + existing push sub
 - `config/content.ts`
 
 **Date:** 2026-04-04
+
+## Aggregation no-data path returned generic 500
+
+**Symptom:**
+Aggregation preview/generate returned payloads like `success: false`, `error: "No reports found for the selected scope and period."`, `code: 500` for valid requests with zero matches.
+
+**Root Cause:**
+The aggregation service threw a generic `Error` for no-data conditions, and route-level handling fell through to `handleApiError`, which maps unknown errors to `500`.
+
+**Fix Applied:**
+
+- Added typed domain error `AggregationNoReportsError` in `lib/data/reportAggregation.ts`.
+- Updated `app/api/reports/aggregate/route.ts` to map:
+  - `AggregationNoReportsError` → `notFoundResponse` (`404`)
+  - `zod` validation errors → `badRequestResponse` (`400`)
+
+**Prevention:**
+
+- Treat expected business no-data outcomes as typed domain errors.
+- Handle domain/validation errors before calling generic API error wrappers.
+
+**Files Affected:**
+
+- `lib/data/reportAggregation.ts`
+- `app/api/reports/aggregate/route.ts`
+
+**Date:** 2026-04-05
