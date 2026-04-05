@@ -49,6 +49,11 @@
 - [ ] Add regression test coverage for Redis scan cursor string termination and write-route completion under cache invalidation load
 - [ ] Add UI regression test coverage ensuring profile and org hierarchy mutations update UI state without manual refresh
 - [ ] Add push notification sync test matrix (permission granted + existing subscription, granted + no subscription, missing VAPID key)
+- [x] Implement Cloudinary managed asset lifecycle for bug report screenshots (session/create-upload-finalize-discard-cleanup, ACID + compensation, legacy screenshotUrl compatibility)
+- [x] Add schema + migration groundwork for `MediaAsset`, `AssetUploadSession`, and `AssetLifecycleEvent`
+- [x] Add bug report UI integration for managed screenshots with deferred submit default and `preupload_draft` feature flag
+- [x] Add stale TEMP screenshot cleanup API path with auth/token guard and structured request-id logging
+- [x] Add lifecycle state-machine and migration compatibility regression tests for screenshot lifecycle
 
 ---
 

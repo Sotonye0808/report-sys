@@ -266,3 +266,35 @@ Investigated and fixed a regression where profile and org hierarchy write operat
 - Add regression coverage for Redis cursor terminal-value variants and write-route completion timing.
 - Add UI regression tests for immediate post-mutation state updates (no manual refresh).
 - Add push sync matrix tests for permission/subscription/VAPID edge cases.
+
+## 2026-04-04 — Cloudinary Managed Asset Lifecycle for Bug Report Screenshots
+
+**Summary:**
+Implemented a managed screenshot asset lifecycle using Cloudinary for bug reports with transactional DB state handling and compensating external cleanup behavior. Added lifecycle APIs and domain service guards to safely handle cancel, clear, replace, finalize, and stale-temp cleanup paths without regressing existing bug-report flows.
+
+**Completed:**
+
+- Added managed asset schema models and migration:
+  - `MediaAsset`
+  - `AssetUploadSession`
+  - `AssetLifecycleEvent`
+  - Bug report linkage via `screenshotAssetId` (legacy `screenshotUrl` retained)
+- Added Cloudinary adapter with enforced folder contract:
+  - `CLOUDINARY_ROOT_FOLDER/CLOUDINARY_PROJECT_ASSET_FOLDER/domain/year/month`
+- Added lifecycle APIs for session create/upload/finalize/discard and stale cleanup.
+- Updated bug report API and UI to support managed screenshots with deferred-submit default and feature-flagged `preupload_draft` mode.
+- Added request-id structured logging across lifecycle transitions.
+- Added regression tests:
+  - `test/lifecycleStateMachine.test.ts`
+  - `test/bugReportAssetCompatibility.test.ts`
+
+**Key Changes:**
+
+- Asset lifecycle now supports idempotent finalize/discard semantics and ownership checks.
+- Bug report read paths remain migration-compatible by preferring managed asset URL and falling back to legacy `screenshotUrl`.
+- Cleanup path can be invoked by SUPERADMIN or shared-token schedule flow via `ASSET_CLEANUP_TOKEN`.
+
+**Next Sprint Focus:**
+
+- Add deeper failure-injection tests around Cloudinary compensation failures and concurrent session races.
+- Add scheduling/invocation runbook for periodic cleanup endpoint execution in deployment environments.

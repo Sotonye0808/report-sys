@@ -168,4 +168,11 @@ export const API_ROUTES = {
         list: "/api/bug-reports",
         detail: (id: string) => `/api/bug-reports/${id}`,
     },
+    assets: {
+        sessions: "/api/assets/sessions",
+        sessionUpload: (id: string) => `/api/assets/sessions/${id}/upload`,
+        sessionFinalize: (id: string) => `/api/assets/sessions/${id}/finalize`,
+        sessionDiscard: (id: string) => `/api/assets/sessions/${id}/discard`,
+        cleanup: "/api/assets/cleanup",
+    },
 } as const;

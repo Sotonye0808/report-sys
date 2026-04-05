@@ -13,7 +13,7 @@ Browser (React + Ant Design UI)
         ↓ (HTTP / fetch)
 Next.js App Router (app/ + server actions)
         ↓ (Route handlers)
-API Layer (app/api/*) → Auth / Reports / Users / Org / Notifications
+API Layer (app/api/*) → Auth / Reports / Users / Org / Notifications / Assets
         ↓
 Business logic (modules/* + config/* + lib/utils)
         ↓
@@ -43,6 +43,7 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 | `lib/hooks/`           | Shared React hooks (auth, offline sync, data fetching)                                                                                          | `lib/hooks/*`                                                                                                                              | `lib/utils/*`                          |
 | `lib/server/`          | Server request-scoped helpers (correlation IDs, request metadata context)                                                                       | `lib/server/requestContext.ts`                                                                                                             | `app/api/*`                            |
 | `lib/utils/`           | Shared cross-cutting utilities (response helpers, logging, notifications, client mutation lifecycle)                                            | `lib/utils/api.ts`, `lib/utils/serverLogger.ts`, `lib/utils/apiMutation.ts`, `lib/utils/notificationOrchestrator.ts`                       | `modules/*`, `app/api/*`               |
+| `lib/assets/`          | Managed Cloudinary asset lifecycle (folders, session state machine, ACID + compensating cleanup)                                                | `lib/assets/cloudinaryAdapter.ts`, `lib/assets/lifecycleStateMachine.ts`, `lib/assets/lifecycleService.ts`                                  | `app/api/assets/*`, `app/api/bug-reports/*`, `prisma/*` |
 | `prisma/`              | Database schema, migrations, and seed data                                                                                                      | `prisma/schema.prisma`, `prisma/seed.ts`                                                                                                   | `@prisma/client`                       |
 
 ---
@@ -64,6 +65,8 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 8) Write endpoints generate/propagate request correlation IDs (`x-request-id`) and emit structured redacted logs for diagnostics.
 9) Client write actions use unified mutation helper (`apiMutation`) with consistent pending/success/error lifecycle to prevent stuck loading states.
 10) Notification fan-out is orchestrated by channel preference: in-app first, email when `RESEND_API_KEY` + user preference allow, and push when subscription exists.
+11) Bug report screenshots now use managed asset lifecycle sessions (`/api/assets/sessions`): create → optional temp upload (`preupload_draft`) → finalize/discard, with deferred submit as default mode.
+12) Asset lifecycle writes use DB transactions for state and compensating Cloudinary deletes on downstream DB failures; stale TEMP assets are cleaned by `/api/assets/cleanup`.
 ```
 
 ### Authentication Flow
@@ -101,6 +104,13 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 | `NEXTAUTH_URL`                 | NextAuth base URL (if used)               | `.env*`  | Not set                               |
 | `NEXT_PUBLIC_APP_URL`          | Absolute app URL for email deep links     | `.env*`  | Not set (recommended in production)   |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Browser push subscription public key      | `.env*`  | Not set (optional, required for push) |
+| `NEXT_PUBLIC_BUG_REPORT_ASSET_UPLOAD_MODE` | Bug screenshot upload mode (`deferred_submit` default, `preupload_draft` feature mode) | `.env*`  | `deferred_submit` |
+| `CLOUDINARY_CLOUD_NAME`        | Cloudinary cloud name                     | `.env*`  | Not set (required for managed assets) |
+| `CLOUDINARY_API_KEY`           | Cloudinary API key                        | `.env*`  | Not set (required for managed assets) |
+| `CLOUDINARY_API_SECRET`        | Cloudinary API secret                     | `.env*`  | Not set (required for managed assets) |
+| `CLOUDINARY_ROOT_FOLDER`       | Root folder segment for managed assets    | `.env*`  | Not set (required for managed assets) |
+| `CLOUDINARY_PROJECT_ASSET_FOLDER` | Project folder segment for managed assets | `.env*`  | Not set (required for managed assets) |
+| `ASSET_CLEANUP_TOKEN`          | Optional shared secret for cleanup endpoint invocation | `.env*`  | Not set                               |
 
 ---
 
@@ -138,6 +148,7 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 - Push notification UI state must reconcile browser permission, existing service worker subscription, and backend subscription persistence to avoid false-disabled toggle states.
 - Notification preference and push-subscription persistence currently uses cache-backed storage (`lib/utils/notificationPreferences.ts`) as a transitional durability layer; migration to relational persistence is recommended for long-term reliability.
 - Write-route diagnostics now depend on request ID propagation and structured logging; all new write endpoints should include request context via `lib/server/requestContext.ts`.
+- Bug report migration currently supports both legacy `screenshotUrl` and managed `screenshotAssetId`; read paths should continue preferring managed asset URL when present.
 
 ---
 
