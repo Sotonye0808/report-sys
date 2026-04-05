@@ -23,7 +23,7 @@
 - [x] Implement offline draft persistence + restore for reports, templates, and goals
 - [x] Implement universal form auto-save + restore for all forms (reports/templates/goals/org/bug reports)
 - [x] Reduce Prisma interactive transaction timeout limit to 15000 for bulk operations and template edits
-- [ ] Add offline sync indicator + retry queue for pending offline submissions
+- [x] Add offline sync indicator + retry queue for pending offline submissions
 - [x] Fix offline/online redirect loop (dashboard loading stuck) by restoring pre-navigation state
 - [x] Implement draft persistence for goals page and templates editing
 - [ ] Implement central audit trail helper (`lib/utils/audit.ts`) and refactor report events + template version snapshots to use it
@@ -100,12 +100,14 @@
 
 ## Pending tasks (added for aggregated rollup feature)
 
+Verification note (2026-04-05): aggregate route/page/service are present but feature is still failing in real usage (selected scope load failure). Keep this section open until end-to-end aggregation succeeds and is validated with tests.
+
 - [ ] Add report aggregation API kernel decorators and zod schemas in `app/api/reports/aggregate`.
 - [ ] Extend report data model / response types in `types/global.d.ts` to carry `aggregationSource` and `aggregatedFrom` metadata.
 - [ ] Implement `lib/data/reportAggregation.ts` service to create/validate aggregated reports by template, version, campus/group, status, and metric calculations.
 - [ ] Add org hierarchy context helper in `modules/org` to resolve parent group/campus rollup sets in aggregation UI.
 - [ ] Add `modules/reports/components/ReportAggregationPage.tsx` with interactive stepper: choose scope (campus/group/CEO), date range, template/version, status filter, metric selector/deselector, and preview metrics.
-- [ ] Add data visualization embedding to export (spreadsheet charts/worksheet summary) in `modules/analytics/components/AnalyticsPage.tsx`/export utility.
+- [x] Add data visualization embedding to export (spreadsheet charts/worksheet summary) in `modules/analytics/components/AnalyticsPage.tsx`/export utility.
 - [ ] Add automated tests for aggregation correctness (sum/average/snapshot logic, mismatch template versions fallback strategy) in `test/aggregation.test.ts`.
 - [ ] Update `config/routes.ts` nav to include Aggregated reports route; update breadcrumbs in `modules/reports`.
 - [ ] Document aggregation behavior in `docs/` and `hypersystem` architecture notes.

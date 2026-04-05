@@ -298,3 +298,28 @@ Implemented a managed screenshot asset lifecycle using Cloudinary for bug report
 
 - Add deeper failure-injection tests around Cloudinary compensation failures and concurrent session races.
 - Add scheduling/invocation runbook for periodic cleanup endpoint execution in deployment environments.
+
+## 2026-04-05 — Task Queue Gap Audit + Cloud Handoff Pack
+
+**Summary:**
+Performed a repo-backed audit of unchecked task-queue items to distinguish truly incomplete work from stale checkbox status. Corrected two stale unchecked tasks, confirmed aggregated reporting remains partially implemented and still failing in real usage, refreshed RepoMix context, and produced a cloud-session handoff artifact with an execution-ready prompt focused on closing remaining production-readiness gaps.
+
+**Completed:**
+
+- Audited unchecked queue items against current code and tests.
+- Corrected stale queue status for offline sync queue indicator and aggregated export chart embedding.
+- Added aggregation verification note to keep partially implemented tasks open until end-to-end validation passes.
+- Created `.ai-system/planning/temp-task-queue-gap-audit-2026-04-05.md` with:
+  - remaining actionable task inventory,
+  - partial/open classification,
+  - cloud-session implementation prompt.
+- Regenerated `repomix-current.txt` via MCP for up-to-date cloud context.
+
+**Key Changes:**
+
+- Queue now reflects implementation reality more accurately, reducing duplicate work in cloud execution.
+- Cloud handoff now prioritizes the aggregation scope/load failure and missing regression suites with explicit validation gates.
+
+**Next Sprint Focus:**
+
+Execute the cloud session prompt from the gap-audit plan, close remaining actionable tasks, and update architecture/repair docs based on final aggregation and regression outcomes.

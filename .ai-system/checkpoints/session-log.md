@@ -362,3 +362,35 @@ Run final validations (`typecheck`, targeted tests, build if possible), run `par
 
 - Baseline lint remains blocked by ESLint v9 flat-config migration gap (`eslint.config.*` missing).
 - Build may fail in sandbox due blocked Google Fonts fetch (known environment limitation).
+
+## Session 9 — 2026-04-05
+
+**Completed:**
+
+- Audited all unchecked items in `.ai-system/planning/task-queue.md` against current repository implementation to identify true open work vs stale checkboxes.
+- Verified and corrected two stale unchecked tasks:
+  - offline sync indicator + retry queue
+  - aggregated export chart embedding
+- Confirmed aggregation feature is still partially implemented and currently failing in real usage; added explicit verification note in task queue section.
+- Generated a consolidated execution artifact for cloud handoff:
+  - `.ai-system/planning/temp-task-queue-gap-audit-2026-04-05.md`
+  - includes remaining actionable task list (17), partial/open classification, and ready-to-paste cloud prompt.
+- Refreshed RepoMix context snapshot via MCP:
+  - `repomix-current.txt` regenerated.
+
+**Files Modified:**
+
+- `.ai-system/planning/task-queue.md`
+- `.ai-system/planning/temp-task-queue-gap-audit-2026-04-05.md`
+- `repomix-current.txt`
+- `.ai-system/checkpoints/session-log.md`
+- `.ai-system/summaries/dev-history.md`
+
+**Next Task:**
+
+Run a cloud implementation session using the new prompt to close the remaining 17 actionable tasks, prioritizing aggregated report scope/load failures and missing regression coverage.
+
+**Notes / Blockers:**
+
+- `rg` is unavailable in this shell environment; task counting used PowerShell `Select-String` instead.
+- Aggregation path has code present (`route/page/service`) but requires end-to-end correctness fixes before completion check-offs.
