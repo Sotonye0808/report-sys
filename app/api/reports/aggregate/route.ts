@@ -12,12 +12,13 @@ import { calculateAggregation, persistAggregatedReport, AggregationCriteria, Agg
 
 const AggregationRequestSchema = z.object({
     scopeType: z.enum(["campus", "group", "all"]),
-    scopeId: z.string().uuid().optional(),
+    scopeId: z.string().min(1).optional(),
     periodType: z.nativeEnum(ReportPeriodType),
     periodYear: z.number().int().min(2000).max(2100),
     periodMonth: z.number().int().min(1).max(12).optional(),
     periodWeek: z.number().int().min(1).max(53).optional(),
-    templateId: z.string().uuid().optional(),
+    templateId: z.string().min(1).optional(),
+    includeDrafts: z.boolean().optional().default(true),
     includeStatuses: z.array(z.nativeEnum(ReportStatus)).optional(),
     metricIds: z.array(z.string()).optional(),
     action: z.enum(["preview", "generate"]).default("preview"),
@@ -52,6 +53,7 @@ export async function POST(req: NextRequest) {
             periodMonth: body.periodMonth,
             periodWeek: body.periodWeek,
             templateId: body.templateId,
+            includeDrafts: body.includeDrafts,
             includeStatuses: body.includeStatuses,
             metricIds: body.metricIds,
             action: body.action,

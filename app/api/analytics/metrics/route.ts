@@ -32,9 +32,9 @@ const QuerySchema = z.object({
     year: z.coerce.number().int().min(2000).max(2100),
     compareYear: z.coerce.number().int().min(2000).max(2100).optional(),
     granularity: z.enum(["weekly", "monthly", "quarterly"]).default("monthly"),
-    startMonth: z.coerce.number().int().min(1).max(12).default(1),
-    endMonth: z.coerce.number().int().min(1).max(12).default(12),
-    includeDrafts: z.coerce.boolean().default(true),
+    startMonth: z.coerce.number().int().min(1).max(12).optional(),
+    endMonth: z.coerce.number().int().min(1).max(12).optional(),
+    includeDrafts: z.enum(["true", "false"]).optional().default("true"),
     statuses: z.array(z.nativeEnum(ReportStatus)).optional(),
 });
 
@@ -122,11 +122,18 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
     }
 
-    const parsed = QuerySchema.safeParse(Object.fromEntries(new URL(req.url).searchParams));
+    const searchParams = new URL(req.url).searchParams;
+    const parsed = QuerySchema.safeParse({
+        ...Object.fromEntries(searchParams),
+        statuses: searchParams.getAll("statuses"),
+    });
     if (!parsed.success) {
         return NextResponse.json({ success: false, error: "Invalid query parameters", details: parsed.error.flatten() }, { status: 400 });
     }
     const query = parsed.data;
+    const includeDrafts = query.includeDrafts === "true";
+    const startMonth = query.startMonth ?? 1;
+    const endMonth = query.endMonth ?? 12;
 
     const cacheKey = `analytics:metrics:${auth.user.id}:${JSON.stringify(query)}`;
     const cached = await cache.get(cacheKey);
@@ -188,16 +195,16 @@ export async function GET(req: NextRequest) {
     };
     if (allowedCampusIds) reportWhere.campusId = { in: allowedCampusIds };
     if (query.groupId) reportWhere.orgGroupId = query.groupId;
-    if (query.startMonth || query.endMonth) {
+    if (query.startMonth != null || query.endMonth != null) {
         reportWhere.periodMonth = {
-            gte: query.startMonth,
-            lte: query.endMonth,
+            gte: startMonth,
+            lte: endMonth,
         };
     }
 
     if (query.statuses && query.statuses.length > 0) {
         reportWhere.status = { in: query.statuses };
-    } else if (!query.includeDrafts) {
+    } else if (!includeDrafts) {
         reportWhere.status = { not: ReportStatus.DRAFT };
     }
 
@@ -253,12 +260,12 @@ export async function GET(req: NextRequest) {
     // Enumerate all periods in the range
     const allPeriods: string[] = [];
     if (query.granularity === "monthly") {
-        for (let mo = query.startMonth; mo <= query.endMonth; mo++) {
+        for (let mo = startMonth; mo <= endMonth; mo++) {
             allPeriods.push(`${query.year}-${String(mo).padStart(2, "0")}`);
         }
     } else if (query.granularity === "quarterly") {
-        const startQ = Math.ceil(query.startMonth / 3);
-        const endQ = Math.ceil(query.endMonth / 3);
+        const startQ = Math.ceil(startMonth / 3);
+        const endQ = Math.ceil(endMonth / 3);
         for (let q = startQ; q <= endQ; q++) {
             allPeriods.push(`${query.year}-Q${q}`);
         }

@@ -13,6 +13,7 @@ export interface AggregationCriteria {
     periodMonth?: number;
     periodWeek?: number;
     templateId?: string;
+    includeDrafts?: boolean;
     includeStatuses?: ReportStatus[];
     metricIds?: string[];
     action?: "preview" | "generate";
@@ -63,6 +64,35 @@ export class AggregationNoReportsError extends Error {
     }
 }
 
+const DRAFT_INCLUDED_STATUSES: ReportStatus[] = [
+    ReportStatus.DRAFT,
+    ReportStatus.SUBMITTED,
+    ReportStatus.APPROVED,
+    ReportStatus.REVIEWED,
+    ReportStatus.LOCKED,
+    ReportStatus.REQUIRES_EDITS,
+];
+
+const DRAFT_EXCLUDED_STATUSES: ReportStatus[] = [
+    ReportStatus.SUBMITTED,
+    ReportStatus.APPROVED,
+    ReportStatus.REVIEWED,
+    ReportStatus.LOCKED,
+    ReportStatus.REQUIRES_EDITS,
+];
+
+function resolveAggregationStatuses(criteria: AggregationCriteria): ReportStatus[] {
+    if (criteria.includeStatuses && criteria.includeStatuses.length > 0) {
+        const statuses = new Set(criteria.includeStatuses);
+        if (criteria.includeDrafts !== false) {
+            statuses.add(ReportStatus.DRAFT);
+        }
+        return Array.from(statuses);
+    }
+
+    return criteria.includeDrafts === false ? DRAFT_EXCLUDED_STATUSES : DRAFT_INCLUDED_STATUSES;
+}
+
 /** Determine campus IDs available for user scope. */
 export async function resolveScopeCampusIds(user: AuthUser): Promise<string[] | null> {
     if (!user || !user.role) return null;
@@ -103,7 +133,7 @@ export async function buildReportQuery(
     const where: any = {
         periodType: criteria.periodType,
         periodYear: criteria.periodYear,
-        status: { in: criteria.includeStatuses ?? [ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.SUBMITTED] },
+        status: { in: resolveAggregationStatuses(criteria) },
     };
 
     if (criteria.periodType === ReportPeriodType.MONTHLY && criteria.periodMonth != null) {

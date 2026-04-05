@@ -11,6 +11,7 @@ export const CONTENT = {
     nav: {
         dashboard: "Dashboard",
         reports: "Reports",
+        aggregatedReports: "Aggregated Reports",
         templates: "Templates",
         analytics: "Analytics",
         users: "Users",

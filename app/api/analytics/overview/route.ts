@@ -24,7 +24,7 @@ const QuerySchema = z.object({
     groupId: z.string().optional(),
     periodType: z.string().optional(),
     year: z.coerce.number().optional(),
-    includeDrafts: z.coerce.boolean().default(true),
+    includeDrafts: z.enum(["true", "false"]).optional().default("true"),
     statuses: z.array(z.nativeEnum(ReportStatus)).optional(),
 });
 
@@ -34,7 +34,12 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ success: false, error: auth.error }, { status: auth.status ?? 401 });
     }
 
-    const query = QuerySchema.parse(Object.fromEntries(new URL(req.url).searchParams));
+    const searchParams = new URL(req.url).searchParams;
+    const query = QuerySchema.parse({
+        ...Object.fromEntries(searchParams),
+        statuses: searchParams.getAll("statuses"),
+    });
+    const includeDrafts = query.includeDrafts === "true";
 
     const cacheKey = `analytics:overview:${auth.user.id}:${JSON.stringify(query)}`;
     const cached = await cache.get(cacheKey);
@@ -54,7 +59,7 @@ export async function GET(req: NextRequest) {
 
     if (query.statuses && query.statuses.length > 0) {
         where.status = { in: query.statuses };
-    } else if (!query.includeDrafts) {
+    } else if (!includeDrafts) {
         where.status = { not: ReportStatus.DRAFT };
     }
 

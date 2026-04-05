@@ -50,7 +50,7 @@ import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import Card from "@/components/ui/Card";
-import { UserRole, MetricCalculationType } from "@/types/global";
+import { UserRole, MetricCalculationType, ReportStatus } from "@/types/global";
 
 /* ── API response types ───────────────────────────────────────────────────── */
 
@@ -341,6 +341,24 @@ export function AnalyticsPage() {
   const { data: compareReport } = useApiData<Report>(
     compareReportId ? API_ROUTES.reports.detail(compareReportId) : null,
   );
+
+  useEffect(() => {
+    const reports = (reportListData?.reports ?? []).filter((report) =>
+      includeDrafts ? true : report.status !== ReportStatus.DRAFT,
+    );
+    if (reports.length === 0) return;
+
+    const hasDataForSelectedYear = reports.some((report) => report.periodYear === year);
+    if (hasDataForSelectedYear) return;
+
+    const latestYear = reports.reduce(
+      (maxYear, report) => Math.max(maxYear, report.periodYear),
+      reports[0].periodYear,
+    );
+    if (latestYear !== year) {
+      setYear(latestYear);
+    }
+  }, [includeDrafts, reportListData?.reports, year]);
 
   /* Campus + user counts */
   const { data: allCampuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
