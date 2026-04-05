@@ -175,16 +175,14 @@ export function ReportNewPage() {
         setSelectedTemplate(defaultTemplate);
       }
 
-      if (!pickerValue) {
-        setPickerValue(dayjs());
-      }
+      setPickerValue((current) => current ?? dayjs());
 
       setDataLoading(false);
       setDefaultsReady(true);
     };
 
     load();
-  }, [user, pickerValue]);
+  }, [user]);
 
   /* Load goals whenever campus + period changes */
   useEffect(() => {

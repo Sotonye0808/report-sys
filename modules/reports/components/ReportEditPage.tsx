@@ -137,7 +137,7 @@ export function ReportEditPage({ params }: PageProps) {
       .catch(() => {
         /* non-fatal */
       });
-  }, [report]);
+  }, [report?.campusId, report?.periodYear, report?.periodMonth]);
 
   const handleMetricChange = (metricId: string, v: MetricValues) =>
     setMetricValues((prev) => ({ ...prev, [metricId]: v }));
