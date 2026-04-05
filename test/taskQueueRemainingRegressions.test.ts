@@ -45,7 +45,10 @@ describe("report unlock + audit trail visibility regressions", () => {
 });
 
 describe("profile/org no-refresh and aggregation rollup helper regressions", () => {
-  const hierarchy: OrgGroupWithDetails[] = [
+  type RollupHierarchy = NonNullable<
+    Parameters<typeof resolveOrgRollupContext>[0]["hierarchy"]
+  >;
+  const hierarchy: RollupHierarchy = [
     {
       id: "g-1",
       name: "Group 1",
