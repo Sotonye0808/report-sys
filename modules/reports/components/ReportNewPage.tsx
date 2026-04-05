@@ -175,7 +175,9 @@ export function ReportNewPage() {
         setSelectedTemplate(defaultTemplate);
       }
 
-      setPickerValue((current) => current ?? dayjs());
+      if (!pickerValueRef.current) {
+        setPickerValue(dayjs());
+      }
 
       setDataLoading(false);
       setDefaultsReady(true);
@@ -183,6 +185,11 @@ export function ReportNewPage() {
 
     load();
   }, [user]);
+
+  const pickerValueRef = useRef<Dayjs | null>(null);
+  useEffect(() => {
+    pickerValueRef.current = pickerValue;
+  }, [pickerValue]);
 
   /* Load goals whenever campus + period changes */
   useEffect(() => {

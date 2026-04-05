@@ -96,6 +96,9 @@ export function ReportEditPage({ params }: PageProps) {
     templateVersion?.snapshot && templateVersion.snapshot !== undefined
       ? templateVersion.snapshot
       : template;
+  const goalCampusId = report?.campusId ?? "";
+  const goalPeriodYear = report?.periodYear ?? null;
+  const goalPeriodMonth = report?.periodMonth ?? null;
 
   const isTemplateVersionMismatch = Boolean(
     report?.templateVersionId &&
@@ -115,11 +118,10 @@ export function ReportEditPage({ params }: PageProps) {
 
   /* Load goals for this campus + period */
   useEffect(() => {
-    if (!report) return;
-    const campusId = report.campusId;
-    const year = report.periodYear;
-    const month = report.periodMonth;
-    if (!campusId || !year) return;
+    if (!goalCampusId || !goalPeriodYear) return;
+    const campusId = goalCampusId;
+    const year = goalPeriodYear;
+    const month = goalPeriodMonth ?? undefined;
     const nextFetchKey = `${campusId}:${year}:${month === undefined ? "none" : month}`;
     if (goalFetchKeyRef.current === nextFetchKey) {
       return;
@@ -137,7 +139,7 @@ export function ReportEditPage({ params }: PageProps) {
       .catch(() => {
         /* non-fatal */
       });
-  }, [report?.campusId, report?.periodYear, report?.periodMonth]);
+  }, [goalCampusId, goalPeriodMonth, goalPeriodYear]);
 
   const handleMetricChange = (metricId: string, v: MetricValues) =>
     setMetricValues((prev) => ({ ...prev, [metricId]: v }));
