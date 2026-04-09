@@ -531,3 +531,32 @@ Run a cloud implementation session using the new prompt to close the remaining 1
 
 - `npm run lint` remains blocked by missing ESLint flat config in repo baseline.
 - Full `npm run test` script remains blocked by quoted-glob script behavior in this shell; targeted suites were run successfully.
+
+## Session 13 — 2026-04-09
+
+**Completed:**
+
+- Fixed org hierarchy bulk write-path timeout failures by refactoring `app/api/org/hierarchy/bulk/route.ts` to use chunked execution with explicit transaction timeout (`15000ms`) and payload-limit validation.
+- Preserved write semantics for create/update/delete group and campus operations while collecting per-operation outcomes.
+- Added hierarchy bulk editor draft retention/restore parity in `modules/org/components/OrgPage.tsx` using shared `useFormPersistence`, including restore-safe modal open behavior and clear/reset UX via `FormDraftBanner`.
+- Added accessibility labeling for hierarchy bulk inputs (textarea/select).
+- Validation:
+  - `npm run -s typecheck` ✅
+  - `npx tsx test/bulkTransaction.test.ts` ✅
+
+**Files Modified:**
+
+- `app/api/org/hierarchy/bulk/route.ts`
+- `modules/org/components/OrgPage.tsx`
+- `.ai-system/planning/task-queue.md`
+- `.ai-system/checkpoints/session-log.md`
+- `.ai-system/summaries/dev-history.md`
+- `.ai-system/agents/repair-system.md`
+
+**Next Task:**
+
+- Add/execute route-level regression coverage specific to org hierarchy bulk mixed operation payloads (create/update/delete in same request) under realistic chunk sizes.
+
+**Notes / Blockers:**
+
+- Workspace diagnostics still include a pre-existing lint/style finding in `modules/analytics/chartUtils.tsx` (inline style usage), unrelated to this hierarchy fix.

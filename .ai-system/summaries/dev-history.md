@@ -428,3 +428,28 @@ Completed the remaining actionable queue slice by closing regression/test gaps, 
 
 - Expand UI-level integration harness coverage for profile/org mutation rendering behavior when full component-mount test runtime is available.
 - Resolve repo baseline tooling debt: ESLint flat config migration and shell-agnostic test script glob handling.
+
+## 2026-04-09 — Org Hierarchy Timeout and Draft-Restore Parity
+
+**Summary:**
+Resolved a production-impacting hierarchy bulk mutation failure caused by Prisma interactive transaction expiry and aligned hierarchy bulk editor UX with existing draft persistence patterns. The hierarchy bulk API now follows the same chunked transaction safety model used by stable bulk flows, while the Org page bulk modal now restores and preserves in-progress local drafts.
+
+**Completed:**
+
+- Refactored `app/api/org/hierarchy/bulk/route.ts` to execute operations in chunks with explicit transaction timeout policy (`15000ms`).
+- Added bulk payload-size guard in hierarchy route to fail fast on oversized requests.
+- Integrated hierarchy bulk modal state in `modules/org/components/OrgPage.tsx` with shared `useFormPersistence`.
+- Updated modal open behavior to avoid clobbering restored draft state and added explicit clear/reset via draft banner.
+- Added accessibility labels to hierarchy bulk inputs for improved form UX consistency.
+- Ran verification:
+  - `npm run -s typecheck` passed
+  - `npx tsx test/bulkTransaction.test.ts` passed
+
+**Key Changes:**
+
+- Prevents 500 responses caused by long-lived single interactive transactions in hierarchy mixed-operation payloads.
+- Establishes hierarchy builder parity with existing local draft autosave/restore experience across other forms.
+
+**Next Sprint Focus:**
+
+- Add dedicated regression tests for hierarchy bulk mixed-op chunking behavior and transaction-timeout resiliency.

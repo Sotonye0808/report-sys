@@ -16,10 +16,12 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import { useApiData } from "@/lib/hooks/useApiData";
+import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import { FormDraftBanner } from "@/components/ui/FormDraftBanner";
 import { PageLayout } from "@/components/ui/PageLayout";
 import Card from "@/components/ui/Card";
 import Table from "@/components/ui/Table";
@@ -55,6 +57,13 @@ type OrgBulkOp = {
   action: OrgBulkAction;
   data: Record<string, any>;
 };
+
+interface HierarchyBulkDraft {
+  interactiveBulk: boolean;
+  interactiveGroups: InteractiveGroup[];
+  bulkText: string;
+  bulkDryRun: boolean;
+}
 
 interface OrgBulkSendResult {
   dryRun: boolean;
@@ -148,13 +157,16 @@ function CampusesTab() {
     setSaving(true);
     try {
       if (editTarget) {
-        const result = await apiMutation<Campus, Record<string, unknown>>(API_ROUTES.org.campus(editTarget.id), {
-          method: "PUT",
-          body: {
-            ...values,
-            groupId: values.groupId || null,
+        const result = await apiMutation<Campus, Record<string, unknown>>(
+          API_ROUTES.org.campus(editTarget.id),
+          {
+            method: "PUT",
+            body: {
+              ...values,
+              groupId: values.groupId || null,
+            },
           },
-        });
+        );
         if (!result.ok) {
           message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
           return;
@@ -256,6 +268,8 @@ function CampusesTab() {
           <Form.Item name="groupId" label={CONTENT.org.groupNameLabel as string}>
             <select
               className="w-full p-2 border border-ds-border-base rounded-ds-lg"
+              aria-label="Campus group"
+              title="Campus group"
               value={form.getFieldValue("groupId") ?? ""}
               onChange={(e) => form.setFieldsValue({ groupId: e.target.value || null })}
             >
@@ -340,10 +354,13 @@ function GroupsTab() {
     setSaving(true);
     try {
       if (editTarget) {
-        const result = await apiMutation<OrgGroup, typeof values>(API_ROUTES.org.group(editTarget.id), {
-          method: "PUT",
-          body: values,
-        });
+        const result = await apiMutation<OrgGroup, typeof values>(
+          API_ROUTES.org.group(editTarget.id),
+          {
+            method: "PUT",
+            body: values,
+          },
+        );
         if (!result.ok) {
           message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
           return;
@@ -473,6 +490,53 @@ function HierarchyTab() {
     refetch: refetchHierarchy,
   } = useApiData<OrgGroupWithDetails[]>(API_ROUTES.org.hierarchy);
 
+  const {
+    status: bulkDraftStatus,
+    lastSavedAt: bulkDraftLastSaved,
+    clearDraft: clearBulkDraft,
+  } = useFormPersistence<HierarchyBulkDraft>({
+    formKey: "draft:org:hierarchy:bulk",
+    formState: {
+      interactiveBulk,
+      interactiveGroups,
+      bulkText,
+      bulkDryRun,
+    },
+    onRestore: (draft) => {
+      setInteractiveBulk(draft.interactiveBulk ?? true);
+      setInteractiveGroups(draft.interactiveGroups ?? []);
+      setBulkText(draft.bulkText ?? "[");
+      setBulkDryRun(draft.bulkDryRun ?? true);
+    },
+    enabled: true,
+  });
+
+  const seedBulkEditor = () => {
+    setInteractiveBulk(true);
+    setInteractiveGroups(
+      (hierarchy ?? []).map((group) => ({
+        id: group.id,
+        name: group.name,
+        country: group.country || "",
+        isActive: group.isActive,
+        leaderId: group.leaderId || "",
+        action: "update" as OrgBulkAction,
+        campuses: group.campuses.map((campus) => ({
+          id: campus.id,
+          statusId: campus.id,
+          name: campus.name,
+          country: campus.country || "",
+          location: campus.location || "",
+          isActive: campus.isActive,
+          action: "update" as OrgBulkAction,
+        })),
+      })),
+    );
+    setBulkText(
+      '[\n  {"type":"group","action":"create","data":{"name":"New Group","country":""}}\n]',
+    );
+  };
+
   const buildOpsFromInteractive = (): OrgBulkOp[] => {
     const ops: OrgBulkOp[] = [];
 
@@ -521,10 +585,13 @@ function HierarchyTab() {
 
       const ops = interactiveBulk ? buildOpsFromInteractive() : JSON.parse(bulkText);
 
-      const result = await apiMutation<OrgBulkSendResult, { ops: OrgBulkOp[]; dryRun: boolean }>(API_ROUTES.org.hierarchyBulk, {
-        method: "POST",
-        body: { ops, dryRun: isDryRun },
-      });
+      const result = await apiMutation<OrgBulkSendResult, { ops: OrgBulkOp[]; dryRun: boolean }>(
+        API_ROUTES.org.hierarchyBulk,
+        {
+          method: "POST",
+          body: { ops, dryRun: isDryRun },
+        },
+      );
       if (!result.ok) {
         setBulkError(result.error || "Bulk operation failed");
       } else {
@@ -634,29 +701,9 @@ function HierarchyTab() {
           icon={<UploadOutlined />}
           onClick={() => {
             setBulkModalOpen(true);
-            setInteractiveBulk(true);
-            setInteractiveGroups(
-              (hierarchy ?? []).map((group) => ({
-                id: group.id,
-                name: group.name,
-                country: group.country || "",
-                isActive: group.isActive,
-                leaderId: group.leaderId || "",
-                action: "update" as OrgBulkAction,
-                campuses: group.campuses.map((campus) => ({
-                  id: campus.id,
-                  statusId: campus.id,
-                  name: campus.name,
-                  country: campus.country || "",
-                  location: campus.location || "",
-                  isActive: campus.isActive,
-                  action: "update" as OrgBulkAction,
-                })),
-              })),
-            );
-            setBulkText(
-              '[\n  {"type":"group","action":"create","data":{"name":"New Group","country":""}}\n]',
-            );
+            if (interactiveGroups.length === 0 && bulkText.trim() === "[") {
+              seedBulkEditor();
+            }
             setBulkResult(null);
             setBulkError(null);
           }}
@@ -773,6 +820,14 @@ function HierarchyTab() {
         destroyOnClose
       >
         <div className="space-y-3">
+          <FormDraftBanner
+            status={bulkDraftStatus}
+            lastSavedAt={bulkDraftLastSaved}
+            onClear={() => {
+              clearBulkDraft();
+              seedBulkEditor();
+            }}
+          />
           <Tabs
             activeKey={interactiveBulk ? "interactive" : "json"}
             onChange={(key) => setInteractiveBulk(key === "interactive")}
@@ -980,6 +1035,9 @@ function HierarchyTab() {
                     <textarea
                       rows={10}
                       className="w-full p-2 border border-ds-border-strong rounded-ds-md font-mono text-xs"
+                      aria-label="Hierarchy bulk JSON payload"
+                      title="Hierarchy bulk JSON payload"
+                      placeholder="Paste JSON bulk operations"
                       value={bulkText}
                       onChange={(e) => setBulkText(e.target.value)}
                     />
