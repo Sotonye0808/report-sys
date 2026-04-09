@@ -54,6 +54,8 @@
 - [x] Add bug report UI integration for managed screenshots with deferred submit default and `preupload_draft` feature flag
 - [x] Add stale TEMP screenshot cleanup API path with auth/token guard and structured request-id logging
 - [x] Add lifecycle state-machine and migration compatibility regression tests for screenshot lifecycle
+- [x] Fix org hierarchy bulk transaction expiry by chunking writes, validating payload size, and applying transaction timeout policy
+- [x] Add hierarchy bulk editor local draft persistence/restore parity in `modules/org/components/OrgPage.tsx`
 
 ---
 

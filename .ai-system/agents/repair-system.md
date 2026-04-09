@@ -318,3 +318,54 @@ The aggregation service threw a generic `Error` for no-data conditions, and rout
 - `app/api/reports/aggregate/route.ts`
 
 **Date:** 2026-04-05
+
+## Prisma interactive transaction expiry in org hierarchy bulk writes
+
+**Symptom:**
+Hierarchy bulk mutation requests failed with errors like `Transaction already closed` / `A commit cannot be executed on an expired transaction`, often after about 5000ms, resulting in `500` responses.
+
+**Root Cause:**
+`app/api/org/hierarchy/bulk/route.ts` executed a long mixed create/update/delete loop inside a single interactive transaction without chunking and without explicit timeout override, causing transaction expiry under larger payloads.
+
+**Fix Applied:**
+
+- Refactored hierarchy bulk processing to use chunked execution (`runBulkTransaction`) instead of one monolithic transaction loop.
+- Applied per-chunk Prisma transaction timeout policy (`15000ms`).
+- Added request payload-size guard (`validateBulkPayloadLimit`) before execution.
+
+**Prevention:**
+
+- For bulk endpoints, always use chunked transaction helpers with explicit timeout policy.
+- Enforce payload size and max item limits at route boundary.
+- Avoid long interactive transactions that mix heterogeneous operations in one loop.
+
+**Files Affected:**
+
+- `app/api/org/hierarchy/bulk/route.ts`
+
+**Date:** 2026-04-09
+
+## Hierarchy bulk modal drafts overwritten on open
+
+**Symptom:**
+Users lost unsent hierarchy bulk edits when reopening the modal because the editor was always reseeded from live hierarchy data, overriding locally restored draft content.
+
+**Root Cause:**
+Modal open flow unconditionally reset `interactiveBulk`, `interactiveGroups`, `bulkText`, and `bulkDryRun`, bypassing the shared draft-restore behavior used by other forms.
+
+**Fix Applied:**
+
+- Wired hierarchy bulk state to shared `useFormPersistence` draft hook.
+- Updated open-modal behavior to seed defaults only when editor state is effectively empty.
+- Added `FormDraftBanner` clear/reset action to let users intentionally discard draft and reseed.
+
+**Prevention:**
+
+- Any form/modal using local draft restoration should avoid unconditional state reset on open.
+- Prefer a single restore-aware seeding helper and explicit user-triggered reset action.
+
+**Files Affected:**
+
+- `modules/org/components/OrgPage.tsx`
+
+**Date:** 2026-04-09
