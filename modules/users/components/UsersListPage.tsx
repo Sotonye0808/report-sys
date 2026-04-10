@@ -23,7 +23,7 @@ import { RoleBadge, ActiveBadge } from "@/components/ui/StatusBadge";
 import SearchInput from "@/components/ui/SearchInput";
 import { UserRole } from "@/types/global";
 
-const PAGE_SIZE = 20;
+const DEFAULT_PAGE_SIZE = 20;
 
 interface Filters {
   search: string;
@@ -42,8 +42,14 @@ export function UsersListPage() {
   const router = useRouter();
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [currentPage, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
 
   const { data: users } = useApiData<UserProfile[]>(API_ROUTES.users.list);
+  const { data: campuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
+  const campusNamesById = useMemo(
+    () => new Map((campuses ?? []).map((campus) => [campus.id, campus.name])),
+    [campuses],
+  );
 
   const filtered = useMemo(() => {
     if (!users) return [];
@@ -63,8 +69,8 @@ export function UsersListPage() {
   }, [users, filters]);
 
   const paginated = useMemo(
-    () => filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
-    [filtered, currentPage],
+    () => filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize),
+    [filtered, currentPage, pageSize],
   );
 
   const updateFilter = useCallback((patch: Partial<Filters>) => {
@@ -98,7 +104,12 @@ export function UsersListPage() {
       title: CONTENT.users.campusLabel as string,
       dataIndex: "campusId",
       width: 130,
-      render: (v) => <span className="text-sm text-ds-text-secondary">{String(v ?? "—")}</span>,
+      render: (v) => {
+        const campusName = campusNamesById.get(v as string);
+        return (
+          <span className="text-sm text-ds-text-secondary">{campusName ?? String(v ?? "—")}</span>
+        );
+      },
     },
     {
       key: "status",
@@ -182,13 +193,20 @@ export function UsersListPage() {
           scroll={{ x: 600 }}
           emptyDescription={CONTENT.users.emptyState.description as string}
         />
-        {filtered.length > PAGE_SIZE && (
+        {filtered.length > pageSize && (
           <div className="border-t border-ds-border-base px-4 py-3">
             <Pagination
               page={currentPage}
-              pageSize={PAGE_SIZE}
+              pageSize={pageSize}
               total={filtered.length}
-              onPageChange={setPage}
+              onPageChange={(nextPage, nextPageSize) => {
+                if (nextPageSize !== pageSize) {
+                  setPageSize(nextPageSize);
+                  setPage(1);
+                  return;
+                }
+                setPage(nextPage);
+              }}
             />
           </div>
         )}

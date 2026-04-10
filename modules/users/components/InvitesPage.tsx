@@ -175,7 +175,7 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
             className="border border-ds-border-base rounded-ds-md px-3 py-1.5 text-sm bg-ds-surface-base text-ds-text-primary focus:outline-none focus:ring-2 focus:ring-ds-brand-accent w-full"
             placeholder={
               ((CONTENT.invites as any).recipientEmailPlaceholder as string) ??
-              "Enter recipient email"
+              "you@harvestersng.org"
             }
           />
         </Form.Item>

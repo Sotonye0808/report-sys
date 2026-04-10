@@ -53,7 +53,7 @@ interface Filters {
   periodYear: string;
 }
 
-const PAGE_SIZE = 20;
+const DEFAULT_PAGE_SIZE = 20;
 
 /* ── Status options ───────────────────────────────────────────────────────── */
 
@@ -92,6 +92,7 @@ export function ReportsListPage() {
     periodYear: "",
   });
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [exportOpen, setExportOpen] = useState(false);
 
   function updateFilter(patch: Partial<Filters>) {
@@ -108,11 +109,14 @@ export function ReportsListPage() {
 
   /* ── Data subscriptions ─────────────────────────────────────────────────── */
 
-  const reportsUrl = user
-    ? visibilityScope === "campus" && user.campusId
-      ? `${API_ROUTES.reports.list}?campusId=${user.campusId}`
-      : API_ROUTES.reports.list
-    : null;
+  const reportsUrl = useMemo(() => {
+    if (!user) return null;
+    const params = new URLSearchParams({ all: "true" });
+    if (visibilityScope === "campus" && user.campusId) {
+      params.set("campusId", user.campusId);
+    }
+    return `${API_ROUTES.reports.list}?${params.toString()}`;
+  }, [user, visibilityScope]);
   const { data: reportsPage } = useApiData<{ reports: Report[]; total: number }>(reportsUrl);
   const allReports = reportsPage?.reports;
 
@@ -165,9 +169,9 @@ export function ReportsListPage() {
   const total = filteredReports?.length ?? 0;
   const pagedReports = useMemo(() => {
     if (!filteredReports) return [];
-    const start = (page - 1) * PAGE_SIZE;
-    return filteredReports.slice(start, start + PAGE_SIZE);
-  }, [filteredReports, page]);
+    const start = (page - 1) * pageSize;
+    return filteredReports.slice(start, start + pageSize);
+  }, [filteredReports, page, pageSize]);
 
   /* ── Column config ──────────────────────────────────────────────────────── */
 
@@ -379,12 +383,19 @@ export function ReportsListPage() {
               style: { cursor: "pointer" },
             })}
           />
-          {total > PAGE_SIZE && (
+          {total > pageSize && (
             <Pagination
               total={total}
               page={page}
-              pageSize={PAGE_SIZE}
-              onPageChange={(p) => setPage(p)}
+              pageSize={pageSize}
+              onPageChange={(nextPage, nextPageSize) => {
+                if (nextPageSize !== pageSize) {
+                  setPageSize(nextPageSize);
+                  setPage(1);
+                  return;
+                }
+                setPage(nextPage);
+              }}
             />
           )}
         </>
