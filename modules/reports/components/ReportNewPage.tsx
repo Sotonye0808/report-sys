@@ -36,7 +36,7 @@ import {
   type MetricValues,
   type GoalsForReportMap,
 } from "./ReportSectionsForm";
-import { ReportPeriodType } from "@/types/global";
+import { ReportPeriodType, UserRole } from "@/types/global";
 import { calculateReportDeadline, formattedDeadlinePolicy } from "@/lib/utils/deadline";
 
 /* ---- Period type options ---- */
@@ -72,7 +72,7 @@ interface ReportNewDraft {
 export function ReportNewPage() {
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuth();
-  const { can } = useRole();
+  const { can, role } = useRole();
   const [form] = Form.useForm<NewReportFormValues>();
   const [loading, setLoading] = useState(false);
   const [templates, setTemplates] = useState<ReportTemplate[]>([]);
@@ -91,6 +91,8 @@ export function ReportNewPage() {
 
   // pickerValue is the single source of truth for the selected period
   const [pickerValue, setPickerValue] = useState<Dayjs | null>(null);
+  const shouldLockCampusSelection =
+    role === UserRole.CAMPUS_ADMIN || role === UserRole.CAMPUS_PASTOR;
 
   // Watch form fields for draft persistence
   const title = Form.useWatch("title", form) as string | undefined;
@@ -157,7 +159,7 @@ export function ReportNewPage() {
       setCampuses(cs);
 
       const existingCampusId = form.getFieldValue("campusId");
-      if (!existingCampusId && user?.campusId) {
+      if (!existingCampusId && user?.campusId && shouldLockCampusSelection) {
         form.setFieldValue("campusId", user.campusId);
       }
 
@@ -185,7 +187,7 @@ export function ReportNewPage() {
     };
 
     load();
-  }, [user]);
+  }, [shouldLockCampusSelection, user]);
 
   useEffect(() => {
     pickerValueRef.current = pickerValue;
@@ -432,7 +434,7 @@ export function ReportNewPage() {
               <Select
                 size="large"
                 placeholder="Select campus"
-                disabled={!!user?.campusId}
+                disabled={shouldLockCampusSelection}
                 options={campuses.map((c) => ({ value: c.id, label: c.name }))}
               />
             </Form.Item>

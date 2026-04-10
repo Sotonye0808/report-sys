@@ -217,7 +217,7 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
         canManageOrg: false,
         canSetGoals: false,
         canApproveGoalUnlock: false,
-        reportVisibilityScope: "campus",
+        reportVisibilityScope: "all",
     },
     [UserRole.MEMBER]: {
         role: UserRole.MEMBER,
