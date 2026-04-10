@@ -25,11 +25,14 @@ import { resolveReportListPagination } from "@/lib/utils/reportListPagination";
 
 dayjs.extend(weekOfYear);
 
+const DEFAULT_REPORT_LIST_PAGE_SIZE = 100;
+const MAX_REPORT_LIST_PAGE_SIZE = 500;
+
 /* ── Query schema ──────────────────────────────────────────────────────────── */
 
 const ListQuerySchema = z.object({
     page: z.coerce.number().int().min(1).default(1),
-    pageSize: z.coerce.number().int().min(1).max(5000).default(100),
+    pageSize: z.coerce.number().int().min(1).max(MAX_REPORT_LIST_PAGE_SIZE).default(DEFAULT_REPORT_LIST_PAGE_SIZE),
     all: z.preprocess((value) => {
         if (value === "true" || value === true) return true;
         if (value === "false" || value === false) return false;
@@ -141,25 +144,28 @@ export async function GET(req: NextRequest) {
             ];
         }
 
+        let reportsPromise;
+        if (query.all) {
+            reportsPromise = db.report.findMany({
+                where,
+                orderBy: { updatedAt: "desc" },
+            });
+        } else {
+            const pagination = resolveReportListPagination({
+                page,
+                pageSize,
+                all: false,
+            }) as { skip: number; take: number };
+            reportsPromise = db.report.findMany({
+                where,
+                orderBy: { updatedAt: "desc" },
+                skip: pagination.skip,
+                take: pagination.take,
+            });
+        }
+
         const [reports, total] = await Promise.all([
-            query.all
-                ? db.report.findMany({
-                    where,
-                    orderBy: { updatedAt: "desc" },
-                })
-                : (() => {
-                    const pagination = resolveReportListPagination({
-                        page,
-                        pageSize,
-                        all: false,
-                    }) as { skip: number; take: number };
-                    return db.report.findMany({
-                        where,
-                        orderBy: { updatedAt: "desc" },
-                        skip: pagination.skip,
-                        take: pagination.take,
-                    });
-                })(),
+            reportsPromise,
             db.report.count({ where }),
         ]);
 

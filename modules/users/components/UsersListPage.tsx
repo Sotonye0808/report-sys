@@ -46,6 +46,10 @@ export function UsersListPage() {
 
   const { data: users } = useApiData<UserProfile[]>(API_ROUTES.users.list);
   const { data: campuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
+  const campusNamesById = useMemo(
+    () => new Map((campuses ?? []).map((campus) => [campus.id, campus.name])),
+    [campuses],
+  );
 
   const filtered = useMemo(() => {
     if (!users) return [];
@@ -101,7 +105,7 @@ export function UsersListPage() {
       dataIndex: "campusId",
       width: 130,
       render: (v) => {
-        const campusName = (campuses ?? []).find((campus) => campus.id === v)?.name;
+        const campusName = campusNamesById.get(v as string);
         return (
           <span className="text-sm text-ds-text-secondary">{campusName ?? String(v ?? "—")}</span>
         );

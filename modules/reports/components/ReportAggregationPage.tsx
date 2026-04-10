@@ -19,6 +19,9 @@ import { ReportPeriodType, ReportStatus, UserRole } from "@/types/global";
 import { exportAggregatedReport } from "@/lib/utils/exportReports";
 
 const STATUS_OPTIONS = ["APPROVED", "REVIEWED", "SUBMITTED"] as ReportStatus[];
+const YEARS_BACK = 10;
+const YEARS_FORWARD = 5;
+const YEAR_RANGE_SIZE = YEARS_BACK + YEARS_FORWARD + 1;
 
 function getWeekNumber(value: Date) {
   const date = new Date(Date.UTC(value.getFullYear(), value.getMonth(), value.getDate()));
@@ -137,8 +140,8 @@ export function ReportAggregationPage() {
 
   const yearOptions = useMemo(() => {
     const currentYear = new Date().getFullYear();
-    return Array.from({ length: 16 }, (_, index) => {
-      const value = currentYear - 10 + index;
+    return Array.from({ length: YEAR_RANGE_SIZE }, (_, index) => {
+      const value = currentYear - YEARS_BACK + index;
       return { value, label: String(value) };
     });
   }, []);
@@ -369,7 +372,7 @@ export function ReportAggregationPage() {
     const { sourceReports, aggregatedSections, templateId: selectedTemplateId } = previewResult;
 
     const metricCount = aggregatedSections.reduce(
-      (count: number, section: { metrics?: unknown[] }) => count + (section.metrics?.length ?? 0),
+      (count: number, section: any) => count + (section.metrics?.length ?? 0),
       0,
     );
 
@@ -507,7 +510,7 @@ export function ReportAggregationPage() {
               }}
             />
             <DatePicker
-              style={{ width: "100%" }}
+              className="w-full"
               picker={
                 periodType === ReportPeriodType.MONTHLY
                   ? "month"
