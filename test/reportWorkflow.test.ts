@@ -7,9 +7,11 @@ describe("reportWorkflow canTransition", () => {
     it("allows DRAFT to SUBMITTED for valid roles", () => {
         assert.strictEqual(canTransition(ReportStatus.DRAFT, ReportStatus.SUBMITTED, UserRole.CAMPUS_ADMIN), true);
         assert.strictEqual(canTransition(ReportStatus.DRAFT, ReportStatus.SUBMITTED, UserRole.DATA_ENTRY), true);
+        assert.strictEqual(canTransition(ReportStatus.DRAFT, ReportStatus.SUBMITTED, UserRole.SUPERADMIN), true);
     });
 
     it("disallows invalid transitions", () => {
         assert.strictEqual(canTransition(ReportStatus.APPROVED, ReportStatus.DRAFT, UserRole.SUPERADMIN), false);
+        assert.strictEqual(canTransition(ReportStatus.REQUIRES_EDITS, ReportStatus.SUBMITTED, UserRole.SUPERADMIN), true);
     });
 });
