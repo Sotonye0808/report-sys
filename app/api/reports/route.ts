@@ -21,14 +21,23 @@ import { DEADLINE_CONFIG } from "@/config/reports";
 import { UserRole, ReportStatus, ReportPeriodType, ReportDeadlinePolicy, ReportEventType, MetricCalculationType } from "@/types/global";
 import { dispatchDeadlineReminder } from "@/lib/utils/deadlineReminder";
 import { getRequestContext } from "@/lib/server/requestContext";
+import { resolveReportListPagination } from "@/lib/utils/reportListPagination";
 
 dayjs.extend(weekOfYear);
+
+const DEFAULT_REPORT_LIST_PAGE_SIZE = 100;
+const MAX_REPORT_LIST_PAGE_SIZE = 500;
 
 /* ── Query schema ──────────────────────────────────────────────────────────── */
 
 const ListQuerySchema = z.object({
     page: z.coerce.number().int().min(1).default(1),
-    pageSize: z.coerce.number().int().min(1).max(100).default(20),
+    pageSize: z.coerce.number().int().min(1).max(MAX_REPORT_LIST_PAGE_SIZE).default(DEFAULT_REPORT_LIST_PAGE_SIZE),
+    all: z.preprocess((value) => {
+        if (value === "true" || value === true) return true;
+        if (value === "false" || value === false) return false;
+        return value;
+    }, z.boolean()).default(false),
     status: z.nativeEnum(ReportStatus).optional(),
     campusId: z.string().optional(),
     periodType: z.nativeEnum(ReportPeriodType).optional(),
@@ -135,17 +144,40 @@ export async function GET(req: NextRequest) {
             ];
         }
 
-        const [reports, total] = await Promise.all([
-            db.report.findMany({
+        let reportsPromise;
+        if (query.all) {
+            reportsPromise = db.report.findMany({
                 where,
                 orderBy: { updatedAt: "desc" },
-                skip: (page - 1) * pageSize,
-                take: pageSize,
-            }),
+            });
+        } else {
+            const pagination = resolveReportListPagination({
+                page,
+                pageSize,
+                all: false,
+            }) as { skip: number; take: number };
+            reportsPromise = db.report.findMany({
+                where,
+                orderBy: { updatedAt: "desc" },
+                skip: pagination.skip,
+                take: pagination.take,
+            });
+        }
+
+        const [reports, total] = await Promise.all([
+            reportsPromise,
             db.report.count({ where }),
         ]);
 
-        const payload = { success: true, data: { reports, total, page, pageSize } };
+        const payload = {
+            success: true,
+            data: {
+                reports,
+                total,
+                page: query.all ? 1 : page,
+                pageSize: query.all ? reports.length : pageSize,
+            },
+        };
         await cache.set(cacheKey, JSON.stringify(payload), 30);
         return NextResponse.json(payload);
     } catch (err) {
