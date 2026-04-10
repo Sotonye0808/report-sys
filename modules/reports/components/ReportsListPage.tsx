@@ -325,11 +325,22 @@ export function ReportsListPage() {
     }
 
     const getEndpoint = (reportId: string) => {
-      if (bulkAction === "submit") return API_ROUTES.reports.submit(reportId);
-      if (bulkAction === "request-edits") return API_ROUTES.reports.requestEdit(reportId);
-      if (bulkAction === "approve") return API_ROUTES.reports.approve(reportId);
-      if (bulkAction === "review") return API_ROUTES.reports.review(reportId);
-      return API_ROUTES.reports.lock(reportId);
+      switch (bulkAction) {
+        case "submit":
+          return API_ROUTES.reports.submit(reportId);
+        case "request-edits":
+          return API_ROUTES.reports.requestEdit(reportId);
+        case "approve":
+          return API_ROUTES.reports.approve(reportId);
+        case "review":
+          return API_ROUTES.reports.review(reportId);
+        case "lock":
+          return API_ROUTES.reports.lock(reportId);
+        default: {
+          const unreachableAction: never = bulkAction;
+          throw new Error(`Unsupported bulk action: ${String(unreachableAction)}`);
+        }
+      }
     };
 
     const isEligible = (report: Report) => {
