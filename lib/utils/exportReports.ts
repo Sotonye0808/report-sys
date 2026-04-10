@@ -35,6 +35,7 @@ interface ExportAggregatedReportOptions {
 }
 
 const ec = (CONTENT.reports as Record<string, unknown>).export as Record<string, string>;
+const DEFAULT_GROUP_NAME = "Ungrouped";
 
 /* ── helpers ────────────────────────────────────────────────────────────── */
 
@@ -325,8 +326,8 @@ export function exportAggregatedReport(
         ];
 
         const groupedReports = [...sourceReports].sort((a, b) => {
-            const groupA = groupNameById.get(a.orgGroupId ?? "") ?? a.orgGroupId ?? "Ungrouped";
-            const groupB = groupNameById.get(b.orgGroupId ?? "") ?? b.orgGroupId ?? "Ungrouped";
+            const groupA = groupNameById.get(a.orgGroupId ?? "") ?? a.orgGroupId ?? DEFAULT_GROUP_NAME;
+            const groupB = groupNameById.get(b.orgGroupId ?? "") ?? b.orgGroupId ?? DEFAULT_GROUP_NAME;
             if (groupA !== groupB) return groupA.localeCompare(groupB);
 
             const campusA = campusNameById.get(a.campusId) ?? a.campusId;
@@ -336,7 +337,7 @@ export function exportAggregatedReport(
         });
 
         for (const src of groupedReports) {
-            const groupName = groupNameById.get(src.orgGroupId ?? "") ?? src.orgGroupId ?? "Ungrouped";
+            const groupName = groupNameById.get(src.orgGroupId ?? "") ?? src.orgGroupId ?? DEFAULT_GROUP_NAME;
             const srcCampusName = campusNameById.get(src.campusId) ?? src.campusId;
             const metricsByTemplateKey = new Map<string, ReportMetric>();
 
