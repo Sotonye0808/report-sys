@@ -279,6 +279,10 @@ export const CONTENT = {
             previewButton: "Preview Aggregation",
             generateButton: "Generate Aggregated Report",
             exportButton: "Export Aggregated Report",
+            exportGroupedDetailsToggle: "Include grouped source report details sheet",
+            exportGroupedDetailsHint:
+                "Adds an extra export sheet grouped by org group and campus, with section and metric rows aligned for each source report.",
+            ungroupedLabel: "Ungrouped",
             previewTitle: "Aggregation Preview",
             reportsIncluded: "Reports included",
             templateTag: "Template",

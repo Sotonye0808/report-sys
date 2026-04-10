@@ -61,6 +61,7 @@ export function ReportAggregationPage() {
   const [previewResult, setPreviewResult] = useState<any>(null);
   const [loadingPreview, setLoadingPreview] = useState(false);
   const [loadingGenerate, setLoadingGenerate] = useState(false);
+  const [includeGroupedDetailSheet, setIncludeGroupedDetailSheet] = useState(true);
 
   const aggregationContent = CONTENT.reports.aggregation as Record<string, string>;
 
@@ -362,6 +363,10 @@ export function ReportAggregationPage() {
       preview.sourceReports,
       templates ?? [],
       orgHierarchy?.flatMap((g) => g.campuses) ?? [],
+      {
+        includeGroupedSourceSheet: includeGroupedDetailSheet,
+        orgGroups: orgHierarchy ?? [],
+      },
     );
   };
 
@@ -421,7 +426,19 @@ export function ReportAggregationPage() {
           ))}
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col gap-3">
+          <Checkbox
+            checked={includeGroupedDetailSheet}
+            onChange={(e) => setIncludeGroupedDetailSheet(e.target.checked)}
+          >
+            {aggregationContent.exportGroupedDetailsToggle ??
+              "Include grouped source report details sheet"}
+          </Checkbox>
+          <span className="text-xs text-ds-text-subtle">
+            {aggregationContent.exportGroupedDetailsHint ??
+              "When enabled, the exported workbook adds an extra sheet grouped by org group and campus with aligned section/metric rows for each source report."}
+          </span>
+          <div className="flex flex-wrap gap-2">
           <Button
             type="primary"
             icon={<CheckCircleOutlined />}
@@ -439,6 +456,7 @@ export function ReportAggregationPage() {
           >
             {aggregationContent.exportButton}
           </Button>
+          </div>
         </div>
       </Card>
     );
