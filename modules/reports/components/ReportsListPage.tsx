@@ -338,7 +338,9 @@ export function ReportsListPage() {
           return API_ROUTES.reports.lock(reportId);
         default: {
           const unreachableAction: never = bulkAction;
-          throw new Error(`Unsupported bulk action: ${String(unreachableAction)}`);
+          throw new Error(
+            `Unexpected bulk action type. This should never happen: ${String(unreachableAction)}`,
+          );
         }
       }
     };
@@ -359,9 +361,7 @@ export function ReportsListPage() {
     const skipped = selectedReports.length - targetReports.length;
     if (targetReports.length === 0) {
       message.warning(
-        skipped > 0
-          ? "No selected reports are eligible for that action. Deselect ineligible items and try again."
-          : "No selected reports are eligible for that action.",
+        "No selected reports are eligible for that action. Deselect ineligible items and try again.",
       );
       return;
     }
