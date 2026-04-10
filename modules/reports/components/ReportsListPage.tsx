@@ -338,9 +338,8 @@ export function ReportsListPage() {
           return API_ROUTES.reports.lock(reportId);
         default: {
           const unreachableAction: never = bulkAction;
-          throw new Error(
-            `Unexpected bulk action type. This should never happen: ${String(unreachableAction)}`,
-          );
+          void unreachableAction;
+          throw new Error("Unexpected bulk action type. This should never happen.");
         }
       }
     };
