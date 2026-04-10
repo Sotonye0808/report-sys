@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { message, Select, Space, Tag, Checkbox } from "antd";
+import { message, Select, Space, Tag, Checkbox, DatePicker } from "antd";
 import { ArrowLeftOutlined, DatabaseOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import { useApiData } from "@/lib/hooks/useApiData";
 import { useAuth } from "@/providers/AuthProvider";
@@ -19,6 +19,20 @@ import { ReportPeriodType, ReportStatus, UserRole } from "@/types/global";
 import { exportAggregatedReport } from "@/lib/utils/exportReports";
 
 const STATUS_OPTIONS = ["APPROVED", "REVIEWED", "SUBMITTED"] as ReportStatus[];
+
+function getWeekNumber(value: Date) {
+  const date = new Date(Date.UTC(value.getFullYear(), value.getMonth(), value.getDate()));
+  const dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  return Math.ceil(((date.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+}
+
+function formatPreviewNumber(value: unknown) {
+  const numeric = Number(value ?? 0);
+  if (!Number.isFinite(numeric)) return "0.00";
+  return numeric.toFixed(2);
+}
 
 export function ReportAggregationPage() {
   const router = useRouter();
@@ -64,7 +78,7 @@ export function ReportAggregationPage() {
     API_ROUTES.reportTemplates.list,
   );
   const { data: reportListData } = useApiData<{ reports: Report[]; total: number }>(
-    `${API_ROUTES.reports.list}?page=1&pageSize=500`,
+    `${API_ROUTES.reports.list}?all=true`,
   );
   const { data: orgHierarchy, loading: hierarchyLoading } = useApiData<OrgGroupWithDetails[]>(
     API_ROUTES.org.hierarchy,
@@ -120,6 +134,36 @@ export function ReportAggregationPage() {
     }
     return [];
   }, [rollupContext.scopeOptions.campuses, rollupContext.scopeOptions.groups, scopeType]);
+
+  const yearOptions = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    return Array.from({ length: 16 }, (_, index) => {
+      const value = currentYear - 10 + index;
+      return { value, label: String(value) };
+    });
+  }, []);
+
+  const monthOptions = useMemo(
+    () => [
+      { value: "", label: aggregationContent.allMonths },
+      ...Array.from({ length: 12 }, (_, index) => ({
+        value: String(index + 1),
+        label: new Date(2000, index, 1).toLocaleString("en-US", { month: "long" }),
+      })),
+    ],
+    [aggregationContent.allMonths],
+  );
+
+  const weekOptions = useMemo(
+    () => [
+      { value: "", label: aggregationContent.allWeeks },
+      ...Array.from({ length: 53 }, (_, index) => {
+        const week = index + 1;
+        return { value: String(week), label: `Week ${week}` };
+      }),
+    ],
+    [aggregationContent.allWeeks],
+  );
 
   useEffect(() => {
     if (!user || !role || !orgHierarchy) return;
@@ -324,6 +368,11 @@ export function ReportAggregationPage() {
 
     const { sourceReports, aggregatedSections, templateId: selectedTemplateId } = previewResult;
 
+    const metricCount = aggregatedSections.reduce(
+      (count: number, section: { metrics?: unknown[] }) => count + (section.metrics?.length ?? 0),
+      0,
+    );
+
     return (
       <Card title={aggregationContent.previewTitle} className="space-y-3">
         <div className="flex flex-wrap gap-2">
@@ -336,16 +385,32 @@ export function ReportAggregationPage() {
           <Tag color="purple">
             {aggregationContent.sectionsTag}: {aggregatedSections.length}
           </Tag>
+          <Tag color="gold">
+            {aggregationContent.metricsTag}: {metricCount}
+          </Tag>
         </div>
-        <div className="space-y-1">
-          {aggregatedSections.slice(0, 5).map((section: any) => (
-            <div key={section.templateSectionId}>
+        <div className="max-h-[420px] overflow-auto pr-1 space-y-3">
+          {sourceReports.length > 0 && (
+            <div>
+              <p className="text-sm font-semibold">{aggregationContent.sourceReportsTag}</p>
+              <ul className="text-xs text-ds-text-secondary list-disc ml-5 space-y-1">
+                {sourceReports.slice(0, 10).map((report: Report) => (
+                  <li key={report.id}>
+                    {report.title || report.id} — {report.period} — {report.status}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {aggregatedSections.map((section: any) => (
+            <div key={section.templateSectionId} className="border border-ds-border-subtle rounded-ds-lg p-2">
               <p className="text-sm font-semibold">{section.sectionName}</p>
-              <ul className="text-xs text-ds-text-secondary list-disc ml-5">
-                {section.metrics.slice(0, 3).map((m: any) => (
+              <ul className="text-xs text-ds-text-secondary list-disc ml-5 space-y-1">
+                {section.metrics.map((m: any) => (
                   <li key={m.templateMetricId}>
-                    {m.metricName}: achieved={m.monthlyAchieved}, goal={m.monthlyGoal}, yoy=
-                    {m.yoyGoal} ({m.calculationType})
+                    {m.metricName}: achieved={formatPreviewNumber(m.monthlyAchieved)}, goal=
+                    {formatPreviewNumber(m.monthlyGoal)}, yoy={formatPreviewNumber(m.yoyGoal)} (
+                    {m.calculationType})
                   </li>
                 ))}
               </ul>
@@ -388,12 +453,13 @@ export function ReportAggregationPage() {
         }
       />
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <Card title={aggregationContent.selectScopeStep}>
           <Space direction="vertical" style={{ width: "100%" }}>
             <Select
               value={scopeType}
               options={scopeOptions}
+              className="w-full"
               onChange={(value) => {
                 setScopeType(value as "campus" | "group" | "all");
                 setScopeId("");
@@ -409,6 +475,7 @@ export function ReportAggregationPage() {
               <Select
                 value={scopeId || undefined}
                 options={scopeItems}
+                className="w-full"
                 onChange={(value) => setScopeId(value as string)}
                 placeholder={
                   scopeType === "campus"
@@ -426,6 +493,7 @@ export function ReportAggregationPage() {
             <Select
               value={periodType}
               options={Object.values(ReportPeriodType).map((v) => ({ value: v, label: v }))}
+              className="w-full"
               onChange={(value) => {
                 const nextPeriodType = value as ReportPeriodType;
                 setPeriodTouched(true);
@@ -438,50 +506,62 @@ export function ReportAggregationPage() {
                 }
               }}
             />
-            <input
-              type="number"
-              className="w-full p-2 border border-ds-border-base rounded-ds-lg"
-              value={periodYear}
-              min={2000}
-              max={2100}
-              aria-label="Aggregation period year"
-              title="Aggregation period year"
-              onChange={(ev) => {
+            <DatePicker
+              style={{ width: "100%" }}
+              picker={
+                periodType === ReportPeriodType.MONTHLY
+                  ? "month"
+                  : periodType === ReportPeriodType.WEEKLY
+                    ? "week"
+                    : "year"
+              }
+              placeholder={
+                periodType === ReportPeriodType.MONTHLY
+                  ? aggregationContent.pickMonth
+                  : periodType === ReportPeriodType.WEEKLY
+                    ? aggregationContent.pickWeek
+                    : aggregationContent.pickYear
+              }
+              onChange={(value) => {
+                if (!value) return;
                 setPeriodTouched(true);
-                setPeriodYear(Number(ev.target.value));
+                setPeriodYear(value.year());
+                if (periodType === ReportPeriodType.MONTHLY) {
+                  setPeriodMonth(value.month() + 1);
+                }
+                if (periodType === ReportPeriodType.WEEKLY) {
+                  setPeriodWeek(getWeekNumber(value.toDate()));
+                }
+              }}
+            />
+            <Select
+              value={periodYear}
+              options={yearOptions}
+              className="w-full"
+              onChange={(value) => {
+                setPeriodTouched(true);
+                setPeriodYear(value as number);
               }}
             />
             {periodType === ReportPeriodType.MONTHLY && (
-              <input
-                type="number"
-                className="w-full p-2 border border-ds-border-base rounded-ds-lg"
-                value={periodMonth ?? ""}
-                min={1}
-                max={12}
-                placeholder="All months"
-                aria-label="Aggregation period month"
-                title="Aggregation period month"
-                onChange={(ev) => {
+              <Select
+                className="w-full"
+                value={periodMonth != null ? String(periodMonth) : ""}
+                options={monthOptions}
+                onChange={(value) => {
                   setPeriodTouched(true);
-                  const raw = ev.target.value.trim();
-                  setPeriodMonth(raw === "" ? undefined : Number(raw));
+                  setPeriodMonth(value ? Number(value) : undefined);
                 }}
               />
             )}
             {periodType === ReportPeriodType.WEEKLY && (
-              <input
-                type="number"
-                className="w-full p-2 border border-ds-border-base rounded-ds-lg"
-                value={periodWeek ?? ""}
-                min={1}
-                max={53}
-                placeholder="All weeks"
-                aria-label="Aggregation period week"
-                title="Aggregation period week"
-                onChange={(ev) => {
+              <Select
+                className="w-full"
+                value={periodWeek != null ? String(periodWeek) : ""}
+                options={weekOptions}
+                onChange={(value) => {
                   setPeriodTouched(true);
-                  const raw = ev.target.value.trim();
-                  setPeriodWeek(raw === "" ? undefined : Number(raw));
+                  setPeriodWeek(value ? Number(value) : undefined);
                 }}
               />
             )}
@@ -495,6 +575,7 @@ export function ReportAggregationPage() {
               options={(templates ?? []).map((t) => ({ value: t.id, label: t.name }))}
               onChange={(v) => setTemplateId(v as string)}
               placeholder={aggregationContent.templatePlaceholder}
+              className="w-full"
               loading={templatesLoading}
               showSearch
               optionFilterProp="label"
@@ -505,6 +586,7 @@ export function ReportAggregationPage() {
               options={metricOptions}
               onChange={(v) => setMetricIds(v as string[])}
               placeholder={aggregationContent.metricsPlaceholder}
+              className="w-full"
               disabled={!templateId || metricOptions.length === 0}
               optionFilterProp="label"
               showSearch
@@ -515,6 +597,7 @@ export function ReportAggregationPage() {
               options={STATUS_OPTIONS.map((s) => ({ value: s, label: s }))}
               onChange={(v) => setIncludeStatuses(v as ReportStatus[])}
               placeholder={aggregationContent.statusesPlaceholder}
+              className="w-full"
               dropdownMatchSelectWidth={false}
             />
             <Checkbox checked={includeDrafts} onChange={(e) => setIncludeDrafts(e.target.checked)}>

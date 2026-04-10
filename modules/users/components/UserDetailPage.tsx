@@ -259,7 +259,7 @@ function RecentUserReports({ userId }: { userId: string }) {
   const router = useRouter();
 
   const { data: reportsPage } = useApiData<{ reports: Report[]; total: number }>(
-    API_ROUTES.reports.list,
+    `${API_ROUTES.reports.list}?all=true`,
   );
   const reports = reportsPage?.reports;
 

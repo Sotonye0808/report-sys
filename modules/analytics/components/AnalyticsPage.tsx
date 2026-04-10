@@ -333,7 +333,7 @@ export function AnalyticsPage() {
   const [selectedReportId, setSelectedReportId] = useState<string | undefined>(undefined);
   const [compareReportId, setCompareReportId] = useState<string | undefined>(undefined);
   const { data: reportListData } = useApiData<{ reports: Report[]; total: number }>(
-    `${API_ROUTES.reports.list}?page=1&pageSize=500`,
+    `${API_ROUTES.reports.list}?all=true`,
   );
   const { data: selectedReport } = useApiData<Report>(
     selectedReportId ? API_ROUTES.reports.detail(selectedReportId) : null,

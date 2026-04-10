@@ -188,8 +188,8 @@ export function DashboardPage() {
   // Complex scoping (own) is done in useMemo — WhereClause<T> only supports Partial<T>.
   const reportsUrl = user
     ? visibilityScope === "campus" && user.campusId
-      ? `${API_ROUTES.reports.list}?campusId=${user.campusId}`
-      : API_ROUTES.reports.list
+      ? `${API_ROUTES.reports.list}?all=true&campusId=${user.campusId}`
+      : `${API_ROUTES.reports.list}?all=true`
     : null;
   const { data: reportsPage } = useApiData<{ reports: Report[]; total: number }>(reportsUrl);
   const allReports = reportsPage?.reports;
