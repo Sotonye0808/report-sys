@@ -55,7 +55,7 @@ interface Filters {
 
 const DEFAULT_PAGE_SIZE = 20;
 const BULK_ACTION_CHUNK_SIZE = 10;
-const BULK_ACTION_TIMEOUT_MS = 12000;
+const BULK_ACTION_TIMEOUT_MS = 12_000;
 
 type BulkActionType = "request-edits" | "approve" | "review" | "lock";
 
@@ -355,6 +355,11 @@ export function ReportsListPage() {
           const json = await response.json().catch(() => ({}));
           throw new Error(json.error ?? `Request failed (${response.status})`);
         }
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") {
+          throw new Error(`Bulk action timed out for report ${report.id}.`);
+        }
+        throw error;
       } finally {
         clearTimeout(timeout);
       }

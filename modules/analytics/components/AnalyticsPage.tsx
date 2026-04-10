@@ -163,6 +163,7 @@ interface MetricAnalyticsData {
 
 const ALL_ROLES = Object.values(UserRole);
 const CURRENT_YEAR = new Date().getFullYear();
+const MIN_ANALYTICS_YEAR = 2000;
 
 const CHART_ROLES = [
   UserRole.SUPERADMIN,
@@ -367,7 +368,9 @@ export function AnalyticsPage() {
   useEffect(() => {
     if (yearOptions.length === 0) return;
     if (yearOptions.some((option) => option.value === compareYear) || compareYear === year) return;
-    const fallback = yearOptions.find((option) => option.value !== year)?.value ?? Math.max(year - 1, 2000);
+    const fallback =
+      yearOptions.find((option) => option.value !== year)?.value ??
+      Math.max(year - 1, MIN_ANALYTICS_YEAR);
     setCompareYear(fallback);
   }, [compareYear, year, yearOptions]);
 
@@ -553,7 +556,7 @@ export function AnalyticsPage() {
   const reportComparisonInsights = useMemo(() => {
     if (!selectedReport) return [];
     const selectedSections = (selectedReport.sections ?? []) as ReportSection[];
-    const compareSections = ((compareReport?.sections ?? []) as ReportSection[]) ?? [];
+    const compareSections = (compareReport?.sections ?? []) as ReportSection[];
     const compareByName = new Map(compareSections.map((section) => [section.sectionName, section]));
 
     return selectedSections
