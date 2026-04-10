@@ -24,7 +24,7 @@ export const REPORT_STATUS_TRANSITIONS: Record<
     [ReportStatus.DRAFT]: [
         {
             to: ReportStatus.SUBMITTED,
-            requiredRole: [UserRole.CAMPUS_ADMIN, UserRole.CAMPUS_PASTOR, UserRole.DATA_ENTRY, UserRole.GROUP_ADMIN],
+            requiredRole: [UserRole.CAMPUS_ADMIN, UserRole.CAMPUS_PASTOR, UserRole.DATA_ENTRY, UserRole.GROUP_ADMIN, UserRole.SUPERADMIN],
         },
     ],
     [ReportStatus.SUBMITTED]: [
@@ -40,7 +40,7 @@ export const REPORT_STATUS_TRANSITIONS: Record<
     [ReportStatus.REQUIRES_EDITS]: [
         {
             to: ReportStatus.SUBMITTED,
-            requiredRole: [UserRole.CAMPUS_ADMIN, UserRole.CAMPUS_PASTOR, UserRole.DATA_ENTRY, UserRole.GROUP_ADMIN],
+            requiredRole: [UserRole.CAMPUS_ADMIN, UserRole.CAMPUS_PASTOR, UserRole.DATA_ENTRY, UserRole.GROUP_ADMIN, UserRole.SUPERADMIN],
         },
     ],
     [ReportStatus.APPROVED]: [

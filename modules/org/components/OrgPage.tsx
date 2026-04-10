@@ -6,7 +6,7 @@
  * SUPERADMIN only.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, Modal, Form, message, Checkbox } from "antd";
 import {
   PlusOutlined,
@@ -68,6 +68,26 @@ interface HierarchyBulkDraft {
 interface OrgBulkSendResult {
   dryRun: boolean;
   results: Array<{ index: number; success: boolean; message: string; id?: string }>;
+}
+
+function mapHierarchyToInteractiveGroups(hierarchy: OrgGroupWithDetails[] | undefined): InteractiveGroup[] {
+  return (hierarchy ?? []).map((group) => ({
+    id: group.id,
+    name: group.name,
+    country: group.country || "",
+    isActive: group.isActive,
+    leaderId: group.leaderId || "",
+    action: "update" as OrgBulkAction,
+    campuses: group.campuses.map((campus) => ({
+      id: campus.id,
+      statusId: campus.id,
+      name: campus.name,
+      country: campus.country || "",
+      location: campus.location || "",
+      isActive: campus.isActive,
+      action: "update" as OrgBulkAction,
+    })),
+  }));
 }
 
 /* ── Campus tab ─────────────────────────────────────────────────────────── */
@@ -482,6 +502,7 @@ function HierarchyTab() {
   const [bulkResult, setBulkResult] = useState<any>(null);
   const [bulkError, setBulkError] = useState<string | null>(null);
   const [bulkLoading, setBulkLoading] = useState(false);
+  const [pendingBulkHierarchySync, setPendingBulkHierarchySync] = useState(false);
 
   const {
     data: hierarchy,
@@ -513,25 +534,7 @@ function HierarchyTab() {
 
   const seedBulkEditor = () => {
     setInteractiveBulk(true);
-    setInteractiveGroups(
-      (hierarchy ?? []).map((group) => ({
-        id: group.id,
-        name: group.name,
-        country: group.country || "",
-        isActive: group.isActive,
-        leaderId: group.leaderId || "",
-        action: "update" as OrgBulkAction,
-        campuses: group.campuses.map((campus) => ({
-          id: campus.id,
-          statusId: campus.id,
-          name: campus.name,
-          country: campus.country || "",
-          location: campus.location || "",
-          isActive: campus.isActive,
-          action: "update" as OrgBulkAction,
-        })),
-      })),
-    );
+    setInteractiveGroups(mapHierarchyToInteractiveGroups(hierarchy));
     setBulkText(
       '[\n  {"type":"group","action":"create","data":{"name":"New Group","country":""}}\n]',
     );
@@ -598,26 +601,8 @@ function HierarchyTab() {
         const data = { success: true, ...(result.data ?? { dryRun: isDryRun, results: [] }) };
         setBulkResult(data);
         if (!isDryRun && data.success) {
-          await refetchHierarchy();
-          setInteractiveGroups(
-            (hierarchy ?? []).map((group) => ({
-              id: group.id,
-              name: group.name,
-              country: group.country || "",
-              isActive: group.isActive,
-              leaderId: group.leaderId || "",
-              action: "update",
-              campuses: group.campuses.map((campus) => ({
-                id: campus.id,
-                statusId: campus.id,
-                name: campus.name,
-                country: campus.country || "",
-                location: campus.location || "",
-                isActive: campus.isActive,
-                action: "update",
-              })),
-            })),
-          );
+          setPendingBulkHierarchySync(true);
+          refetchHierarchy();
         }
       }
     } catch (err: any) {
@@ -626,6 +611,13 @@ function HierarchyTab() {
       setBulkLoading(false);
     }
   };
+
+
+  useEffect(() => {
+    if (!pendingBulkHierarchySync || !hierarchy) return;
+    setInteractiveGroups(mapHierarchyToInteractiveGroups(hierarchy));
+    setPendingBulkHierarchySync(false);
+  }, [hierarchy, pendingBulkHierarchySync]);
 
   const handleSave = async (values: { name: string; country?: string; location?: string }) => {
     if (!editEntity || !editTarget) return;
