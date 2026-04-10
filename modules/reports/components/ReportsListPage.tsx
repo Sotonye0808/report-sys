@@ -57,7 +57,7 @@ const DEFAULT_PAGE_SIZE = 20;
 const BULK_ACTION_CHUNK_SIZE = 10;
 const BULK_ACTION_TIMEOUT_MS = 12_000;
 
-type BulkActionType = "request-edits" | "approve" | "review" | "lock";
+type BulkActionType = "submit" | "request-edits" | "approve" | "review" | "lock";
 
 /* ── Status options ───────────────────────────────────────────────────────── */
 
@@ -297,10 +297,21 @@ export function ReportsListPage() {
   }, [filteredReports, selectedReportIds]);
 
   const bulkActionOptions = [
-    ...(can.requestEdits ? [{ value: "request-edits" as const, label: "Mark Requires Edits" }] : []),
-    ...(can.approveReports ? [{ value: "approve" as const, label: "Approve" }] : []),
-    ...(can.markReviewed ? [{ value: "review" as const, label: "Mark Reviewed" }] : []),
-    ...(can.lockReports ? [{ value: "lock" as const, label: "Lock" }] : []),
+    ...(can.submitReports || isSuperadmin
+      ? [{ value: "submit" as const, label: CONTENT.reports.actions?.submit ?? "Submit" }]
+      : []),
+    ...(can.requestEdits || isSuperadmin
+      ? [{ value: "request-edits" as const, label: "Mark Requires Edits" }]
+      : []),
+    ...(can.approveReports || isSuperadmin
+      ? [{ value: "approve" as const, label: CONTENT.reports.actions?.approve ?? "Approve" }]
+      : []),
+    ...(can.markReviewed || isSuperadmin
+      ? [{ value: "review" as const, label: CONTENT.reports.actions?.review ?? "Mark Reviewed" }]
+      : []),
+    ...(can.lockReports || isSuperadmin
+      ? [{ value: "lock" as const, label: CONTENT.reports.actions?.lock ?? "Lock" }]
+      : []),
   ];
 
   const applyBulkAction = async () => {
@@ -313,7 +324,20 @@ export function ReportsListPage() {
       return;
     }
 
+    const getEndpoint = (reportId: string) => {
+      if (bulkAction === "submit") return API_ROUTES.reports.submit(reportId);
+      if (bulkAction === "request-edits") return API_ROUTES.reports.requestEdit(reportId);
+      if (bulkAction === "approve") return API_ROUTES.reports.approve(reportId);
+      if (bulkAction === "review") return API_ROUTES.reports.review(reportId);
+      return API_ROUTES.reports.lock(reportId);
+    };
+
     const isEligible = (report: Report) => {
+      if (bulkAction === "submit") {
+        return (
+          report.status === ReportStatus.DRAFT || report.status === ReportStatus.REQUIRES_EDITS
+        );
+      }
       if (bulkAction === "request-edits") return report.status === ReportStatus.SUBMITTED;
       if (bulkAction === "approve") return report.status === ReportStatus.SUBMITTED;
       if (bulkAction === "review") return report.status === ReportStatus.APPROVED;
@@ -321,20 +345,18 @@ export function ReportsListPage() {
     };
 
     const targetReports = selectedReports.filter(isEligible);
+    const skipped = selectedReports.length - targetReports.length;
     if (targetReports.length === 0) {
-      message.warning("No selected reports are eligible for that action.");
+      message.warning(
+        skipped > 0
+          ? "No selected reports are eligible for that action. Deselect ineligible items and try again."
+          : "No selected reports are eligible for that action.",
+      );
       return;
     }
 
     const runAction = async (report: Report) => {
-      const endpoint =
-        bulkAction === "request-edits"
-          ? API_ROUTES.reports.requestEdit(report.id)
-          : bulkAction === "approve"
-            ? API_ROUTES.reports.approve(report.id)
-            : bulkAction === "review"
-              ? API_ROUTES.reports.review(report.id)
-              : API_ROUTES.reports.lock(report.id);
+      const endpoint = getEndpoint(report.id);
 
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), BULK_ACTION_TIMEOUT_MS);
@@ -389,9 +411,17 @@ export function ReportsListPage() {
     }
 
     if (failed > 0) {
-      message.warning(`Bulk action completed: ${succeeded} succeeded, ${failed} failed.`);
+      message.warning(
+        `Bulk action completed: ${succeeded} succeeded, ${failed} failed${
+          skipped > 0 ? `, ${skipped} skipped (not eligible)` : ""
+        }.`,
+      );
     } else {
-      message.success(`Bulk action completed for ${succeeded} report(s).`);
+      message.success(
+        `Bulk action completed for ${succeeded} report(s)${
+          skipped > 0 ? `, ${skipped} skipped (not eligible)` : ""
+        }.`,
+      );
     }
   };
 
