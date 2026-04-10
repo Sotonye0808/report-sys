@@ -18,6 +18,7 @@ import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole, ReportStatus } from "@/types/global";
+import { resolveReportMonth } from "@/lib/utils/reportPeriod";
 
 const QuerySchema = z.object({
     campusId: z.string().optional(),
@@ -81,8 +82,9 @@ export async function GET(req: NextRequest) {
     /* ── Submission trend — group by month (last 12) ───────────────────────── */
     const submissionsByMonth: Record<string, number> = {};
     for (const r of reports) {
-        if (r.status !== ReportStatus.DRAFT && r.periodMonth != null) {
-            const key = `${r.periodYear}-${String(r.periodMonth).padStart(2, "0")}`;
+        const month = resolveReportMonth(r);
+        if (r.status !== ReportStatus.DRAFT && month != null) {
+            const key = `${r.periodYear}-${String(month).padStart(2, "0")}`;
             submissionsByMonth[key] = (submissionsByMonth[key] ?? 0) + 1;
         }
     }
@@ -94,8 +96,9 @@ export async function GET(req: NextRequest) {
     /* ── Quarterly compliance trend ─────────────────────────────────────────── */
     const quarterlyMap: Record<string, { submitted: number; approved: number }> = {};
     for (const r of reports) {
-        if (r.periodMonth == null) continue;
-        const q = Math.ceil(r.periodMonth / 3);
+        const month = resolveReportMonth(r);
+        if (month == null) continue;
+        const q = Math.ceil(month / 3);
         const key = `${r.periodYear}-Q${q}`;
         if (!quarterlyMap[key]) quarterlyMap[key] = { submitted: 0, approved: 0 };
         if (r.status !== ReportStatus.DRAFT) quarterlyMap[key].submitted++;
@@ -115,8 +118,9 @@ export async function GET(req: NextRequest) {
     /* ── Status over months (for stacked bar) ──────────────────────────────── */
     const statusByMonth: Record<string, Record<string, number>> = {};
     for (const r of reports) {
-        if (r.periodMonth == null) continue;
-        const key = `${r.periodYear}-${String(r.periodMonth).padStart(2, "0")}`;
+        const month = resolveReportMonth(r);
+        if (month == null) continue;
+        const key = `${r.periodYear}-${String(month).padStart(2, "0")}`;
         if (!statusByMonth[key]) statusByMonth[key] = {};
         statusByMonth[key][r.status] = (statusByMonth[key][r.status] ?? 0) + 1;
     }
@@ -156,4 +160,3 @@ export async function GET(req: NextRequest) {
     await cache.set(cacheKey, JSON.stringify(response), 60);
     return NextResponse.json(response);
 }
-

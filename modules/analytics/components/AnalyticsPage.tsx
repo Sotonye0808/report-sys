@@ -12,7 +12,7 @@
  *   CAMPUS_ADMIN / CAMPUS_PASTOR / DATA_ENTRY — campus-scoped
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Select, Tabs, Segmented, Progress, Checkbox } from "antd";
 import Button from "@/components/ui/Button";
 import { DownloadOutlined } from "@ant-design/icons";
@@ -172,13 +172,6 @@ const CHART_ROLES = [
   UserRole.GROUP_ADMIN,
   UserRole.GROUP_PASTOR,
 ];
-
-const YEAR_OPTIONS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2, CURRENT_YEAR - 3].map(
-  (y) => ({
-    value: y,
-    label: String(y),
-  }),
-);
 
 const TOOLTIP_STYLE: React.CSSProperties = {
   background: "var(--ds-surface-elevated)",
@@ -342,6 +335,17 @@ export function AnalyticsPage() {
     compareReportId ? API_ROUTES.reports.detail(compareReportId) : null,
   );
 
+  const yearOptions = useMemo(() => {
+    const reportYears = (reportListData?.reports ?? []).map((report) => report.periodYear);
+    const years = new Set<number>([CURRENT_YEAR, CURRENT_YEAR - 1, ...reportYears]);
+    return [...years]
+      .sort((a, b) => b - a)
+      .map((y) => ({
+        value: y,
+        label: String(y),
+      }));
+  }, [reportListData?.reports]);
+
   useEffect(() => {
     const reports = (reportListData?.reports ?? []).filter((report) =>
       includeDrafts ? true : report.status !== ReportStatus.DRAFT,
@@ -359,6 +363,13 @@ export function AnalyticsPage() {
       setYear(latestYear);
     }
   }, [includeDrafts, reportListData?.reports, year]);
+
+  useEffect(() => {
+    if (yearOptions.length === 0) return;
+    if (yearOptions.some((option) => option.value === compareYear) || compareYear === year) return;
+    const fallback = yearOptions.find((option) => option.value !== year)?.value ?? Math.max(year - 1, 2000);
+    setCompareYear(fallback);
+  }, [compareYear, year, yearOptions]);
 
   /* Campus + user counts */
   const { data: allCampuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
@@ -539,6 +550,37 @@ export function AnalyticsPage() {
     };
   };
 
+  const reportComparisonInsights = useMemo(() => {
+    if (!selectedReport) return [];
+    const selectedSections = (selectedReport.sections ?? []) as ReportSection[];
+    const compareSections = ((compareReport?.sections ?? []) as ReportSection[]) ?? [];
+    const compareByName = new Map(compareSections.map((section) => [section.sectionName, section]));
+
+    return selectedSections
+      .map((section) => {
+        const selectedMetrics = section.metrics ?? [];
+        const compareSection = compareByName.get(section.sectionName);
+        const compareMetrics = compareSection?.metrics ?? [];
+        const selectedAchieved = selectedMetrics.reduce((sum, metric) => sum + (metric.monthlyAchieved ?? 0), 0);
+        const compareAchieved = compareMetrics.reduce((sum, metric) => sum + (metric.monthlyAchieved ?? 0), 0);
+        const delta = selectedAchieved - compareAchieved;
+        return {
+          section: section.sectionName,
+          selectedAchieved,
+          compareAchieved,
+          delta,
+          comment:
+            delta > 0
+              ? "Improved versus compared report."
+              : delta < 0
+                ? "Under compared report; review this section."
+                : "Stable versus compared report.",
+        };
+      })
+      .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
+      .slice(0, 6);
+  }, [compareReport?.sections, selectedReport]);
+
   /* ── Fetch overview ─────────────────────────────────────────────────── */
 
   const fetchOverview = useCallback(async () => {
@@ -650,6 +692,44 @@ export function AnalyticsPage() {
     name: allCampuses?.find((c) => c.id === row.campusId)?.name ?? row.campusId,
   }));
 
+  const trendsInsight = useMemo(() => {
+    if (!overview) return null;
+    const lastStatus = overview.statusTrend[overview.statusTrend.length - 1] as
+      | (StatusTrendRow & Record<string, number | string>)
+      | undefined;
+    const lastQuarter = overview.quarterlyTrend[overview.quarterlyTrend.length - 1];
+    if (!lastStatus && !lastQuarter) return "No trend insights available for selected filters yet.";
+
+    const submitted = Number(lastStatus?.SUBMITTED ?? 0);
+    const approved = Number(lastStatus?.APPROVED ?? 0);
+    const approvalSignal =
+      submitted > 0 ? Math.round((approved / submitted) * 100) : lastQuarter?.complianceRate ?? 0;
+
+    if (approvalSignal >= 80) return "Strong momentum: approval/compliance trend is healthy.";
+    if (approvalSignal >= 50) return "Moderate trend: monitor pending submissions and approvals.";
+    return "Weak trend signal: prioritize review throughput and close pending reports.";
+  }, [overview]);
+
+  const complianceInsight = useMemo(() => {
+    if (!overview) return null;
+    if (campusBreakdownNamed.length === 0) return "No campus compliance data available.";
+    const best = [...campusBreakdownNamed].sort((a, b) => b.complianceRate - a.complianceRate)[0];
+    const worst = [...campusBreakdownNamed].sort((a, b) => a.complianceRate - b.complianceRate)[0];
+    if (!best || !worst) return null;
+    return `Top performer: ${best.name} (${best.complianceRate}%). Lowest: ${worst.name} (${worst.complianceRate}%).`;
+  }, [campusBreakdownNamed, overview]);
+
+  const quarterlyInsight = useMemo(() => {
+    if (!quarterlyData) return null;
+    if (quarterlyData.qoqDelta.compliance > 0) {
+      return `Compliance improved by ${quarterlyData.qoqDelta.compliance}% versus ${quarterlyData.previous.label}.`;
+    }
+    if (quarterlyData.qoqDelta.compliance < 0) {
+      return `Compliance dropped by ${Math.abs(quarterlyData.qoqDelta.compliance)}% versus ${quarterlyData.previous.label}.`;
+    }
+    return `Compliance is unchanged versus ${quarterlyData.previous.label}.`;
+  }, [quarterlyData]);
+
   const campusOptions = canSeeCrossCampus
     ? [
         { value: "", label: "All Campuses" },
@@ -721,7 +801,7 @@ export function AnalyticsPage() {
       )}
       <Select
         value={year}
-        options={YEAR_OPTIONS}
+        options={yearOptions}
         onChange={setYear}
         size="middle"
         style={{ width: 100 }}
@@ -790,27 +870,51 @@ export function AnalyticsPage() {
           </div>
 
           {selectedReport && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                { report: selectedReport, label: "Selected report" },
-                { report: compareReport, label: "Compared report" },
-              ]
-                .filter((x) => x.report)
-                .map((entry) => {
-                  const summary = summarizeReport(entry.report as Report);
-                  return (
-                    <div key={entry.label} className="bg-ds-surface-base p-3 rounded-ds-md">
-                      <p className="text-xs text-ds-text-subtle mb-1">{entry.label}</p>
-                      <p className="text-sm font-semibold">Total Goal: {summary.totalGoal}</p>
-                      <p className="text-sm font-semibold">
-                        Total Achieved: {summary.totalAchieved}
-                      </p>
-                      <p className="text-sm font-semibold">
-                        Target %: {summary.targetPct ?? "n/a"}
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  { report: selectedReport, label: "Selected report" },
+                  { report: compareReport, label: "Compared report" },
+                ]
+                  .filter((x) => x.report)
+                  .map((entry) => {
+                    const summary = summarizeReport(entry.report as Report);
+                    return (
+                      <div key={entry.label} className="bg-ds-surface-base p-3 rounded-ds-md">
+                        <p className="text-xs text-ds-text-subtle mb-1">{entry.label}</p>
+                        <p className="text-sm font-semibold">Total Goal: {summary.totalGoal}</p>
+                        <p className="text-sm font-semibold">
+                          Total Achieved: {summary.totalAchieved}
+                        </p>
+                        <p className="text-sm font-semibold">
+                          Target %: {summary.targetPct ?? "n/a"}
+                        </p>
+                      </div>
+                    );
+                  })}
+              </div>
+              {compareReport && reportComparisonInsights.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold text-ds-text-secondary">
+                    Section comparison insights
+                  </p>
+                  {reportComparisonInsights.map((row) => (
+                    <div
+                      key={row.section}
+                      className="flex flex-wrap items-center justify-between gap-2 rounded-ds-md border border-ds-border-base bg-ds-surface-base px-3 py-2"
+                    >
+                      <div>
+                        <p className="text-sm font-medium text-ds-text-primary">{row.section}</p>
+                        <p className="text-xs text-ds-text-subtle">{row.comment}</p>
+                      </div>
+                      <p className="text-xs font-semibold text-ds-text-secondary">
+                        Δ Achieved: {row.delta >= 0 ? "+" : ""}
+                        {row.delta}
                       </p>
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </ChartCard>
@@ -889,7 +993,7 @@ export function AnalyticsPage() {
         />
         <Select
           value={compareYear}
-          options={YEAR_OPTIONS.filter((y) => y.value !== year)}
+          options={yearOptions.filter((option) => option.value !== year)}
           onChange={setCompareYear}
           style={{ width: 120 }}
           placeholder="Compare year"
@@ -1091,6 +1195,11 @@ export function AnalyticsPage() {
             </div>
           </Card>
         )}
+        {trendsInsight && (
+          <Card>
+            <p className="text-sm text-ds-text-secondary">{trendsInsight}</p>
+          </Card>
+        )}
       </div>
     );
 
@@ -1101,6 +1210,11 @@ export function AnalyticsPage() {
       <LoadingSkeleton rows={6} />
     ) : (
       <div className="space-y-6">
+        {complianceInsight && (
+          <Card>
+            <p className="text-sm text-ds-text-secondary">{complianceInsight}</p>
+          </Card>
+        )}
         <ChartCard title={CONTENT.analytics.complianceTitle as string}>
           {campusBreakdownNamed.length === 0 ? (
             <p className="text-sm text-ds-text-subtle">{CONTENT.analytics.noData as string}</p>
@@ -1256,6 +1370,11 @@ export function AnalyticsPage() {
             </Card>
           ))}
         </div>
+        {quarterlyInsight && (
+          <Card>
+            <p className="text-sm text-ds-text-secondary">{quarterlyInsight}</p>
+          </Card>
+        )}
 
         {/* Monthly breakdown within quarter */}
         {quarterlyData.monthlyBreakdown.length > 0 && (

@@ -153,39 +153,6 @@ export async function GET(req: NextRequest) {
         allowedCampusIds = [query.campusId];
     }
 
-    /* ── Load default template to enumerate available metrics ────────────── */
-    const defaultTemplate = await db.reportTemplate.findFirst({
-        where: { isDefault: true },
-        include: { sections: { include: { metrics: true }, orderBy: { order: "asc" } } },
-    });
-    if (!defaultTemplate) {
-        return NextResponse.json({ success: false, error: "No default template found" }, { status: 404 });
-    }
-
-    const availableMetrics: MetricAnalyticsPayload["availableMetrics"] = [];
-    for (const sec of defaultTemplate.sections) {
-        for (const met of sec.metrics) {
-            if (met.capturesAchieved) {
-                availableMetrics.push({
-                    id: met.id,
-                    name: met.name,
-                    sectionName: sec.name,
-                    calculationType: met.calculationType as MetricCalculationType,
-                });
-            }
-        }
-    }
-
-    /* ── Resolve target metric ───────────────────────────────────────────── */
-    let targetMetric = availableMetrics[0]; // default to first
-    if (query.metricId) {
-        const found = availableMetrics.find((m) => m.id === query.metricId);
-        if (!found) {
-            return NextResponse.json({ success: false, error: "Metric not found in default template" }, { status: 404 });
-        }
-        targetMetric = found;
-    }
-
     /* ── Load reports in scope ───────────────────────────────────────────── */
     const years = [query.year, ...(query.compareYear != null ? [query.compareYear] : [])];
 
@@ -221,6 +188,52 @@ export async function GET(req: NextRequest) {
     ]);
 
     const campusMap = new Map(allCampuses.map((c) => [c.id, c]));
+
+    const availableMetricMap = new Map<string, MetricAnalyticsPayload["availableMetrics"][number]>();
+    for (const report of scopedReports) {
+        for (const section of report.sections) {
+            for (const metric of section.metrics) {
+                const existing = availableMetricMap.get(metric.templateMetricId);
+                if (existing) continue;
+                availableMetricMap.set(metric.templateMetricId, {
+                    id: metric.templateMetricId,
+                    name: metric.metricName,
+                    sectionName: section.sectionName,
+                    calculationType: metric.calculationType as MetricCalculationType,
+                });
+            }
+        }
+    }
+
+    const availableMetrics = [...availableMetricMap.values()].sort((a, b) => {
+        const sectionCmp = a.sectionName.localeCompare(b.sectionName);
+        if (sectionCmp !== 0) return sectionCmp;
+        return a.name.localeCompare(b.name);
+    });
+    if (availableMetrics.length === 0) {
+        return NextResponse.json({
+            success: true,
+            data: {
+                metricId: "",
+                metricName: "",
+                sectionName: "",
+                calculationType: MetricCalculationType.SUM,
+                aggregate: [],
+                byCampus: [],
+                availableMetrics: [],
+            } satisfies MetricAnalyticsPayload,
+        });
+    }
+
+    /* ── Resolve target metric ───────────────────────────────────────────── */
+    let targetMetric = availableMetrics[0];
+    if (query.metricId) {
+        const found = availableMetrics.find((m) => m.id === query.metricId);
+        if (!found) {
+            return NextResponse.json({ success: false, error: "Metric not found in selected report scope" }, { status: 404 });
+        }
+        targetMetric = found;
+    }
 
     /* ── Accumulator: [campusId][periodKey] → { goal[], achieved[], yoy[] } ─ */
     type BucketMap = Map<string, Map<string, { goal: number[]; achieved: number[]; yoy: number[] }>>;

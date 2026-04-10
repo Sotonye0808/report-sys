@@ -17,6 +17,7 @@ import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole, ReportStatus } from "@/types/global";
+import { resolveReportMonth } from "@/lib/utils/reportPeriod";
 
 const QuerySchema = z.object({
     year: z.coerce.number().optional(),
@@ -42,7 +43,7 @@ export async function GET(req: NextRequest) {
     const year = query.year ?? now.getFullYear();
     const quarter = query.quarter ?? Math.ceil((now.getMonth() + 1) / 3);
 
-    const cacheKey = `analytics:quarterly:${auth.user.id}:${year}:Q${quarter}:${query.campusId ?? "all"}`;
+    const cacheKey = `analytics:quarterly:${auth.user.id}:${year}:Q${quarter}:${query.campusId ?? "all"}:${includeDrafts ? "with-draft" : "no-draft"}`;
     const cached = await cache.get(cacheKey);
     if (cached) return NextResponse.json(cached);
 
@@ -52,7 +53,6 @@ export async function GET(req: NextRequest) {
     const months = getQuarterMonths(quarter);
     const where: Record<string, unknown> = {
         periodYear: year,
-        periodMonth: { in: months },
     };
     if (roleConfig?.reportVisibilityScope === "campus" && auth.user.campusId) {
         where.campusId = auth.user.campusId;
@@ -62,7 +62,11 @@ export async function GET(req: NextRequest) {
         where.status = { not: ReportStatus.DRAFT };
     }
 
-    const reports = await db.report.findMany({ where });
+    const reportsAll = await db.report.findMany({ where });
+    const reports = reportsAll.filter((report) => {
+        const month = resolveReportMonth(report);
+        return month != null && months.includes(month);
+    });
 
     /* ── Previous quarter data for QoQ comparison ─────────────────────── */
     const prevQ = quarter === 1 ? 4 : quarter - 1;
@@ -70,7 +74,6 @@ export async function GET(req: NextRequest) {
     const prevMonths = getQuarterMonths(prevQ);
     const prevWhere: Record<string, unknown> = {
         periodYear: prevYear,
-        periodMonth: { in: prevMonths },
     };
     if (where.campusId) prevWhere.campusId = where.campusId;
     if (roleConfig?.reportVisibilityScope === "campus" && auth.user.campusId) {
@@ -79,7 +82,11 @@ export async function GET(req: NextRequest) {
     if (!includeDrafts) {
         prevWhere.status = { not: ReportStatus.DRAFT };
     }
-    const prevReports = await db.report.findMany({ where: prevWhere });
+    const prevReportsAll = await db.report.findMany({ where: prevWhere });
+    const prevReports = prevReportsAll.filter((report) => {
+        const month = resolveReportMonth(report);
+        return month != null && prevMonths.includes(month);
+    });
 
     /* ── Compute totals ────────────────────────────────────────────────── */
     function computeTotals(rpts: typeof reports) {
@@ -124,7 +131,7 @@ export async function GET(req: NextRequest) {
 
     /* ── Monthly breakdown within quarter ──────────────────────────────── */
     const monthlyBreakdown = months.map((m) => {
-        const monthReports = reports.filter((r) => r.periodMonth === m);
+        const monthReports = reports.filter((r) => resolveReportMonth(r) === m);
         const totals = computeTotals(monthReports);
         return { month: m, label: `${year}-${String(m).padStart(2, "0")}`, ...totals };
     });
