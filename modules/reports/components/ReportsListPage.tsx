@@ -6,9 +6,9 @@
  * Unified role-aware reports list.
  */
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Select } from "antd";
+import { Select, message } from "antd";
 import {
   PlusOutlined,
   LockOutlined,
@@ -54,6 +54,10 @@ interface Filters {
 }
 
 const DEFAULT_PAGE_SIZE = 20;
+const BULK_ACTION_CHUNK_SIZE = 10;
+const BULK_ACTION_TIMEOUT_MS = 12_000;
+
+type BulkActionType = "request-edits" | "approve" | "review" | "lock";
 
 /* ── Status options ───────────────────────────────────────────────────────── */
 
@@ -94,6 +98,9 @@ export function ReportsListPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [exportOpen, setExportOpen] = useState(false);
+  const [selectedReportIds, setSelectedReportIds] = useState<string[]>([]);
+  const [bulkAction, setBulkAction] = useState<BulkActionType | undefined>(undefined);
+  const [bulkLoading, setBulkLoading] = useState(false);
 
   function updateFilter(patch: Partial<Filters>) {
     setFilters((prev) => ({ ...prev, ...patch }));
@@ -117,7 +124,9 @@ export function ReportsListPage() {
     }
     return `${API_ROUTES.reports.list}?${params.toString()}`;
   }, [user, visibilityScope]);
-  const { data: reportsPage } = useApiData<{ reports: Report[]; total: number }>(reportsUrl);
+  const { data: reportsPage, refetch: refetchReports } = useApiData<{ reports: Report[]; total: number }>(
+    reportsUrl,
+  );
   const allReports = reportsPage?.reports;
 
   const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
@@ -275,6 +284,117 @@ export function ReportsListPage() {
     (col) => !role || col.allowedRoles.includes(role),
   ).map((col) => col.antColumn);
 
+  useEffect(() => {
+    if (!filteredReports) return;
+    const filteredIds = new Set(filteredReports.map((r) => r.id));
+    setSelectedReportIds((prev) => prev.filter((id) => filteredIds.has(id)));
+  }, [filteredReports]);
+
+  const selectedReports = useMemo(() => {
+    if (!filteredReports || selectedReportIds.length === 0) return [];
+    const selectedSet = new Set(selectedReportIds);
+    return filteredReports.filter((report) => selectedSet.has(report.id));
+  }, [filteredReports, selectedReportIds]);
+
+  const bulkActionOptions = [
+    ...(can.requestEdits ? [{ value: "request-edits" as const, label: "Mark Requires Edits" }] : []),
+    ...(can.approveReports ? [{ value: "approve" as const, label: "Approve" }] : []),
+    ...(can.markReviewed ? [{ value: "review" as const, label: "Mark Reviewed" }] : []),
+    ...(can.lockReports ? [{ value: "lock" as const, label: "Lock" }] : []),
+  ];
+
+  const applyBulkAction = async () => {
+    if (!bulkAction) {
+      message.warning("Select a bulk action first.");
+      return;
+    }
+    if (selectedReports.length === 0) {
+      message.warning("Select at least one report.");
+      return;
+    }
+
+    const isEligible = (report: Report) => {
+      if (bulkAction === "request-edits") return report.status === ReportStatus.SUBMITTED;
+      if (bulkAction === "approve") return report.status === ReportStatus.SUBMITTED;
+      if (bulkAction === "review") return report.status === ReportStatus.APPROVED;
+      return report.status === ReportStatus.REVIEWED;
+    };
+
+    const targetReports = selectedReports.filter(isEligible);
+    if (targetReports.length === 0) {
+      message.warning("No selected reports are eligible for that action.");
+      return;
+    }
+
+    const runAction = async (report: Report) => {
+      const endpoint =
+        bulkAction === "request-edits"
+          ? API_ROUTES.reports.requestEdit(report.id)
+          : bulkAction === "approve"
+            ? API_ROUTES.reports.approve(report.id)
+            : bulkAction === "review"
+              ? API_ROUTES.reports.review(report.id)
+              : API_ROUTES.reports.lock(report.id);
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), BULK_ACTION_TIMEOUT_MS);
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body:
+            bulkAction === "request-edits"
+              ? JSON.stringify({
+                  reason: "Bulk action: report requires edits.",
+                })
+              : undefined,
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          const json = await response.json().catch(() => ({}));
+          throw new Error(json.error ?? `Request failed (${response.status})`);
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") {
+          throw new Error(`Bulk action timed out for report ${report.id}.`);
+        }
+        throw error;
+      } finally {
+        clearTimeout(timeout);
+      }
+    };
+
+    setBulkLoading(true);
+    let succeeded = 0;
+    const successfulIds = new Set<string>();
+    let failed = 0;
+    for (let index = 0; index < targetReports.length; index += BULK_ACTION_CHUNK_SIZE) {
+      const chunk = targetReports.slice(index, index + BULK_ACTION_CHUNK_SIZE);
+      const chunkResults = await Promise.allSettled(chunk.map((report) => runAction(report)));
+      chunkResults.forEach((result, chunkIndex) => {
+        if (result.status === "fulfilled") {
+          succeeded += 1;
+          successfulIds.add(chunk[chunkIndex].id);
+        } else {
+          failed += 1;
+        }
+      });
+    }
+    setBulkLoading(false);
+
+    if (succeeded > 0) {
+      await refetchReports();
+      setSelectedReportIds((prev) => prev.filter((id) => !successfulIds.has(id)));
+    }
+
+    if (failed > 0) {
+      message.warning(`Bulk action completed: ${succeeded} succeeded, ${failed} failed.`);
+    } else {
+      message.success(`Bulk action completed for ${succeeded} report(s).`);
+    }
+  };
+
   /* ── Loading guard ──────────────────────────────────────────────────────── */
 
   if (!user || !role) return <LoadingSkeleton rows={3} />;
@@ -365,6 +485,52 @@ export function ReportsListPage() {
         }
       />
 
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <Button
+          size="small"
+          onClick={() => setSelectedReportIds((filteredReports ?? []).map((report) => report.id))}
+          disabled={!filteredReports || filteredReports.length === 0}
+        >
+          Select all
+        </Button>
+        <Button
+          size="small"
+          onClick={() => {
+            const allIds = (filteredReports ?? []).map((report) => report.id);
+            const selectedSet = new Set(selectedReportIds);
+            setSelectedReportIds(allIds.filter((id) => !selectedSet.has(id)));
+          }}
+          disabled={!filteredReports || filteredReports.length === 0}
+        >
+          Invert selection
+        </Button>
+        <Button
+          size="small"
+          onClick={() => setSelectedReportIds([])}
+          disabled={selectedReportIds.length === 0}
+        >
+          Clear selection
+        </Button>
+        <Select
+          size="small"
+          placeholder="Bulk action"
+          style={{ minWidth: 200 }}
+          options={bulkActionOptions}
+          value={bulkAction}
+          onChange={(value) => setBulkAction(value)}
+        />
+        <Button
+          size="small"
+          type="primary"
+          onClick={applyBulkAction}
+          loading={bulkLoading}
+          disabled={selectedReportIds.length === 0 || !bulkAction}
+        >
+          Apply
+        </Button>
+        <span className="text-xs text-ds-text-subtle">{selectedReportIds.length} selected</span>
+      </div>
+
       {filteredReports === undefined ? (
         <LoadingSkeleton rows={8} />
       ) : (
@@ -376,10 +542,25 @@ export function ReportsListPage() {
             loading={false}
             pagination={false}
             scroll={{ x: 700 }}
+            rowSelection={{
+              selectedRowKeys: selectedReportIds,
+              preserveSelectedRowKeys: true,
+              onChange: (keys) => setSelectedReportIds(keys as string[]),
+            }}
             emptyTitle={CONTENT.reports.emptyState.title}
             emptyDescription={CONTENT.reports.emptyState.description}
             onRow={(record) => ({
-              onClick: () => router.push(APP_ROUTES.reportDetail(record.id)),
+              onClick: (event) => {
+                const target = event.target as HTMLElement;
+                if (
+                  target.closest(
+                    "button, a, input, label, .ant-checkbox-wrapper, .ant-checkbox, .ant-select",
+                  )
+                ) {
+                  return;
+                }
+                router.push(APP_ROUTES.reportDetail(record.id));
+              },
               style: { cursor: "pointer" },
             })}
           />
@@ -405,6 +586,7 @@ export function ReportsListPage() {
         open={exportOpen}
         onClose={() => setExportOpen(false)}
         reports={filteredReports ?? []}
+        selectedReports={selectedReports}
         templates={templates ?? []}
         campuses={campuses ?? []}
       />
