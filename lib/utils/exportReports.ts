@@ -25,6 +25,15 @@ interface AggregatedMetricValue {
     selectedFromReportId?: string;
 }
 
+interface AggregatedSourceReport extends Report {
+    sections?: (ReportSection & { metrics?: ReportMetric[] })[];
+}
+
+interface ExportAggregatedReportOptions {
+    includeGroupedSourceSheet?: boolean;
+    orgGroups?: OrgGroupWithDetails[];
+}
+
 const ec = (CONTENT.reports as Record<string, unknown>).export as Record<string, string>;
 
 /* ── helpers ────────────────────────────────────────────────────────────── */
@@ -232,12 +241,18 @@ export function exportReportDetail(
 export function exportAggregatedReport(
     report: Report,
     aggregatedSections: { sectionName: string; metrics: AggregatedMetricValue[] }[],
-    sourceReports: Report[],
+    sourceReports: AggregatedSourceReport[],
     templates: ReportTemplate[],
     campuses: Campus[],
+    options?: ExportAggregatedReportOptions,
 ): void {
     const campusName = campuses.find((c) => c.id === report.campusId)?.name ?? report.campusId;
     const template = templates.find((t) => t.id === report.templateId);
+    const includeGroupedSourceSheet = options?.includeGroupedSourceSheet !== false;
+    const groupNameById = new Map<string, string>(
+        (options?.orgGroups ?? []).map((group) => [group.id, group.name]),
+    );
+    const campusNameById = new Map<string, string>(campuses.map((campus) => [campus.id, campus.name]));
 
     const overviewRows = [
         ["Title", report.title ?? ""],
@@ -291,6 +306,82 @@ export function exportAggregatedReport(
     XLSX.utils.book_append_sheet(wb, wsMetrics, "Metrics");
     XLSX.utils.book_append_sheet(wb, wsSources, "Source Reports");
     XLSX.utils.book_append_sheet(wb, wsChart, "Chart Data");
+
+    if (includeGroupedSourceSheet && sourceReports.length > 0) {
+        const groupedRows: (string | number)[][] = [
+            [
+                "Group",
+                "Campus",
+                "Report",
+                "Period",
+                "Status",
+                "Section",
+                "Metric",
+                "Achieved",
+                "Goal",
+                "YoY",
+                "Calculation Type",
+            ],
+        ];
+
+        const groupedReports = [...sourceReports].sort((a, b) => {
+            const groupA = groupNameById.get(a.orgGroupId ?? "") ?? a.orgGroupId ?? "Ungrouped";
+            const groupB = groupNameById.get(b.orgGroupId ?? "") ?? b.orgGroupId ?? "Ungrouped";
+            if (groupA !== groupB) return groupA.localeCompare(groupB);
+
+            const campusA = campusNameById.get(a.campusId) ?? a.campusId;
+            const campusB = campusNameById.get(b.campusId) ?? b.campusId;
+            if (campusA !== campusB) return campusA.localeCompare(campusB);
+            return (a.title ?? a.id).localeCompare(b.title ?? b.id);
+        });
+
+        for (const src of groupedReports) {
+            const groupName = groupNameById.get(src.orgGroupId ?? "") ?? src.orgGroupId ?? "Ungrouped";
+            const srcCampusName = campusNameById.get(src.campusId) ?? src.campusId;
+            const metricsByTemplateKey = new Map<string, ReportMetric>();
+
+            for (const section of src.sections ?? []) {
+                for (const metric of section.metrics ?? []) {
+                    metricsByTemplateKey.set(metric.templateMetricId, metric);
+                }
+            }
+
+            for (const section of aggregatedSections) {
+                for (const metric of section.metrics) {
+                    const matched = metricsByTemplateKey.get(metric.templateMetricId);
+                    groupedRows.push([
+                        groupName,
+                        srcCampusName,
+                        src.title ?? src.id,
+                        src.period ?? "",
+                        src.status,
+                        section.sectionName,
+                        metric.metricName,
+                        matched?.monthlyAchieved ?? "",
+                        matched?.monthlyGoal ?? "",
+                        matched?.yoyGoal ?? "",
+                        matched?.calculationType ?? metric.calculationType,
+                    ]);
+                }
+            }
+        }
+
+        const wsGrouped = XLSX.utils.aoa_to_sheet(groupedRows);
+        wsGrouped["!cols"] = [
+            { wch: 24 },
+            { wch: 24 },
+            { wch: 34 },
+            { wch: 16 },
+            { wch: 16 },
+            { wch: 24 },
+            { wch: 28 },
+            { wch: 12 },
+            { wch: 12 },
+            { wch: 12 },
+            { wch: 16 },
+        ];
+        XLSX.utils.book_append_sheet(wb, wsGrouped, "Grouped Details");
+    }
 
     const safeName = (report.title ?? "aggregated-report").replace(/[/\\?*[\]]/g, "-").slice(0, 50);
     XLSX.writeFile(wb, `${safeName}.xlsx`);
@@ -443,4 +534,3 @@ export function exportReportsWithOptions(opts: ExportDialogOptions): void {
 
     XLSX.writeFile(wb, `${ec.listFilename}-${timestamp}.xlsx`);
 }
-
