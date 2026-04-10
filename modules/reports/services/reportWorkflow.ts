@@ -117,9 +117,9 @@ export async function submitReport(params: BaseWorkflowParams) {
 export async function requestEditReport(params: BaseWorkflowParams, reason: string) {
     const report = await db.report.findUnique({ where: { id: params.reportId } });
     if (!report) throw new Error("Report not found.");
-    const recipientId = report.submittedById ?? report.createdById;
 
     const updated = await db.$transaction(async (tx) => {
+        const recipientId = report.submittedById ?? report.createdById;
         const reportUpdate = await tx.report.update({
             where: { id: params.reportId },
             data: { status: ReportStatus.REQUIRES_EDITS, notes: reason, updatedAt: new Date() },
@@ -166,13 +166,13 @@ export async function requestEditReport(params: BaseWorkflowParams, reason: stri
             );
         }
 
-        return reportUpdate;
+        return { reportUpdate, recipientId };
     });
 
     await cache.invalidatePattern(`report:${params.reportId}*`);
     await cache.invalidatePattern("reports:list:*");
-    if (recipientId) await cache.invalidatePattern(`notifications:${recipientId}*`);
-    return updated;
+    if (updated.recipientId) await cache.invalidatePattern(`notifications:${updated.recipientId}*`);
+    return updated.reportUpdate;
 }
 
 export async function approveReport(params: BaseWorkflowParams, detail?: string) {

@@ -35,7 +35,8 @@ interface ExportAggregatedReportOptions {
 }
 
 const ec = (CONTENT.reports as Record<string, unknown>).export as Record<string, string>;
-const DEFAULT_GROUP_NAME = "Ungrouped";
+const aggregationContent = (CONTENT.reports as Record<string, unknown>).aggregation as Record<string, string>;
+const DEFAULT_GROUP_NAME = aggregationContent.ungroupedLabel ?? "Ungrouped";
 
 /* ── helpers ────────────────────────────────────────────────────────────── */
 

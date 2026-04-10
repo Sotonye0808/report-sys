@@ -165,8 +165,11 @@ interface MetricAnalyticsData {
 const ALL_ROLES = Object.values(UserRole);
 const CURRENT_YEAR = new Date().getFullYear();
 const MIN_ANALYTICS_YEAR = 2000;
-const METRIC_KEY_DELIMITER = "::";
 type TrendChartType = "bar" | "line" | "area";
+
+function makeMetricCompareKey(sectionName: string, metricName: string) {
+  return JSON.stringify([sectionName, metricName]);
+}
 
 const CHART_ROLES = [
   UserRole.SUPERADMIN,
@@ -596,17 +599,14 @@ export function AnalyticsPage() {
 
     for (const section of compareSections) {
       for (const metric of section.metrics ?? []) {
-        compareMetricByKey.set(
-          `${section.sectionName}${METRIC_KEY_DELIMITER}${metric.metricName}`,
-          metric,
-        );
+        compareMetricByKey.set(makeMetricCompareKey(section.sectionName, metric.metricName), metric);
       }
     }
 
     return selectedSections
       .flatMap((section) =>
         (section.metrics ?? []).map((metric) => {
-          const key = `${section.sectionName}${METRIC_KEY_DELIMITER}${metric.metricName}`;
+          const key = makeMetricCompareKey(section.sectionName, metric.metricName);
           const compared = compareMetricByKey.get(key);
           const selectedAchieved = metric.monthlyAchieved ?? 0;
           const comparedAchieved = compared?.monthlyAchieved ?? 0;
