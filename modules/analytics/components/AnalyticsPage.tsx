@@ -21,6 +21,7 @@ import {
   Bar,
   LineChart,
   Line,
+  AreaChart,
   PieChart,
   Pie,
   Cell,
@@ -164,6 +165,11 @@ interface MetricAnalyticsData {
 const ALL_ROLES = Object.values(UserRole);
 const CURRENT_YEAR = new Date().getFullYear();
 const MIN_ANALYTICS_YEAR = 2000;
+type TrendChartType = "bar" | "line" | "area";
+
+function makeMetricCompareKey(sectionName: string, metricName: string) {
+  return JSON.stringify([sectionName, metricName]);
+}
 
 const CHART_ROLES = [
   UserRole.SUPERADMIN,
@@ -305,6 +311,7 @@ export function AnalyticsPage() {
   const [granularity, setGranularity] = useState<"weekly" | "monthly" | "quarterly">("monthly");
   const [compareYear, setCompareYear] = useState<number>(CURRENT_YEAR - 1);
   const [chartType, setChartType] = useState<MetricChartType>("bar");
+  const [trendsChartType, setTrendsChartType] = useState<TrendChartType>("bar");
   const [axisLabelMode, setAxisLabelMode] = useState<AxisLabelMode>("auto");
   const [metricsData, setMetricsData] = useState<MetricAnalyticsData | null>(null);
   const [metricsLoading, setMetricsLoading] = useState(false);
@@ -583,6 +590,40 @@ export function AnalyticsPage() {
       .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
       .slice(0, 6);
   }, [compareReport?.sections, selectedReport]);
+
+  const reportMetricComparisonInsights = useMemo(() => {
+    if (!selectedReport || !compareReport) return [];
+    const selectedSections = (selectedReport.sections ?? []) as ReportSection[];
+    const compareSections = (compareReport.sections ?? []) as ReportSection[];
+    const compareMetricByKey = new Map<string, ReportMetric>();
+
+    for (const section of compareSections) {
+      for (const metric of section.metrics ?? []) {
+        compareMetricByKey.set(makeMetricCompareKey(section.sectionName, metric.metricName), metric);
+      }
+    }
+
+    return selectedSections
+      .flatMap((section) =>
+        (section.metrics ?? []).map((metric) => {
+          const key = makeMetricCompareKey(section.sectionName, metric.metricName);
+          const compared = compareMetricByKey.get(key);
+          const selectedAchieved = metric.monthlyAchieved ?? 0;
+          const comparedAchieved = compared?.monthlyAchieved ?? 0;
+          const achievedDelta = selectedAchieved - comparedAchieved;
+          return {
+            key,
+            section: section.sectionName,
+            metric: metric.metricName,
+            selectedAchieved,
+            comparedAchieved,
+            achievedDelta,
+          };
+        }),
+      )
+      .sort((a, b) => Math.abs(b.achievedDelta) - Math.abs(a.achievedDelta))
+      .slice(0, 8);
+  }, [compareReport, selectedReport]);
 
   /* ── Fetch overview ─────────────────────────────────────────────────── */
 
@@ -918,6 +959,32 @@ export function AnalyticsPage() {
                   ))}
                 </div>
               )}
+              {reportMetricComparisonInsights.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold text-ds-text-secondary">
+                    Metric comparison insights
+                  </p>
+                  {reportMetricComparisonInsights.map((row) => (
+                    <div
+                      key={row.key}
+                      className="flex flex-wrap items-center justify-between gap-2 rounded-ds-md border border-ds-border-base bg-ds-surface-base px-3 py-2"
+                    >
+                      <div>
+                        <p className="text-sm font-medium text-ds-text-primary">
+                          {row.section} · {row.metric}
+                        </p>
+                        <p className="text-xs text-ds-text-subtle">
+                          Selected: {row.selectedAchieved} | Compared: {row.comparedAchieved}
+                        </p>
+                      </div>
+                      <p className="text-xs font-semibold text-ds-text-secondary">
+                        Δ Achieved: {row.achievedDelta >= 0 ? "+" : ""}
+                        {row.achievedDelta}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </ChartCard>
@@ -985,6 +1052,13 @@ export function AnalyticsPage() {
     <div className="space-y-6">
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3 bg-ds-surface-elevated rounded-ds-xl border border-ds-border-base p-4">
+        <Select
+          value={year}
+          options={yearOptions}
+          onChange={setYear}
+          style={{ width: 120 }}
+          placeholder={CONTENT.analytics.yearLabel as string}
+        />
         <Select
           placeholder={CONTENT.analytics.metricSelectorLabel as string}
           value={selectedMetricId}
@@ -1128,34 +1202,117 @@ export function AnalyticsPage() {
       <LoadingSkeleton rows={8} />
     ) : (
       <div className="space-y-6">
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-ds-text-secondary">Chart type:</span>
+          <Segmented
+            value={trendsChartType}
+            onChange={(v) => setTrendsChartType(v as TrendChartType)}
+            options={[
+              { label: "Bar", value: "bar" },
+              { label: "Line", value: "line" },
+              { label: "Area", value: "area" },
+            ]}
+          />
+        </div>
         {/* Status stacked bar over time */}
         {overview.statusTrend.length > 0 ? (
           <ChartCard title={CONTENT.analytics.statusBreakdownTitle as string}>
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={overview.statusTrend as Record<string, unknown>[]}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
-                <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
-                <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Legend />
-                <Bar dataKey="SUBMITTED" name="Submitted" stackId="a" fill="var(--ds-chart-1)" />
-                <Bar dataKey="APPROVED" name="Approved" stackId="a" fill="var(--ds-chart-2)" />
-                <Bar dataKey="REVIEWED" name="Reviewed" stackId="a" fill="var(--ds-chart-3)" />
-                <Bar dataKey="LOCKED" name="Locked" stackId="a" fill="var(--ds-chart-4)" />
-                <Bar
-                  dataKey="REQUIRES_EDITS"
-                  name="Requires Edits"
-                  stackId="a"
-                  fill="var(--ds-chart-5)"
-                />
-                <Bar
-                  dataKey="DRAFT"
-                  name="Draft"
-                  stackId="a"
-                  fill="var(--ds-chart-6)"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
+              {trendsChartType === "bar" ? (
+                <BarChart data={overview.statusTrend as Record<string, unknown>[]}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <Tooltip contentStyle={TOOLTIP_STYLE} />
+                  <Legend />
+                  <Bar dataKey="SUBMITTED" name="Submitted" stackId="a" fill="var(--ds-chart-1)" />
+                  <Bar dataKey="APPROVED" name="Approved" stackId="a" fill="var(--ds-chart-2)" />
+                  <Bar dataKey="REVIEWED" name="Reviewed" stackId="a" fill="var(--ds-chart-3)" />
+                  <Bar dataKey="LOCKED" name="Locked" stackId="a" fill="var(--ds-chart-4)" />
+                  <Bar
+                    dataKey="REQUIRES_EDITS"
+                    name="Requires Edits"
+                    stackId="a"
+                    fill="var(--ds-chart-5)"
+                  />
+                  <Bar
+                    dataKey="DRAFT"
+                    name="Draft"
+                    stackId="a"
+                    fill="var(--ds-chart-6)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              ) : trendsChartType === "line" ? (
+                <LineChart data={overview.statusTrend as Record<string, unknown>[]}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <Tooltip contentStyle={TOOLTIP_STYLE} />
+                  <Legend />
+                  <Line dataKey="SUBMITTED" name="Submitted" stroke="var(--ds-chart-1)" dot={false} />
+                  <Line dataKey="APPROVED" name="Approved" stroke="var(--ds-chart-2)" dot={false} />
+                  <Line dataKey="REVIEWED" name="Reviewed" stroke="var(--ds-chart-3)" dot={false} />
+                  <Line dataKey="LOCKED" name="Locked" stroke="var(--ds-chart-4)" dot={false} />
+                  <Line
+                    dataKey="REQUIRES_EDITS"
+                    name="Requires Edits"
+                    stroke="var(--ds-chart-5)"
+                    dot={false}
+                  />
+                  <Line dataKey="DRAFT" name="Draft" stroke="var(--ds-chart-6)" dot={false} />
+                </LineChart>
+              ) : (
+                <AreaChart data={overview.statusTrend as Record<string, unknown>[]}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <Tooltip contentStyle={TOOLTIP_STYLE} />
+                  <Legend />
+                  <Area
+                    dataKey="SUBMITTED"
+                    name="Submitted"
+                    stackId="a"
+                    stroke="var(--ds-chart-1)"
+                    fill="var(--ds-chart-1)"
+                  />
+                  <Area
+                    dataKey="APPROVED"
+                    name="Approved"
+                    stackId="a"
+                    stroke="var(--ds-chart-2)"
+                    fill="var(--ds-chart-2)"
+                  />
+                  <Area
+                    dataKey="REVIEWED"
+                    name="Reviewed"
+                    stackId="a"
+                    stroke="var(--ds-chart-3)"
+                    fill="var(--ds-chart-3)"
+                  />
+                  <Area
+                    dataKey="LOCKED"
+                    name="Locked"
+                    stackId="a"
+                    stroke="var(--ds-chart-4)"
+                    fill="var(--ds-chart-4)"
+                  />
+                  <Area
+                    dataKey="REQUIRES_EDITS"
+                    name="Requires Edits"
+                    stackId="a"
+                    stroke="var(--ds-chart-5)"
+                    fill="var(--ds-chart-5)"
+                  />
+                  <Area
+                    dataKey="DRAFT"
+                    name="Draft"
+                    stackId="a"
+                    stroke="var(--ds-chart-6)"
+                    fill="var(--ds-chart-6)"
+                  />
+                </AreaChart>
+              )}
             </ResponsiveContainer>
           </ChartCard>
         ) : (
@@ -1170,25 +1327,70 @@ export function AnalyticsPage() {
         {overview.quarterlyTrend.length > 0 ? (
           <ChartCard title="Quarterly Compliance Rate">
             <ResponsiveContainer width="100%" height={220}>
-              <BarChart data={overview.quarterlyTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                <XAxis dataKey="quarter" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
-                <YAxis
-                  domain={[0, 100]}
-                  tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
-                  unit="%"
-                />
-                <Tooltip
-                  contentStyle={TOOLTIP_STYLE}
-                  formatter={(v: unknown) => [v + "%", "Compliance"]}
-                />
-                <Bar
-                  dataKey="complianceRate"
-                  name="Compliance %"
-                  fill="var(--ds-brand-accent)"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
+              {trendsChartType === "bar" ? (
+                <BarChart data={overview.quarterlyTrend}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                  <XAxis dataKey="quarter" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                    unit="%"
+                  />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    formatter={(v: unknown) => [v + "%", "Compliance"]}
+                  />
+                  <Bar
+                    dataKey="complianceRate"
+                    name="Compliance %"
+                    fill="var(--ds-brand-accent)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              ) : trendsChartType === "line" ? (
+                <LineChart data={overview.quarterlyTrend}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                  <XAxis dataKey="quarter" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                    unit="%"
+                  />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    formatter={(v: unknown) => [v + "%", "Compliance"]}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="complianceRate"
+                    name="Compliance %"
+                    stroke="var(--ds-brand-accent)"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              ) : (
+                <AreaChart data={overview.quarterlyTrend}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                  <XAxis dataKey="quarter" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                    unit="%"
+                  />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    formatter={(v: unknown) => [v + "%", "Compliance"]}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="complianceRate"
+                    name="Compliance %"
+                    stroke="var(--ds-brand-accent)"
+                    fill="var(--ds-brand-accent)"
+                  />
+                </AreaChart>
+              )}
             </ResponsiveContainer>
           </ChartCard>
         ) : (
