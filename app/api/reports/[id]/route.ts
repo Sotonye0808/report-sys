@@ -18,6 +18,7 @@ import {
 import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole, ReportStatus, ReportEventType, MetricCalculationType } from "@/types/global";
 import { parseCachedJsonSafe } from "@/lib/utils/cacheJson";
+import { isOwnScopedReport } from "@/lib/utils/reportVisibility";
 
 /* ── Update schema ─────────────────────────────────────────────────────────── */
 
@@ -55,6 +56,12 @@ export async function GET(
         if (roleConfig.reportVisibilityScope === "campus" && report.campusId !== auth.user.campusId) {
             return errorResponse("You do not have access to this report.", 403);
         }
+        if (roleConfig.reportVisibilityScope === "group" && report.orgGroupId !== auth.user.orgGroupId) {
+            return errorResponse("You do not have access to this report.", 403);
+        }
+        if (roleConfig.reportVisibilityScope === "own" && !isOwnScopedReport(report, auth.user.id)) {
+            return errorResponse("You do not have access to this report.", 403);
+        }
 
         await cache.set(cacheKey, JSON.stringify(report), 60);
         return NextResponse.json(successResponse(report));
@@ -82,6 +89,15 @@ export async function PUT(
         const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
         if (!roleConfig.canFillReports) {
             return errorResponse("You do not have permission to edit reports.", 403);
+        }
+        if (roleConfig.reportVisibilityScope === "campus" && report.campusId !== auth.user.campusId) {
+            return errorResponse("You do not have access to edit this report.", 403);
+        }
+        if (roleConfig.reportVisibilityScope === "group" && report.orgGroupId !== auth.user.orgGroupId) {
+            return errorResponse("You do not have access to edit this report.", 403);
+        }
+        if (roleConfig.reportVisibilityScope === "own" && !isOwnScopedReport(report, auth.user.id)) {
+            return errorResponse("You do not have access to edit this report.", 403);
         }
         if (report.status !== ReportStatus.DRAFT && report.status !== ReportStatus.REQUIRES_EDITS) {
             return errorResponse("Only draft or requires-edit reports can be updated.", 409);

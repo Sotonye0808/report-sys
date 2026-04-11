@@ -37,6 +37,7 @@ import { useApiData } from "@/lib/hooks/useApiData";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
+import { isOwnScopedReport } from "@/lib/utils/reportVisibility";
 import Button from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -186,11 +187,16 @@ export function DashboardPage() {
 
   // Load reports scoped to campus where applicable.
   // Complex scoping (own) is done in useMemo — WhereClause<T> only supports Partial<T>.
-  const reportsUrl = user
-    ? visibilityScope === "campus" && user.campusId
-      ? `${API_ROUTES.reports.list}?all=true&campusId=${user.campusId}`
-      : `${API_ROUTES.reports.list}?all=true`
-    : null;
+  const reportsUrl = useMemo(() => {
+    if (!user) return null;
+    if (visibilityScope === "campus" && user.campusId) {
+      return `${API_ROUTES.reports.list}?all=true&campusId=${user.campusId}`;
+    }
+    if (visibilityScope === "group" && user.orgGroupId) {
+      return `${API_ROUTES.reports.list}?all=true&groupId=${user.orgGroupId}`;
+    }
+    return `${API_ROUTES.reports.list}?all=true`;
+  }, [user, visibilityScope]);
   const { data: reportsPage } = useApiData<{ reports: Report[]; total: number }>(reportsUrl);
   const allReports = reportsPage?.reports;
 
@@ -205,9 +211,16 @@ export function DashboardPage() {
 
   const reports = useMemo(() => {
     if (!allReports) return undefined;
-    if (visibilityScope === "own" && user) {
+    if (!user) return allReports;
+
+    if (visibilityScope === "own" && user?.id) {
+      return allReports.filter((r) => isOwnScopedReport(r, user.id));
+    }
+
+    if (visibilityScope === "group" && user.orgGroupId) {
       return allReports.filter((r) => r.orgGroupId === user.orgGroupId);
     }
+
     return allReports;
   }, [allReports, visibilityScope, user]);
 

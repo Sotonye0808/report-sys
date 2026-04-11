@@ -24,6 +24,7 @@ import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { ROLE_CONFIG } from "@/config/roles";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
+import { isOwnScopedReport } from "@/lib/utils/reportVisibility";
 import { fmtDate } from "@/lib/utils/formatDate";
 import Button from "@/components/ui/Button";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -121,6 +122,8 @@ export function ReportsListPage() {
     const params = new URLSearchParams({ all: "true" });
     if (visibilityScope === "campus" && user.campusId) {
       params.set("campusId", user.campusId);
+    } else if (visibilityScope === "group" && user.orgGroupId) {
+      params.set("groupId", user.orgGroupId);
     }
     return `${API_ROUTES.reports.list}?${params.toString()}`;
   }, [user, visibilityScope]);
@@ -140,8 +143,11 @@ export function ReportsListPage() {
 
     let result = allReports;
 
-    // "own" scope — reports belonging to the user's org group
-    if (visibilityScope === "own" && user) {
+    if (visibilityScope === "own" && user?.id) {
+      result = result.filter((r) => isOwnScopedReport(r, user.id));
+    }
+
+    if (visibilityScope === "group" && user?.orgGroupId) {
       result = result.filter((r) => r.orgGroupId === user.orgGroupId);
     }
 

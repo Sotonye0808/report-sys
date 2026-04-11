@@ -72,9 +72,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       persistUser(null);
-    } catch {
-      // Network failure / offline — fall back to cached user for offline resilience
-      if (typeof navigator !== "undefined" && !navigator.onLine) {
+    } catch (err) {
+      const shouldUseCachedUser =
+        (err instanceof Error && err.name === "AbortError") ||
+        (typeof navigator !== "undefined" && !navigator.onLine);
+
+      // On transient connectivity errors, keep cached user when available.
+      if (shouldUseCachedUser) {
         try {
           const cached = localStorage.getItem("hrs:auth-user");
           if (cached) {
@@ -85,6 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           /* localStorage unavailable */
         }
       }
+
       setUser(null);
     } finally {
       window.clearTimeout(timeoutId);
