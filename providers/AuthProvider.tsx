@@ -15,15 +15,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { message } = App.useApp();
 
   useEffect(() => {
-    try {
-      const cached = localStorage.getItem("hrs:auth-user");
-      if (cached) {
-        setUser(JSON.parse(cached) as AuthUser);
-      }
-    } catch {
-      /* localStorage unavailable */
-    }
-
     checkAuth();
 
     // Re-validate auth when coming back online
@@ -81,17 +72,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       persistUser(null);
-    } catch {
-      // Network failure / transient offline — keep cached user when available.
-      try {
-        const cached = localStorage.getItem("hrs:auth-user");
-        if (cached) {
-          setUser(JSON.parse(cached) as AuthUser);
-          return;
+    } catch (err) {
+      const shouldUseCachedUser =
+        (err instanceof Error && err.name === "AbortError") ||
+        (typeof navigator !== "undefined" && !navigator.onLine);
+
+      // On transient connectivity errors, keep cached user when available.
+      if (shouldUseCachedUser) {
+        try {
+          const cached = localStorage.getItem("hrs:auth-user");
+          if (cached) {
+            setUser(JSON.parse(cached) as AuthUser);
+            return;
+          }
+        } catch {
+          /* localStorage unavailable */
         }
-      } catch {
-        /* localStorage unavailable */
       }
+
+      setUser(null);
     } finally {
       window.clearTimeout(timeoutId);
       setIsLoading(false);

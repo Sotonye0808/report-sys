@@ -22,6 +22,7 @@ import { UserRole, ReportStatus, ReportPeriodType, ReportDeadlinePolicy, ReportE
 import { dispatchDeadlineReminder } from "@/lib/utils/deadlineReminder";
 import { getRequestContext } from "@/lib/server/requestContext";
 import { resolveReportListPagination } from "@/lib/utils/reportListPagination";
+import { buildOwnScopeCondition } from "@/lib/utils/reportVisibility";
 
 dayjs.extend(weekOfYear);
 
@@ -130,14 +131,14 @@ export async function GET(req: NextRequest) {
         }
 
         /* Build Prisma where clause */
-        const andConditions: Record<string, unknown>[] = [];
-        if (status) andConditions.push({ status });
-        if (campusId) andConditions.push({ campusId });
-        if (groupId) andConditions.push({ orgGroupId: groupId });
-        if (periodType) andConditions.push({ periodType });
-        if (templateId) andConditions.push({ templateId });
+        const conditions: Record<string, unknown>[] = [];
+        if (status) conditions.push({ status });
+        if (campusId) conditions.push({ campusId });
+        if (groupId) conditions.push({ orgGroupId: groupId });
+        if (periodType) conditions.push({ periodType });
+        if (templateId) conditions.push({ templateId });
         if (search) {
-            andConditions.push({
+            conditions.push({
                 OR: [
                     { title: { contains: search, mode: "insensitive" } },
                     { period: { contains: search, mode: "insensitive" } },
@@ -146,22 +147,16 @@ export async function GET(req: NextRequest) {
         }
 
         if (roleConfig.reportVisibilityScope === "campus" && auth.user.campusId) {
-            andConditions.push({ campusId: auth.user.campusId });
+            conditions.push({ campusId: auth.user.campusId });
         }
         if (roleConfig.reportVisibilityScope === "group" && auth.user.orgGroupId) {
-            andConditions.push({ orgGroupId: auth.user.orgGroupId });
+            conditions.push({ orgGroupId: auth.user.orgGroupId });
         }
         if (roleConfig.reportVisibilityScope === "own") {
-            andConditions.push({
-                OR: [
-                    { createdById: auth.user.id },
-                    { submittedById: auth.user.id },
-                    { dataEntryById: auth.user.id },
-                ],
-            });
+            conditions.push(buildOwnScopeCondition(auth.user.id));
         }
 
-        const where = andConditions.length ? { AND: andConditions } : {};
+        const where = conditions.length ? { AND: conditions } : {};
 
         let reportsPromise;
         if (query.all) {

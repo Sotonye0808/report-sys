@@ -16,6 +16,7 @@ import {
 import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole } from "@/types/global";
 import { parseCachedJsonSafe } from "@/lib/utils/cacheJson";
+import { isOwnScopedReport } from "@/lib/utils/reportVisibility";
 
 export async function GET(
     req: NextRequest,
@@ -37,12 +38,7 @@ export async function GET(
         if (roleConfig.reportVisibilityScope === "group" && report.orgGroupId !== auth.user.orgGroupId) {
             return errorResponse("You do not have access to this report.", 403);
         }
-        if (
-            roleConfig.reportVisibilityScope === "own" &&
-            report.createdById !== auth.user.id &&
-            report.submittedById !== auth.user.id &&
-            report.dataEntryById !== auth.user.id
-        ) {
+        if (roleConfig.reportVisibilityScope === "own" && !isOwnScopedReport(report, auth.user.id)) {
             return errorResponse("You do not have access to this report.", 403);
         }
 

@@ -24,6 +24,7 @@ import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { ROLE_CONFIG } from "@/config/roles";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
+import { isOwnScopedReport } from "@/lib/utils/reportVisibility";
 import { fmtDate } from "@/lib/utils/formatDate";
 import Button from "@/components/ui/Button";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -142,10 +143,8 @@ export function ReportsListPage() {
 
     let result = allReports;
 
-    if (visibilityScope === "own" && user) {
-      result = result.filter(
-        (r) => r.createdById === user.id || r.submittedById === user.id || r.dataEntryById === user.id,
-      );
+    if (visibilityScope === "own" && user?.id) {
+      result = result.filter((r) => isOwnScopedReport(r, user.id));
     }
 
     if (visibilityScope === "group" && user?.orgGroupId) {
