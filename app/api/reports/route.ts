@@ -40,6 +40,7 @@ const ListQuerySchema = z.object({
     }, z.boolean()).default(false),
     status: z.nativeEnum(ReportStatus).optional(),
     campusId: z.string().optional(),
+    groupId: z.string().optional(),
     periodType: z.nativeEnum(ReportPeriodType).optional(),
     search: z.string().optional(),
     templateId: z.string().optional(),
@@ -120,7 +121,7 @@ export async function GET(req: NextRequest) {
         const query = ListQuerySchema.parse(params);
 
         const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
-        const { page, pageSize, status, campusId, periodType, search, templateId } = query;
+        const { page, pageSize, status, campusId, groupId, periodType, search, templateId } = query;
 
         const cacheKey = `reports:list:${auth.user.id}:${JSON.stringify(query)}`;
         const cached = await cache.get(cacheKey);
@@ -129,20 +130,38 @@ export async function GET(req: NextRequest) {
         }
 
         /* Build Prisma where clause */
-        const where: Record<string, unknown> = {};
-        if (roleConfig.reportVisibilityScope === "campus" && auth.user.campusId) {
-            where.campusId = auth.user.campusId;
-        }
-        if (status) where.status = status;
-        if (campusId) where.campusId = campusId;
-        if (periodType) where.periodType = periodType;
-        if (templateId) where.templateId = templateId;
+        const andConditions: Record<string, unknown>[] = [];
+        if (status) andConditions.push({ status });
+        if (campusId) andConditions.push({ campusId });
+        if (groupId) andConditions.push({ orgGroupId: groupId });
+        if (periodType) andConditions.push({ periodType });
+        if (templateId) andConditions.push({ templateId });
         if (search) {
-            where.OR = [
-                { title: { contains: search, mode: "insensitive" } },
-                { period: { contains: search, mode: "insensitive" } },
-            ];
+            andConditions.push({
+                OR: [
+                    { title: { contains: search, mode: "insensitive" } },
+                    { period: { contains: search, mode: "insensitive" } },
+                ],
+            });
         }
+
+        if (roleConfig.reportVisibilityScope === "campus" && auth.user.campusId) {
+            andConditions.push({ campusId: auth.user.campusId });
+        }
+        if (roleConfig.reportVisibilityScope === "group" && auth.user.orgGroupId) {
+            andConditions.push({ orgGroupId: auth.user.orgGroupId });
+        }
+        if (roleConfig.reportVisibilityScope === "own") {
+            andConditions.push({
+                OR: [
+                    { createdById: auth.user.id },
+                    { submittedById: auth.user.id },
+                    { dataEntryById: auth.user.id },
+                ],
+            });
+        }
+
+        const where = andConditions.length ? { AND: andConditions } : {};
 
         let reportsPromise;
         if (query.all) {

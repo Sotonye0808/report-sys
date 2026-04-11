@@ -10,6 +10,7 @@ import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { db } from "@/lib/data/db";
 import { parseDurationToSecondsOrDefault } from "@/lib/utils/duration";
+import { getAccessTokenExpiry, getRefreshTokenExpiry } from "@/lib/utils/authSession";
 import { UserRole } from "@/types/global";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -18,8 +19,8 @@ import { UserRole } from "@/types/global";
 
 const ACCESS_SECRET = process.env.JWT_SECRET ?? "dev-access-secret-change-me";
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET ?? "dev-refresh-secret-change-me";
-const ACCESS_EXPIRY = process.env.JWT_EXPIRES_IN ?? "15m";
-const REFRESH_EXPIRY = process.env.JWT_REFRESH_EXPIRES_IN ?? "7d";
+const ACCESS_EXPIRY = getAccessTokenExpiry(false);
+const REFRESH_EXPIRY = getRefreshTokenExpiry(false);
 const COOKIE_NAME = process.env.COOKIE_NAME ?? "hrs_token";
 const REFRESH_COOKIE_NAME = process.env.REFRESH_COOKIE_NAME ?? "hrs_refresh";
 
@@ -63,23 +64,29 @@ export async function verifyPassword(plain: string, hashed: string): Promise<boo
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function generateAccessToken(user: AuthUser): string {
+    return generateAccessTokenWithExpiry(user, false);
+}
+
+function generateAccessTokenWithExpiry(user: AuthUser, rememberMe?: boolean): string {
+    const expiry = getAccessTokenExpiry(rememberMe);
     return jwt.sign(
         { userId: user.id, email: user.email, role: user.role } satisfies JWTPayload,
         ACCESS_SECRET,
-        { expiresIn: ACCESS_EXPIRY } as jwt.SignOptions,
+        { expiresIn: expiry } as jwt.SignOptions,
     );
 }
 
 export function generateRefreshToken(userId: string, rememberMe?: boolean): string {
     const payload: RefreshTokenPayload = { userId, rememberMe };
+    const expiry = getRefreshTokenExpiry(rememberMe);
     return jwt.sign(payload, REFRESH_SECRET, {
-        expiresIn: REFRESH_EXPIRY,
+        expiresIn: expiry,
     } as jwt.SignOptions);
 }
 
 export function generateTokens(user: AuthUser, rememberMe?: boolean): AuthTokens {
     return {
-        accessToken: generateAccessToken(user),
+        accessToken: generateAccessTokenWithExpiry(user, rememberMe),
         refreshToken: generateRefreshToken(user.id, rememberMe),
     };
 }

@@ -121,6 +121,8 @@ export function ReportsListPage() {
     const params = new URLSearchParams({ all: "true" });
     if (visibilityScope === "campus" && user.campusId) {
       params.set("campusId", user.campusId);
+    } else if (visibilityScope === "group" && user.orgGroupId) {
+      params.set("groupId", user.orgGroupId);
     }
     return `${API_ROUTES.reports.list}?${params.toString()}`;
   }, [user, visibilityScope]);
@@ -140,8 +142,13 @@ export function ReportsListPage() {
 
     let result = allReports;
 
-    // "own" scope — reports belonging to the user's org group
     if (visibilityScope === "own" && user) {
+      result = result.filter(
+        (r) => r.createdById === user.id || r.submittedById === user.id || r.dataEntryById === user.id,
+      );
+    }
+
+    if (visibilityScope === "group" && user?.orgGroupId) {
       result = result.filter((r) => r.orgGroupId === user.orgGroupId);
     }
 

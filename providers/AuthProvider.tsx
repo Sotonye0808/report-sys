@@ -15,6 +15,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { message } = App.useApp();
 
   useEffect(() => {
+    try {
+      const cached = localStorage.getItem("hrs:auth-user");
+      if (cached) {
+        setUser(JSON.parse(cached) as AuthUser);
+      }
+    } catch {
+      /* localStorage unavailable */
+    }
+
     checkAuth();
 
     // Re-validate auth when coming back online
@@ -73,19 +82,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       persistUser(null);
     } catch {
-      // Network failure / offline — fall back to cached user for offline resilience
-      if (typeof navigator !== "undefined" && !navigator.onLine) {
-        try {
-          const cached = localStorage.getItem("hrs:auth-user");
-          if (cached) {
-            setUser(JSON.parse(cached) as AuthUser);
-            return;
-          }
-        } catch {
-          /* localStorage unavailable */
+      // Network failure / transient offline — keep cached user when available.
+      try {
+        const cached = localStorage.getItem("hrs:auth-user");
+        if (cached) {
+          setUser(JSON.parse(cached) as AuthUser);
+          return;
         }
+      } catch {
+        /* localStorage unavailable */
       }
-      setUser(null);
     } finally {
       window.clearTimeout(timeoutId);
       setIsLoading(false);

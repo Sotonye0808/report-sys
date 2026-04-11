@@ -189,7 +189,9 @@ export function DashboardPage() {
   const reportsUrl = user
     ? visibilityScope === "campus" && user.campusId
       ? `${API_ROUTES.reports.list}?all=true&campusId=${user.campusId}`
-      : `${API_ROUTES.reports.list}?all=true`
+      : visibilityScope === "group" && user.orgGroupId
+        ? `${API_ROUTES.reports.list}?all=true&groupId=${user.orgGroupId}`
+        : `${API_ROUTES.reports.list}?all=true`
     : null;
   const { data: reportsPage } = useApiData<{ reports: Report[]; total: number }>(reportsUrl);
   const allReports = reportsPage?.reports;
@@ -205,9 +207,18 @@ export function DashboardPage() {
 
   const reports = useMemo(() => {
     if (!allReports) return undefined;
-    if (visibilityScope === "own" && user) {
+    if (!user) return allReports;
+
+    if (visibilityScope === "own") {
+      return allReports.filter(
+        (r) => r.createdById === user.id || r.submittedById === user.id || r.dataEntryById === user.id,
+      );
+    }
+
+    if (visibilityScope === "group" && user.orgGroupId) {
       return allReports.filter((r) => r.orgGroupId === user.orgGroupId);
     }
+
     return allReports;
   }, [allReports, visibilityScope, user]);
 

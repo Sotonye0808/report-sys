@@ -34,6 +34,17 @@ export async function GET(
         if (roleConfig.reportVisibilityScope === "campus" && report.campusId !== auth.user.campusId) {
             return errorResponse("You do not have access to this report.", 403);
         }
+        if (roleConfig.reportVisibilityScope === "group" && report.orgGroupId !== auth.user.orgGroupId) {
+            return errorResponse("You do not have access to this report.", 403);
+        }
+        if (
+            roleConfig.reportVisibilityScope === "own" &&
+            report.createdById !== auth.user.id &&
+            report.submittedById !== auth.user.id &&
+            report.dataEntryById !== auth.user.id
+        ) {
+            return errorResponse("You do not have access to this report.", 403);
+        }
 
         const cacheKey = `report:${id}:history`;
         const cached = await cache.get(cacheKey);
