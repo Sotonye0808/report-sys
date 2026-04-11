@@ -133,7 +133,7 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
         canManageOrg: false,
         canSetGoals: true,
         canApproveGoalUnlock: true,
-        reportVisibilityScope: "all",
+        reportVisibilityScope: "group",
     },
     [UserRole.GROUP_ADMIN]: {
         role: UserRole.GROUP_ADMIN,
@@ -154,7 +154,7 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
         canManageOrg: false,
         canSetGoals: true,
         canApproveGoalUnlock: false,
-        reportVisibilityScope: "all",
+        reportVisibilityScope: "group",
     },
     [UserRole.CAMPUS_PASTOR]: {
         role: UserRole.CAMPUS_PASTOR,
@@ -217,7 +217,7 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
         canManageOrg: false,
         canSetGoals: false,
         canApproveGoalUnlock: false,
-        reportVisibilityScope: "all",
+        reportVisibilityScope: "own",
     },
     [UserRole.MEMBER]: {
         role: UserRole.MEMBER,

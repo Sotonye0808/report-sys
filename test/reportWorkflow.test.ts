@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, it } from "node:test";
-import { canTransition } from "../modules/reports/services/reportWorkflowUtils";
+import { appendWorkflowNote, canTransition } from "../modules/reports/services/reportWorkflowUtils";
 import { UserRole, ReportStatus } from "../types/global.js";
 
 describe("reportWorkflow canTransition", () => {
@@ -16,5 +16,17 @@ describe("reportWorkflow canTransition", () => {
 
     it("disallows invalid transitions", () => {
         assert.strictEqual(canTransition(ReportStatus.APPROVED, ReportStatus.DRAFT, UserRole.SUPERADMIN), false);
+    });
+});
+
+describe("reportWorkflow appendWorkflowNote", () => {
+    it("appends edit note context without removing existing notes", () => {
+        const next = appendWorkflowNote("Original note", "Please update metric total", "Edit Requested");
+        assert.strictEqual(next, "Original note\n\n(Edit Requested) Please update metric total");
+    });
+
+    it("returns existing notes unchanged for empty update note", () => {
+        const next = appendWorkflowNote("Original note", "   ", "Edit Requested");
+        assert.strictEqual(next, "Original note");
     });
 });

@@ -705,7 +705,7 @@ declare global {
         canManageOrg: boolean;
         canSetGoals: boolean;
         canApproveGoalUnlock: boolean;
-        reportVisibilityScope: "own" | "campus" | "all";
+        reportVisibilityScope: "own" | "campus" | "group" | "all";
     }
 
     interface OrgLevelConfig {

@@ -6,7 +6,7 @@
 import { db, cache } from "@/lib/data/db";
 import { createReportEvent, createAuditNotification } from "@/lib/utils/audit";
 import { ReportStatus, ReportEventType, NotificationType, UserRole, ReportEditStatus } from "@/types/global";
-import { canTransition } from "@/modules/reports/services/reportWorkflowUtils";
+import { appendWorkflowNote, canTransition } from "@/modules/reports/services/reportWorkflowUtils";
 
 
 async function getApproverCandidate(report: { orgGroupId?: string | null; campusId?: string | null }) {
@@ -122,7 +122,11 @@ export async function requestEditReport(params: BaseWorkflowParams, reason: stri
         const recipientId = report.submittedById ?? report.createdById;
         const reportUpdate = await tx.report.update({
             where: { id: params.reportId },
-            data: { status: ReportStatus.REQUIRES_EDITS, notes: reason, updatedAt: new Date() },
+            data: {
+                status: ReportStatus.REQUIRES_EDITS,
+                notes: appendWorkflowNote(report.notes, reason, "Edit Requested"),
+                updatedAt: new Date(),
+            },
         });
 
         await tx.reportEdit.create({
@@ -270,7 +274,11 @@ export async function submitReportEdit(
 
         await tx.report.update({
             where: { id: reportId },
-            data: { status: ReportStatus.REQUIRES_EDITS, notes: edit.reason, updatedAt: new Date() },
+            data: {
+                status: ReportStatus.REQUIRES_EDITS,
+                notes: appendWorkflowNote(report.notes, edit.reason, "Edit Submitted"),
+                updatedAt: new Date(),
+            },
         });
 
         await createReportEvent(

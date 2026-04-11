@@ -22,6 +22,7 @@ import { UserRole, ReportStatus, ReportPeriodType, ReportDeadlinePolicy, ReportE
 import { dispatchDeadlineReminder } from "@/lib/utils/deadlineReminder";
 import { getRequestContext } from "@/lib/server/requestContext";
 import { resolveReportListPagination } from "@/lib/utils/reportListPagination";
+import { buildOwnScopeCondition } from "@/lib/utils/reportVisibility";
 
 dayjs.extend(weekOfYear);
 
@@ -40,6 +41,7 @@ const ListQuerySchema = z.object({
     }, z.boolean()).default(false),
     status: z.nativeEnum(ReportStatus).optional(),
     campusId: z.string().optional(),
+    groupId: z.string().optional(),
     periodType: z.nativeEnum(ReportPeriodType).optional(),
     search: z.string().optional(),
     templateId: z.string().optional(),
@@ -120,7 +122,7 @@ export async function GET(req: NextRequest) {
         const query = ListQuerySchema.parse(params);
 
         const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
-        const { page, pageSize, status, campusId, periodType, search, templateId } = query;
+        const { page, pageSize, status, campusId, groupId, periodType, search, templateId } = query;
 
         const cacheKey = `reports:list:${auth.user.id}:${JSON.stringify(query)}`;
         const cached = await cache.get(cacheKey);
@@ -129,20 +131,32 @@ export async function GET(req: NextRequest) {
         }
 
         /* Build Prisma where clause */
-        const where: Record<string, unknown> = {};
-        if (roleConfig.reportVisibilityScope === "campus" && auth.user.campusId) {
-            where.campusId = auth.user.campusId;
-        }
-        if (status) where.status = status;
-        if (campusId) where.campusId = campusId;
-        if (periodType) where.periodType = periodType;
-        if (templateId) where.templateId = templateId;
+        const conditions: Record<string, unknown>[] = [];
+        if (status) conditions.push({ status });
+        if (campusId) conditions.push({ campusId });
+        if (groupId) conditions.push({ orgGroupId: groupId });
+        if (periodType) conditions.push({ periodType });
+        if (templateId) conditions.push({ templateId });
         if (search) {
-            where.OR = [
-                { title: { contains: search, mode: "insensitive" } },
-                { period: { contains: search, mode: "insensitive" } },
-            ];
+            conditions.push({
+                OR: [
+                    { title: { contains: search, mode: "insensitive" } },
+                    { period: { contains: search, mode: "insensitive" } },
+                ],
+            });
         }
+
+        if (roleConfig.reportVisibilityScope === "campus" && auth.user.campusId) {
+            conditions.push({ campusId: auth.user.campusId });
+        }
+        if (roleConfig.reportVisibilityScope === "group" && auth.user.orgGroupId) {
+            conditions.push({ orgGroupId: auth.user.orgGroupId });
+        }
+        if (roleConfig.reportVisibilityScope === "own") {
+            conditions.push(buildOwnScopeCondition(auth.user.id));
+        }
+
+        const where = conditions.length ? { AND: conditions } : {};
 
         let reportsPromise;
         if (query.all) {
