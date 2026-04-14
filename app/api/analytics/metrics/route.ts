@@ -152,7 +152,7 @@ export async function GET(req: NextRequest) {
     const startMonth = query.startMonth ?? 1;
     const endMonth = query.endMonth ?? 12;
     const maxIsoWeeks = getIsoWeeksInYear(query.year);
-    const endWeek = Math.min(query.endWeek ?? maxIsoWeeks, maxIsoWeeks);
+    const endWeek = query.endWeek ? Math.min(query.endWeek, maxIsoWeeks) : maxIsoWeeks;
     const startWeek = Math.min(query.startWeek ?? 1, endWeek);
 
     const cacheKey = `analytics:metrics:${auth.user.id}:${JSON.stringify(query)}`;

@@ -817,7 +817,7 @@ export function AnalyticsPage() {
       { value: ALL_PERIOD_SELECTOR_VALUE, label: "All Weeks" },
       ...Array.from({ length: getIsoWeeksInYear(year) }, (_, i) => {
         const week = i + 1;
-        return { value: String(week), label: `W${String(week).padStart(2, "0")}` };
+        return { value: String(week), label: `W${week.toString().padStart(2, "0")}` };
       }),
     ];
   }, [granularity, year]);
