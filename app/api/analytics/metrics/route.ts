@@ -130,6 +130,18 @@ function aggregateValues(values: number[], calcType: MetricCalculationType): num
     }
 }
 
+function getIsoWeekNumber(date: Date): number {
+    const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+    const dayNumber = target.getUTCDay() || 7;
+    target.setUTCDate(target.getUTCDate() + 4 - dayNumber);
+    const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
+    return Math.ceil(((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+}
+
+function getIsoWeeksInYear(year: number): number {
+    return getIsoWeekNumber(new Date(Date.UTC(year, 11, 28)));
+}
+
 /* ── Handler ───────────────────────────────────────────────────────────────── */
 
 export async function GET(req: NextRequest) {
@@ -150,8 +162,9 @@ export async function GET(req: NextRequest) {
     const includeDrafts = query.includeDrafts === "true";
     const startMonth = query.startMonth ?? 1;
     const endMonth = query.endMonth ?? 12;
-    const startWeek = query.startWeek ?? 1;
-    const endWeek = query.endWeek ?? 53;
+    const maxIsoWeeks = getIsoWeeksInYear(query.year);
+    const endWeek = Math.min(query.endWeek ?? maxIsoWeeks, maxIsoWeeks);
+    const startWeek = Math.min(query.startWeek ?? 1, endWeek);
 
     const cacheKey = `analytics:metrics:${auth.user.id}:${JSON.stringify(query)}`;
     const cached = await cache.get(cacheKey);

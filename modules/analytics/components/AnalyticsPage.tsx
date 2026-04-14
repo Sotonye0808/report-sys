@@ -172,6 +172,18 @@ function makeMetricCompareKey(sectionName: string, metricName: string) {
   return JSON.stringify([sectionName, metricName]);
 }
 
+function getIsoWeekNumber(date: Date): number {
+  const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+  const dayNumber = target.getUTCDay() || 7;
+  target.setUTCDate(target.getUTCDate() + 4 - dayNumber);
+  const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
+  return Math.ceil(((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+}
+
+function getIsoWeeksInYear(year: number): number {
+  return getIsoWeekNumber(new Date(Date.UTC(year, 11, 28)));
+}
+
 const CHART_ROLES = [
   UserRole.SUPERADMIN,
   UserRole.CEO,
@@ -814,7 +826,7 @@ export function AnalyticsPage() {
     }
     return [
       { value: ALL_PERIOD_SELECTOR_VALUE, label: "All Weeks" },
-      ...Array.from({ length: 53 }, (_, i) => {
+      ...Array.from({ length: getIsoWeeksInYear(year) }, (_, i) => {
         const week = i + 1;
         return { value: String(week), label: `W${String(week).padStart(2, "0")}` };
       }),
