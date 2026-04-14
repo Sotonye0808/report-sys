@@ -24,6 +24,7 @@ import { db, cache } from "@/lib/data/db";
 import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole, MetricCalculationType, ReportStatus } from "@/types/global";
 import { resolveReportMonth } from "@/lib/utils/reportPeriod";
+import { getIsoWeeksInYear } from "@/lib/utils/isoWeek";
 
 const QuerySchema = z.object({
     metricId: z.string().optional(),
@@ -128,18 +129,6 @@ function aggregateValues(values: number[], calcType: MetricCalculationType): num
         case MetricCalculationType.SNAPSHOT: return values[values.length - 1]; // last value
         default: return values.reduce((a, b) => a + b, 0);
     }
-}
-
-function getIsoWeekNumber(date: Date): number {
-    const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-    const dayNumber = target.getUTCDay() || 7;
-    target.setUTCDate(target.getUTCDate() + 4 - dayNumber);
-    const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
-    return Math.ceil(((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
-}
-
-function getIsoWeeksInYear(year: number): number {
-    return getIsoWeekNumber(new Date(Date.UTC(year, 11, 28)));
 }
 
 /* ── Handler ───────────────────────────────────────────────────────────────── */

@@ -46,6 +46,7 @@ import {
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
 import { useApiData } from "@/lib/hooks/useApiData";
+import { getIsoWeeksInYear } from "@/lib/utils/isoWeek";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES } from "@/config/routes";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
@@ -170,18 +171,6 @@ const ALL_PERIOD_SELECTOR_VALUE = "all";
 
 function makeMetricCompareKey(sectionName: string, metricName: string) {
   return JSON.stringify([sectionName, metricName]);
-}
-
-function getIsoWeekNumber(date: Date): number {
-  const target = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-  const dayNumber = target.getUTCDay() || 7;
-  target.setUTCDate(target.getUTCDate() + 4 - dayNumber);
-  const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
-  return Math.ceil(((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
-}
-
-function getIsoWeeksInYear(year: number): number {
-  return getIsoWeekNumber(new Date(Date.UTC(year, 11, 28)));
 }
 
 const CHART_ROLES = [
