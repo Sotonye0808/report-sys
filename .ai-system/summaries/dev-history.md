@@ -453,3 +453,33 @@ Resolved a production-impacting hierarchy bulk mutation failure caused by Prisma
 **Next Sprint Focus:**
 
 - Add dedicated regression tests for hierarchy bulk mixed-op chunking behavior and transaction-timeout resiliency.
+
+## 2026-04-14 — Dashboard + Analytics Polish (CTA/KPI/Period Controls/Chart Responsiveness)
+
+**Summary:**
+Polished dashboard messaging and analytics behavior to improve clarity and accuracy for role-scoped workflows. Dashboard CTA copy now uses neutral platform wording for organization-scoped counts, pending-review and quarter-compliance KPI computation was corrected, and platform analytics gained broader chart controls plus overflow-safe chart rendering for smaller screens.
+
+**Completed:**
+
+- Updated dashboard CTA wording in `config/content.ts` to reduce over-personalization for org-scoped report counts while retaining personal draft messaging.
+- Fixed dashboard KPI derivation in `modules/dashboard/components/DashboardPage.tsx`:
+  - role-aware pending-review value selection
+  - quarter compliance month resolution using shared period utility.
+- Enhanced analytics chart UX in `modules/analytics/components/AnalyticsPage.tsx`:
+  - added chart type + x-axis label controls across overview/trends/quarterly views
+  - replaced old compare-year metrics selector with period selector (week/month/quarter).
+- Added scroll-on-overflow chart containers in:
+  - `modules/analytics/chartUtils.tsx`
+  - `modules/analytics/components/AnalyticsPage.tsx`
+  - `modules/reports/components/ReportAnalyticsPage.tsx`
+- Updated metrics API aggregation in `app/api/analytics/metrics/route.ts` to include weekly report data in monthly/quarterly analysis via normalized month resolution and period-range query support.
+
+**Key Changes:**
+
+- Platform analytics charts now retain readability under constrained width by allowing horizontal scroll instead of over-compressing labels.
+- Metrics analysis now filters by explicit period selection (all/specific week|month|quarter) and aligns processing with selected granularity.
+- Dashboard KPI/CTA output better reflects workflow context and shared report scope.
+
+**Next Sprint Focus:**
+
+- Add regression coverage for analytics period selector behavior and weekly-source aggregation normalization across monthly/quarterly views.
