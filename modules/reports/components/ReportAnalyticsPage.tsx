@@ -33,7 +33,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import { formatAxisLabel, AxisLabelMode } from "@/modules/analytics/chartUtils";
+import { formatAxisLabel, AxisLabelMode, ChartScrollContainer } from "@/modules/analytics/chartUtils";
 
 interface ReportAnalyticsPageProps {
   reportId: string;
@@ -281,77 +281,79 @@ export function ReportAnalyticsPage({ reportId }: ReportAnalyticsPageProps) {
               </Card>
             )}
             <Card title="Performance by metric">
-              <div className="h-96">
-                <ResponsiveContainer width="100%" height="100%">
-                  {chartType === "bar" ? (
-                    <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis
-                        dataKey="label"
-                        tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
-                        angle={-40}
-                        textAnchor="end"
-                        height={80}
-                        tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 18)}
-                      />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      {showGoal && <Bar dataKey="goal" fill="#8884d8" name="Goal" />}
-                      {showAchieved && <Bar dataKey="achieved" fill="#82ca9d" name="Achieved" />}
-                      {showYoY && <Bar dataKey="yoy" fill="#ffc658" name="YoY" />}
-                    </BarChart>
-                  ) : chartType === "line" ? (
-                    <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis
-                        dataKey="label"
-                        tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
-                        angle={-40}
-                        textAnchor="end"
-                        height={80}
-                        tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 18)}
-                      />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      {showGoal && (
-                        <Line type="monotone" dataKey="goal" stroke="#8884d8" dot={false} />
-                      )}
-                      {showAchieved && (
-                        <Line type="monotone" dataKey="achieved" stroke="#82ca9d" dot={false} />
-                      )}
-                      {showYoY && (
-                        <Line type="monotone" dataKey="yoy" stroke="#ffc658" dot={false} />
-                      )}
-                    </LineChart>
-                  ) : (
-                    <AreaChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis
-                        dataKey="label"
-                        tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
-                        angle={-40}
-                        textAnchor="end"
-                        height={80}
-                        tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 18)}
-                      />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      {showGoal && (
-                        <Area type="monotone" dataKey="goal" stroke="#8884d8" fill="#8884d8" />
-                      )}
-                      {showAchieved && (
-                        <Area type="monotone" dataKey="achieved" stroke="#82ca9d" fill="#82ca9d" />
-                      )}
-                      {showYoY && (
-                        <Area type="monotone" dataKey="yoy" stroke="#ffc658" fill="#ffc658" />
-                      )}
-                    </AreaChart>
-                  )}
-                </ResponsiveContainer>
-              </div>
+              <ChartScrollContainer minWidthClass="min-w-[920px]">
+                <div className="h-96">
+                  <ResponsiveContainer width="100%" height="100%">
+                    {chartType === "bar" ? (
+                      <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis
+                          dataKey="label"
+                          tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                          angle={-40}
+                          textAnchor="end"
+                          height={80}
+                          tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 18)}
+                        />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        {showGoal && <Bar dataKey="goal" fill="#8884d8" name="Goal" />}
+                        {showAchieved && <Bar dataKey="achieved" fill="#82ca9d" name="Achieved" />}
+                        {showYoY && <Bar dataKey="yoy" fill="#ffc658" name="YoY" />}
+                      </BarChart>
+                    ) : chartType === "line" ? (
+                      <LineChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis
+                          dataKey="label"
+                          tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                          angle={-40}
+                          textAnchor="end"
+                          height={80}
+                          tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 18)}
+                        />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        {showGoal && (
+                          <Line type="monotone" dataKey="goal" stroke="#8884d8" dot={false} />
+                        )}
+                        {showAchieved && (
+                          <Line type="monotone" dataKey="achieved" stroke="#82ca9d" dot={false} />
+                        )}
+                        {showYoY && (
+                          <Line type="monotone" dataKey="yoy" stroke="#ffc658" dot={false} />
+                        )}
+                      </LineChart>
+                    ) : (
+                      <AreaChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis
+                          dataKey="label"
+                          tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                          angle={-40}
+                          textAnchor="end"
+                          height={80}
+                          tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 18)}
+                        />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        {showGoal && (
+                          <Area type="monotone" dataKey="goal" stroke="#8884d8" fill="#8884d8" />
+                        )}
+                        {showAchieved && (
+                          <Area type="monotone" dataKey="achieved" stroke="#82ca9d" fill="#82ca9d" />
+                        )}
+                        {showYoY && (
+                          <Area type="monotone" dataKey="yoy" stroke="#ffc658" fill="#ffc658" />
+                        )}
+                      </AreaChart>
+                    )}
+                  </ResponsiveContainer>
+                </div>
+              </ChartScrollContainer>
             </Card>
 
             <Card title="Top analytics insights">

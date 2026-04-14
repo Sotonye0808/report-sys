@@ -447,10 +447,10 @@ export const CONTENT = {
         upcomingDeadlines: "Upcoming Deadlines",
         noDeadlines: "No upcoming deadlines.",
         cta: {
-            pendingApproval: (n: number) => `${n} report${n === 1 ? "" : "s"} pending your approval`,
-            pendingReview: (n: number) => `${n} approved report${n === 1 ? "" : "s"} awaiting your review sign-off`,
+            pendingApproval: (n: number) => `There ${n === 1 ? "is" : "are"} ${n} report${n === 1 ? "" : "s"} pending approval`,
+            pendingReview: (n: number) => `There ${n === 1 ? "is" : "are"} ${n} approved report${n === 1 ? "" : "s"} awaiting review sign-off`,
             draftReports: (n: number) => `You have ${n} draft report${n === 1 ? "" : "s"} in progress`,
-            requiresEdits: (n: number) => `${n} of your report${n === 1 ? "" : "s"} require${n === 1 ? "s" : ""} edits`,
+            requiresEdits: (n: number) => `There ${n === 1 ? "is" : "are"} ${n} report${n === 1 ? "" : "s"} that require${n === 1 ? "s" : ""} edits`,
             weeklyReportDue: (period: string) => `You have a weekly report due for ${period}`,
             viewReports: "View Reports",
         },

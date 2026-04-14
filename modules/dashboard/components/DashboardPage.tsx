@@ -38,6 +38,7 @@ import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
 import { isOwnScopedReport } from "@/lib/utils/reportVisibility";
+import { resolveReportMonth } from "@/lib/utils/reportPeriod";
 import Button from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -241,16 +242,26 @@ export function DashboardPage() {
     const currentQ = Math.ceil((now.getMonth() + 1) / 3);
     const currentYear = now.getFullYear();
     const qMonths = [(currentQ - 1) * 3 + 1, (currentQ - 1) * 3 + 2, (currentQ - 1) * 3 + 3];
-    const qReports = r.filter((x) => x.periodYear === currentYear && qMonths.includes(x.periodMonth ?? 0));
+    const qReports = r.filter((x) => {
+      if (x.periodYear !== currentYear) return false;
+      const month = resolveReportMonth(x);
+      return month != null && qMonths.includes(month);
+    });
     const qSubmitted = qReports.filter((x) => x.status !== ReportStatus.DRAFT).length;
-    const qApproved = qReports.filter((x) =>
+    const qApprovedOrReviewed = qReports.filter((x) =>
       [ReportStatus.APPROVED, ReportStatus.REVIEWED, ReportStatus.LOCKED].includes(x.status),
     ).length;
-    const quarterlyCompliance = qSubmitted > 0 ? Math.round((qApproved / qSubmitted) * 100) : 0;
+    const quarterlyCompliance =
+      qSubmitted > 0 ? Math.round((qApprovedOrReviewed / qSubmitted) * 100) : 0;
+    const pendingReview =
+      roleConfig?.canMarkReviewed
+        ? r.filter((x) => x.status === ReportStatus.APPROVED).length
+        : r.filter((x) => x.status === ReportStatus.SUBMITTED).length;
 
     return {
       totalReports: r.length,
       pending: r.filter((x) => x.status === ReportStatus.SUBMITTED).length,
+      pendingReview,
       approved: r.filter((x) => x.status === ReportStatus.APPROVED).length,
       draft: r.filter((x) => x.status === ReportStatus.DRAFT).length,
       requiresEdits: r.filter((x) => x.status === ReportStatus.REQUIRES_EDITS).length,
@@ -304,7 +315,7 @@ export function DashboardPage() {
     {
       id: "pending-review",
       label: CONTENT.dashboard.kpi.pendingReview,
-      value: counts.pending,
+      value: counts.pendingReview,
       icon: <ClockCircleOutlined />,
       color: "bg-ds-state-warning/10 text-ds-state-warning",
       href: reportsHref,
@@ -504,9 +515,9 @@ export function DashboardPage() {
             },
             {
               id: "pending-review",
-              message: ctaContent.pendingReview(counts.approved),
+              message: ctaContent.pendingReview(counts.pendingReview),
               type: "info",
-              show: (roleConfig?.canMarkReviewed ?? false) && counts.approved > 0,
+              show: (roleConfig?.canMarkReviewed ?? false) && counts.pendingReview > 0,
             },
             {
               id: "drafts",

@@ -23,6 +23,7 @@ import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole, MetricCalculationType, ReportStatus } from "@/types/global";
+import { resolveReportMonth } from "@/lib/utils/reportPeriod";
 
 const QuerySchema = z.object({
     metricId: z.string().optional(),
@@ -34,6 +35,8 @@ const QuerySchema = z.object({
     granularity: z.enum(["weekly", "monthly", "quarterly"]).default("monthly"),
     startMonth: z.coerce.number().int().min(1).max(12).optional(),
     endMonth: z.coerce.number().int().min(1).max(12).optional(),
+    startWeek: z.coerce.number().int().min(1).max(53).optional(),
+    endWeek: z.coerce.number().int().min(1).max(53).optional(),
     includeDrafts: z.enum(["true", "false"]).optional().default("true"),
     statuses: z.array(z.nativeEnum(ReportStatus)).optional(),
 });
@@ -69,15 +72,28 @@ interface MetricAnalyticsPayload {
 
 /* ── Helpers ───────────────────────────────────────────────────────────────── */
 
-function periodKey(periodType: string, year: number, month?: number, week?: number, granularity: "weekly" | "monthly" | "quarterly" = "monthly"): string | null {
-    if (granularity === "weekly" && week != null) {
+function periodKey(
+    report: { periodType: string; periodYear: number; periodMonth?: number | null; periodWeek?: number | null },
+    granularity: "weekly" | "monthly" | "quarterly" = "monthly",
+): string | null {
+    if (granularity === "weekly" && report.periodWeek != null) {
+        const year = report.periodYear;
+        const week = report.periodWeek;
         const wStr = String(week).padStart(2, "0");
         return `${year}-W${wStr}`;
     }
+    const month = resolveReportMonth({
+        periodType: report.periodType as "WEEKLY" | "MONTHLY" | "YEARLY",
+        periodYear: report.periodYear,
+        periodMonth: report.periodMonth,
+        periodWeek: report.periodWeek,
+    });
     if (granularity === "monthly" && month != null) {
+        const year = report.periodYear;
         return `${year}-${String(month).padStart(2, "0")}`;
     }
     if (granularity === "quarterly" && month != null) {
+        const year = report.periodYear;
         const q = Math.ceil(month / 3);
         return `${year}-Q${q}`;
     }
@@ -134,6 +150,8 @@ export async function GET(req: NextRequest) {
     const includeDrafts = query.includeDrafts === "true";
     const startMonth = query.startMonth ?? 1;
     const endMonth = query.endMonth ?? 12;
+    const startWeek = query.startWeek ?? 1;
+    const endWeek = query.endWeek ?? 53;
 
     const cacheKey = `analytics:metrics:${auth.user.id}:${JSON.stringify(query)}`;
     const cached = await cache.get(cacheKey);
@@ -162,13 +180,6 @@ export async function GET(req: NextRequest) {
     };
     if (allowedCampusIds) reportWhere.campusId = { in: allowedCampusIds };
     if (query.groupId) reportWhere.orgGroupId = query.groupId;
-    if (query.startMonth != null || query.endMonth != null) {
-        reportWhere.periodMonth = {
-            gte: startMonth,
-            lte: endMonth,
-        };
-    }
-
     if (query.statuses && query.statuses.length > 0) {
         reportWhere.status = { in: query.statuses };
     } else if (!includeDrafts) {
@@ -244,13 +255,7 @@ export async function GET(req: NextRequest) {
             const targetMetricEntry = sec.metrics.find((met) => met.templateMetricId === targetMetric.id);
             if (!targetMetricEntry) continue;
 
-            const pk = periodKey(
-                report.periodType,
-                report.periodYear,
-                report.periodMonth ?? undefined,
-                report.periodWeek ?? undefined,
-                query.granularity,
-            );
+            const pk = periodKey(report, query.granularity);
             if (!pk) continue;
 
             // Separate primary and comparison year
@@ -283,8 +288,7 @@ export async function GET(req: NextRequest) {
             allPeriods.push(`${query.year}-Q${q}`);
         }
     } else {
-        // Weekly: 52 weeks
-        for (let w = 1; w <= 52; w++) {
+        for (let w = startWeek; w <= endWeek; w++) {
             allPeriods.push(`${query.year}-W${String(w).padStart(2, "0")}`);
         }
     }
