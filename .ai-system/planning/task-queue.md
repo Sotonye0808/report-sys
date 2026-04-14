@@ -70,6 +70,7 @@
 - [x] Improve analytics chart labeling and readability: add section/metric display options, better x-axis handling, and toggle chart libraries (Recharts, Victory, Chart.js) in `modules/reports/components/ReportAnalyticsPage.tsx`.
 - [x] Add regression tests for chart label rendering (x-axis, tooltip, legend) and metric/section breadcrumbing in analytics.
 - [x] Add design system audit to ensure all analytics charts conform to token colors and accessible text in `modules/analytics`.
+- [x] Polish dashboard CTA copy and analytics behavior: neutral org-scoped CTA wording, fix pending-review/quarter-compliance KPI accuracy, add metrics period selector (week/month/quarter), and add overflow-safe chart containers with cross-tab chart controls in platform analytics.
 
 ---
 
