@@ -41,10 +41,12 @@ import {
   METRIC_CHART_TYPE_OPTIONS,
   renderMetricChart,
   formatAxisLabel,
+  ChartScrollContainer,
 } from "@/modules/analytics/chartUtils";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
 import { useApiData } from "@/lib/hooks/useApiData";
+import { getIsoWeeksInYear } from "@/lib/utils/isoWeek";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES } from "@/config/routes";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
@@ -164,8 +166,8 @@ interface MetricAnalyticsData {
 
 const ALL_ROLES = Object.values(UserRole);
 const CURRENT_YEAR = new Date().getFullYear();
-const MIN_ANALYTICS_YEAR = 2000;
 type TrendChartType = "bar" | "line" | "area";
+const ALL_PERIOD_SELECTOR_VALUE = "all";
 
 function makeMetricCompareKey(sectionName: string, metricName: string) {
   return JSON.stringify([sectionName, metricName]);
@@ -309,9 +311,11 @@ export function AnalyticsPage() {
   /* Metrics tab state */
   const [selectedMetricId, setSelectedMetricId] = useState<string | undefined>();
   const [granularity, setGranularity] = useState<"weekly" | "monthly" | "quarterly">("monthly");
-  const [compareYear, setCompareYear] = useState<number>(CURRENT_YEAR - 1);
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(ALL_PERIOD_SELECTOR_VALUE);
   const [chartType, setChartType] = useState<MetricChartType>("bar");
   const [trendsChartType, setTrendsChartType] = useState<TrendChartType>("bar");
+  const [overviewChartType, setOverviewChartType] = useState<TrendChartType>("line");
+  const [quarterlyChartType, setQuarterlyChartType] = useState<TrendChartType>("bar");
   const [axisLabelMode, setAxisLabelMode] = useState<AxisLabelMode>("auto");
   const [metricsData, setMetricsData] = useState<MetricAnalyticsData | null>(null);
   const [metricsLoading, setMetricsLoading] = useState(false);
@@ -373,13 +377,8 @@ export function AnalyticsPage() {
   }, [includeDrafts, reportListData?.reports, year]);
 
   useEffect(() => {
-    if (yearOptions.length === 0) return;
-    if (yearOptions.some((option) => option.value === compareYear) || compareYear === year) return;
-    const fallback =
-      yearOptions.find((option) => option.value !== year)?.value ??
-      Math.max(year - 1, MIN_ANALYTICS_YEAR);
-    setCompareYear(fallback);
-  }, [compareYear, year, yearOptions]);
+    setSelectedPeriod(ALL_PERIOD_SELECTOR_VALUE);
+  }, [granularity, year]);
 
   /* Campus + user counts */
   const { data: allCampuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
@@ -680,10 +679,24 @@ export function AnalyticsPage() {
     try {
       const params = new URLSearchParams({
         year: String(year),
-        compareYear: String(compareYear),
         granularity,
         includeDrafts: String(includeDrafts),
       });
+      if (selectedPeriod !== ALL_PERIOD_SELECTOR_VALUE) {
+        const periodValue = Number(selectedPeriod);
+        if (granularity === "monthly") {
+          params.set("startMonth", String(periodValue));
+          params.set("endMonth", String(periodValue));
+        } else if (granularity === "quarterly") {
+          const startMonth = (periodValue - 1) * 3 + 1;
+          const endMonth = periodValue * 3;
+          params.set("startMonth", String(startMonth));
+          params.set("endMonth", String(endMonth));
+        } else {
+          params.set("startWeek", String(periodValue));
+          params.set("endWeek", String(periodValue));
+        }
+      }
       if (effectiveCampusId) params.set("campusId", effectiveCampusId);
       params.set("metricId", selectedMetricId);
       const res = await fetch(API_ROUTES.analytics.metrics + "?" + params.toString());
@@ -694,7 +707,7 @@ export function AnalyticsPage() {
     } finally {
       setMetricsLoading(false);
     }
-  }, [selectedMetricId, year, compareYear, granularity, effectiveCampusId, includeDrafts]);
+  }, [selectedMetricId, year, granularity, selectedPeriod, effectiveCampusId, includeDrafts]);
 
   useEffect(() => {
     fetchMetrics();
@@ -780,6 +793,34 @@ export function AnalyticsPage() {
         ...(allCampuses ?? []).map((c) => ({ value: c.id, label: c.name })),
       ]
     : [];
+
+  const metricPeriodSelectorOptions = useMemo(() => {
+    if (granularity === "monthly") {
+      return [
+        { value: ALL_PERIOD_SELECTOR_VALUE, label: "All Months" },
+        ...Array.from({ length: 12 }, (_, i) => {
+          const month = i + 1;
+          return {
+            value: String(month),
+            label: new Date(year, i, 1).toLocaleString("en-GB", { month: "short" }),
+          };
+        }),
+      ];
+    }
+    if (granularity === "quarterly") {
+      return [
+        { value: ALL_PERIOD_SELECTOR_VALUE, label: "All Quarters" },
+        ...[1, 2, 3, 4].map((q) => ({ value: String(q), label: `Q${q}` })),
+      ];
+    }
+    return [
+      { value: ALL_PERIOD_SELECTOR_VALUE, label: "All Weeks" },
+      ...Array.from({ length: getIsoWeeksInYear(year) }, (_, i) => {
+        const week = i + 1;
+        return { value: String(week), label: `W${week.toString().padStart(2, "0")}` };
+      }),
+    ];
+  }, [granularity, year]);
 
   /* Group available metrics by section for the Select optgroup */
   const metricSelectOptions = (() => {
@@ -989,58 +1030,188 @@ export function AnalyticsPage() {
           )}
         </ChartCard>
 
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-xs text-ds-text-secondary">Chart type:</span>
+          <Segmented
+            value={overviewChartType}
+            onChange={(v) => setOverviewChartType(v as TrendChartType)}
+            options={[
+              { label: "Bar", value: "bar" },
+              { label: "Line", value: "line" },
+              { label: "Area", value: "area" },
+            ]}
+          />
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-ds-text-secondary">X-axis labels:</span>
+            <Select
+              size="small"
+              value={axisLabelMode}
+              options={[
+                { label: "Auto", value: "auto" },
+                { label: "Short", value: "short" },
+                { label: "Full", value: "full" },
+              ]}
+              onChange={(value) => setAxisLabelMode(value as AxisLabelMode)}
+              style={{ width: 100 }}
+            />
+          </div>
+        </div>
+
         {/* Submission trend */}
         {overview.submissionTrend.length > 0 && (
           <ChartCard title={CONTENT.analytics.trendsTitle as string}>
-            <ResponsiveContainer width="100%" height={240}>
-              <LineChart data={overview.submissionTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
-                <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
-                <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Line
-                  type="monotone"
-                  dataKey="count"
-                  name={CONTENT.analytics.chartLabels.submitted as string}
-                  stroke="var(--ds-brand-accent)"
-                  strokeWidth={2}
-                  dot={{ r: 3, fill: "var(--ds-brand-accent)" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <ChartScrollContainer minWidthClass="min-w-[720px]">
+              <ResponsiveContainer width="100%" height={240}>
+                {overviewChartType === "bar" ? (
+                  <BarChart data={overview.submissionTrend}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                    <XAxis
+                      dataKey="month"
+                      tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 14)}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                    <Tooltip contentStyle={TOOLTIP_STYLE} />
+                    <Legend />
+                    <Bar
+                      dataKey="count"
+                      name={CONTENT.analytics.chartLabels.submitted as string}
+                      fill="var(--ds-chart-1)"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                ) : overviewChartType === "area" ? (
+                  <AreaChart data={overview.submissionTrend}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                    <XAxis
+                      dataKey="month"
+                      tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 14)}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                    <Tooltip contentStyle={TOOLTIP_STYLE} />
+                    <Legend />
+                    <Area
+                      type="monotone"
+                      dataKey="count"
+                      name={CONTENT.analytics.chartLabels.submitted as string}
+                      fill="var(--ds-brand-accent)"
+                      stroke="var(--ds-brand-accent)"
+                      strokeWidth={2}
+                    />
+                  </AreaChart>
+                ) : (
+                  <LineChart data={overview.submissionTrend}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                    <XAxis
+                      dataKey="month"
+                      tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 14)}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                    <Tooltip contentStyle={TOOLTIP_STYLE} />
+                    <Line
+                      type="monotone"
+                      dataKey="count"
+                      name={CONTENT.analytics.chartLabels.submitted as string}
+                      stroke="var(--ds-brand-accent)"
+                      strokeWidth={2}
+                      dot={{ r: 3, fill: "var(--ds-brand-accent)" }}
+                    />
+                  </LineChart>
+                )}
+              </ResponsiveContainer>
+            </ChartScrollContainer>
           </ChartCard>
         )}
 
         {/* Campus breakdown — cross-campus roles */}
         {canSeeCrossCampus && campusBreakdownNamed.length > 0 && (
           <ChartCard title={CONTENT.analytics.campusBreakdownTitle as string}>
-            <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={campusBreakdownNamed} margin={{ bottom: 40 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                <XAxis
-                  dataKey="name"
-                  tick={{ fontSize: 10, fill: "var(--ds-text-subtle)" }}
-                  angle={-30}
-                  textAnchor="end"
-                  interval={0}
-                />
-                <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
-                <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Legend />
-                <Bar
-                  dataKey="submitted"
-                  name={CONTENT.analytics.chartLabels.submitted as string}
-                  fill="var(--ds-chart-1)"
-                  radius={[4, 4, 0, 0]}
-                />
-                <Bar
-                  dataKey="approved"
-                  name={CONTENT.analytics.chartLabels.approved as string}
-                  fill="var(--ds-chart-2)"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            <ChartScrollContainer minWidthClass="min-w-[820px]">
+              <ResponsiveContainer width="100%" height={280}>
+                {overviewChartType === "line" ? (
+                  <LineChart data={campusBreakdownNamed}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                    <XAxis
+                      dataKey="name"
+                      tick={{ fontSize: 10, fill: "var(--ds-text-subtle)" }}
+                      interval={0}
+                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 20)}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                    <Tooltip contentStyle={TOOLTIP_STYLE} />
+                    <Legend />
+                    <Line
+                      dataKey="submitted"
+                      name={CONTENT.analytics.chartLabels.submitted as string}
+                      stroke="var(--ds-chart-1)"
+                      dot={false}
+                    />
+                    <Line
+                      dataKey="approved"
+                      name={CONTENT.analytics.chartLabels.approved as string}
+                      stroke="var(--ds-chart-2)"
+                      dot={false}
+                    />
+                  </LineChart>
+                ) : overviewChartType === "area" ? (
+                  <AreaChart data={campusBreakdownNamed}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                    <XAxis
+                      dataKey="name"
+                      tick={{ fontSize: 10, fill: "var(--ds-text-subtle)" }}
+                      interval={0}
+                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 20)}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                    <Tooltip contentStyle={TOOLTIP_STYLE} />
+                    <Legend />
+                    <Area
+                      dataKey="submitted"
+                      name={CONTENT.analytics.chartLabels.submitted as string}
+                      stackId="a"
+                      fill="var(--ds-chart-1)"
+                      stroke="var(--ds-chart-1)"
+                    />
+                    <Area
+                      dataKey="approved"
+                      name={CONTENT.analytics.chartLabels.approved as string}
+                      stackId="a"
+                      fill="var(--ds-chart-2)"
+                      stroke="var(--ds-chart-2)"
+                    />
+                  </AreaChart>
+                ) : (
+                  <BarChart data={campusBreakdownNamed} margin={{ bottom: 40 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                    <XAxis
+                      dataKey="name"
+                      tick={{ fontSize: 10, fill: "var(--ds-text-subtle)" }}
+                      angle={-30}
+                      textAnchor="end"
+                      interval={0}
+                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 20)}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                    <Tooltip contentStyle={TOOLTIP_STYLE} />
+                    <Legend />
+                    <Bar
+                      dataKey="submitted"
+                      name={CONTENT.analytics.chartLabels.submitted as string}
+                      fill="var(--ds-chart-1)"
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Bar
+                      dataKey="approved"
+                      name={CONTENT.analytics.chartLabels.approved as string}
+                      fill="var(--ds-chart-2)"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                )}
+              </ResponsiveContainer>
+            </ChartScrollContainer>
           </ChartCard>
         )}
       </div>
@@ -1053,13 +1224,6 @@ export function AnalyticsPage() {
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3 bg-ds-surface-elevated rounded-ds-xl border border-ds-border-base p-4">
         <Select
-          value={year}
-          options={yearOptions}
-          onChange={setYear}
-          style={{ width: 120 }}
-          placeholder={CONTENT.analytics.yearLabel as string}
-        />
-        <Select
           placeholder={CONTENT.analytics.metricSelectorLabel as string}
           value={selectedMetricId}
           options={metricSelectOptions}
@@ -1069,11 +1233,11 @@ export function AnalyticsPage() {
           optionFilterProp="label"
         />
         <Select
-          value={compareYear}
-          options={yearOptions.filter((option) => option.value !== year)}
-          onChange={setCompareYear}
-          style={{ width: 120 }}
-          placeholder="Compare year"
+          value={selectedPeriod}
+          options={metricPeriodSelectorOptions}
+          onChange={(value) => setSelectedPeriod(value)}
+          style={{ width: 150 }}
+          placeholder={CONTENT.analytics.periodSelectorLabel as string}
         />
         <Segmented
           value={granularity}
@@ -1133,61 +1297,66 @@ export function AnalyticsPage() {
           </ChartCard>
 
           {/* Campus comparison — cross-campus roles only */}
-          {canSeeCrossCampus &&
-            campusComparisonData.length > 0 &&
-            metricsData.byCampus.length > 1 && (
-              <ChartCard title={CONTENT.analytics.campusMetricCompTitle as string}>
-                <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={campusComparisonData} margin={{ bottom: 8 }}>
+            {canSeeCrossCampus &&
+              campusComparisonData.length > 0 &&
+              metricsData.byCampus.length > 1 && (
+                <ChartCard title={CONTENT.analytics.campusMetricCompTitle as string}>
+                  <ChartScrollContainer minWidthClass="min-w-[860px]">
+                    <ResponsiveContainer width="100%" height={280}>
+                      <BarChart data={campusComparisonData} margin={{ bottom: 8 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                        <XAxis
+                          dataKey="period"
+                          tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                          angle={-40}
+                          textAnchor="end"
+                          height={70}
+                          tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 20)}
+                        />
+                        <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                        <Tooltip contentStyle={TOOLTIP_STYLE} />
+                        <Legend />
+                        {metricsData.byCampus.map((c, i) => (
+                          <Bar
+                            key={c.campusId}
+                            dataKey={c.campusName}
+                            fill={CAMPUS_COLORS[i % CAMPUS_COLORS.length]}
+                            radius={[3, 3, 0, 0]}
+                            maxBarSize={32}
+                          />
+                        ))}
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </ChartScrollContainer>
+                </ChartCard>
+              )}
+
+          {/* Cumulative / Area chart */}
+          {metricsData.calculationType === MetricCalculationType.SUM && (
+            <ChartCard title={CONTENT.analytics.cumulativeTrendTitle as string}>
+              <ChartScrollContainer minWidthClass="min-w-[760px]">
+                <ResponsiveContainer width="100%" height={240}>
+                  <ComposedChart data={metricsData.aggregate}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
                     <XAxis
-                      dataKey="period"
+                      dataKey="periodLabel"
                       tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
-                      angle={-40}
-                      textAnchor="end"
-                      height={70}
                       tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 20)}
                     />
                     <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
                     <Tooltip contentStyle={TOOLTIP_STYLE} />
                     <Legend />
-                    {metricsData.byCampus.map((c, i) => (
-                      <Bar
-                        key={c.campusId}
-                        dataKey={c.campusName}
-                        fill={CAMPUS_COLORS[i % CAMPUS_COLORS.length]}
-                        radius={[3, 3, 0, 0]}
-                        maxBarSize={32}
-                      />
-                    ))}
-                  </BarChart>
+                    <Area
+                      type="monotone"
+                      dataKey="achieved"
+                      name={CONTENT.analytics.chartLabels.achieved as string}
+                      fill="color-mix(in srgb, var(--ds-brand-accent) 20%, transparent)"
+                      stroke="var(--ds-brand-accent)"
+                      strokeWidth={2}
+                    />
+                  </ComposedChart>
                 </ResponsiveContainer>
-              </ChartCard>
-            )}
-
-          {/* Cumulative / Area chart */}
-          {metricsData.calculationType === MetricCalculationType.SUM && (
-            <ChartCard title={CONTENT.analytics.cumulativeTrendTitle as string}>
-              <ResponsiveContainer width="100%" height={240}>
-                <ComposedChart data={metricsData.aggregate}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                  <XAxis
-                    dataKey="periodLabel"
-                    tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
-                  />
-                  <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
-                  <Tooltip contentStyle={TOOLTIP_STYLE} />
-                  <Legend />
-                  <Area
-                    type="monotone"
-                    dataKey="achieved"
-                    name={CONTENT.analytics.chartLabels.achieved as string}
-                    fill="color-mix(in srgb, var(--ds-brand-accent) 20%, transparent)"
-                    stroke="var(--ds-brand-accent)"
-                    strokeWidth={2}
-                  />
-                </ComposedChart>
-              </ResponsiveContainer>
+              </ChartScrollContainer>
             </ChartCard>
           )}
         </>
@@ -1213,15 +1382,34 @@ export function AnalyticsPage() {
               { label: "Area", value: "area" },
             ]}
           />
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-ds-text-secondary">X-axis labels:</span>
+            <Select
+              size="small"
+              value={axisLabelMode}
+              options={[
+                { label: "Auto", value: "auto" },
+                { label: "Short", value: "short" },
+                { label: "Full", value: "full" },
+              ]}
+              onChange={(value) => setAxisLabelMode(value as AxisLabelMode)}
+              style={{ width: 100 }}
+            />
+          </div>
         </div>
         {/* Status stacked bar over time */}
         {overview.statusTrend.length > 0 ? (
           <ChartCard title={CONTENT.analytics.statusBreakdownTitle as string}>
-            <ResponsiveContainer width="100%" height={280}>
+            <ChartScrollContainer minWidthClass="min-w-[820px]">
+              <ResponsiveContainer width="100%" height={280}>
               {trendsChartType === "bar" ? (
                 <BarChart data={overview.statusTrend as Record<string, unknown>[]}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <XAxis
+                    dataKey="month"
+                    tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                    tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 14)}
+                  />
                   <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
                   <Tooltip contentStyle={TOOLTIP_STYLE} />
                   <Legend />
@@ -1246,7 +1434,11 @@ export function AnalyticsPage() {
               ) : trendsChartType === "line" ? (
                 <LineChart data={overview.statusTrend as Record<string, unknown>[]}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <XAxis
+                    dataKey="month"
+                    tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                    tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 14)}
+                  />
                   <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
                   <Tooltip contentStyle={TOOLTIP_STYLE} />
                   <Legend />
@@ -1265,7 +1457,11 @@ export function AnalyticsPage() {
               ) : (
                 <AreaChart data={overview.statusTrend as Record<string, unknown>[]}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <XAxis
+                    dataKey="month"
+                    tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                    tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 14)}
+                  />
                   <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
                   <Tooltip contentStyle={TOOLTIP_STYLE} />
                   <Legend />
@@ -1313,7 +1509,8 @@ export function AnalyticsPage() {
                   />
                 </AreaChart>
               )}
-            </ResponsiveContainer>
+              </ResponsiveContainer>
+            </ChartScrollContainer>
           </ChartCard>
         ) : (
           <Card>
@@ -1326,11 +1523,16 @@ export function AnalyticsPage() {
         {/* Quarterly compliance trend */}
         {overview.quarterlyTrend.length > 0 ? (
           <ChartCard title="Quarterly Compliance Rate">
-            <ResponsiveContainer width="100%" height={220}>
+            <ChartScrollContainer minWidthClass="min-w-[720px]">
+              <ResponsiveContainer width="100%" height={220}>
               {trendsChartType === "bar" ? (
                 <BarChart data={overview.quarterlyTrend}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                  <XAxis dataKey="quarter" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <XAxis
+                    dataKey="quarter"
+                    tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                    tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 12)}
+                  />
                   <YAxis
                     domain={[0, 100]}
                     tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
@@ -1350,7 +1552,11 @@ export function AnalyticsPage() {
               ) : trendsChartType === "line" ? (
                 <LineChart data={overview.quarterlyTrend}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                  <XAxis dataKey="quarter" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <XAxis
+                    dataKey="quarter"
+                    tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                    tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 12)}
+                  />
                   <YAxis
                     domain={[0, 100]}
                     tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
@@ -1372,7 +1578,11 @@ export function AnalyticsPage() {
               ) : (
                 <AreaChart data={overview.quarterlyTrend}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                  <XAxis dataKey="quarter" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                  <XAxis
+                    dataKey="quarter"
+                    tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                    tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 12)}
+                  />
                   <YAxis
                     domain={[0, 100]}
                     tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
@@ -1391,7 +1601,8 @@ export function AnalyticsPage() {
                   />
                 </AreaChart>
               )}
-            </ResponsiveContainer>
+              </ResponsiveContainer>
+            </ChartScrollContainer>
           </ChartCard>
         ) : (
           <Card>
@@ -1460,31 +1671,33 @@ export function AnalyticsPage() {
           ].filter((d) => d.value > 0);
           return pieData.length > 0 ? (
             <ChartCard title={CONTENT.analytics.statusBreakdownTitle as string}>
-              <ResponsiveContainer width="100%" height={260}>
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={90}
-                    dataKey="value"
-                    label={
-                      ((props: Record<string, unknown>) =>
-                        String(props.name ?? "") +
-                        " " +
-                        Math.round(((props.percent as number) ?? 0) * 100) +
-                        "%") as unknown as import("recharts").PieLabel
-                    }
-                    labelLine={{ stroke: "var(--ds-border-base)" }}
-                  >
-                    {pieData.map((_entry, i) => (
-                      <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={TOOLTIP_STYLE} />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
+              <ChartScrollContainer minWidthClass="min-w-[680px]">
+                <ResponsiveContainer width="100%" height={260}>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={90}
+                      dataKey="value"
+                      label={
+                        ((props: Record<string, unknown>) =>
+                          String(props.name ?? "") +
+                          " " +
+                          Math.round(((props.percent as number) ?? 0) * 100) +
+                          "%") as unknown as import("recharts").PieLabel
+                      }
+                      labelLine={{ stroke: "var(--ds-border-base)" }}
+                    >
+                      {pieData.map((_entry, i) => (
+                        <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={TOOLTIP_STYLE} />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </ChartScrollContainer>
             </ChartCard>
           ) : null;
         })()}
@@ -1533,6 +1746,29 @@ export function AnalyticsPage() {
             style={{ width: 80 }}
             size="middle"
           />
+          <Segmented
+            value={quarterlyChartType}
+            onChange={(v) => setQuarterlyChartType(v as TrendChartType)}
+            options={[
+              { label: "Bar", value: "bar" },
+              { label: "Line", value: "line" },
+              { label: "Area", value: "area" },
+            ]}
+          />
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-ds-text-secondary">X-axis labels:</span>
+            <Select
+              size="small"
+              value={axisLabelMode}
+              options={[
+                { label: "Auto", value: "auto" },
+                { label: "Short", value: "short" },
+                { label: "Full", value: "full" },
+              ]}
+              onChange={(value) => setAxisLabelMode(value as AxisLabelMode)}
+              style={{ width: 100 }}
+            />
+          </div>
         </div>
 
         {/* Quarterly KPIs with QoQ delta */}
@@ -1584,27 +1820,85 @@ export function AnalyticsPage() {
         {/* Monthly breakdown within quarter */}
         {quarterlyData.monthlyBreakdown.length > 0 && (
           <ChartCard title={CONTENT.analytics.quarterlyTitle as string}>
-            <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={quarterlyData.monthlyBreakdown}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
-                <XAxis dataKey="label" tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
-                <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
-                <Tooltip contentStyle={TOOLTIP_STYLE} />
-                <Legend />
-                <Bar
-                  dataKey="submitted"
-                  name={CONTENT.analytics.chartLabels.submitted as string}
-                  fill="var(--ds-chart-1)"
-                  radius={[4, 4, 0, 0]}
-                />
-                <Bar
-                  dataKey="approved"
-                  name={CONTENT.analytics.chartLabels.approved as string}
-                  fill="var(--ds-chart-2)"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            <ChartScrollContainer minWidthClass="min-w-[720px]">
+              <ResponsiveContainer width="100%" height={240}>
+                {quarterlyChartType === "line" ? (
+                  <LineChart data={quarterlyData.monthlyBreakdown}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                    <XAxis
+                      dataKey="label"
+                      tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 12)}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                    <Tooltip contentStyle={TOOLTIP_STYLE} />
+                    <Legend />
+                    <Line
+                      dataKey="submitted"
+                      name={CONTENT.analytics.chartLabels.submitted as string}
+                      stroke="var(--ds-chart-1)"
+                      dot={false}
+                    />
+                    <Line
+                      dataKey="approved"
+                      name={CONTENT.analytics.chartLabels.approved as string}
+                      stroke="var(--ds-chart-2)"
+                      dot={false}
+                    />
+                  </LineChart>
+                ) : quarterlyChartType === "area" ? (
+                  <AreaChart data={quarterlyData.monthlyBreakdown}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                    <XAxis
+                      dataKey="label"
+                      tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 12)}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                    <Tooltip contentStyle={TOOLTIP_STYLE} />
+                    <Legend />
+                    <Area
+                      dataKey="submitted"
+                      name={CONTENT.analytics.chartLabels.submitted as string}
+                      stackId="a"
+                      fill="var(--ds-chart-1)"
+                      stroke="var(--ds-chart-1)"
+                    />
+                    <Area
+                      dataKey="approved"
+                      name={CONTENT.analytics.chartLabels.approved as string}
+                      stackId="a"
+                      fill="var(--ds-chart-2)"
+                      stroke="var(--ds-chart-2)"
+                    />
+                  </AreaChart>
+                ) : (
+                  <BarChart data={quarterlyData.monthlyBreakdown}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
+                    <XAxis
+                      dataKey="label"
+                      tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }}
+                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 12)}
+                    />
+                    <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
+                    <Tooltip contentStyle={TOOLTIP_STYLE} />
+                    <Legend />
+                    <Bar
+                      dataKey="submitted"
+                      name={CONTENT.analytics.chartLabels.submitted as string}
+                      fill="var(--ds-chart-1)"
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Bar
+                      dataKey="approved"
+                      name={CONTENT.analytics.chartLabels.approved as string}
+                      fill="var(--ds-chart-2)"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                )}
+              </ResponsiveContainer>
+            </ChartScrollContainer>
           </ChartCard>
         )}
 

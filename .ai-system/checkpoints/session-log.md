@@ -560,3 +560,41 @@ Run a cloud implementation session using the new prompt to close the remaining 1
 **Notes / Blockers:**
 
 - Workspace diagnostics still include a pre-existing lint/style finding in `modules/analytics/chartUtils.tsx` (inline style usage), unrelated to this hierarchy fix.
+
+## Session 14 — 2026-04-14
+
+**Completed:**
+
+- Polished dashboard CTA tone by making organization-scoped count messages neutral while retaining personal draft messaging.
+- Fixed dashboard KPI behavior:
+  - pending-review KPI now follows workflow stage intent for reviewer roles
+  - quarter compliance now resolves month consistently for weekly/monthly source reports.
+- Upgraded platform analytics UX:
+  - deprecated old compare-year selector in Metrics Analysis and replaced it with a period selector (all/specific week|month|quarter) wired to API filters
+  - added chart controls (chart type + x-axis label mode) across overview/trends/quarterly analytics views
+  - added overflow-safe scroll containers around analytics/report-analytics charts to preserve readability on smaller screens.
+- Hardened analytics metrics processing so monthly/quarterly aggregations include weekly-source report data via normalized month resolution.
+- Validation:
+  - `npm run -s typecheck` ✅
+  - `npx tsx test/reportListPagination.test.ts` ✅
+  - `npx tsx test/reportWorkflow.test.ts` ✅
+
+**Files Modified:**
+
+- `config/content.ts`
+- `modules/dashboard/components/DashboardPage.tsx`
+- `modules/analytics/chartUtils.tsx`
+- `modules/analytics/components/AnalyticsPage.tsx`
+- `modules/reports/components/ReportAnalyticsPage.tsx`
+- `app/api/analytics/metrics/route.ts`
+- `.ai-system/planning/task-queue.md`
+- `.ai-system/checkpoints/session-log.md`
+- `.ai-system/summaries/dev-history.md`
+
+**Next Task:**
+
+- Add focused regression tests for analytics metrics period filtering and weekly→monthly/quarterly normalization to lock in behavior under evolving data mixes.
+
+**Notes / Blockers:**
+
+- `npm run lint` remains blocked by the repo-level ESLint v9 flat-config gap (pre-existing).
