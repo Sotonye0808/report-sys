@@ -104,6 +104,11 @@ export type MetricEntry = $Result.DefaultSelection<Prisma.$MetricEntryPayload>
  */
 export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
 /**
+ * Model EmailActionToken
+ * 
+ */
+export type EmailActionToken = $Result.DefaultSelection<Prisma.$EmailActionTokenPayload>
+/**
  * Model InviteLink
  * 
  */
@@ -268,10 +273,22 @@ export const NotificationType: {
   GOAL_UNLOCK_REQUESTED: 'GOAL_UNLOCK_REQUESTED',
   GOAL_UNLOCK_APPROVED: 'GOAL_UNLOCK_APPROVED',
   GOAL_UNLOCK_REJECTED: 'GOAL_UNLOCK_REJECTED',
-  REPORT_UNLOCKED: 'REPORT_UNLOCKED'
+  REPORT_UNLOCKED: 'REPORT_UNLOCKED',
+  EMAIL_VERIFICATION_REQUIRED: 'EMAIL_VERIFICATION_REQUIRED',
+  EMAIL_VERIFIED: 'EMAIL_VERIFIED',
+  EMAIL_CHANGE_REQUESTED: 'EMAIL_CHANGE_REQUESTED',
+  EMAIL_CHANGED: 'EMAIL_CHANGED'
 };
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const EmailActionType: {
+  VERIFY_PRIMARY_EMAIL: 'VERIFY_PRIMARY_EMAIL',
+  CONFIRM_PENDING_EMAIL: 'CONFIRM_PENDING_EMAIL'
+};
+
+export type EmailActionType = (typeof EmailActionType)[keyof typeof EmailActionType]
 
 
 export const GoalMode: {
@@ -429,6 +446,10 @@ export const ReportUpdateRequestStatus: typeof $Enums.ReportUpdateRequestStatus
 export type NotificationType = $Enums.NotificationType
 
 export const NotificationType: typeof $Enums.NotificationType
+
+export type EmailActionType = $Enums.EmailActionType
+
+export const EmailActionType: typeof $Enums.EmailActionType
 
 export type GoalMode = $Enums.GoalMode
 
@@ -774,6 +795,16 @@ export class PrismaClient<
     * ```
     */
   get notification(): Prisma.NotificationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.emailActionToken`: Exposes CRUD operations for the **EmailActionToken** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EmailActionTokens
+    * const emailActionTokens = await prisma.emailActionToken.findMany()
+    * ```
+    */
+  get emailActionToken(): Prisma.EmailActionTokenDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.inviteLink`: Exposes CRUD operations for the **InviteLink** model.
@@ -1276,6 +1307,7 @@ export namespace Prisma {
     GoalEditRequest: 'GoalEditRequest',
     MetricEntry: 'MetricEntry',
     Notification: 'Notification',
+    EmailActionToken: 'EmailActionToken',
     InviteLink: 'InviteLink',
     BugReport: 'BugReport',
     MediaAsset: 'MediaAsset',
@@ -1296,7 +1328,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "orgGroup" | "campus" | "reportTemplate" | "reportTemplateSection" | "reportTemplateMetric" | "reportTemplateVersion" | "report" | "reportSection" | "reportMetric" | "reportEdit" | "reportUpdateRequest" | "reportEvent" | "reportVersion" | "goal" | "goalEditRequest" | "metricEntry" | "notification" | "inviteLink" | "bugReport" | "mediaAsset" | "assetUploadSession" | "assetLifecycleEvent"
+      modelProps: "user" | "orgGroup" | "campus" | "reportTemplate" | "reportTemplateSection" | "reportTemplateMetric" | "reportTemplateVersion" | "report" | "reportSection" | "reportMetric" | "reportEdit" | "reportUpdateRequest" | "reportEvent" | "reportVersion" | "goal" | "goalEditRequest" | "metricEntry" | "notification" | "emailActionToken" | "inviteLink" | "bugReport" | "mediaAsset" | "assetUploadSession" | "assetLifecycleEvent"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2632,6 +2664,80 @@ export namespace Prisma {
           }
         }
       }
+      EmailActionToken: {
+        payload: Prisma.$EmailActionTokenPayload<ExtArgs>
+        fields: Prisma.EmailActionTokenFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EmailActionTokenFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailActionTokenPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EmailActionTokenFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailActionTokenPayload>
+          }
+          findFirst: {
+            args: Prisma.EmailActionTokenFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailActionTokenPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EmailActionTokenFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailActionTokenPayload>
+          }
+          findMany: {
+            args: Prisma.EmailActionTokenFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailActionTokenPayload>[]
+          }
+          create: {
+            args: Prisma.EmailActionTokenCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailActionTokenPayload>
+          }
+          createMany: {
+            args: Prisma.EmailActionTokenCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.EmailActionTokenCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailActionTokenPayload>[]
+          }
+          delete: {
+            args: Prisma.EmailActionTokenDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailActionTokenPayload>
+          }
+          update: {
+            args: Prisma.EmailActionTokenUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailActionTokenPayload>
+          }
+          deleteMany: {
+            args: Prisma.EmailActionTokenDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EmailActionTokenUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.EmailActionTokenUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailActionTokenPayload>[]
+          }
+          upsert: {
+            args: Prisma.EmailActionTokenUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailActionTokenPayload>
+          }
+          aggregate: {
+            args: Prisma.EmailActionTokenAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEmailActionToken>
+          }
+          groupBy: {
+            args: Prisma.EmailActionTokenGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EmailActionTokenGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EmailActionTokenCountArgs<ExtArgs>
+            result: $Utils.Optional<EmailActionTokenCountAggregateOutputType> | number
+          }
+        }
+      }
       InviteLink: {
         payload: Prisma.$InviteLinkPayload<ExtArgs>
         fields: Prisma.InviteLinkFieldRefs
@@ -3128,6 +3234,7 @@ export namespace Prisma {
     goalEditRequest?: GoalEditRequestOmit
     metricEntry?: MetricEntryOmit
     notification?: NotificationOmit
+    emailActionToken?: EmailActionTokenOmit
     inviteLink?: InviteLinkOmit
     bugReport?: BugReportOmit
     mediaAsset?: MediaAssetOmit
@@ -3223,6 +3330,7 @@ export namespace Prisma {
     mediaAssets: number
     assetUploadSessions: number
     assetLifecycleEvents: number
+    emailActionTokens: number
     notifications: number
     ledOrgGroups: number
     reviewedEdits: number
@@ -3252,6 +3360,7 @@ export namespace Prisma {
     mediaAssets?: boolean | UserCountOutputTypeCountMediaAssetsArgs
     assetUploadSessions?: boolean | UserCountOutputTypeCountAssetUploadSessionsArgs
     assetLifecycleEvents?: boolean | UserCountOutputTypeCountAssetLifecycleEventsArgs
+    emailActionTokens?: boolean | UserCountOutputTypeCountEmailActionTokensArgs
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     ledOrgGroups?: boolean | UserCountOutputTypeCountLedOrgGroupsArgs
     reviewedEdits?: boolean | UserCountOutputTypeCountReviewedEditsArgs
@@ -3349,6 +3458,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAssetLifecycleEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AssetLifecycleEventWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountEmailActionTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmailActionTokenWhereInput
   }
 
   /**
@@ -3945,6 +4061,11 @@ export namespace Prisma {
     id: string | null
     organisationId: string | null
     email: string | null
+    pendingEmail: string | null
+    emailVerifiedAt: Date | null
+    emailVerificationSentAt: Date | null
+    pendingEmailRequestedAt: Date | null
+    pendingEmailSentAt: Date | null
     passwordHash: string | null
     firstName: string | null
     lastName: string | null
@@ -3964,6 +4085,11 @@ export namespace Prisma {
     id: string | null
     organisationId: string | null
     email: string | null
+    pendingEmail: string | null
+    emailVerifiedAt: Date | null
+    emailVerificationSentAt: Date | null
+    pendingEmailRequestedAt: Date | null
+    pendingEmailSentAt: Date | null
     passwordHash: string | null
     firstName: string | null
     lastName: string | null
@@ -3983,6 +4109,11 @@ export namespace Prisma {
     id: number
     organisationId: number
     email: number
+    pendingEmail: number
+    emailVerifiedAt: number
+    emailVerificationSentAt: number
+    pendingEmailRequestedAt: number
+    pendingEmailSentAt: number
     passwordHash: number
     firstName: number
     lastName: number
@@ -4004,6 +4135,11 @@ export namespace Prisma {
     id?: true
     organisationId?: true
     email?: true
+    pendingEmail?: true
+    emailVerifiedAt?: true
+    emailVerificationSentAt?: true
+    pendingEmailRequestedAt?: true
+    pendingEmailSentAt?: true
     passwordHash?: true
     firstName?: true
     lastName?: true
@@ -4023,6 +4159,11 @@ export namespace Prisma {
     id?: true
     organisationId?: true
     email?: true
+    pendingEmail?: true
+    emailVerifiedAt?: true
+    emailVerificationSentAt?: true
+    pendingEmailRequestedAt?: true
+    pendingEmailSentAt?: true
     passwordHash?: true
     firstName?: true
     lastName?: true
@@ -4042,6 +4183,11 @@ export namespace Prisma {
     id?: true
     organisationId?: true
     email?: true
+    pendingEmail?: true
+    emailVerifiedAt?: true
+    emailVerificationSentAt?: true
+    pendingEmailRequestedAt?: true
+    pendingEmailSentAt?: true
     passwordHash?: true
     firstName?: true
     lastName?: true
@@ -4134,6 +4280,11 @@ export namespace Prisma {
     id: string
     organisationId: string | null
     email: string
+    pendingEmail: string | null
+    emailVerifiedAt: Date | null
+    emailVerificationSentAt: Date | null
+    pendingEmailRequestedAt: Date | null
+    pendingEmailSentAt: Date | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -4170,6 +4321,11 @@ export namespace Prisma {
     id?: boolean
     organisationId?: boolean
     email?: boolean
+    pendingEmail?: boolean
+    emailVerifiedAt?: boolean
+    emailVerificationSentAt?: boolean
+    pendingEmailRequestedAt?: boolean
+    pendingEmailSentAt?: boolean
     passwordHash?: boolean
     firstName?: boolean
     lastName?: boolean
@@ -4193,6 +4349,7 @@ export namespace Prisma {
     mediaAssets?: boolean | User$mediaAssetsArgs<ExtArgs>
     assetUploadSessions?: boolean | User$assetUploadSessionsArgs<ExtArgs>
     assetLifecycleEvents?: boolean | User$assetLifecycleEventsArgs<ExtArgs>
+    emailActionTokens?: boolean | User$emailActionTokensArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     ledOrgGroups?: boolean | User$ledOrgGroupsArgs<ExtArgs>
     reviewedEdits?: boolean | User$reviewedEditsArgs<ExtArgs>
@@ -4218,6 +4375,11 @@ export namespace Prisma {
     id?: boolean
     organisationId?: boolean
     email?: boolean
+    pendingEmail?: boolean
+    emailVerifiedAt?: boolean
+    emailVerificationSentAt?: boolean
+    pendingEmailRequestedAt?: boolean
+    pendingEmailSentAt?: boolean
     passwordHash?: boolean
     firstName?: boolean
     lastName?: boolean
@@ -4239,6 +4401,11 @@ export namespace Prisma {
     id?: boolean
     organisationId?: boolean
     email?: boolean
+    pendingEmail?: boolean
+    emailVerifiedAt?: boolean
+    emailVerificationSentAt?: boolean
+    pendingEmailRequestedAt?: boolean
+    pendingEmailSentAt?: boolean
     passwordHash?: boolean
     firstName?: boolean
     lastName?: boolean
@@ -4260,6 +4427,11 @@ export namespace Prisma {
     id?: boolean
     organisationId?: boolean
     email?: boolean
+    pendingEmail?: boolean
+    emailVerifiedAt?: boolean
+    emailVerificationSentAt?: boolean
+    pendingEmailRequestedAt?: boolean
+    pendingEmailSentAt?: boolean
     passwordHash?: boolean
     firstName?: boolean
     lastName?: boolean
@@ -4275,7 +4447,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organisationId" | "email" | "passwordHash" | "firstName" | "lastName" | "phone" | "gender" | "role" | "campusId" | "orgGroupId" | "avatar" | "avatarUrl" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organisationId" | "email" | "pendingEmail" | "emailVerifiedAt" | "emailVerificationSentAt" | "pendingEmailRequestedAt" | "pendingEmailSentAt" | "passwordHash" | "firstName" | "lastName" | "phone" | "gender" | "role" | "campusId" | "orgGroupId" | "avatar" | "avatarUrl" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bugReports?: boolean | User$bugReportsArgs<ExtArgs>
     adminedCampuses?: boolean | User$adminedCampusesArgs<ExtArgs>
@@ -4287,6 +4459,7 @@ export namespace Prisma {
     mediaAssets?: boolean | User$mediaAssetsArgs<ExtArgs>
     assetUploadSessions?: boolean | User$assetUploadSessionsArgs<ExtArgs>
     assetLifecycleEvents?: boolean | User$assetLifecycleEventsArgs<ExtArgs>
+    emailActionTokens?: boolean | User$emailActionTokensArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     ledOrgGroups?: boolean | User$ledOrgGroupsArgs<ExtArgs>
     reviewedEdits?: boolean | User$reviewedEditsArgs<ExtArgs>
@@ -4329,6 +4502,7 @@ export namespace Prisma {
       mediaAssets: Prisma.$MediaAssetPayload<ExtArgs>[]
       assetUploadSessions: Prisma.$AssetUploadSessionPayload<ExtArgs>[]
       assetLifecycleEvents: Prisma.$AssetLifecycleEventPayload<ExtArgs>[]
+      emailActionTokens: Prisma.$EmailActionTokenPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       ledOrgGroups: Prisma.$OrgGroupPayload<ExtArgs>[]
       reviewedEdits: Prisma.$ReportEditPayload<ExtArgs>[]
@@ -4352,6 +4526,11 @@ export namespace Prisma {
       id: string
       organisationId: string | null
       email: string
+      pendingEmail: string | null
+      emailVerifiedAt: Date | null
+      emailVerificationSentAt: Date | null
+      pendingEmailRequestedAt: Date | null
+      pendingEmailSentAt: Date | null
       passwordHash: string
       firstName: string
       lastName: string
@@ -4769,6 +4948,7 @@ export namespace Prisma {
     mediaAssets<T extends User$mediaAssetsArgs<ExtArgs> = {}>(args?: Subset<T, User$mediaAssetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assetUploadSessions<T extends User$assetUploadSessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$assetUploadSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetUploadSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assetLifecycleEvents<T extends User$assetLifecycleEventsArgs<ExtArgs> = {}>(args?: Subset<T, User$assetLifecycleEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetLifecycleEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    emailActionTokens<T extends User$emailActionTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$emailActionTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ledOrgGroups<T extends User$ledOrgGroupsArgs<ExtArgs> = {}>(args?: Subset<T, User$ledOrgGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrgGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewedEdits<T extends User$reviewedEditsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewedEditsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportEditPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4819,6 +4999,11 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'String'>
     readonly organisationId: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
+    readonly pendingEmail: FieldRef<"User", 'String'>
+    readonly emailVerifiedAt: FieldRef<"User", 'DateTime'>
+    readonly emailVerificationSentAt: FieldRef<"User", 'DateTime'>
+    readonly pendingEmailRequestedAt: FieldRef<"User", 'DateTime'>
+    readonly pendingEmailSentAt: FieldRef<"User", 'DateTime'>
     readonly passwordHash: FieldRef<"User", 'String'>
     readonly firstName: FieldRef<"User", 'String'>
     readonly lastName: FieldRef<"User", 'String'>
@@ -5465,6 +5650,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AssetLifecycleEventScalarFieldEnum | AssetLifecycleEventScalarFieldEnum[]
+  }
+
+  /**
+   * User.emailActionTokens
+   */
+  export type User$emailActionTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenInclude<ExtArgs> | null
+    where?: EmailActionTokenWhereInput
+    orderBy?: EmailActionTokenOrderByWithRelationInput | EmailActionTokenOrderByWithRelationInput[]
+    cursor?: EmailActionTokenWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EmailActionTokenScalarFieldEnum | EmailActionTokenScalarFieldEnum[]
   }
 
   /**
@@ -26748,6 +26957,1129 @@ export namespace Prisma {
 
 
   /**
+   * Model EmailActionToken
+   */
+
+  export type AggregateEmailActionToken = {
+    _count: EmailActionTokenCountAggregateOutputType | null
+    _min: EmailActionTokenMinAggregateOutputType | null
+    _max: EmailActionTokenMaxAggregateOutputType | null
+  }
+
+  export type EmailActionTokenMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.EmailActionType | null
+    tokenHash: string | null
+    targetEmail: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    invalidatedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EmailActionTokenMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    type: $Enums.EmailActionType | null
+    tokenHash: string | null
+    targetEmail: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    invalidatedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EmailActionTokenCountAggregateOutputType = {
+    id: number
+    userId: number
+    type: number
+    tokenHash: number
+    targetEmail: number
+    expiresAt: number
+    usedAt: number
+    invalidatedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type EmailActionTokenMinAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    tokenHash?: true
+    targetEmail?: true
+    expiresAt?: true
+    usedAt?: true
+    invalidatedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EmailActionTokenMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    tokenHash?: true
+    targetEmail?: true
+    expiresAt?: true
+    usedAt?: true
+    invalidatedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EmailActionTokenCountAggregateInputType = {
+    id?: true
+    userId?: true
+    type?: true
+    tokenHash?: true
+    targetEmail?: true
+    expiresAt?: true
+    usedAt?: true
+    invalidatedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type EmailActionTokenAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmailActionToken to aggregate.
+     */
+    where?: EmailActionTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailActionTokens to fetch.
+     */
+    orderBy?: EmailActionTokenOrderByWithRelationInput | EmailActionTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EmailActionTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailActionTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailActionTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EmailActionTokens
+    **/
+    _count?: true | EmailActionTokenCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EmailActionTokenMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EmailActionTokenMaxAggregateInputType
+  }
+
+  export type GetEmailActionTokenAggregateType<T extends EmailActionTokenAggregateArgs> = {
+        [P in keyof T & keyof AggregateEmailActionToken]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEmailActionToken[P]>
+      : GetScalarType<T[P], AggregateEmailActionToken[P]>
+  }
+
+
+
+
+  export type EmailActionTokenGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmailActionTokenWhereInput
+    orderBy?: EmailActionTokenOrderByWithAggregationInput | EmailActionTokenOrderByWithAggregationInput[]
+    by: EmailActionTokenScalarFieldEnum[] | EmailActionTokenScalarFieldEnum
+    having?: EmailActionTokenScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EmailActionTokenCountAggregateInputType | true
+    _min?: EmailActionTokenMinAggregateInputType
+    _max?: EmailActionTokenMaxAggregateInputType
+  }
+
+  export type EmailActionTokenGroupByOutputType = {
+    id: string
+    userId: string
+    type: $Enums.EmailActionType
+    tokenHash: string
+    targetEmail: string | null
+    expiresAt: Date
+    usedAt: Date | null
+    invalidatedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: EmailActionTokenCountAggregateOutputType | null
+    _min: EmailActionTokenMinAggregateOutputType | null
+    _max: EmailActionTokenMaxAggregateOutputType | null
+  }
+
+  type GetEmailActionTokenGroupByPayload<T extends EmailActionTokenGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EmailActionTokenGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EmailActionTokenGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EmailActionTokenGroupByOutputType[P]>
+            : GetScalarType<T[P], EmailActionTokenGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EmailActionTokenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    tokenHash?: boolean
+    targetEmail?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    invalidatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["emailActionToken"]>
+
+  export type EmailActionTokenSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    tokenHash?: boolean
+    targetEmail?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    invalidatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["emailActionToken"]>
+
+  export type EmailActionTokenSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    tokenHash?: boolean
+    targetEmail?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    invalidatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["emailActionToken"]>
+
+  export type EmailActionTokenSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    type?: boolean
+    tokenHash?: boolean
+    targetEmail?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    invalidatedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type EmailActionTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "type" | "tokenHash" | "targetEmail" | "expiresAt" | "usedAt" | "invalidatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["emailActionToken"]>
+  export type EmailActionTokenInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type EmailActionTokenIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type EmailActionTokenIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $EmailActionTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EmailActionToken"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      type: $Enums.EmailActionType
+      tokenHash: string
+      targetEmail: string | null
+      expiresAt: Date
+      usedAt: Date | null
+      invalidatedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["emailActionToken"]>
+    composites: {}
+  }
+
+  type EmailActionTokenGetPayload<S extends boolean | null | undefined | EmailActionTokenDefaultArgs> = $Result.GetResult<Prisma.$EmailActionTokenPayload, S>
+
+  type EmailActionTokenCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<EmailActionTokenFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EmailActionTokenCountAggregateInputType | true
+    }
+
+  export interface EmailActionTokenDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EmailActionToken'], meta: { name: 'EmailActionToken' } }
+    /**
+     * Find zero or one EmailActionToken that matches the filter.
+     * @param {EmailActionTokenFindUniqueArgs} args - Arguments to find a EmailActionToken
+     * @example
+     * // Get one EmailActionToken
+     * const emailActionToken = await prisma.emailActionToken.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EmailActionTokenFindUniqueArgs>(args: SelectSubset<T, EmailActionTokenFindUniqueArgs<ExtArgs>>): Prisma__EmailActionTokenClient<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one EmailActionToken that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {EmailActionTokenFindUniqueOrThrowArgs} args - Arguments to find a EmailActionToken
+     * @example
+     * // Get one EmailActionToken
+     * const emailActionToken = await prisma.emailActionToken.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EmailActionTokenFindUniqueOrThrowArgs>(args: SelectSubset<T, EmailActionTokenFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EmailActionTokenClient<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EmailActionToken that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailActionTokenFindFirstArgs} args - Arguments to find a EmailActionToken
+     * @example
+     * // Get one EmailActionToken
+     * const emailActionToken = await prisma.emailActionToken.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EmailActionTokenFindFirstArgs>(args?: SelectSubset<T, EmailActionTokenFindFirstArgs<ExtArgs>>): Prisma__EmailActionTokenClient<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EmailActionToken that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailActionTokenFindFirstOrThrowArgs} args - Arguments to find a EmailActionToken
+     * @example
+     * // Get one EmailActionToken
+     * const emailActionToken = await prisma.emailActionToken.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EmailActionTokenFindFirstOrThrowArgs>(args?: SelectSubset<T, EmailActionTokenFindFirstOrThrowArgs<ExtArgs>>): Prisma__EmailActionTokenClient<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more EmailActionTokens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailActionTokenFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EmailActionTokens
+     * const emailActionTokens = await prisma.emailActionToken.findMany()
+     * 
+     * // Get first 10 EmailActionTokens
+     * const emailActionTokens = await prisma.emailActionToken.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const emailActionTokenWithIdOnly = await prisma.emailActionToken.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EmailActionTokenFindManyArgs>(args?: SelectSubset<T, EmailActionTokenFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a EmailActionToken.
+     * @param {EmailActionTokenCreateArgs} args - Arguments to create a EmailActionToken.
+     * @example
+     * // Create one EmailActionToken
+     * const EmailActionToken = await prisma.emailActionToken.create({
+     *   data: {
+     *     // ... data to create a EmailActionToken
+     *   }
+     * })
+     * 
+     */
+    create<T extends EmailActionTokenCreateArgs>(args: SelectSubset<T, EmailActionTokenCreateArgs<ExtArgs>>): Prisma__EmailActionTokenClient<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many EmailActionTokens.
+     * @param {EmailActionTokenCreateManyArgs} args - Arguments to create many EmailActionTokens.
+     * @example
+     * // Create many EmailActionTokens
+     * const emailActionToken = await prisma.emailActionToken.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EmailActionTokenCreateManyArgs>(args?: SelectSubset<T, EmailActionTokenCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many EmailActionTokens and returns the data saved in the database.
+     * @param {EmailActionTokenCreateManyAndReturnArgs} args - Arguments to create many EmailActionTokens.
+     * @example
+     * // Create many EmailActionTokens
+     * const emailActionToken = await prisma.emailActionToken.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many EmailActionTokens and only return the `id`
+     * const emailActionTokenWithIdOnly = await prisma.emailActionToken.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends EmailActionTokenCreateManyAndReturnArgs>(args?: SelectSubset<T, EmailActionTokenCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a EmailActionToken.
+     * @param {EmailActionTokenDeleteArgs} args - Arguments to delete one EmailActionToken.
+     * @example
+     * // Delete one EmailActionToken
+     * const EmailActionToken = await prisma.emailActionToken.delete({
+     *   where: {
+     *     // ... filter to delete one EmailActionToken
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EmailActionTokenDeleteArgs>(args: SelectSubset<T, EmailActionTokenDeleteArgs<ExtArgs>>): Prisma__EmailActionTokenClient<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one EmailActionToken.
+     * @param {EmailActionTokenUpdateArgs} args - Arguments to update one EmailActionToken.
+     * @example
+     * // Update one EmailActionToken
+     * const emailActionToken = await prisma.emailActionToken.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EmailActionTokenUpdateArgs>(args: SelectSubset<T, EmailActionTokenUpdateArgs<ExtArgs>>): Prisma__EmailActionTokenClient<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more EmailActionTokens.
+     * @param {EmailActionTokenDeleteManyArgs} args - Arguments to filter EmailActionTokens to delete.
+     * @example
+     * // Delete a few EmailActionTokens
+     * const { count } = await prisma.emailActionToken.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EmailActionTokenDeleteManyArgs>(args?: SelectSubset<T, EmailActionTokenDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EmailActionTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailActionTokenUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EmailActionTokens
+     * const emailActionToken = await prisma.emailActionToken.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EmailActionTokenUpdateManyArgs>(args: SelectSubset<T, EmailActionTokenUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EmailActionTokens and returns the data updated in the database.
+     * @param {EmailActionTokenUpdateManyAndReturnArgs} args - Arguments to update many EmailActionTokens.
+     * @example
+     * // Update many EmailActionTokens
+     * const emailActionToken = await prisma.emailActionToken.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more EmailActionTokens and only return the `id`
+     * const emailActionTokenWithIdOnly = await prisma.emailActionToken.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends EmailActionTokenUpdateManyAndReturnArgs>(args: SelectSubset<T, EmailActionTokenUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one EmailActionToken.
+     * @param {EmailActionTokenUpsertArgs} args - Arguments to update or create a EmailActionToken.
+     * @example
+     * // Update or create a EmailActionToken
+     * const emailActionToken = await prisma.emailActionToken.upsert({
+     *   create: {
+     *     // ... data to create a EmailActionToken
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EmailActionToken we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EmailActionTokenUpsertArgs>(args: SelectSubset<T, EmailActionTokenUpsertArgs<ExtArgs>>): Prisma__EmailActionTokenClient<$Result.GetResult<Prisma.$EmailActionTokenPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of EmailActionTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailActionTokenCountArgs} args - Arguments to filter EmailActionTokens to count.
+     * @example
+     * // Count the number of EmailActionTokens
+     * const count = await prisma.emailActionToken.count({
+     *   where: {
+     *     // ... the filter for the EmailActionTokens we want to count
+     *   }
+     * })
+    **/
+    count<T extends EmailActionTokenCountArgs>(
+      args?: Subset<T, EmailActionTokenCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EmailActionTokenCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EmailActionToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailActionTokenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EmailActionTokenAggregateArgs>(args: Subset<T, EmailActionTokenAggregateArgs>): Prisma.PrismaPromise<GetEmailActionTokenAggregateType<T>>
+
+    /**
+     * Group by EmailActionToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailActionTokenGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EmailActionTokenGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EmailActionTokenGroupByArgs['orderBy'] }
+        : { orderBy?: EmailActionTokenGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EmailActionTokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEmailActionTokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EmailActionToken model
+   */
+  readonly fields: EmailActionTokenFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EmailActionToken.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EmailActionTokenClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EmailActionToken model
+   */
+  interface EmailActionTokenFieldRefs {
+    readonly id: FieldRef<"EmailActionToken", 'String'>
+    readonly userId: FieldRef<"EmailActionToken", 'String'>
+    readonly type: FieldRef<"EmailActionToken", 'EmailActionType'>
+    readonly tokenHash: FieldRef<"EmailActionToken", 'String'>
+    readonly targetEmail: FieldRef<"EmailActionToken", 'String'>
+    readonly expiresAt: FieldRef<"EmailActionToken", 'DateTime'>
+    readonly usedAt: FieldRef<"EmailActionToken", 'DateTime'>
+    readonly invalidatedAt: FieldRef<"EmailActionToken", 'DateTime'>
+    readonly createdAt: FieldRef<"EmailActionToken", 'DateTime'>
+    readonly updatedAt: FieldRef<"EmailActionToken", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EmailActionToken findUnique
+   */
+  export type EmailActionTokenFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailActionToken to fetch.
+     */
+    where: EmailActionTokenWhereUniqueInput
+  }
+
+  /**
+   * EmailActionToken findUniqueOrThrow
+   */
+  export type EmailActionTokenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailActionToken to fetch.
+     */
+    where: EmailActionTokenWhereUniqueInput
+  }
+
+  /**
+   * EmailActionToken findFirst
+   */
+  export type EmailActionTokenFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailActionToken to fetch.
+     */
+    where?: EmailActionTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailActionTokens to fetch.
+     */
+    orderBy?: EmailActionTokenOrderByWithRelationInput | EmailActionTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmailActionTokens.
+     */
+    cursor?: EmailActionTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailActionTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailActionTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmailActionTokens.
+     */
+    distinct?: EmailActionTokenScalarFieldEnum | EmailActionTokenScalarFieldEnum[]
+  }
+
+  /**
+   * EmailActionToken findFirstOrThrow
+   */
+  export type EmailActionTokenFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailActionToken to fetch.
+     */
+    where?: EmailActionTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailActionTokens to fetch.
+     */
+    orderBy?: EmailActionTokenOrderByWithRelationInput | EmailActionTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmailActionTokens.
+     */
+    cursor?: EmailActionTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailActionTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailActionTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmailActionTokens.
+     */
+    distinct?: EmailActionTokenScalarFieldEnum | EmailActionTokenScalarFieldEnum[]
+  }
+
+  /**
+   * EmailActionToken findMany
+   */
+  export type EmailActionTokenFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailActionTokens to fetch.
+     */
+    where?: EmailActionTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailActionTokens to fetch.
+     */
+    orderBy?: EmailActionTokenOrderByWithRelationInput | EmailActionTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EmailActionTokens.
+     */
+    cursor?: EmailActionTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailActionTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailActionTokens.
+     */
+    skip?: number
+    distinct?: EmailActionTokenScalarFieldEnum | EmailActionTokenScalarFieldEnum[]
+  }
+
+  /**
+   * EmailActionToken create
+   */
+  export type EmailActionTokenCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to create a EmailActionToken.
+     */
+    data: XOR<EmailActionTokenCreateInput, EmailActionTokenUncheckedCreateInput>
+  }
+
+  /**
+   * EmailActionToken createMany
+   */
+  export type EmailActionTokenCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EmailActionTokens.
+     */
+    data: EmailActionTokenCreateManyInput | EmailActionTokenCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EmailActionToken createManyAndReturn
+   */
+  export type EmailActionTokenCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * The data used to create many EmailActionTokens.
+     */
+    data: EmailActionTokenCreateManyInput | EmailActionTokenCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EmailActionToken update
+   */
+  export type EmailActionTokenUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to update a EmailActionToken.
+     */
+    data: XOR<EmailActionTokenUpdateInput, EmailActionTokenUncheckedUpdateInput>
+    /**
+     * Choose, which EmailActionToken to update.
+     */
+    where: EmailActionTokenWhereUniqueInput
+  }
+
+  /**
+   * EmailActionToken updateMany
+   */
+  export type EmailActionTokenUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EmailActionTokens.
+     */
+    data: XOR<EmailActionTokenUpdateManyMutationInput, EmailActionTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which EmailActionTokens to update
+     */
+    where?: EmailActionTokenWhereInput
+    /**
+     * Limit how many EmailActionTokens to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EmailActionToken updateManyAndReturn
+   */
+  export type EmailActionTokenUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * The data used to update EmailActionTokens.
+     */
+    data: XOR<EmailActionTokenUpdateManyMutationInput, EmailActionTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which EmailActionTokens to update
+     */
+    where?: EmailActionTokenWhereInput
+    /**
+     * Limit how many EmailActionTokens to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EmailActionToken upsert
+   */
+  export type EmailActionTokenUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenInclude<ExtArgs> | null
+    /**
+     * The filter to search for the EmailActionToken to update in case it exists.
+     */
+    where: EmailActionTokenWhereUniqueInput
+    /**
+     * In case the EmailActionToken found by the `where` argument doesn't exist, create a new EmailActionToken with this data.
+     */
+    create: XOR<EmailActionTokenCreateInput, EmailActionTokenUncheckedCreateInput>
+    /**
+     * In case the EmailActionToken was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EmailActionTokenUpdateInput, EmailActionTokenUncheckedUpdateInput>
+  }
+
+  /**
+   * EmailActionToken delete
+   */
+  export type EmailActionTokenDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenInclude<ExtArgs> | null
+    /**
+     * Filter which EmailActionToken to delete.
+     */
+    where: EmailActionTokenWhereUniqueInput
+  }
+
+  /**
+   * EmailActionToken deleteMany
+   */
+  export type EmailActionTokenDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmailActionTokens to delete
+     */
+    where?: EmailActionTokenWhereInput
+    /**
+     * Limit how many EmailActionTokens to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * EmailActionToken without action
+   */
+  export type EmailActionTokenDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailActionToken
+     */
+    select?: EmailActionTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailActionToken
+     */
+    omit?: EmailActionTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailActionTokenInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model InviteLink
    */
 
@@ -32878,6 +34210,11 @@ export namespace Prisma {
     id: 'id',
     organisationId: 'organisationId',
     email: 'email',
+    pendingEmail: 'pendingEmail',
+    emailVerifiedAt: 'emailVerifiedAt',
+    emailVerificationSentAt: 'emailVerificationSentAt',
+    pendingEmailRequestedAt: 'pendingEmailRequestedAt',
+    pendingEmailSentAt: 'pendingEmailSentAt',
     passwordHash: 'passwordHash',
     firstName: 'firstName',
     lastName: 'lastName',
@@ -33184,6 +34521,22 @@ export namespace Prisma {
   export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
+  export const EmailActionTokenScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    type: 'type',
+    tokenHash: 'tokenHash',
+    targetEmail: 'targetEmail',
+    expiresAt: 'expiresAt',
+    usedAt: 'usedAt',
+    invalidatedAt: 'invalidatedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type EmailActionTokenScalarFieldEnum = (typeof EmailActionTokenScalarFieldEnum)[keyof typeof EmailActionTokenScalarFieldEnum]
+
+
   export const InviteLinkScalarFieldEnum: {
     id: 'id',
     token: 'token',
@@ -33349,6 +34702,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Gender'
    */
   export type EnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Gender'>
@@ -33380,20 +34747,6 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
-   * Reference to a field of type 'DateTime'
-   */
-  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-  /**
-   * Reference to a field of type 'DateTime[]'
-   */
-  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -33594,6 +34947,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'EmailActionType'
+   */
+  export type EnumEmailActionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmailActionType'>
+    
+
+
+  /**
+   * Reference to a field of type 'EmailActionType[]'
+   */
+  export type ListEnumEmailActionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmailActionType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'InviteLinkType'
    */
   export type EnumInviteLinkTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InviteLinkType'>
@@ -33729,6 +35096,11 @@ export namespace Prisma {
     id?: StringFilter<"User"> | string
     organisationId?: StringNullableFilter<"User"> | string | null
     email?: StringFilter<"User"> | string
+    pendingEmail?: StringNullableFilter<"User"> | string | null
+    emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    emailVerificationSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    pendingEmailRequestedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    pendingEmailSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
     passwordHash?: StringFilter<"User"> | string
     firstName?: StringFilter<"User"> | string
     lastName?: StringFilter<"User"> | string
@@ -33752,6 +35124,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetListRelationFilter
     assetUploadSessions?: AssetUploadSessionListRelationFilter
     assetLifecycleEvents?: AssetLifecycleEventListRelationFilter
+    emailActionTokens?: EmailActionTokenListRelationFilter
     notifications?: NotificationListRelationFilter
     ledOrgGroups?: OrgGroupListRelationFilter
     reviewedEdits?: ReportEditListRelationFilter
@@ -33776,6 +35149,11 @@ export namespace Prisma {
     id?: SortOrder
     organisationId?: SortOrderInput | SortOrder
     email?: SortOrder
+    pendingEmail?: SortOrderInput | SortOrder
+    emailVerifiedAt?: SortOrderInput | SortOrder
+    emailVerificationSentAt?: SortOrderInput | SortOrder
+    pendingEmailRequestedAt?: SortOrderInput | SortOrder
+    pendingEmailSentAt?: SortOrderInput | SortOrder
     passwordHash?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
@@ -33799,6 +35177,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetOrderByRelationAggregateInput
     assetUploadSessions?: AssetUploadSessionOrderByRelationAggregateInput
     assetLifecycleEvents?: AssetLifecycleEventOrderByRelationAggregateInput
+    emailActionTokens?: EmailActionTokenOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     ledOrgGroups?: OrgGroupOrderByRelationAggregateInput
     reviewedEdits?: ReportEditOrderByRelationAggregateInput
@@ -33822,10 +35201,15 @@ export namespace Prisma {
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
+    pendingEmail?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     organisationId?: StringNullableFilter<"User"> | string | null
+    emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    emailVerificationSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    pendingEmailRequestedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    pendingEmailSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
     passwordHash?: StringFilter<"User"> | string
     firstName?: StringFilter<"User"> | string
     lastName?: StringFilter<"User"> | string
@@ -33849,6 +35233,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetListRelationFilter
     assetUploadSessions?: AssetUploadSessionListRelationFilter
     assetLifecycleEvents?: AssetLifecycleEventListRelationFilter
+    emailActionTokens?: EmailActionTokenListRelationFilter
     notifications?: NotificationListRelationFilter
     ledOrgGroups?: OrgGroupListRelationFilter
     reviewedEdits?: ReportEditListRelationFilter
@@ -33867,12 +35252,17 @@ export namespace Prisma {
     submittedReports?: ReportListRelationFilter
     campus?: XOR<CampusNullableScalarRelationFilter, CampusWhereInput> | null
     orgGroup?: XOR<OrgGroupNullableScalarRelationFilter, OrgGroupWhereInput> | null
-  }, "id" | "email">
+  }, "id" | "email" | "pendingEmail">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     organisationId?: SortOrderInput | SortOrder
     email?: SortOrder
+    pendingEmail?: SortOrderInput | SortOrder
+    emailVerifiedAt?: SortOrderInput | SortOrder
+    emailVerificationSentAt?: SortOrderInput | SortOrder
+    pendingEmailRequestedAt?: SortOrderInput | SortOrder
+    pendingEmailSentAt?: SortOrderInput | SortOrder
     passwordHash?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
@@ -33898,6 +35288,11 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"User"> | string
     organisationId?: StringNullableWithAggregatesFilter<"User"> | string | null
     email?: StringWithAggregatesFilter<"User"> | string
+    pendingEmail?: StringNullableWithAggregatesFilter<"User"> | string | null
+    emailVerifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    emailVerificationSentAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    pendingEmailRequestedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    pendingEmailSentAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     passwordHash?: StringWithAggregatesFilter<"User"> | string
     firstName?: StringWithAggregatesFilter<"User"> | string
     lastName?: StringWithAggregatesFilter<"User"> | string
@@ -35520,6 +36915,86 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
   }
 
+  export type EmailActionTokenWhereInput = {
+    AND?: EmailActionTokenWhereInput | EmailActionTokenWhereInput[]
+    OR?: EmailActionTokenWhereInput[]
+    NOT?: EmailActionTokenWhereInput | EmailActionTokenWhereInput[]
+    id?: StringFilter<"EmailActionToken"> | string
+    userId?: StringFilter<"EmailActionToken"> | string
+    type?: EnumEmailActionTypeFilter<"EmailActionToken"> | $Enums.EmailActionType
+    tokenHash?: StringFilter<"EmailActionToken"> | string
+    targetEmail?: StringNullableFilter<"EmailActionToken"> | string | null
+    expiresAt?: DateTimeFilter<"EmailActionToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"EmailActionToken"> | Date | string | null
+    invalidatedAt?: DateTimeNullableFilter<"EmailActionToken"> | Date | string | null
+    createdAt?: DateTimeFilter<"EmailActionToken"> | Date | string
+    updatedAt?: DateTimeFilter<"EmailActionToken"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type EmailActionTokenOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    tokenHash?: SortOrder
+    targetEmail?: SortOrderInput | SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    invalidatedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type EmailActionTokenWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    tokenHash?: string
+    AND?: EmailActionTokenWhereInput | EmailActionTokenWhereInput[]
+    OR?: EmailActionTokenWhereInput[]
+    NOT?: EmailActionTokenWhereInput | EmailActionTokenWhereInput[]
+    userId?: StringFilter<"EmailActionToken"> | string
+    type?: EnumEmailActionTypeFilter<"EmailActionToken"> | $Enums.EmailActionType
+    targetEmail?: StringNullableFilter<"EmailActionToken"> | string | null
+    expiresAt?: DateTimeFilter<"EmailActionToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"EmailActionToken"> | Date | string | null
+    invalidatedAt?: DateTimeNullableFilter<"EmailActionToken"> | Date | string | null
+    createdAt?: DateTimeFilter<"EmailActionToken"> | Date | string
+    updatedAt?: DateTimeFilter<"EmailActionToken"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "tokenHash">
+
+  export type EmailActionTokenOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    tokenHash?: SortOrder
+    targetEmail?: SortOrderInput | SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    invalidatedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: EmailActionTokenCountOrderByAggregateInput
+    _max?: EmailActionTokenMaxOrderByAggregateInput
+    _min?: EmailActionTokenMinOrderByAggregateInput
+  }
+
+  export type EmailActionTokenScalarWhereWithAggregatesInput = {
+    AND?: EmailActionTokenScalarWhereWithAggregatesInput | EmailActionTokenScalarWhereWithAggregatesInput[]
+    OR?: EmailActionTokenScalarWhereWithAggregatesInput[]
+    NOT?: EmailActionTokenScalarWhereWithAggregatesInput | EmailActionTokenScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"EmailActionToken"> | string
+    userId?: StringWithAggregatesFilter<"EmailActionToken"> | string
+    type?: EnumEmailActionTypeWithAggregatesFilter<"EmailActionToken"> | $Enums.EmailActionType
+    tokenHash?: StringWithAggregatesFilter<"EmailActionToken"> | string
+    targetEmail?: StringNullableWithAggregatesFilter<"EmailActionToken"> | string | null
+    expiresAt?: DateTimeWithAggregatesFilter<"EmailActionToken"> | Date | string
+    usedAt?: DateTimeNullableWithAggregatesFilter<"EmailActionToken"> | Date | string | null
+    invalidatedAt?: DateTimeNullableWithAggregatesFilter<"EmailActionToken"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"EmailActionToken"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"EmailActionToken"> | Date | string
+  }
+
   export type InviteLinkWhereInput = {
     AND?: InviteLinkWhereInput | InviteLinkWhereInput[]
     OR?: InviteLinkWhereInput[]
@@ -36036,6 +37511,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -36057,6 +37537,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -36081,6 +37562,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -36104,6 +37590,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -36126,6 +37613,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -36147,6 +37639,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -36171,6 +37664,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -36194,6 +37692,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -36216,6 +37715,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -36235,6 +37739,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -36252,6 +37761,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -37976,6 +39490,96 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type EmailActionTokenCreateInput = {
+    id?: string
+    type: $Enums.EmailActionType
+    tokenHash: string
+    targetEmail?: string | null
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    invalidatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutEmailActionTokensInput
+  }
+
+  export type EmailActionTokenUncheckedCreateInput = {
+    id?: string
+    userId: string
+    type: $Enums.EmailActionType
+    tokenHash: string
+    targetEmail?: string | null
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    invalidatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EmailActionTokenUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumEmailActionTypeFieldUpdateOperationsInput | $Enums.EmailActionType
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    targetEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invalidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutEmailActionTokensNestedInput
+  }
+
+  export type EmailActionTokenUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumEmailActionTypeFieldUpdateOperationsInput | $Enums.EmailActionType
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    targetEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invalidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailActionTokenCreateManyInput = {
+    id?: string
+    userId: string
+    type: $Enums.EmailActionType
+    tokenHash: string
+    targetEmail?: string | null
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    invalidatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EmailActionTokenUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumEmailActionTypeFieldUpdateOperationsInput | $Enums.EmailActionType
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    targetEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invalidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailActionTokenUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumEmailActionTypeFieldUpdateOperationsInput | $Enums.EmailActionType
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    targetEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invalidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type InviteLinkCreateInput = {
     id?: string
     token: string
@@ -38587,6 +40191,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type EnumGenderNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.Gender | EnumGenderFieldRefInput<$PrismaModel> | null
     in?: $Enums.Gender[] | ListEnumGenderFieldRefInput<$PrismaModel> | null
@@ -38663,6 +40278,12 @@ export namespace Prisma {
     every?: AssetLifecycleEventWhereInput
     some?: AssetLifecycleEventWhereInput
     none?: AssetLifecycleEventWhereInput
+  }
+
+  export type EmailActionTokenListRelationFilter = {
+    every?: EmailActionTokenWhereInput
+    some?: EmailActionTokenWhereInput
+    none?: EmailActionTokenWhereInput
   }
 
   export type NotificationListRelationFilter = {
@@ -38772,6 +40393,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type EmailActionTokenOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type NotificationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -38816,6 +40441,11 @@ export namespace Prisma {
     id?: SortOrder
     organisationId?: SortOrder
     email?: SortOrder
+    pendingEmail?: SortOrder
+    emailVerifiedAt?: SortOrder
+    emailVerificationSentAt?: SortOrder
+    pendingEmailRequestedAt?: SortOrder
+    pendingEmailSentAt?: SortOrder
     passwordHash?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
@@ -38835,6 +40465,11 @@ export namespace Prisma {
     id?: SortOrder
     organisationId?: SortOrder
     email?: SortOrder
+    pendingEmail?: SortOrder
+    emailVerifiedAt?: SortOrder
+    emailVerificationSentAt?: SortOrder
+    pendingEmailRequestedAt?: SortOrder
+    pendingEmailSentAt?: SortOrder
     passwordHash?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
@@ -38854,6 +40489,11 @@ export namespace Prisma {
     id?: SortOrder
     organisationId?: SortOrder
     email?: SortOrder
+    pendingEmail?: SortOrder
+    emailVerifiedAt?: SortOrder
+    emailVerificationSentAt?: SortOrder
+    pendingEmailRequestedAt?: SortOrder
+    pendingEmailSentAt?: SortOrder
     passwordHash?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
@@ -38903,6 +40543,20 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type EnumGenderNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -39488,17 +41142,6 @@ export namespace Prisma {
     not?: NestedEnumReportStatusFilter<$PrismaModel> | $Enums.ReportStatus
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type ReportSectionListRelationFilter = {
     every?: ReportSectionWhereInput
     some?: ReportSectionWhereInput
@@ -39628,20 +41271,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumReportStatusFilter<$PrismaModel>
     _max?: NestedEnumReportStatusFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type ReportScalarRelationFilter = {
@@ -40265,6 +41894,62 @@ export namespace Prisma {
     _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
   }
 
+  export type EnumEmailActionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.EmailActionType | EnumEmailActionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EmailActionType[] | ListEnumEmailActionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EmailActionType[] | ListEnumEmailActionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEmailActionTypeFilter<$PrismaModel> | $Enums.EmailActionType
+  }
+
+  export type EmailActionTokenCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    tokenHash?: SortOrder
+    targetEmail?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    invalidatedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EmailActionTokenMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    tokenHash?: SortOrder
+    targetEmail?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    invalidatedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EmailActionTokenMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    type?: SortOrder
+    tokenHash?: SortOrder
+    targetEmail?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    invalidatedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumEmailActionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EmailActionType | EnumEmailActionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EmailActionType[] | ListEnumEmailActionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EmailActionType[] | ListEnumEmailActionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEmailActionTypeWithAggregatesFilter<$PrismaModel> | $Enums.EmailActionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEmailActionTypeFilter<$PrismaModel>
+    _max?: NestedEnumEmailActionTypeFilter<$PrismaModel>
+  }
+
   export type EnumInviteLinkTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.InviteLinkType | EnumInviteLinkTypeFieldRefInput<$PrismaModel>
     in?: $Enums.InviteLinkType[] | ListEnumInviteLinkTypeFieldRefInput<$PrismaModel>
@@ -40823,6 +42508,13 @@ export namespace Prisma {
     connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
   }
 
+  export type EmailActionTokenCreateNestedManyWithoutUserInput = {
+    create?: XOR<EmailActionTokenCreateWithoutUserInput, EmailActionTokenUncheckedCreateWithoutUserInput> | EmailActionTokenCreateWithoutUserInput[] | EmailActionTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailActionTokenCreateOrConnectWithoutUserInput | EmailActionTokenCreateOrConnectWithoutUserInput[]
+    createMany?: EmailActionTokenCreateManyUserInputEnvelope
+    connect?: EmailActionTokenWhereUniqueInput | EmailActionTokenWhereUniqueInput[]
+  }
+
   export type NotificationCreateNestedManyWithoutUserInput = {
     create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
@@ -41017,6 +42709,13 @@ export namespace Prisma {
     connect?: AssetLifecycleEventWhereUniqueInput | AssetLifecycleEventWhereUniqueInput[]
   }
 
+  export type EmailActionTokenUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<EmailActionTokenCreateWithoutUserInput, EmailActionTokenUncheckedCreateWithoutUserInput> | EmailActionTokenCreateWithoutUserInput[] | EmailActionTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailActionTokenCreateOrConnectWithoutUserInput | EmailActionTokenCreateOrConnectWithoutUserInput[]
+    createMany?: EmailActionTokenCreateManyUserInputEnvelope
+    connect?: EmailActionTokenWhereUniqueInput | EmailActionTokenWhereUniqueInput[]
+  }
+
   export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
@@ -41135,6 +42834,10 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type NullableEnumGenderFieldUpdateOperationsInput = {
@@ -41291,6 +42994,20 @@ export namespace Prisma {
     update?: AssetLifecycleEventUpdateWithWhereUniqueWithoutActorInput | AssetLifecycleEventUpdateWithWhereUniqueWithoutActorInput[]
     updateMany?: AssetLifecycleEventUpdateManyWithWhereWithoutActorInput | AssetLifecycleEventUpdateManyWithWhereWithoutActorInput[]
     deleteMany?: AssetLifecycleEventScalarWhereInput | AssetLifecycleEventScalarWhereInput[]
+  }
+
+  export type EmailActionTokenUpdateManyWithoutUserNestedInput = {
+    create?: XOR<EmailActionTokenCreateWithoutUserInput, EmailActionTokenUncheckedCreateWithoutUserInput> | EmailActionTokenCreateWithoutUserInput[] | EmailActionTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailActionTokenCreateOrConnectWithoutUserInput | EmailActionTokenCreateOrConnectWithoutUserInput[]
+    upsert?: EmailActionTokenUpsertWithWhereUniqueWithoutUserInput | EmailActionTokenUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: EmailActionTokenCreateManyUserInputEnvelope
+    set?: EmailActionTokenWhereUniqueInput | EmailActionTokenWhereUniqueInput[]
+    disconnect?: EmailActionTokenWhereUniqueInput | EmailActionTokenWhereUniqueInput[]
+    delete?: EmailActionTokenWhereUniqueInput | EmailActionTokenWhereUniqueInput[]
+    connect?: EmailActionTokenWhereUniqueInput | EmailActionTokenWhereUniqueInput[]
+    update?: EmailActionTokenUpdateWithWhereUniqueWithoutUserInput | EmailActionTokenUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: EmailActionTokenUpdateManyWithWhereWithoutUserInput | EmailActionTokenUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EmailActionTokenScalarWhereInput | EmailActionTokenScalarWhereInput[]
   }
 
   export type NotificationUpdateManyWithoutUserNestedInput = {
@@ -41675,6 +43392,20 @@ export namespace Prisma {
     update?: AssetLifecycleEventUpdateWithWhereUniqueWithoutActorInput | AssetLifecycleEventUpdateWithWhereUniqueWithoutActorInput[]
     updateMany?: AssetLifecycleEventUpdateManyWithWhereWithoutActorInput | AssetLifecycleEventUpdateManyWithWhereWithoutActorInput[]
     deleteMany?: AssetLifecycleEventScalarWhereInput | AssetLifecycleEventScalarWhereInput[]
+  }
+
+  export type EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<EmailActionTokenCreateWithoutUserInput, EmailActionTokenUncheckedCreateWithoutUserInput> | EmailActionTokenCreateWithoutUserInput[] | EmailActionTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailActionTokenCreateOrConnectWithoutUserInput | EmailActionTokenCreateOrConnectWithoutUserInput[]
+    upsert?: EmailActionTokenUpsertWithWhereUniqueWithoutUserInput | EmailActionTokenUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: EmailActionTokenCreateManyUserInputEnvelope
+    set?: EmailActionTokenWhereUniqueInput | EmailActionTokenWhereUniqueInput[]
+    disconnect?: EmailActionTokenWhereUniqueInput | EmailActionTokenWhereUniqueInput[]
+    delete?: EmailActionTokenWhereUniqueInput | EmailActionTokenWhereUniqueInput[]
+    connect?: EmailActionTokenWhereUniqueInput | EmailActionTokenWhereUniqueInput[]
+    update?: EmailActionTokenUpdateWithWhereUniqueWithoutUserInput | EmailActionTokenUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: EmailActionTokenUpdateManyWithWhereWithoutUserInput | EmailActionTokenUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EmailActionTokenScalarWhereInput | EmailActionTokenScalarWhereInput[]
   }
 
   export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
@@ -42851,10 +44582,6 @@ export namespace Prisma {
     set?: $Enums.ReportStatus
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type ReportEditUpdateManyWithoutReportNestedInput = {
     create?: XOR<ReportEditCreateWithoutReportInput, ReportEditUncheckedCreateWithoutReportInput> | ReportEditCreateWithoutReportInput[] | ReportEditUncheckedCreateWithoutReportInput[]
     connectOrCreate?: ReportEditCreateOrConnectWithoutReportInput | ReportEditCreateOrConnectWithoutReportInput[]
@@ -43567,6 +45294,24 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotificationsInput, UserUpdateWithoutNotificationsInput>, UserUncheckedUpdateWithoutNotificationsInput>
   }
 
+  export type UserCreateNestedOneWithoutEmailActionTokensInput = {
+    create?: XOR<UserCreateWithoutEmailActionTokensInput, UserUncheckedCreateWithoutEmailActionTokensInput>
+    connectOrCreate?: UserCreateOrConnectWithoutEmailActionTokensInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumEmailActionTypeFieldUpdateOperationsInput = {
+    set?: $Enums.EmailActionType
+  }
+
+  export type UserUpdateOneRequiredWithoutEmailActionTokensNestedInput = {
+    create?: XOR<UserCreateWithoutEmailActionTokensInput, UserUncheckedCreateWithoutEmailActionTokensInput>
+    connectOrCreate?: UserCreateOrConnectWithoutEmailActionTokensInput
+    upsert?: UserUpsertWithoutEmailActionTokensInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEmailActionTokensInput, UserUpdateWithoutEmailActionTokensInput>, UserUncheckedUpdateWithoutEmailActionTokensInput>
+  }
+
   export type UserCreateNestedOneWithoutCreatedInviteLinksInput = {
     create?: XOR<UserCreateWithoutCreatedInviteLinksInput, UserUncheckedCreateWithoutCreatedInviteLinksInput>
     connectOrCreate?: UserCreateOrConnectWithoutCreatedInviteLinksInput
@@ -43939,6 +45684,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedEnumGenderNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.Gender | EnumGenderFieldRefInput<$PrismaModel> | null
     in?: $Enums.Gender[] | ListEnumGenderFieldRefInput<$PrismaModel> | null
@@ -44023,6 +45779,20 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumGenderNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -44225,17 +45995,6 @@ export namespace Prisma {
     not?: NestedEnumReportStatusFilter<$PrismaModel> | $Enums.ReportStatus
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedEnumReportPeriodTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ReportPeriodType | EnumReportPeriodTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ReportPeriodType[] | ListEnumReportPeriodTypeFieldRefInput<$PrismaModel>
@@ -44254,20 +46013,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumReportStatusFilter<$PrismaModel>
     _max?: NestedEnumReportStatusFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumReportEditStatusFilter<$PrismaModel = never> = {
@@ -44403,6 +46148,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
     _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumEmailActionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.EmailActionType | EnumEmailActionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EmailActionType[] | ListEnumEmailActionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EmailActionType[] | ListEnumEmailActionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEmailActionTypeFilter<$PrismaModel> | $Enums.EmailActionType
+  }
+
+  export type NestedEnumEmailActionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EmailActionType | EnumEmailActionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EmailActionType[] | ListEnumEmailActionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EmailActionType[] | ListEnumEmailActionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEmailActionTypeWithAggregatesFilter<$PrismaModel> | $Enums.EmailActionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEmailActionTypeFilter<$PrismaModel>
+    _max?: NestedEnumEmailActionTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumInviteLinkTypeFilter<$PrismaModel = never> = {
@@ -45021,6 +46783,40 @@ export namespace Prisma {
 
   export type AssetLifecycleEventCreateManyActorInputEnvelope = {
     data: AssetLifecycleEventCreateManyActorInput | AssetLifecycleEventCreateManyActorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type EmailActionTokenCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.EmailActionType
+    tokenHash: string
+    targetEmail?: string | null
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    invalidatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EmailActionTokenUncheckedCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.EmailActionType
+    tokenHash: string
+    targetEmail?: string | null
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    invalidatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EmailActionTokenCreateOrConnectWithoutUserInput = {
+    where: EmailActionTokenWhereUniqueInput
+    create: XOR<EmailActionTokenCreateWithoutUserInput, EmailActionTokenUncheckedCreateWithoutUserInput>
+  }
+
+  export type EmailActionTokenCreateManyUserInputEnvelope = {
+    data: EmailActionTokenCreateManyUserInput | EmailActionTokenCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -46171,6 +47967,38 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AssetLifecycleEvent"> | Date | string
   }
 
+  export type EmailActionTokenUpsertWithWhereUniqueWithoutUserInput = {
+    where: EmailActionTokenWhereUniqueInput
+    update: XOR<EmailActionTokenUpdateWithoutUserInput, EmailActionTokenUncheckedUpdateWithoutUserInput>
+    create: XOR<EmailActionTokenCreateWithoutUserInput, EmailActionTokenUncheckedCreateWithoutUserInput>
+  }
+
+  export type EmailActionTokenUpdateWithWhereUniqueWithoutUserInput = {
+    where: EmailActionTokenWhereUniqueInput
+    data: XOR<EmailActionTokenUpdateWithoutUserInput, EmailActionTokenUncheckedUpdateWithoutUserInput>
+  }
+
+  export type EmailActionTokenUpdateManyWithWhereWithoutUserInput = {
+    where: EmailActionTokenScalarWhereInput
+    data: XOR<EmailActionTokenUpdateManyMutationInput, EmailActionTokenUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type EmailActionTokenScalarWhereInput = {
+    AND?: EmailActionTokenScalarWhereInput | EmailActionTokenScalarWhereInput[]
+    OR?: EmailActionTokenScalarWhereInput[]
+    NOT?: EmailActionTokenScalarWhereInput | EmailActionTokenScalarWhereInput[]
+    id?: StringFilter<"EmailActionToken"> | string
+    userId?: StringFilter<"EmailActionToken"> | string
+    type?: EnumEmailActionTypeFilter<"EmailActionToken"> | $Enums.EmailActionType
+    tokenHash?: StringFilter<"EmailActionToken"> | string
+    targetEmail?: StringNullableFilter<"EmailActionToken"> | string | null
+    expiresAt?: DateTimeFilter<"EmailActionToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"EmailActionToken"> | Date | string | null
+    invalidatedAt?: DateTimeNullableFilter<"EmailActionToken"> | Date | string | null
+    createdAt?: DateTimeFilter<"EmailActionToken"> | Date | string
+    updatedAt?: DateTimeFilter<"EmailActionToken"> | Date | string
+  }
+
   export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
     where: NotificationWhereUniqueInput
     update: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
@@ -46791,6 +48619,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -46812,6 +48645,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
     reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
@@ -46835,6 +48669,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -46858,6 +48697,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
     reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
@@ -46958,6 +48798,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -46979,6 +48824,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -47002,6 +48848,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -47024,6 +48875,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -47099,6 +48951,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -47120,6 +48977,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
     reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
@@ -47143,6 +49001,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -47166,6 +49029,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
     reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
@@ -47222,6 +49086,11 @@ export namespace Prisma {
     id?: StringFilter<"User"> | string
     organisationId?: StringNullableFilter<"User"> | string | null
     email?: StringFilter<"User"> | string
+    pendingEmail?: StringNullableFilter<"User"> | string | null
+    emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    emailVerificationSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    pendingEmailRequestedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    pendingEmailSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
     passwordHash?: StringFilter<"User"> | string
     firstName?: StringFilter<"User"> | string
     lastName?: StringFilter<"User"> | string
@@ -47241,6 +49110,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -47261,6 +49135,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -47285,6 +49160,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -47307,6 +49187,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -47525,6 +49406,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -47546,6 +49432,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -47569,6 +49456,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -47591,6 +49483,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -47634,6 +49527,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -47654,6 +49552,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -47678,6 +49577,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -47700,6 +49604,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -47944,6 +49849,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -47965,6 +49875,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -47988,6 +49899,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -48011,6 +49927,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -48182,6 +50099,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -48203,6 +50125,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -48226,6 +50149,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -48249,6 +50177,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -48687,6 +50616,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -48708,6 +50642,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -48731,6 +50666,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -48754,6 +50694,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -48836,6 +50777,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -48857,6 +50803,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -48880,6 +50827,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -48903,6 +50855,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -49127,6 +51080,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -49148,6 +51106,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -49171,6 +51130,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -49194,6 +51158,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -49265,6 +51230,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -49286,6 +51256,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -49309,6 +51280,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -49332,6 +51308,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -49358,6 +51335,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -49379,6 +51361,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -49402,6 +51385,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -49425,6 +51413,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -49484,6 +51473,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -49505,6 +51499,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -49528,6 +51523,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -49551,6 +51551,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -49577,6 +51578,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -49598,6 +51604,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -49621,6 +51628,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -49644,6 +51656,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -49816,6 +51829,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -49837,6 +51855,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -49860,6 +51879,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -49883,6 +51907,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -49966,6 +51991,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -49987,6 +52017,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -50010,6 +52041,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -50033,6 +52069,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -50065,6 +52102,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -50086,6 +52128,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -50109,6 +52152,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -50132,6 +52180,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -50203,6 +52252,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -50224,6 +52278,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -50247,6 +52302,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -50270,6 +52330,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -50302,6 +52363,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -50323,6 +52389,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -50346,6 +52413,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -50369,6 +52441,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -50641,6 +52714,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -50662,6 +52740,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -50685,6 +52764,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -50708,6 +52792,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -50805,6 +52890,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -50826,6 +52916,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -50849,6 +52940,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -50872,6 +52968,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -51034,6 +53131,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -51055,6 +53157,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
@@ -51078,6 +53181,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -51101,6 +53209,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
@@ -51127,6 +53236,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -51148,6 +53262,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -51171,6 +53286,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -51194,6 +53314,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -51306,6 +53427,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -51327,6 +53453,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
@@ -51350,6 +53477,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -51373,6 +53505,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
@@ -51405,6 +53538,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -51426,6 +53564,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -51449,6 +53588,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -51472,6 +53616,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -51562,6 +53707,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -51583,6 +53733,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -51606,6 +53757,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -51629,6 +53785,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -51655,6 +53812,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -51676,6 +53838,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -51699,6 +53862,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -51722,6 +53890,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -51834,6 +54003,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -51855,6 +54029,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -51878,6 +54053,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -51901,6 +54081,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -51933,6 +54114,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -51954,6 +54140,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -51977,6 +54164,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -52000,6 +54192,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -52021,6 +54214,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -52042,6 +54240,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -52065,6 +54264,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -52088,6 +54292,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -52194,6 +54399,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -52215,6 +54425,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -52238,6 +54449,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -52261,6 +54477,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -52357,6 +54574,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -52378,6 +54600,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -52401,6 +54624,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -52424,6 +54652,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -52530,6 +54759,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -52551,6 +54785,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -52574,6 +54809,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -52597,6 +54837,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -52772,6 +55013,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -52792,6 +55038,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -52816,6 +55063,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -52838,6 +55090,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -52865,6 +55118,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -52885,6 +55143,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -52909,6 +55168,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -52931,6 +55195,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -53155,6 +55420,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -53175,6 +55445,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -53199,6 +55470,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -53221,6 +55497,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -53254,6 +55531,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -53274,6 +55556,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -53298,6 +55581,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -53320,6 +55608,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -53522,6 +55811,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -53542,6 +55836,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -53566,6 +55861,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -53588,6 +55888,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -53615,6 +55916,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -53635,6 +55941,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -53659,6 +55966,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -53681,6 +55993,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -53768,6 +56081,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -53788,6 +56106,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -53812,6 +56131,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -53834,6 +56158,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -53867,6 +56192,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -53887,6 +56217,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -53911,6 +56242,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -53933,6 +56269,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -54139,6 +56476,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -54160,6 +56502,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
     reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
@@ -54183,6 +56526,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -54206,6 +56554,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
     reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
@@ -54243,6 +56592,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -54264,6 +56618,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
     reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
@@ -54287,6 +56642,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -54310,6 +56670,223 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+  }
+
+  export type UserCreateWithoutEmailActionTokensInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutEmailActionTokensInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+  }
+
+  export type UserCreateOrConnectWithoutEmailActionTokensInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutEmailActionTokensInput, UserUncheckedCreateWithoutEmailActionTokensInput>
+  }
+
+  export type UserUpsertWithoutEmailActionTokensInput = {
+    update: XOR<UserUpdateWithoutEmailActionTokensInput, UserUncheckedUpdateWithoutEmailActionTokensInput>
+    create: XOR<UserCreateWithoutEmailActionTokensInput, UserUncheckedCreateWithoutEmailActionTokensInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutEmailActionTokensInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutEmailActionTokensInput, UserUncheckedUpdateWithoutEmailActionTokensInput>
+  }
+
+  export type UserUpdateWithoutEmailActionTokensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutEmailActionTokensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
     reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
@@ -54331,6 +56908,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -54351,6 +56933,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -54375,6 +56958,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -54397,6 +56985,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -54435,6 +57024,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -54455,6 +57049,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -54479,6 +57074,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -54501,6 +57101,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -54523,6 +57124,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -54543,6 +57149,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -54567,6 +57174,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -54589,6 +57201,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -54686,6 +57299,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -54706,6 +57324,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -54730,6 +57349,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -54752,6 +57376,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -54839,6 +57464,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -54859,6 +57489,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -54883,6 +57514,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -54905,6 +57541,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -55051,6 +57688,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -55071,6 +57713,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -55095,6 +57738,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -55117,6 +57765,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -55187,6 +57836,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -55207,6 +57861,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -55231,6 +57886,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -55253,6 +57913,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -55380,6 +58041,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -55400,6 +58066,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -55424,6 +58091,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -55446,6 +58118,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -55645,6 +58318,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -55665,6 +58343,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
     mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
@@ -55689,6 +58368,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -55711,6 +58395,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
     mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
     assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
     reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
@@ -55857,6 +58542,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -55877,6 +58567,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -55901,6 +58592,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -55923,6 +58619,7 @@ export namespace Prisma {
     createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -56092,6 +58789,18 @@ export namespace Prisma {
     details?: NullableJsonNullValueInput | InputJsonValue
     requestId?: string | null
     createdAt?: Date | string
+  }
+
+  export type EmailActionTokenCreateManyUserInput = {
+    id?: string
+    type: $Enums.EmailActionType
+    tokenHash: string
+    targetEmail?: string | null
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    invalidatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type NotificationCreateManyUserInput = {
@@ -56835,6 +59544,42 @@ export namespace Prisma {
     details?: NullableJsonNullValueInput | InputJsonValue
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailActionTokenUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumEmailActionTypeFieldUpdateOperationsInput | $Enums.EmailActionType
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    targetEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invalidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailActionTokenUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumEmailActionTypeFieldUpdateOperationsInput | $Enums.EmailActionType
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    targetEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invalidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailActionTokenUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumEmailActionTypeFieldUpdateOperationsInput | $Enums.EmailActionType
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    targetEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    invalidatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationUpdateWithoutUserInput = {
@@ -57760,6 +60505,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -57981,6 +60731,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -58002,6 +60757,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -58025,6 +60781,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -58047,6 +60808,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -58069,6 +60831,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -58145,6 +60912,11 @@ export namespace Prisma {
     id?: string
     organisationId?: string | null
     email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
     passwordHash: string
     firstName: string
     lastName: string
@@ -58349,6 +61121,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -58370,6 +61147,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
@@ -58393,6 +61171,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
@@ -58415,6 +61198,7 @@ export namespace Prisma {
     mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
     assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
     assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
     reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -58437,6 +61221,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organisationId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordHash?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string

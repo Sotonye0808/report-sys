@@ -45,6 +45,29 @@ If payload shape differs, route is not yet on the unified contract path.
 
 Use targeted `npx tsx` test execution + `npm run typecheck` until tooling pass lands.
 
+## 5b) Email Verification and Change Flow Diagnostics
+
+- Readiness gate:
+  - `RESEND_API_KEY`, `EMAIL_FROM`, and `NEXT_PUBLIC_APP_URL` must all be present.
+  - If any is missing, email-send paths should skip safely and return non-fatal readiness flags.
+- Token flow endpoints:
+  - `POST /api/auth/email-verification/request`
+  - `POST /api/auth/email-verification/confirm`
+  - `GET /api/auth/email-verification/status`
+  - `POST /api/auth/email-change/request`
+  - `POST /api/auth/email-change/confirm`
+- Verification landing route:
+  - `/verify-email?token=<token>&mode=verify|change`
+
+## 5c) Migration Drift Remediation Without Data Loss
+
+- If reset is not allowed, do not run `prisma migrate reset`.
+- Use non-destructive migration application first:
+  - `npx prisma migrate deploy`
+- If migration history and database state diverge, reconcile migration history explicitly with `prisma migrate resolve` (`--applied` or `--rolled-back`) before deploy.
+- Validate final state with:
+  - `npx prisma migrate status`
+
 ## 6) Known Incident Signature — Pending Writes + 504 + Non-JSON Error
 
 Symptoms:

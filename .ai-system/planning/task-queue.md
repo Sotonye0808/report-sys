@@ -72,6 +72,25 @@
 - [x] Add design system audit to ensure all analytics charts conform to token colors and accessible text in `modules/analytics`.
 - [x] Polish dashboard CTA copy and analytics behavior: neutral org-scoped CTA wording, fix pending-review/quarter-compliance KPI accuracy, add metrics period selector (week/month/quarter), and add overflow-safe chart containers with cross-tab chart controls in platform analytics.
 
+### Planned Feature — Email Verification + Email Change + Inbox Parity + Footer
+
+- [x] Add email verification data model support in `prisma/schema.prisma` (verification status, timestamps, token hash/expiry + pending email change fields) and generate/apply migration.
+- [x] Add server email-service readiness helper (`RESEND_API_KEY` + `EMAIL_FROM`) and expose readiness + verification state in auth/profile payloads (`/api/auth/me`, `/api/auth/login`, `/api/auth/refresh`, `/api/users/profile`).
+- [x] Add verification token lifecycle APIs: send/resend verification, verify token, verification status check, and cancel/rotate stale tokens (non-blocking when email service is not configured).
+- [x] Wire registration and invite-join flows to create verification state and trigger send/resend verification email when service readiness is true.
+- [x] Keep login non-blocking for unverified users, but include deterministic verification flags in returned auth user payload for contextual UI prompts.
+- [x] Add legacy-user verification bootstrap flow: create inbox verification prompt + dashboard CTA for existing unverified users only when email service readiness is true.
+- [x] Extend notification domain model/types/content to include email verification notifications and ensure routing target is the verification UI.
+- [x] Implement email change flow APIs (request change, confirm via token, optional rollback window), with safe uniqueness checks and notification fan-out to old/new addresses.
+- [x] Build user-facing UI for email verification and email change in profile/auth surfaces (show destination email address, resend action, pending-change state, success/error feedback).
+- [x] Add dedicated verification landing UI route for token consumption and post-verification status display.
+- [x] Ensure inbox availability for all authenticated roles by removing residual role-gating gaps (include `MEMBER` in inbox route/nav) and add guard tests that superadmin/member can access and receive inbox items.
+- [x] Audit and patch notification recipient paths so superadmin and every role can receive in-app notifications for applicable events; add targeted regressions for recipient delivery.
+- [x] Expand email template registry + Resend helpers with verification and email-change templates (request, confirmed, fallback copy) while keeping email sends environment-gated and non-blocking.
+- [x] Add config-driven global footer component (HICC identity, dynamic current year, developer credit/link) and mount it consistently in auth/dashboard shells.
+- [x] Add/refresh integration tests for verification lifecycle, email-change lifecycle, readiness-gated behavior, legacy-user prompts, inbox role parity, and footer rendering.
+- [x] Update `.env.example` and `.ai-system` docs (`system-architecture.md`, diagnostics, repair patterns) with new env/config keys, data flow, and failure handling guidance.
+
 ---
 
 ## Backlog

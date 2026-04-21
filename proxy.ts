@@ -86,7 +86,7 @@ const JWT_SECRET = new TextEncoder().encode(
 );
 
 /** Auth pages — redirect to dashboard if already logged in */
-const PUBLIC_ROUTES = ["/login", "/register", "/forgot-password", "/reset-password", "/join"];
+const PUBLIC_ROUTES = ["/login", "/register", "/forgot-password", "/reset-password", "/join", "/verify-email"];
 
 /** Routes accessible only to SUPERADMIN */
 const SUPERADMIN_ROUTES = ["/templates", "/users", "/org", "/invites", "/goals"];

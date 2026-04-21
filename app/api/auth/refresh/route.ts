@@ -13,6 +13,8 @@ import {
     unauthorizedResponse,
     handleApiError,
 } from "@/lib/utils/api";
+import { isEmailServiceReady } from "@/lib/utils/emailServiceReadiness";
+import { syncVerificationPromptForUser } from "@/modules/auth/services/emailVerificationService";
 
 const RefreshSchema = z.object({}).optional();
 
@@ -35,13 +37,21 @@ export async function POST(req: NextRequest) {
         const authUser: AuthUser = {
             id: userProfile.id,
             email: userProfile.email,
+            pendingEmail: (userProfile as any).pendingEmail ?? undefined,
             firstName: userProfile.firstName,
             lastName: userProfile.lastName,
             role: userProfile.role as UserRole,
             campusId: userProfile.campusId ?? undefined,
             orgGroupId: userProfile.orgGroupId ?? undefined,
             avatar: userProfile.avatar ?? undefined,
+            isEmailVerified: Boolean((userProfile as any).emailVerifiedAt),
+            emailVerifiedAt: (userProfile as any).emailVerifiedAt?.toISOString?.(),
+            emailServiceReady: isEmailServiceReady(),
         };
+
+        if (authUser.emailServiceReady) {
+            void syncVerificationPromptForUser(authUser.id).catch(() => undefined);
+        }
 
         const tokens = generateTokens(authUser, payload.rememberMe);
         await setAuthCookies(tokens, payload.rememberMe);

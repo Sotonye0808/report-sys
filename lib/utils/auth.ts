@@ -11,6 +11,7 @@ import type { NextRequest } from "next/server";
 import { db } from "@/lib/data/db";
 import { parseDurationToSecondsOrDefault } from "@/lib/utils/duration";
 import { getAccessTokenExpiry, getRefreshTokenExpiry } from "@/lib/utils/authSession";
+import { isEmailServiceReady } from "@/lib/utils/emailServiceReadiness";
 import { UserRole } from "@/types/global";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -195,12 +196,16 @@ export async function verifyAuth(
     const user: AuthUser = {
         id: userProfile.id,
         email: userProfile.email,
+        pendingEmail: (userProfile as any).pendingEmail ?? undefined,
         firstName: userProfile.firstName,
         lastName: userProfile.lastName,
         role: userProfile.role as UserRole,
         campusId: userProfile.campusId ?? undefined,
         orgGroupId: userProfile.orgGroupId ?? undefined,
         avatar: userProfile.avatar ?? undefined,
+        isEmailVerified: Boolean((userProfile as any).emailVerifiedAt),
+        emailVerifiedAt: (userProfile as any).emailVerifiedAt?.toISOString?.(),
+        emailServiceReady: isEmailServiceReady(),
     };
 
     if (allowedRoles && !allowedRoles.includes(user.role)) {

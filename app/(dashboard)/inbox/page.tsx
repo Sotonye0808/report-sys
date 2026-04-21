@@ -17,6 +17,7 @@ const INBOX_ALLOWED_ROLES: UserRole[] = [
   UserRole.OFFICE_OF_CEO,
   UserRole.SPO,
   UserRole.DATA_ENTRY,
+  UserRole.MEMBER,
 ];
 
 export const metadata: Metadata = {

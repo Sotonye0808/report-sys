@@ -106,3 +106,46 @@ export async function sendDeadlineReminderEmail(params: {
     html: template.html,
   });
 }
+
+export async function sendEmailVerificationEmail(params: {
+  to: string;
+  firstName?: string;
+  email: string;
+  verifyUrl: string;
+}) {
+  const template = emailTemplates.emailVerification(params);
+  return sendEmail({
+    to: params.to,
+    subject: template.subject,
+    html: template.html,
+  });
+}
+
+export async function sendEmailChangeVerificationEmail(params: {
+  to: string;
+  firstName?: string;
+  currentEmail: string;
+  newEmail: string;
+  verifyUrl: string;
+}) {
+  const template = emailTemplates.emailChangeVerification(params);
+  return sendEmail({
+    to: params.to,
+    subject: template.subject,
+    html: template.html,
+  });
+}
+
+export async function sendEmailChangedNoticeEmail(params: {
+  to: string;
+  firstName?: string;
+  oldEmail: string;
+  newEmail: string;
+}) {
+  const template = emailTemplates.emailChangedNotice(params);
+  return sendEmail({
+    to: params.to,
+    subject: template.subject,
+    html: template.html,
+  });
+}

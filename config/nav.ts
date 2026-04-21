@@ -61,6 +61,7 @@ export const DASHBOARD_NAV_ITEMS: NavItem[] = [
             UserRole.OFFICE_OF_CEO,
             UserRole.SPO,
             UserRole.DATA_ENTRY,
+            UserRole.MEMBER,
         ],
     },
     {
@@ -111,6 +112,7 @@ export const DASHBOARD_NAV_ITEMS: NavItem[] = [
             UserRole.OFFICE_OF_CEO,
             UserRole.SPO,
             UserRole.DATA_ENTRY,
+            UserRole.MEMBER,
         ],
     },
     /* — Superadmin-only — */

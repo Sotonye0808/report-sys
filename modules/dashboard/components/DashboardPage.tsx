@@ -253,10 +253,9 @@ export function DashboardPage() {
     ).length;
     const quarterlyCompliance =
       qSubmitted > 0 ? Math.round((qApprovedOrReviewed / qSubmitted) * 100) : 0;
-    const pendingReview =
-      roleConfig?.canMarkReviewed
-        ? r.filter((x) => x.status === ReportStatus.APPROVED).length
-        : r.filter((x) => x.status === ReportStatus.SUBMITTED).length;
+    const pendingReview = roleConfig?.canMarkReviewed
+      ? r.filter((x) => x.status === ReportStatus.APPROVED).length
+      : r.filter((x) => x.status === ReportStatus.SUBMITTED).length;
 
     return {
       totalReports: r.length,
@@ -490,7 +489,9 @@ export function DashboardPage() {
             draftReports: (n: number) => string;
             requiresEdits: (n: number) => string;
             weeklyReportDue: (period: string) => string;
+            verifyEmail: (email: string) => string;
             viewReports: string;
+            openProfile: string;
           };
 
           interface CtaItem {
@@ -498,6 +499,8 @@ export function DashboardPage() {
             message: string;
             type: "warning" | "info" | "error";
             show: boolean;
+            href?: string;
+            actionLabel?: string;
           }
 
           const ctaItems: CtaItem[] = [
@@ -506,30 +509,48 @@ export function DashboardPage() {
               message: ctaContent.weeklyReportDue(weeklyReportCheck.currentPeriodLabel),
               type: "warning",
               show: (roleConfig?.canFillReports ?? false) && !weeklyReportCheck.hasWeeklyReport,
+              href: reportsHref,
+              actionLabel: ctaContent.viewReports,
             },
             {
               id: "pending-approval",
               message: ctaContent.pendingApproval(counts.pending),
               type: "warning",
               show: (roleConfig?.canApproveReports ?? false) && counts.pending > 0,
+              href: reportsHref,
+              actionLabel: ctaContent.viewReports,
             },
             {
               id: "pending-review",
               message: ctaContent.pendingReview(counts.pendingReview),
               type: "info",
               show: (roleConfig?.canMarkReviewed ?? false) && counts.pendingReview > 0,
+              href: reportsHref,
+              actionLabel: ctaContent.viewReports,
             },
             {
               id: "drafts",
               message: ctaContent.draftReports(counts.draft),
               type: "info",
               show: (roleConfig?.canFillReports ?? false) && counts.draft > 0,
+              href: reportsHref,
+              actionLabel: ctaContent.viewReports,
             },
             {
               id: "requires-edits",
               message: ctaContent.requiresEdits(counts.requiresEdits),
               type: "error",
               show: (roleConfig?.canFillReports ?? false) && counts.requiresEdits > 0,
+              href: reportsHref,
+              actionLabel: ctaContent.viewReports,
+            },
+            {
+              id: "verify-email",
+              message: ctaContent.verifyEmail(user.email),
+              type: "info",
+              show: Boolean(user.emailServiceReady && !user.isEmailVerified),
+              href: APP_ROUTES.profile,
+              actionLabel: ctaContent.openProfile,
             },
           ];
 
@@ -559,12 +580,14 @@ export function DashboardPage() {
                     <span className={`w-2 h-2 rounded-full flex-shrink-0 ${dotStyles[cta.type]}`} />
                     {cta.message}
                   </span>
-                  <button
-                    onClick={() => router.push(reportsHref)}
-                    className="underline underline-offset-2 text-xs opacity-80 hover:opacity-100 whitespace-nowrap flex-shrink-0"
-                  >
-                    {ctaContent.viewReports}
-                  </button>
+                  {cta.href ? (
+                    <button
+                      onClick={() => router.push(cta.href!)}
+                      className="underline underline-offset-2 text-xs opacity-80 hover:opacity-100 whitespace-nowrap flex-shrink-0"
+                    >
+                      {cta.actionLabel ?? ctaContent.viewReports}
+                    </button>
+                  ) : null}
                 </div>
               ))}
             </div>

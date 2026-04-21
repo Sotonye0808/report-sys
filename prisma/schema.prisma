@@ -11,6 +11,11 @@ model User {
   id                      String                  @id @default(uuid())
   organisationId          String?
   email                   String                  @unique
+  pendingEmail            String?                 @unique
+  emailVerifiedAt         DateTime?
+  emailVerificationSentAt DateTime?
+  pendingEmailRequestedAt DateTime?
+  pendingEmailSentAt      DateTime?
   passwordHash            String
   firstName               String
   lastName                String
@@ -34,6 +39,7 @@ model User {
   mediaAssets             MediaAsset[]            @relation("MediaAssetOwner")
   assetUploadSessions     AssetUploadSession[]    @relation("AssetSessionOwner")
   assetLifecycleEvents    AssetLifecycleEvent[]   @relation("AssetLifecycleActor")
+  emailActionTokens       EmailActionToken[]      @relation("EmailActionTokenOwner")
   notifications           Notification[]          @relation("NotificationRecipient")
   ledOrgGroups            OrgGroup[]              @relation("OrgGroupLeader")
   reviewedEdits           ReportEdit[]            @relation("EditReviewer")
@@ -418,6 +424,24 @@ model Notification {
   @@map("notifications")
 }
 
+model EmailActionToken {
+  id            String          @id @default(uuid())
+  userId        String
+  type          EmailActionType
+  tokenHash     String          @unique
+  targetEmail   String?
+  expiresAt     DateTime
+  usedAt        DateTime?
+  invalidatedAt DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  user          User            @relation("EmailActionTokenOwner", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type, usedAt])
+  @@index([expiresAt])
+  @@map("email_action_tokens")
+}
+
 model InviteLink {
   id          String         @id @default(uuid())
   token       String         @unique
@@ -439,19 +463,19 @@ model InviteLink {
 }
 
 model BugReport {
-  id            String            @id @default(uuid())
-  category      BugReportCategory
-  description   String
-  screenshotUrl String?
+  id                String            @id @default(uuid())
+  category          BugReportCategory
+  description       String
+  screenshotUrl     String?
   screenshotAssetId String?
-  contactEmail  String
-  status        BugReportStatus   @default(OPEN)
-  adminNotes    String?
-  createdById   String
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
-  createdBy     User              @relation("BugReportCreator", fields: [createdById], references: [id])
-  screenshotAsset MediaAsset?     @relation("BugReportScreenshotAsset", fields: [screenshotAssetId], references: [id])
+  contactEmail      String
+  status            BugReportStatus   @default(OPEN)
+  adminNotes        String?
+  createdById       String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  createdBy         User              @relation("BugReportCreator", fields: [createdById], references: [id])
+  screenshotAsset   MediaAsset?       @relation("BugReportScreenshotAsset", fields: [screenshotAssetId], references: [id])
 
   @@index([status])
   @@index([createdById])
@@ -460,32 +484,32 @@ model BugReport {
 }
 
 model MediaAsset {
-  id                 String              @id @default(uuid())
-  ownerId            String
-  domain             AssetDomain
-  provider           AssetProvider       @default(CLOUDINARY)
-  state              AssetState          @default(TEMP)
-  publicId           String?             @unique
-  secureUrl          String?
-  resourceType       String?             @default("image")
-  format             String?
-  bytes              Int?
-  width              Int?
-  height             Int?
-  mimeType           String?
-  originalFileName   String?
-  folder             String?
-  metadata           Json?
-  requestId          String?
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
-  finalizedAt        DateTime?
-  discardedAt        DateTime?
-  expiresAt          DateTime?
-  owner              User                @relation("MediaAssetOwner", fields: [ownerId], references: [id])
-  bugReportsAsScreenshot BugReport[]     @relation("BugReportScreenshotAsset")
-  uploadSessions     AssetUploadSession[] @relation("AssetSessionAsset")
-  lifecycleEvents    AssetLifecycleEvent[] @relation("AssetEventAsset")
+  id                     String                @id @default(uuid())
+  ownerId                String
+  domain                 AssetDomain
+  provider               AssetProvider         @default(CLOUDINARY)
+  state                  AssetState            @default(TEMP)
+  publicId               String?               @unique
+  secureUrl              String?
+  resourceType           String?               @default("image")
+  format                 String?
+  bytes                  Int?
+  width                  Int?
+  height                 Int?
+  mimeType               String?
+  originalFileName       String?
+  folder                 String?
+  metadata               Json?
+  requestId              String?
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+  finalizedAt            DateTime?
+  discardedAt            DateTime?
+  expiresAt              DateTime?
+  owner                  User                  @relation("MediaAssetOwner", fields: [ownerId], references: [id])
+  bugReportsAsScreenshot BugReport[]           @relation("BugReportScreenshotAsset")
+  uploadSessions         AssetUploadSession[]  @relation("AssetSessionAsset")
+  lifecycleEvents        AssetLifecycleEvent[] @relation("AssetEventAsset")
 
   @@index([ownerId, state])
   @@index([domain, state])
@@ -494,42 +518,42 @@ model MediaAsset {
 }
 
 model AssetUploadSession {
-  id               String               @id @default(uuid())
-  ownerId          String
-  domain           AssetDomain
-  mode             AssetUploadMode      @default(DEFERRED_SUBMIT)
-  state            AssetSessionState    @default(OPEN)
-  activeAssetId    String?
-  idempotencyKey   String?
-  requestId        String?
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
-  finalizedAt      DateTime?
-  discardedAt      DateTime?
-  expiresAt        DateTime?
-  owner            User                 @relation("AssetSessionOwner", fields: [ownerId], references: [id])
-  activeAsset      MediaAsset?          @relation("AssetSessionAsset", fields: [activeAssetId], references: [id])
-  lifecycleEvents  AssetLifecycleEvent[] @relation("AssetEventSession")
+  id              String                @id @default(uuid())
+  ownerId         String
+  domain          AssetDomain
+  mode            AssetUploadMode       @default(DEFERRED_SUBMIT)
+  state           AssetSessionState     @default(OPEN)
+  activeAssetId   String?
+  idempotencyKey  String?
+  requestId       String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  finalizedAt     DateTime?
+  discardedAt     DateTime?
+  expiresAt       DateTime?
+  owner           User                  @relation("AssetSessionOwner", fields: [ownerId], references: [id])
+  activeAsset     MediaAsset?           @relation("AssetSessionAsset", fields: [activeAssetId], references: [id])
+  lifecycleEvents AssetLifecycleEvent[] @relation("AssetEventSession")
 
+  @@unique([ownerId, idempotencyKey])
   @@index([ownerId, state])
   @@index([domain, state])
   @@index([expiresAt])
-  @@unique([ownerId, idempotencyKey])
   @@map("asset_upload_sessions")
 }
 
 model AssetLifecycleEvent {
-  id         String                   @id @default(uuid())
-  sessionId  String?
-  assetId    String?
-  actorId    String?
-  eventType  AssetLifecycleEventType
-  details    Json?
-  requestId  String?
-  createdAt  DateTime                 @default(now())
-  session    AssetUploadSession?      @relation("AssetEventSession", fields: [sessionId], references: [id], onDelete: SetNull)
-  asset      MediaAsset?              @relation("AssetEventAsset", fields: [assetId], references: [id], onDelete: SetNull)
-  actor      User?                    @relation("AssetLifecycleActor", fields: [actorId], references: [id], onDelete: SetNull)
+  id        String                  @id @default(uuid())
+  sessionId String?
+  assetId   String?
+  actorId   String?
+  eventType AssetLifecycleEventType
+  details   Json?
+  requestId String?
+  createdAt DateTime                @default(now())
+  session   AssetUploadSession?     @relation("AssetEventSession", fields: [sessionId], references: [id], onDelete: SetNull)
+  asset     MediaAsset?             @relation("AssetEventAsset", fields: [assetId], references: [id], onDelete: SetNull)
+  actor     User?                   @relation("AssetLifecycleActor", fields: [actorId], references: [id], onDelete: SetNull)
 
   @@index([sessionId, createdAt])
   @@index([assetId, createdAt])
@@ -643,6 +667,15 @@ enum NotificationType {
   GOAL_UNLOCK_APPROVED
   GOAL_UNLOCK_REJECTED
   REPORT_UNLOCKED
+  EMAIL_VERIFICATION_REQUIRED
+  EMAIL_VERIFIED
+  EMAIL_CHANGE_REQUESTED
+  EMAIL_CHANGED
+}
+
+enum EmailActionType {
+  VERIFY_PRIMARY_EMAIL
+  CONFIRM_PENDING_EMAIL
 }
 
 enum GoalMode {

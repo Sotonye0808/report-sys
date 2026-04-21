@@ -47,7 +47,15 @@ interface JoinFormValues {
 
 /* ── Success redirect with countdown ──────────────────────────────────────── */
 
-function SuccessRedirect({ router }: { router: ReturnType<typeof useRouter> }) {
+function SuccessRedirect({
+  router,
+  email,
+  emailServiceReady,
+}: {
+  router: ReturnType<typeof useRouter>;
+  email?: string;
+  emailServiceReady?: boolean;
+}) {
   const [seconds, setSeconds] = useState(5);
 
   useEffect(() => {
@@ -69,6 +77,9 @@ function SuccessRedirect({ router }: { router: ReturnType<typeof useRouter> }) {
         {(CONTENT.auth.registrationSuccessMessage as string) ??
           "Your account is ready. Please log in."}
       </p>
+      {emailServiceReady && email ? (
+        <p className="text-xs text-ds-text-subtle">Verification email sent to {email}</p>
+      ) : null}
       <p className="text-xs text-ds-text-subtle">
         {(CONTENT.auth.redirectingIn as string) ?? "Redirecting to login in"} {seconds}s…
       </p>
@@ -93,6 +104,8 @@ function JoinForm() {
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
   const [countdown, setCountdown] = useState(5);
+  const [registeredEmail, setRegisteredEmail] = useState("");
+  const [emailServiceReady, setEmailServiceReady] = useState(false);
 
   const [form] = Form.useForm<JoinFormValues>();
 
@@ -158,6 +171,8 @@ function JoinForm() {
         setErrorMsg(json.error ?? (CONTENT.errors as Record<string, string>).generic);
         return;
       }
+      setRegisteredEmail(json?.data?.user?.email ?? values.email);
+      setEmailServiceReady(Boolean(json?.data?.user?.emailServiceReady));
       setStatus("done");
     } catch {
       setErrorMsg((CONTENT.errors as Record<string, string>).generic ?? "Registration failed.");
@@ -213,7 +228,13 @@ function JoinForm() {
 
   /* ── Success — auto-redirect with countdown ────────────────────────── */
   if (status === "done") {
-    return <SuccessRedirect router={router} />;
+    return (
+      <SuccessRedirect
+        router={router}
+        email={registeredEmail}
+        emailServiceReady={emailServiceReady}
+      />
+    );
   }
 
   /* ── Registration form ────────────────────────────────────────────────── */

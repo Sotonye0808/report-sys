@@ -105,6 +105,15 @@ export enum NotificationType {
     GOAL_UNLOCK_REQUESTED = "GOAL_UNLOCK_REQUESTED",
     GOAL_UNLOCK_APPROVED = "GOAL_UNLOCK_APPROVED",
     GOAL_UNLOCK_REJECTED = "GOAL_UNLOCK_REJECTED",
+    EMAIL_VERIFICATION_REQUIRED = "EMAIL_VERIFICATION_REQUIRED",
+    EMAIL_VERIFIED = "EMAIL_VERIFIED",
+    EMAIL_CHANGE_REQUESTED = "EMAIL_CHANGE_REQUESTED",
+    EMAIL_CHANGED = "EMAIL_CHANGED",
+}
+
+export enum EmailActionType {
+    VERIFY_PRIMARY_EMAIL = "VERIFY_PRIMARY_EMAIL",
+    CONFIRM_PENDING_EMAIL = "CONFIRM_PENDING_EMAIL",
 }
 
 export enum MetricCalculationType {
@@ -226,12 +235,16 @@ declare global {
     interface AuthUser {
         id: string;
         email: string;
+        pendingEmail?: string;
         role: UserRole;
         campusId?: string;
         orgGroupId?: string;
         firstName: string;
         lastName: string;
         avatar?: string;
+        isEmailVerified?: boolean;
+        emailVerifiedAt?: string;
+        emailServiceReady?: boolean;
     }
 
     interface AuthContextValue {
@@ -246,6 +259,11 @@ declare global {
         id: string;
         organisationId?: string;
         email: string;
+        pendingEmail?: string;
+        emailVerifiedAt?: string;
+        emailVerificationSentAt?: string;
+        pendingEmailRequestedAt?: string;
+        pendingEmailSentAt?: string;
         firstName: string;
         lastName: string;
         phone?: string;
@@ -823,6 +841,7 @@ declare global {
         bugReports: Record<string, unknown>;
         errors: Record<string, unknown>;
         common: Record<string, unknown>;
+        footer: Record<string, unknown>;
         offline: Record<string, unknown>;
         seo: Record<string, string>;
     }

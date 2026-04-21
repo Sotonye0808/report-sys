@@ -13,6 +13,8 @@ import {
 } from "@/lib/utils/auth";
 import { successResponse, errorResponse, handleApiError } from "@/lib/utils/api";
 import { UserRole } from "@/types/global";
+import { isEmailServiceReady } from "@/lib/utils/emailServiceReadiness";
+import { requestEmailVerification, syncVerificationPromptForUser } from "@/modules/auth/services/emailVerificationService";
 
 const RegisterSchema = z.object({
     firstName: z.string().min(1).max(100),
@@ -78,6 +80,7 @@ export async function POST(req: NextRequest) {
                 campusId,
                 orgGroupId,
                 isActive: true,
+                emailVerifiedAt: null,
                 passwordHash: hashed,
                 createdAt: now,
                 updatedAt: now,
@@ -106,10 +109,17 @@ export async function POST(req: NextRequest) {
                     role: user.role as UserRole,
                     campusId: user.campusId ?? undefined,
                     orgGroupId: user.orgGroupId ?? undefined,
+                    isEmailVerified: false,
+                    emailServiceReady: isEmailServiceReady(),
                 } satisfies AuthUser,
             }),
             { status: 201 },
         );
+
+        if (isEmailServiceReady()) {
+            void requestEmailVerification(user.id).catch(() => undefined);
+            void syncVerificationPromptForUser(user.id).catch(() => undefined);
+        }
 
         await setAuthCookies(tokens);
         return response;

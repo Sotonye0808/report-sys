@@ -34,6 +34,10 @@ function NotificationRow({ notification, onMarkRead }: NotificationRowProps) {
 
   const handleClick = () => {
     if (!notification.read && !notification.isRead) onMarkRead(notification.id);
+    if (notification.relatedId === "verify-email") {
+      router.push(APP_ROUTES.profile);
+      return;
+    }
     if (notification.relatedId || notification.reportId) {
       const targetId = notification.reportId ?? notification.relatedId;
       if (targetId) router.push(APP_ROUTES.reportDetail(targetId));
