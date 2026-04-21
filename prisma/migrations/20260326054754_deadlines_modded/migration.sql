@@ -1,4 +1,4 @@
-﻿-- automatically created to reconcile missing migration
+-- automatically created to reconcile missing migration
 -- this SQL is idempotent and matches already-applied schema changes
 DO $$ BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'reportdeadlinepolicy') THEN

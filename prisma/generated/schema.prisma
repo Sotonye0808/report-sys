@@ -11,6 +11,11 @@ model User {
   id                      String                  @id @default(uuid())
   organisationId          String?
   email                   String                  @unique
+  pendingEmail            String?                 @unique
+  emailVerifiedAt         DateTime?
+  emailVerificationSentAt DateTime?
+  pendingEmailRequestedAt DateTime?
+  pendingEmailSentAt      DateTime?
   passwordHash            String
   firstName               String
   lastName                String
@@ -34,6 +39,7 @@ model User {
   mediaAssets             MediaAsset[]            @relation("MediaAssetOwner")
   assetUploadSessions     AssetUploadSession[]    @relation("AssetSessionOwner")
   assetLifecycleEvents    AssetLifecycleEvent[]   @relation("AssetLifecycleActor")
+  emailActionTokens       EmailActionToken[]      @relation("EmailActionTokenOwner")
   notifications           Notification[]          @relation("NotificationRecipient")
   ledOrgGroups            OrgGroup[]              @relation("OrgGroupLeader")
   reviewedEdits           ReportEdit[]            @relation("EditReviewer")
@@ -418,6 +424,24 @@ model Notification {
   @@map("notifications")
 }
 
+model EmailActionToken {
+  id            String          @id @default(uuid())
+  userId        String
+  type          EmailActionType
+  tokenHash     String          @unique
+  targetEmail   String?
+  expiresAt     DateTime
+  usedAt        DateTime?
+  invalidatedAt DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  user          User            @relation("EmailActionTokenOwner", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type, usedAt])
+  @@index([expiresAt])
+  @@map("email_action_tokens")
+}
+
 model InviteLink {
   id          String         @id @default(uuid())
   token       String         @unique
@@ -643,6 +667,15 @@ enum NotificationType {
   GOAL_UNLOCK_APPROVED
   GOAL_UNLOCK_REJECTED
   REPORT_UNLOCKED
+  EMAIL_VERIFICATION_REQUIRED
+  EMAIL_VERIFIED
+  EMAIL_CHANGE_REQUESTED
+  EMAIL_CHANGED
+}
+
+enum EmailActionType {
+  VERIFY_PRIMARY_EMAIL
+  CONFIRM_PENDING_EMAIL
 }
 
 enum GoalMode {

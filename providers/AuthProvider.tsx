@@ -118,7 +118,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     persistUser(data.data.user);
     message.success("Welcome back!");
-    // Redirect to the `from` param if provided, otherwise fall back to role dashboard
     const destination = redirectTo ?? ROLE_DASHBOARD_ROUTES[data.data.user.role];
     router.push(destination);
   };

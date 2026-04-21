@@ -41,6 +41,8 @@ function RegisterPageContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState<string>("");
+  const [emailServiceReady, setEmailServiceReady] = useState(false);
 
   const handleSubmit = async (values: RegisterFormValues) => {
     if (values.password !== values.confirm) {
@@ -67,6 +69,8 @@ function RegisterPageContent() {
         setError(json.error ?? CONTENT.auth.errors.serverError);
         return;
       }
+      setRegisteredEmail(json?.data?.user?.email ?? values.email);
+      setEmailServiceReady(Boolean(json?.data?.user?.emailServiceReady));
       setDone(true);
       /* Redirect to dashboard after brief pause */
       setTimeout(() => window.location.replace("/"), 1200);
@@ -85,6 +89,11 @@ function RegisterPageContent() {
         </div>
         <h1 className="text-xl font-bold text-ds-text-primary">Account created!</h1>
         <p className="text-sm text-ds-text-secondary">Redirecting you now…</p>
+        {emailServiceReady ? (
+          <p className="text-xs text-ds-text-subtle">
+            Verification email sent to {registeredEmail}
+          </p>
+        ) : null}
       </div>
     );
   }

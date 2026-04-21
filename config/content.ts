@@ -452,7 +452,9 @@ export const CONTENT = {
             draftReports: (n: number) => `You have ${n} draft report${n === 1 ? "" : "s"} in progress`,
             requiresEdits: (n: number) => `There ${n === 1 ? "is" : "are"} ${n} report${n === 1 ? "" : "s"} that require${n === 1 ? "s" : ""} edits`,
             weeklyReportDue: (period: string) => `You have a weekly report due for ${period}`,
+            verifyEmail: (email: string) => `Please verify your email (${email}) to secure your account`,
             viewReports: "View Reports",
+            openProfile: "Open Profile",
         },
         memberLobby: {
             title: "Welcome to Harvesters Reporting",
@@ -625,6 +627,10 @@ export const CONTENT = {
             GOAL_UNLOCK_REQUESTED: "Goal Unlock Requested",
             GOAL_UNLOCK_APPROVED: "Goal Unlock Approved",
             GOAL_UNLOCK_REJECTED: "Goal Unlock Rejected",
+            EMAIL_VERIFICATION_REQUIRED: "Email Verification",
+            EMAIL_VERIFIED: "Email Verified",
+            EMAIL_CHANGE_REQUESTED: "Email Change Requested",
+            EMAIL_CHANGED: "Email Changed",
         },
         deadlineReminder: {
             fallbackRecipient: "there",
@@ -683,6 +689,14 @@ export const CONTENT = {
         switchTo: "Switch to",
     },
 
+    footer: {
+        organization: "Harvesters International Christian Centre (HICC)",
+        rights: "All rights reserved.",
+        builtByLabel: "Built by",
+        developerName: "S.D",
+        developerUrl: "https://sotonye-dagogo.is-a.dev",
+    },
+
     /* ── Profile ───────────────────────────────────────────────────────────── */
     profile: {
         pageTitle: "My Profile",
@@ -700,6 +714,21 @@ export const CONTENT = {
         saveChanges: "Save Changes",
         saving: "Saving…",
         passwordSection: "Change Password",
+        emailSecuritySection: "Email Verification & Change",
+        emailVerificationLabel: "Email Verification",
+        emailVerifiedBadge: "Verified",
+        emailUnverifiedBadge: "Unverified",
+        verificationStatusHint: "Verification protects your account and enables trusted email alerts.",
+        verificationSentTo: "Verification email sent to",
+        resendVerification: "Resend Verification Email",
+        verificationEmailSent: "Verification email sent.",
+        emailChangeLabel: "Change Email",
+        newEmailLabel: "New Email Address",
+        newEmailPlaceholder: "new-address@harvestersng.org",
+        requestEmailChange: "Request Email Change",
+        emailChangeRequested: "Email change confirmation sent.",
+        pendingEmailLabel: "Pending Email",
+        confirmViaEmailHint: "Confirm the link sent to your new email to complete this change.",
         currentPasswordLabel: "Current Password",
         newPasswordLabel: "New Password",
         confirmPasswordLabel: "Confirm New Password",

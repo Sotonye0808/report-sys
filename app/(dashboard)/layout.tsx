@@ -32,6 +32,7 @@ import { getNavItems } from "@/config/nav";
 import Button from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
+import { AppFooter } from "@/components/ui/AppFooter";
 import { UserRole } from "@/types/global";
 
 const SIDEBAR_FULL_WIDTH = 240;
@@ -332,6 +333,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         />
         <main ref={mainRef} className="flex-1 overflow-y-auto p-4 md:p-6">
           {children}
+          <AppFooter className="mt-8 border-t border-ds-border-subtle" />
           <ScrollToTop scrollContainerRef={mainRef} />
         </main>
       </div>

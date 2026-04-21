@@ -18,6 +18,7 @@ import {
   BellOutlined,
   CheckOutlined,
   MobileOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/providers/AuthProvider";
@@ -329,7 +330,164 @@ function SecurityTab() {
           </Button>
         </Form>
       </div>
+
+      <EmailSecuritySection />
     </div>
+  );
+}
+
+function EmailSecuritySection() {
+  const profileText = CONTENT.profile as any;
+  const [newEmail, setNewEmail] = useState("");
+  const [loadingStatus, setLoadingStatus] = useState(true);
+  const [sendingVerification, setSendingVerification] = useState(false);
+  const [requestingEmailChange, setRequestingEmailChange] = useState(false);
+  const [status, setStatus] = useState<EmailVerificationStatusPayload | null>(null);
+
+  const loadStatus = async () => {
+    setLoadingStatus(true);
+    try {
+      const result = await apiMutation<EmailVerificationStatusPayload>(
+        API_ROUTES.auth.emailVerificationStatus,
+        { method: "GET" },
+      );
+      if (result.ok && result.data) {
+        setStatus(result.data);
+      }
+    } finally {
+      setLoadingStatus(false);
+    }
+  };
+
+  useEffect(() => {
+    void loadStatus();
+  }, []);
+
+  const resendVerification = async () => {
+    setSendingVerification(true);
+    try {
+      const result = await apiMutation<{ sent: boolean; email: string }>(
+        API_ROUTES.auth.emailVerificationRequest,
+        { method: "POST" },
+      );
+      if (!result.ok) {
+        message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
+        return;
+      }
+      message.success(profileText.verificationEmailSent as string);
+      await loadStatus();
+    } finally {
+      setSendingVerification(false);
+    }
+  };
+
+  const requestEmailChange = async () => {
+    const email = newEmail.trim();
+    if (!email) {
+      message.warning("Enter a new email address.");
+      return;
+    }
+
+    setRequestingEmailChange(true);
+    try {
+      const result = await apiMutation<{ pendingEmail: string }>(
+        API_ROUTES.auth.emailChangeRequest,
+        {
+          method: "POST",
+          body: { newEmail: email },
+        },
+      );
+      if (!result.ok) {
+        message.error(result.error ?? (CONTENT.errors as Record<string, string>).generic);
+        return;
+      }
+      message.success(profileText.emailChangeRequested as string);
+      setNewEmail("");
+      await loadStatus();
+    } finally {
+      setRequestingEmailChange(false);
+    }
+  };
+
+  if (loadingStatus) {
+    return <LoadingSkeleton rows={3} />;
+  }
+
+  if (!status) {
+    return null;
+  }
+
+  return (
+    <SectionCard icon={<MailOutlined />} title={profileText.emailSecuritySection as string}>
+      <div className="space-y-4">
+        <div className="rounded-ds-lg border border-ds-border-base p-3 bg-ds-surface-sunken">
+          <p className="text-sm font-medium text-ds-text-primary">
+            {profileText.emailVerificationLabel as string}
+          </p>
+          <p className="text-xs text-ds-text-subtle mt-0.5">
+            {profileText.verificationStatusHint as string}
+          </p>
+          <p className="text-sm text-ds-text-primary mt-2">{status.email}</p>
+          <p className="text-xs mt-1">
+            {status.isEmailVerified
+              ? (profileText.emailVerifiedBadge as string)
+              : (profileText.emailUnverifiedBadge as string)}
+          </p>
+          {status.emailVerificationSentAt ? (
+            <p className="text-xs text-ds-text-subtle mt-1">
+              {profileText.verificationSentTo as string}: {status.email}
+            </p>
+          ) : null}
+          {!status.isEmailVerified && status.emailServiceReady ? (
+            <Button
+              className="mt-3"
+              onClick={resendVerification}
+              loading={sendingVerification}
+              icon={<MailOutlined />}
+            >
+              {profileText.resendVerification as string}
+            </Button>
+          ) : null}
+        </div>
+
+        {status.emailServiceReady ? (
+          <div className="rounded-ds-lg border border-ds-border-base p-3 bg-ds-surface-sunken">
+            <p className="text-sm font-medium text-ds-text-primary">
+              {profileText.emailChangeLabel as string}
+            </p>
+            {status.pendingEmail ? (
+              <div className="mt-2">
+                <p className="text-xs text-ds-text-subtle">
+                  {profileText.pendingEmailLabel as string}
+                </p>
+                <p className="text-sm text-ds-text-primary">{status.pendingEmail}</p>
+                <p className="text-xs text-ds-text-subtle mt-1">
+                  {profileText.confirmViaEmailHint as string}
+                </p>
+              </div>
+            ) : null}
+
+            <div className="mt-3 flex gap-2">
+              <Input
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                placeholder={profileText.newEmailPlaceholder as string}
+                aria-label={profileText.newEmailLabel as string}
+              />
+              <Button type="primary" onClick={requestEmailChange} loading={requestingEmailChange}>
+                {profileText.requestEmailChange as string}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Alert
+            type="info"
+            showIcon
+            message="Email features are not active in this environment yet."
+          />
+        )}
+      </div>
+    </SectionCard>
   );
 }
 
@@ -389,6 +547,17 @@ interface NotifPrefs {
   email: boolean;
   inApp: boolean;
   deadlineReminders: boolean;
+}
+
+interface EmailVerificationStatusPayload {
+  email: string;
+  pendingEmail: string | null;
+  isEmailVerified: boolean;
+  emailVerifiedAt: string | null;
+  emailVerificationSentAt: string | null;
+  pendingEmailRequestedAt: string | null;
+  pendingEmailSentAt: string | null;
+  emailServiceReady: boolean;
 }
 
 const DEFAULT_PREFS: NotifPrefs = { email: true, inApp: true, deadlineReminders: true };

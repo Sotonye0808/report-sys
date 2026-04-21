@@ -35,6 +35,31 @@ export interface DeadlineReminderTemplateInput {
   reportUrl: string;
 }
 
+export interface EmailVerificationTemplateInput {
+  firstName?: string;
+  email: string;
+  verifyUrl: string;
+}
+
+export interface EmailChangeVerificationTemplateInput {
+  firstName?: string;
+  currentEmail: string;
+  newEmail: string;
+  verifyUrl: string;
+}
+
+export interface EmailChangeRequestedNoticeTemplateInput {
+  firstName?: string;
+  currentEmail: string;
+  newEmail: string;
+}
+
+export interface EmailChangedNoticeTemplateInput {
+  firstName?: string;
+  oldEmail: string;
+  newEmail: string;
+}
+
 export const emailTemplates = {
   invite(input: InviteEmailTemplateInput) {
     return {
@@ -85,6 +110,61 @@ export const emailTemplates = {
           <p>Hi ${escapeHtml(input.userName)},</p>
           <p>The report <strong>${escapeHtml(input.reportTitle)}</strong> is due on <strong>${escapeHtml(input.deadlineDate)}</strong>.</p>
           <a href="${escapeHtml(input.reportUrl)}" style="display:inline-block;background:#10b981;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;margin:16px 0">Submit Report</a>
+        `,
+      }),
+    };
+  },
+  emailVerification(input: EmailVerificationTemplateInput) {
+    return {
+      subject: "Verify your email — Harvesters Reporting",
+      html: renderEmailLayout({
+        heading: "Verify your email",
+        bodyHtml: `
+          <p>Hi ${escapeHtml(input.firstName || "there")},</p>
+          <p>Please verify <strong>${escapeHtml(input.email)}</strong> to secure your account.</p>
+          <a href="${escapeHtml(input.verifyUrl)}" style="display:inline-block;background:#10b981;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;margin:16px 0">Verify Email</a>
+          <p style="font-size:13px;color:#6b7280">If the button doesn't work, use this link: ${escapeHtml(input.verifyUrl)}</p>
+        `,
+      }),
+    };
+  },
+  emailChangeVerification(input: EmailChangeVerificationTemplateInput) {
+    return {
+      subject: "Confirm your new email — Harvesters Reporting",
+      html: renderEmailLayout({
+        heading: "Confirm email change",
+        bodyHtml: `
+          <p>Hi ${escapeHtml(input.firstName || "there")},</p>
+          <p>We received a request to change your account email from <strong>${escapeHtml(input.currentEmail)}</strong> to <strong>${escapeHtml(input.newEmail)}</strong>.</p>
+          <a href="${escapeHtml(input.verifyUrl)}" style="display:inline-block;background:#10b981;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;margin:16px 0">Confirm New Email</a>
+          <p style="font-size:13px;color:#6b7280">If this wasn't you, ignore this email and keep your current address.</p>
+        `,
+      }),
+    };
+  },
+  emailChangeRequestedNotice(input: EmailChangeRequestedNoticeTemplateInput) {
+    return {
+      subject: "Email change requested — Harvesters Reporting",
+      html: renderEmailLayout({
+        heading: "Email change requested",
+        accent: "#f59e0b",
+        bodyHtml: `
+          <p>Hi ${escapeHtml(input.firstName || "there")},</p>
+          <p>A request was made to change your account email from <strong>${escapeHtml(input.currentEmail)}</strong> to <strong>${escapeHtml(input.newEmail)}</strong>.</p>
+          <p>If this was not you, update your password immediately.</p>
+        `,
+      }),
+    };
+  },
+  emailChangedNotice(input: EmailChangedNoticeTemplateInput) {
+    return {
+      subject: "Your email has been changed — Harvesters Reporting",
+      html: renderEmailLayout({
+        heading: "Email change completed",
+        bodyHtml: `
+          <p>Hi ${escapeHtml(input.firstName || "there")},</p>
+          <p>Your account email has been changed from <strong>${escapeHtml(input.oldEmail)}</strong> to <strong>${escapeHtml(input.newEmail)}</strong>.</p>
+          <p>If this was not you, contact an administrator immediately.</p>
         `,
       }),
     };

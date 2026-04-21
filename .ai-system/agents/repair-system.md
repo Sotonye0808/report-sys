@@ -258,6 +258,35 @@ Profile and org hierarchy write operations stayed in pending state, UI remained 
 **Files Affected:**
 
 - `lib/data/redis.ts`
+
+**Date:** 2026-04-04
+
+## Prisma migration drift with no-reset constraint
+
+**Symptom:**
+`prisma migrate dev` cannot proceed and suggests reset when migration history/drift checks fail, but environment policy disallows data loss.
+
+**Root Cause:**
+`migrate dev` performs shadow-database drift detection and may block in non-pristine environments; this can happen even when pending migrations are valid for deployment.
+
+**Fix Applied:**
+
+- Applied pending migrations non-destructively with `prisma migrate deploy`.
+- Verified final state with `prisma migrate status` showing database schema up to date.
+
+**Prevention:**
+
+- Use `migrate deploy` for data-safe environments where reset is not permitted.
+- Reserve `migrate dev` for development workflows where reset is explicitly acceptable.
+- If history reconciliation is needed, use `prisma migrate resolve` instead of reset.
+
+**Files Affected:**
+
+- `prisma/migrations/*`
+- `.ai-system/operations/diagnostics-runbook.md`
+
+**Date:** 2026-04-21
+
 - `modules/users/services/profileService.ts`
 - `modules/org/services/orgWriteService.ts`
 - `app/api/org/hierarchy/bulk/route.ts`

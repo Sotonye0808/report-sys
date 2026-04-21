@@ -124,6 +124,11 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   organisationId: 'organisationId',
   email: 'email',
+  pendingEmail: 'pendingEmail',
+  emailVerifiedAt: 'emailVerifiedAt',
+  emailVerificationSentAt: 'emailVerificationSentAt',
+  pendingEmailRequestedAt: 'pendingEmailRequestedAt',
+  pendingEmailSentAt: 'pendingEmailSentAt',
   passwordHash: 'passwordHash',
   firstName: 'firstName',
   lastName: 'lastName',
@@ -376,6 +381,19 @@ exports.Prisma.NotificationScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.EmailActionTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  tokenHash: 'tokenHash',
+  targetEmail: 'targetEmail',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  invalidatedAt: 'invalidatedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.InviteLinkScalarFieldEnum = {
   id: 'id',
   token: 'token',
@@ -604,7 +622,16 @@ exports.NotificationType = exports.$Enums.NotificationType = {
   GOAL_UNLOCK_REQUESTED: 'GOAL_UNLOCK_REQUESTED',
   GOAL_UNLOCK_APPROVED: 'GOAL_UNLOCK_APPROVED',
   GOAL_UNLOCK_REJECTED: 'GOAL_UNLOCK_REJECTED',
-  REPORT_UNLOCKED: 'REPORT_UNLOCKED'
+  REPORT_UNLOCKED: 'REPORT_UNLOCKED',
+  EMAIL_VERIFICATION_REQUIRED: 'EMAIL_VERIFICATION_REQUIRED',
+  EMAIL_VERIFIED: 'EMAIL_VERIFIED',
+  EMAIL_CHANGE_REQUESTED: 'EMAIL_CHANGE_REQUESTED',
+  EMAIL_CHANGED: 'EMAIL_CHANGED'
+};
+
+exports.EmailActionType = exports.$Enums.EmailActionType = {
+  VERIFY_PRIMARY_EMAIL: 'VERIFY_PRIMARY_EMAIL',
+  CONFIRM_PENDING_EMAIL: 'CONFIRM_PENDING_EMAIL'
 };
 
 exports.InviteLinkType = exports.$Enums.InviteLinkType = {
@@ -692,6 +719,7 @@ exports.Prisma.ModelName = {
   GoalEditRequest: 'GoalEditRequest',
   MetricEntry: 'MetricEntry',
   Notification: 'Notification',
+  EmailActionToken: 'EmailActionToken',
   InviteLink: 'InviteLink',
   BugReport: 'BugReport',
   MediaAsset: 'MediaAsset',

@@ -7,6 +7,17 @@ interface UpdateProfileInput {
   phone?: string;
 }
 
+function mapUserProfile(user: any): UserProfile {
+  return {
+    ...(user as UserProfile),
+    pendingEmail: user.pendingEmail ?? undefined,
+    emailVerifiedAt: user.emailVerifiedAt ?? undefined,
+    emailVerificationSentAt: user.emailVerificationSentAt ?? undefined,
+    pendingEmailRequestedAt: user.pendingEmailRequestedAt ?? undefined,
+    pendingEmailSentAt: user.pendingEmailSentAt ?? undefined,
+  };
+}
+
 export async function getOwnProfile(userId: string): Promise<OperationResult<UserProfile>> {
   const user = await db.user.findUnique({
     where: { id: userId },
@@ -17,7 +28,7 @@ export async function getOwnProfile(userId: string): Promise<OperationResult<Use
     return fail("User not found.", 404);
   }
 
-  return ok(user as unknown as UserProfile);
+  return ok(mapUserProfile(user));
 }
 
 export async function updateOwnProfile(
@@ -37,6 +48,6 @@ export async function updateOwnProfile(
 
   cache.invalidatePatternAsync(`users:detail:${userId}`);
   cache.invalidatePatternAsync("users:list:*");
-  return ok(updated as unknown as UserProfile);
+  return ok(mapUserProfile(updated));
 }
 
