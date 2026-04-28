@@ -127,6 +127,8 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 | ---------- | -------------------------------- | ------------------------------- |
 | Frontend   | Next.js (App Router)             | 16.x                            |
 | UI Library | Ant Design                       | 6.x                             |
+| Charting   | Recharts                         | 3.x                             |
+| Theming    | Next-Themes                      | 0.x                             |
 | Styling    | Tailwind CSS & CSS variables     | 4.x                             |
 | Backend    | Node.js (Next.js route handlers) | (Node version from environment) |
 | Database   | PostgreSQL (Prisma) / Mock DB    | Prisma 7.x                      |

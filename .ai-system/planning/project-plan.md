@@ -60,6 +60,20 @@
 
 ---
 
+## Phase 6 — Advanced Flexibility & Analytics
+
+> **Section summary:** Future-facing enhancements for admin control, data entry optimization, and deeper analytical insights.
+
+- [ ] Admin-editable configuration system (migrate roles, hierarchy level definitions, and mappings to be config-driven and admin-editable)
+- [ ] Quick form interface for ushers/data entry (metric-specific exposure and simplified input fields)
+- [ ] Simplified analytical views for various roles with clear insights and statistics
+- [ ] Flexible report and metric comparison with automated correlations and insights
+- [ ] Excel/Spreadsheet import (mapping abstract values to metrics and templates)
+- [ ] PWA installation notice and optimized PWA onboarding
+- [ ] Auto-invite with optimized UI/UX via query parameter links and redirects
+
+---
+
 ## Completed
 
 > **Section summary:** Features fully shipped. Archived here for reference.
