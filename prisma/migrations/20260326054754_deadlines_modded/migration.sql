@@ -6,10 +6,12 @@ DO $$ BEGIN
     END IF;
 
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='report_templates' AND column_name='deadlinePolicy') THEN
-        ALTER TABLE "report_templates" ADD COLUMN "deadlinePolicy" VARCHAR(255);
+        ALTER TABLE "report_templates"
+            ADD COLUMN "deadlinePolicy" "ReportDeadlinePolicy" DEFAULT 'PERIOD_END';
     END IF;
 
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='report_templates' AND column_name='deadlineOffsetHours') THEN
-        ALTER TABLE "report_templates" ADD COLUMN "deadlineOffsetHours" INTEGER;
+        ALTER TABLE "report_templates"
+            ADD COLUMN "deadlineOffsetHours" INTEGER DEFAULT 48;
     END IF;
 END $$;
