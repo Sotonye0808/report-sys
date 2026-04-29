@@ -34,6 +34,8 @@ import {
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
 import { useApiData } from "@/lib/hooks/useApiData";
+import { useRoleConfig } from "@/providers/RoleConfigProvider";
+import { ScopeOverviewGrid, useScopeOverviewContext } from "../widgets/registry";
 import { CONTENT } from "@/config/content";
 import { APP_ROUTES, API_ROUTES } from "@/config/routes";
 import { getReportLabel, formatReportPeriod } from "@/lib/utils/reportUtils";
@@ -179,10 +181,43 @@ export function DashboardPage() {
   const { user } = useAuth();
   const { role, config: roleConfig } = useRole();
   const router = useRouter();
+  const { dashboardLayout: dashboardLayoutOverride } = useRoleConfig();
 
   const dashboardMode = roleConfig?.dashboardMode ?? "report-fill";
   const isSuperadmin = role === UserRole.SUPERADMIN;
   const visibilityScope = roleConfig?.reportVisibilityScope ?? "own";
+
+  /* ── Scope-overview branch (higher-up roles) ──────────────────────────── */
+  const { ctx: scopeCtx, isLoading: scopeLoading } = useScopeOverviewContext(
+    visibilityScope as "own" | "campus" | "group" | "all",
+    user ?? null,
+  );
+
+  if (dashboardMode === "scope-overview" && user) {
+    return (
+      <PageLayout>
+        <PageHeader
+          title={CONTENT.dashboard.pageTitle}
+          subtitle={`${CONTENT.dashboard.welcomeBack}, ${user.firstName}`}
+        />
+        <ScopeOverviewGrid
+          ctx={scopeCtx ?? {
+            reports: [],
+            campuses: [],
+            orgGroups: [],
+            templates: [],
+            scope: visibilityScope as "own" | "campus" | "group" | "all",
+          }}
+          isLoading={scopeLoading || !scopeCtx}
+          layoutOverride={
+            (dashboardLayoutOverride && typeof dashboardLayoutOverride === "object"
+              ? (dashboardLayoutOverride as { byRoleBand?: Record<string, string[]> }).byRoleBand
+              : undefined) ?? undefined
+          }
+        />
+      </PageLayout>
+    );
+  }
 
   /* ── Data subscriptions ─────────────────────────────────────────────────── */
 

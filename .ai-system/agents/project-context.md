@@ -49,6 +49,8 @@ The Harvesters Central Reporting System is a **standalone, role-based web applic
 - All IDs are UUIDs; no hardcoded org/campus/group IDs
 - Design tokens (`--ds-*`) are the only allowed color/spacing source
 - Admin-editable config substrate (`lib/data/adminConfig.ts`) must remain DB-first with `config/*` as the immutable fallback. No role names, dashboard widget IDs, metric IDs, push install copy, or import-mapping shapes may be hardcoded in module code — bind them through the namespace loader so admins can tune them at runtime without a deploy.
+- Role labels, capabilities, hierarchy order, dashboard mode, and visibility scope are runtime-CRUDable for every role **except SUPERADMIN**, which is absolute. `lib/auth/permissions.ts` (`sanitiseRoleConfigPayload` + `freezeSuperadmin`) enforces this server-side regardless of payload contents.
+- Hierarchy levels are runtime-CRUDable in shape and depth (group → campus today, but admins can add/remove/reorder levels and bind leader/admin roles per level via the `hierarchy` admin-config namespace). All hierarchy-aware code reads through `resolveHierarchyLevels()` with `ORG_HIERARCHY_CONFIG` as the immutable fallback.
 
 ---
 

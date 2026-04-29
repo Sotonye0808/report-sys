@@ -21,6 +21,7 @@ import {
     AdminConfigConflictError,
     type AdminConfigNamespaceName,
 } from "@/lib/data/adminConfig";
+import { sanitiseRoleConfigPayload } from "@/lib/auth/permissions";
 import { UserRole } from "@/types/global";
 
 const ALLOWED_NS: AdminConfigNamespaceName[] = [
@@ -90,9 +91,19 @@ export async function PUT(
             });
         }
 
+        let payload = parsed.data.payload;
+        if (ns === "roles" && payload && typeof payload === "object" && "roleConfig" in payload) {
+            payload = {
+                ...payload,
+                roleConfig: sanitiseRoleConfigPayload(
+                    payload.roleConfig as Partial<Record<UserRole, Partial<RoleConfig>>>,
+                ),
+            };
+        }
+
         const snap = await writeAdminConfig({
             namespace: ns,
-            payload: parsed.data.payload,
+            payload,
             baseVersion: parsed.data.baseVersion,
             actorId: auth.user.id,
             notes: parsed.data.notes,

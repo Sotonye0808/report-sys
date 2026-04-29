@@ -95,44 +95,46 @@
 
 > **Tightened plan:** see [`.ai-system/planning/temp-admin-config-quickform-pwa-imports-plan-2026-04-29.md`](./temp-admin-config-quickform-pwa-imports-plan-2026-04-29.md). Tasks below are the canonical sequence and supersede the prior bullet block.
 
-#### Phase A — Foundation (this pass)
+#### Phase A — Foundation
 
-- [ ] Add `USHER` role + new capability bits (`canQuickFormFill`, `canManageAdminConfig`, `canImportSpreadsheets`, `canBulkInvite`, `canViewScopeOverview`) to `types/global.ts` and `ROLE_CONFIG`.
-- [ ] Add Prisma models: `AdminConfigEntry`, `FormAssignment`, `ImportJob`, `ImportJobItem`, `ImportMappingProfile`, `BulkInviteBatch`, `PwaPromptDismissal`, `UserActivationToken`; add `batchId` to `InviteLink`; add `USHER` to `UserRole` enum.
-- [ ] Run migration (`prisma migrate deploy` for data-safe environments).
-- [ ] Implement `lib/data/adminConfig.ts`: DB-first load + `config/*` fallback, namespace cache, optimistic-lock writes, audit emit.
-- [ ] Implement `lib/data/formAssignment.ts`: resolve-for-user + verify-metric-subset.
-- [ ] Implement `lib/data/importPipeline.ts`: parse, mapping store, validate, preview, chunked commit + compensation.
-- [ ] Add API routes: `/api/admin-config` (GET/PUT/POST reset), `/api/form-assignments` (CRUD), `/api/imports` (job lifecycle), `/api/invite-links/bulk`, `/api/users/preregister`, `/api/auth/activate`, `/api/notifications/pwa-dismissal`.
-- [ ] Add `lib/auth/permissions.ts` reading from `adminConfig.load("roles")` with `ROLE_CONFIG` fallback.
-- [ ] Update `config/content.ts` with new namespaces (`adminConfig`, `imports`, `quickForm`, `pwaInstall`, `bulkInvites`, `preregister`, `activation`).
-- [ ] Update `config/nav.ts` and `config/routes.ts` for new surfaces.
+- [x] Add `USHER` role + new capability bits (`canQuickFormFill`, `canManageAdminConfig`, `canImportSpreadsheets`, `canBulkInvite`, `canViewScopeOverview`) to `types/global.ts` and `ROLE_CONFIG`.
+- [x] Add Prisma models: `AdminConfigEntry`, `FormAssignment`, `ImportJob`, `ImportJobItem`, `ImportMappingProfile`, `BulkInviteBatch`, `PwaPromptDismissal`, `UserActivationToken`; add `batchId` to `InviteLink`; add `USHER` to `UserRole` enum.
+- [x] Run migration (`prisma migrate deploy` for data-safe environments).
+- [x] Implement `lib/data/adminConfig.ts`: DB-first load + `config/*` fallback, namespace cache, optimistic-lock writes, audit emit.
+- [x] Implement `lib/data/formAssignment.ts`: resolve-for-user + verify-metric-subset.
+- [x] Implement `lib/data/importPipeline.ts`: parse, mapping store, validate, preview, chunked commit + compensation.
+- [x] Add API routes: `/api/admin-config` (GET/PUT/POST reset), `/api/form-assignments` (CRUD), `/api/imports` (job lifecycle), `/api/invite-links/bulk`, `/api/users/preregister`, `/api/auth/activate`, `/api/notifications/pwa-dismissal`.
+- [x] Add `lib/auth/permissions.ts` reading from `adminConfig.load("roles")` with `ROLE_CONFIG` fallback (SUPERADMIN immutability enforced).
+- [x] Update `config/content.ts` with new namespaces (`adminConfig`, `imports`, `quickForm`, `pwaInstall`, `bulkInvites`, `preregister`, `activation`).
+- [x] Update `config/nav.ts` and `config/routes.ts` for new surfaces.
 
 #### Phase B — UI surfaces
 
-- [ ] `modules/admin-config/components/AdminConfigPage.tsx` (tabs, schema-driven forms, diff vs fallback, reset-to-defaults).
-- [ ] `modules/quick-form/components/QuickFormLandingPage.tsx` + `QuickFormFillPage.tsx` (single-metric input, autosave, no goal visibility).
-- [ ] `modules/imports/components/ImportWizardPage.tsx` (upload → mapping → preview → commit with saved profiles).
-- [ ] Refactor `modules/dashboard/components/DashboardPage.tsx` into widget registry + role-band layout consumer.
-- [ ] `components/ui/PwaInstallBanner.tsx` (platform-aware OS copy, BeforeInstallPromptEvent, dismissal API).
-- [ ] `components/ui/PwaPushPrompt.tsx` (post-install push prompt sub-banner reusing existing push subscription flow).
-- [ ] Extend `modules/users/components/InvitesPage.tsx` with Bulk Invite + Pre-register tabs and per-row outcome table.
-- [ ] `app/(auth)/join/page.tsx` query-param-aware redirect helper (whitelisted destinations).
-- [ ] `app/(auth)/activate/page.tsx` activation token consumer with forced password change.
-- [ ] `modules/analytics` scope-overview presets (group / campus / metric movers / correlations) + correlation toggle UI.
+- [x] `modules/admin-config/components/AdminConfigPage.tsx` (Roles CRUD with SUPERADMIN read-only, Hierarchy CRUD, JSON editor for other namespaces, diff/reset).
+- [x] `modules/quick-form/components/QuickFormLandingPage.tsx` + `QuickFormFillPage.tsx` (single-metric input, autosave every 30s, server-enforced subset).
+- [x] `modules/imports/components/ImportWizardPage.tsx` (upload CSV → map columns → validate → commit, saved-mapping profile API).
+- [x] Refactor `modules/dashboard/components/DashboardPage.tsx` into widget registry + role-band layout consumer (scope-overview branch for higher-up roles).
+- [x] `components/ui/PwaInstallBanner.tsx` (platform-aware OS copy, BeforeInstallPromptEvent, dismissal API).
+- [x] `components/ui/PwaPushPrompt.tsx` consolidated into PwaInstallBanner sub-prompt (post-install permission request).
+- [x] Bulk Invite + Pre-register surface at `/invites/bulk` (per-row outcome table; existing InvitesPage untouched).
+- [x] `app/(auth)/join/page.tsx` query-param-aware redirect helper (whitelisted destinations).
+- [x] `app/(auth)/activate/page.tsx` activation token consumer with forced password change.
+- [x] `modules/analytics/components/AnalyticsCorrelationControls.tsx` (config-driven correlation toggle with admin-set max cap; further analytics scope-overview drill-ins served by dashboard widget registry).
+- [x] `providers/RoleConfigProvider.tsx` exposes runtime role labels + dashboard layout to client; mounted at root layout.
 
 #### Phase C — Polish + tests + docs
 
-- [ ] `test/adminConfigLoader.test.ts` (DB hit, fallback, drift detection, optimistic-lock conflict).
-- [ ] `test/formAssignmentEnforcement.test.ts` (assignment-bound metric subset, unauthorized metric rejection).
-- [ ] `test/importPipeline.test.ts` (mapping save/replay, chunked commit, compensation).
-- [ ] `test/bulkInviteAndPreregister.test.ts` (existing-email handling, activation flow, token reuse rejection).
-- [ ] `test/pwaInstallDismissal.test.ts` (per-platform dismissal persistence + re-show window).
-- [ ] `test/dashboardWidgetRegistry.test.ts` (role-band → widget set, no JSX branching).
-- [ ] Update `.ai-system/agents/system-architecture.md` (module breakdown rows, data-flow entries, env keys, tech stack).
-- [ ] Update `.ai-system/agents/project-context.md` (USHER role + admin-config-driven business constraint).
-- [ ] Update `.env.example` (`ADMIN_CONFIG_DB_ENABLED`, `ACTIVATION_TOKEN_TTL_HOURS`, `IMPORT_MAX_FILE_BYTES`, `PWA_BANNER_REENGAGE_DAYS`).
-- [ ] Add diagnostics-runbook entries for namespace cache keys, import-job inspection, activation-token diagnostics.
+- [x] `test/adminConfigFallback.test.ts` (substrate-disabled fallback + AdminConfigConflictError context).
+- [x] `test/formAssignmentEnforcement.test.ts` (assignment-bound metric subset, unauthorized metric rejection).
+- [x] `test/importPipeline.test.ts` (CSV parser quoted/escaped fields + validateRows numeric/duplicate/unknown checks).
+- [x] `test/joinRedirect.test.ts` (whitelisted target + query-param scrubbing + protocol-relative rejection).
+- [x] `test/rolesConfigUsher.test.ts` (USHER + scope-overview wiring).
+- [x] `test/rolePermissionsImmutable.test.ts` (SUPERADMIN sanitisation + freezeSuperadmin).
+- [x] `test/dashboardWidgetRegistry.test.ts` (role-band → widget set, override filtering of unknown widget ids).
+- [x] Update `.ai-system/agents/system-architecture.md` (module breakdown rows, data-flow entries 16–27, env keys, tech stack).
+- [x] Update `.ai-system/agents/project-context.md` (USHER role + admin-config + runtime role/hierarchy CRUD constraints).
+- [x] Update `.env.example` (`ADMIN_CONFIG_DB_ENABLED`, `ACTIVATION_TOKEN_TTL_HOURS`, `IMPORT_MAX_FILE_BYTES`, `PWA_BANNER_REENGAGE_DAYS`, `ANALYTICS_CORRELATION_MAX_METRICS`).
+- [x] Add diagnostics-runbook entries for namespace cache keys, SUPERADMIN immutability, import-job inspection, activation-token diagnostics, PWA dismissal, hierarchy CRUD propagation.
 
 ---
 

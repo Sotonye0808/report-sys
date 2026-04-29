@@ -93,3 +93,62 @@ Mitigation Pattern:
 - Keep cache invalidation non-blocking for write critical path where possible.
 - Prefer async invalidation (`invalidatePatternAsync`) after successful DB commit.
 - Use exact-key delete path for non-glob patterns to avoid full keyspace scan.
+
+---
+
+## Admin Config + Quick Forms + Imports + PWA + Activation
+
+Added 2026-04-29.
+
+### Admin Config namespace cache keys
+
+- Redis key prefix: `hrs:adminConfig:ns:<namespace>`
+- TTL controlled by `ADMIN_CONFIG_CACHE_TTL_SECONDS` (default 300s).
+- Substrate gate: `ADMIN_CONFIG_DB_ENABLED=false` makes every loader read return the typed `config/*` fallback without touching DB or cache.
+- A namespace with no DB row returns `source: "fallback"` and `version: 0`. After the first save, `version >= 1` and `source: "db"`.
+- Optimistic-lock conflict: PUT returns HTTP `409` with body `code: 409, error: "Admin config conflict on namespace ..."`. Retry by GETting the namespace, re-applying edits, and re-PUTting with the new `version` as `baseVersion`.
+
+### SUPERADMIN immutability
+
+- Server side: `sanitiseRoleConfigPayload` strips overrides for SUPERADMIN's `label`, `dashboardMode`, `reportVisibilityScope`, `canManageAdminConfig`, `canManageUsers`, `canManageOrg`, `canLockReports` before write.
+- If a SUPERADMIN appears demoted in a UI cache, force-reload the role config public endpoint (`/api/admin-config/public`) — the override on disk has been silently dropped on the immutable keys.
+
+### Form assignment metric leak attempts
+
+- Quick-fill writes are gated by `verifyMetricSubset`. Submitting a metric outside the assigned subset returns HTTP `403` with body `error: "Unauthorized metric ids: <list>"`.
+- The same constraint is applied to the `submit: true` flow — a partial-submit cannot complete an assignment with metrics outside the subset.
+- Diagnostic command (DB):
+  ```sql
+  SELECT id, "assigneeId", "reportId", "metricIds", "completedAt"
+  FROM form_assignments
+  WHERE id = '<assignmentId>';
+  ```
+
+### Import job inspection
+
+- Per-row outcomes:
+  ```sql
+  SELECT outcome, count(*)
+  FROM import_job_items
+  WHERE "jobId" = '<jobId>'
+  GROUP BY outcome;
+  ```
+- Validation summary lives at `import_jobs.validationSummary`, commit summary at `import_jobs.commitSummary`.
+- A job stuck in `VALIDATED` is normal — commit must be triggered explicitly via `POST /api/imports/[id]/commit`.
+
+### Activation token diagnostics
+
+- Tokens are stored hashed (SHA-256). One-time use: `usedAt` is set on success.
+- `expiresAt` is `now + ACTIVATION_TOKEN_TTL_HOURS` (default 72h).
+- A reused or expired token returns HTTP `400` with body `error: "Activation link ..."`. Surface this directly to the user — the right CTA is "ask your admin to send a new activation link", not "retry".
+
+### PWA install dismissal
+
+- Per-device suppression: `localStorage["hrs:pwa:dismissal"]` (JSON array of `{kind, platform, mode, nextEligibleAt}`).
+- Per-user cross-device suppression: `pwa_prompt_dismissals` table, unique on `(userId, kind, platform)`.
+- Re-engagement window: `PWA_BANNER_REENGAGE_DAYS` (default 14). `mode: never` suppresses indefinitely until the user clears it.
+
+### Hierarchy CRUD
+
+- After saving the `hierarchy` namespace, all callers of `resolveHierarchyLevels()` see the new shape on the next loader read (cache TTL caps the propagation delay at `ADMIN_CONFIG_CACHE_TTL_SECONDS`).
+- The fallback (`ORG_HIERARCHY_CONFIG`) is still the GROUP → CAMPUS structure. If the override is malformed (missing `level` or `label`), the loader silently rejects the entry — diff via `diffAgainstFallback("hierarchy")` to spot drift.

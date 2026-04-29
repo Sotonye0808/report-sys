@@ -201,6 +201,7 @@ export const API_ROUTES = {
     },
     adminConfig: {
         list: "/api/admin-config",
+        public: "/api/admin-config/public",
         namespace: (ns: string) => `/api/admin-config/${ns}`,
         reset: (ns: string) => `/api/admin-config/${ns}/reset`,
     },
