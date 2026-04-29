@@ -42,6 +42,10 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 | `lib/server/`       | Request context metadata (request IDs, route context)                                 | `lib/server/requestContext.ts`                                                                                              | `app/api/*`                                             |
 | `lib/utils/`        | API envelope helpers, logging, mutation lifecycle, offline, notifications             | `lib/utils/api.ts`, `lib/utils/serverLogger.ts`, `lib/utils/apiMutation.ts`, `lib/utils/notificationOrchestrator.ts`        | `modules/*`, `app/api/*`                                |
 | `lib/email/`        | Resend delivery and templated email generation                                        | `lib/email/resend.ts`, `lib/email/templates/registry.ts`                                                                    | `resend`, `config/content.ts`                           |
+| `lib/data/adminConfig.ts` | DB-first admin-config loader with `config/*` fallback, namespace cache, optimistic-lock writes | `lib/data/adminConfig.ts`                                                                                            | `prisma/*`, `lib/data/redis.ts`                         |
+| `lib/utils/joinRedirect.ts` | Whitelisted query-param redirect resolver for /join post-registration flow      | `lib/utils/joinRedirect.ts`                                                                                          | `config/routes.ts`                                      |
+| `modules/bulk-invites` | Bulk invite + pre-register surfaces                                                | `modules/bulk-invites/components/BulkInvitesPage.tsx`                                                                       | `app/api/invite-links/bulk/*`, `app/api/users/preregister/*` |
+| `components/ui/PwaInstallBanner.tsx` | Non-blocking PWA install + push prompt banner with platform detection and dismissal API | `components/ui/PwaInstallBanner.tsx`                                                            | `app/api/notifications/pwa-dismissal/*`                 |
 | `prisma/`           | Schema, migrations, generated client, seed                                            | `prisma/schema.prisma`, `prisma/migrations/*`, `prisma/generated/*`, `prisma/seed.ts`                                       | `@prisma/client`, `@prisma/adapter-pg`                  |
 
 ---
@@ -68,6 +72,12 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 13) Aggregation preview/generate treats no matching source reports as domain not-found (`404`) rather than generic server failure, improving user error handling.
 14) Aggregation UI now resolves scope defaults/options through a shared org rollup helper (`resolveOrgRollupContext`) so campus/group/global role constraints stay consistent.
 15) Email security flow is readiness-gated by `RESEND_API_KEY` + `EMAIL_FROM` + `NEXT_PUBLIC_APP_URL`: registration/login/auth refresh can trigger non-blocking verification prompts, profile UI can resend/request change, and token confirmation is completed via `/verify-email` with Route Handlers under `/api/auth/email-verification/*` and `/api/auth/email-change/*`.
+16) Admin-config substrate (`/api/admin-config`, `/api/admin-config/[ns]`, `/api/admin-config/[ns]/reset`) loads namespaces DB-first with `config/*` fallback. Loader returns the typed fallback on DB failure or when `ADMIN_CONFIG_DB_ENABLED=false`. Writes are versioned with optimistic-lock conflict detection (`409`) and async cache invalidation under the `adminConfig:ns:*` key prefix.
+17) Form assignments (`/api/form-assignments`, `/api/form-assignments/[id]`) pin a metric subset of a report to one or more assignees (USHER / DATA_ENTRY). Quick-form fills must verify the metric set on each write — never trust client-supplied metric IDs.
+18) Bulk invites (`/api/invite-links/bulk`) and pre-registration (`/api/users/preregister`) write a `BulkInviteBatch` and per-entry outcomes (`created` / `already_invited` / `already_registered` / `preregistered` / `activation_skipped` / `failed`). Pre-register creates inactive users with one-time `UserActivationToken` rows; existing active users are never overwritten.
+19) Activation flow (`/activate?token=...` → `/api/auth/activate`) verifies a SHA-256 token hash, forces a new password, marks the user active, and issues a sign-in cookie. Tokens are one-time and rotate on use.
+20) PWA install + push prompt banner (`components/ui/PwaInstallBanner.tsx`) is mounted in the dashboard layout. Dismissals are stored both in `localStorage` (per device) and `/api/notifications/pwa-dismissal` (per user across devices). Re-engagement window is `PWA_BANNER_REENGAGE_DAYS` for `mode: snooze` and indefinite for `mode: never`.
+21) `/join?token=...&redirect=<encoded path>` sanitises the redirect target via `lib/utils/joinRedirect.ts`. Only whitelisted authenticated routes survive (`/reports/new`, `/reports`, `/reports/aggregate`, `/quick-form`, `/goals`, `/imports`); on success the user is redirected to login with `?from=<sanitised>` so the existing login flow can replay the destination.
 ```
 
 ### Authentication Flow
@@ -116,6 +126,12 @@ PostgreSQL (via Prisma)  /  Upstash Redis  /  Resend email
 | `ASSET_CLEANUP_TOKEN`                      | Optional shared secret for cleanup endpoint invocation                                 | `.env*`  | Not set                               |
 | `PRISMA_ACCELERATE_URL`                    | Optional Prisma Accelerate URL (when used)                                             | `.env*`  | Not set                               |
 | `REPORT_REMINDER_HOURS`                    | Deadline reminder lead-time in hours                                                   | `.env*`  | `24`                                  |
+| `ADMIN_CONFIG_DB_ENABLED`                  | Toggle DB-backed admin-config substrate (false → always fallback to `config/*`)        | `.env*`  | `true`                                |
+| `ADMIN_CONFIG_CACHE_TTL_SECONDS`           | Redis TTL for namespace snapshots                                                      | `.env*`  | `300`                                 |
+| `ACTIVATION_TOKEN_TTL_HOURS`               | Pre-register activation link lifetime in hours                                         | `.env*`  | `72`                                  |
+| `IMPORT_MAX_FILE_BYTES`                    | Max spreadsheet upload bytes                                                           | `.env*`  | `10485760`                            |
+| `PWA_BANNER_REENGAGE_DAYS`                 | Days to suppress PWA install/push banner after a snooze                                | `.env*`  | `14`                                  |
+| `ANALYTICS_CORRELATION_MAX_METRICS`        | Cap on metrics included in correlation views                                           | `.env*`  | `12`                                  |
 
 ---
 

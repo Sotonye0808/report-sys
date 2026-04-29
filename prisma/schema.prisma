@@ -56,6 +56,14 @@ model User {
   dataEntryReports        Report[]                @relation("DataEntryCreator")
   reviewedReports         Report[]                @relation("ReportReviewer")
   submittedReports        Report[]                @relation("ReportSubmitter")
+  adminConfigEntries      AdminConfigEntry[]      @relation("AdminConfigActor")
+  formAssignmentsReceived FormAssignment[]        @relation("FormAssignmentAssignee")
+  formAssignmentsCreated  FormAssignment[]        @relation("FormAssignmentAssigner")
+  importJobs              ImportJob[]             @relation("ImportJobOwner")
+  importMappingProfiles   ImportMappingProfile[]  @relation("ImportMappingOwner")
+  bulkInviteBatches       BulkInviteBatch[]       @relation("BulkInviteCreator")
+  pwaPromptDismissals     PwaPromptDismissal[]    @relation("PwaPromptUser")
+  activationTokens        UserActivationToken[]   @relation("UserActivationOwner")
   campus                  Campus?                 @relation("CampusUsers", fields: [campusId], references: [id])
   orgGroup                OrgGroup?               @relation("OrgGroupUsers", fields: [orgGroupId], references: [id])
 
@@ -216,6 +224,7 @@ model Report {
   sections          ReportSection[]
   updateRequests    ReportUpdateRequest[]
   versions          ReportVersion[]
+  formAssignments   FormAssignment[]      @relation("FormAssignmentReport")
   approvedBy        User?                 @relation("ReportApprover", fields: [approvedById], references: [id])
   campus            Campus                @relation("ReportCampus", fields: [campusId], references: [id])
   createdBy         User?                 @relation("ReportCreator", fields: [createdById], references: [id])
@@ -443,22 +452,26 @@ model EmailActionToken {
 }
 
 model InviteLink {
-  id          String         @id @default(uuid())
-  token       String         @unique
-  type        InviteLinkType
-  targetId    String?
-  targetRole  UserRole?
-  campusId    String?
-  groupId     String?
-  note        String?
-  createdById String
-  usedAt      DateTime?
-  expiresAt   DateTime?
-  isActive    Boolean        @default(true)
-  createdAt   DateTime       @default(now())
-  createdBy   User           @relation("InviteLinkCreator", fields: [createdById], references: [id])
+  id             String            @id @default(uuid())
+  token          String            @unique
+  type           InviteLinkType
+  targetId       String?
+  targetRole     UserRole?
+  campusId       String?
+  groupId        String?
+  note           String?
+  createdById    String
+  usedAt         DateTime?
+  expiresAt      DateTime?
+  isActive       Boolean           @default(true)
+  recipientEmail String?
+  batchId        String?
+  createdAt      DateTime          @default(now())
+  createdBy      User              @relation("InviteLinkCreator", fields: [createdById], references: [id])
+  batch          BulkInviteBatch?  @relation("InviteLinkBatch", fields: [batchId], references: [id], onDelete: SetNull)
 
   @@index([token])
+  @@index([batchId])
   @@map("invite_links")
 }
 
@@ -561,6 +574,152 @@ model AssetLifecycleEvent {
   @@map("asset_lifecycle_events")
 }
 
+/* ── Admin Config + Form Assignments + Imports + Bulk Invites + PWA + Activation ── */
+
+model AdminConfigEntry {
+  id         String   @id @default(uuid())
+  namespace  String
+  version    Int      @default(1)
+  payload    Json
+  isFallback Boolean  @default(false)
+  actorId    String?
+  notes      String?
+  createdAt  DateTime @default(now())
+
+  actor User? @relation("AdminConfigActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([namespace, version])
+  @@index([namespace, createdAt])
+  @@map("admin_config_entries")
+}
+
+model FormAssignment {
+  id           String    @id @default(uuid())
+  reportId     String
+  assigneeId   String
+  assignedById String
+  metricIds    String[]
+  dueAt        DateTime?
+  completedAt  DateTime?
+  cancelledAt  DateTime?
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  report     Report @relation("FormAssignmentReport", fields: [reportId], references: [id], onDelete: Cascade)
+  assignee   User   @relation("FormAssignmentAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
+  assignedBy User   @relation("FormAssignmentAssigner", fields: [assignedById], references: [id], onDelete: Cascade)
+
+  @@index([assigneeId, completedAt])
+  @@index([reportId])
+  @@map("form_assignments")
+}
+
+model ImportJob {
+  id                 String              @id @default(uuid())
+  ownerId            String
+  templateId         String?
+  status             ImportJobStatus     @default(DRAFT)
+  fileName           String?
+  fileMime           String?
+  fileBytes          Int?
+  storageRef         String?
+  mappingProfileId   String?
+  mapping            Json?
+  validationSummary  Json?
+  commitSummary      Json?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  owner          User                   @relation("ImportJobOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  mappingProfile ImportMappingProfile?  @relation("ImportJobProfile", fields: [mappingProfileId], references: [id], onDelete: SetNull)
+  items          ImportJobItem[]        @relation("ImportJobItems")
+
+  @@index([ownerId, status])
+  @@map("import_jobs")
+}
+
+model ImportJobItem {
+  id                String             @id @default(uuid())
+  jobId             String
+  rowIndex          Int
+  rawValues         Json
+  normalizedValues  Json?
+  outcome           ImportRowOutcome   @default(OK)
+  errors            String[]
+  createdAt         DateTime           @default(now())
+
+  job ImportJob @relation("ImportJobItems", fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId, outcome])
+  @@map("import_job_items")
+}
+
+model ImportMappingProfile {
+  id         String   @id @default(uuid())
+  ownerId    String
+  templateId String?
+  name       String
+  mapping    Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  owner User        @relation("ImportMappingOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  jobs  ImportJob[] @relation("ImportJobProfile")
+
+  @@index([ownerId, templateId])
+  @@map("import_mapping_profiles")
+}
+
+model BulkInviteBatch {
+  id            String           @id @default(uuid())
+  createdById   String
+  kind          BulkInviteKind
+  sharedAttrs   Json?
+  totalEntries  Int              @default(0)
+  successCount  Int              @default(0)
+  skippedCount  Int              @default(0)
+  failedCount   Int              @default(0)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  createdBy User         @relation("BulkInviteCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  invites   InviteLink[] @relation("InviteLinkBatch")
+
+  @@index([createdById, createdAt])
+  @@map("bulk_invite_batches")
+}
+
+model PwaPromptDismissal {
+  id              String              @id @default(uuid())
+  userId          String
+  kind            PwaPromptKind
+  platform        PwaPromptPlatform
+  mode            PwaDismissalMode    @default(snooze)
+  nextEligibleAt  DateTime?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  user User @relation("PwaPromptUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, kind, platform])
+  @@map("pwa_prompt_dismissals")
+}
+
+model UserActivationToken {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation("UserActivationOwner", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@map("user_activation_tokens")
+}
+
 enum UserRole {
   SUPERADMIN
   SPO
@@ -573,6 +732,7 @@ enum UserRole {
   DATA_ENTRY
   MEMBER
   OFFICE_OF_CEO
+  USHER
 }
 
 enum Gender {
@@ -754,4 +914,42 @@ enum AssetLifecycleEventType {
   CLEANUP_FAILED
   COMPENSATION_DELETED
   COMPENSATION_FAILED
+}
+
+enum ImportJobStatus {
+  DRAFT
+  FILE_UPLOADED
+  MAPPED
+  VALIDATED
+  COMMITTED
+  FAILED
+  CANCELLED
+}
+
+enum ImportRowOutcome {
+  OK
+  WARNING
+  ERROR
+  COMMITTED
+}
+
+enum BulkInviteKind {
+  INVITE_LINK
+  PRE_REGISTER
+}
+
+enum PwaPromptKind {
+  INSTALL
+  PUSH
+}
+
+enum PwaPromptPlatform {
+  IOS
+  ANDROID
+  DESKTOP
+}
+
+enum PwaDismissalMode {
+  snooze
+  never
 }

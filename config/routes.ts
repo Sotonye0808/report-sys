@@ -55,6 +55,23 @@ export const APP_ROUTES = {
     bugReports: "/bug-reports",
     bugReportsManage: "/bug-reports/manage",
 
+    /* — Admin Config (superadmin) — */
+    adminConfig: "/admin-config",
+
+    /* — Quick Form (USHER / DATA_ENTRY) — */
+    quickForm: "/quick-form",
+    quickFormFill: (assignmentId: string) => `/quick-form/${assignmentId}`,
+
+    /* — Spreadsheet Imports — */
+    imports: "/imports",
+    importDetail: (id: string) => `/imports/${id}`,
+
+    /* — Bulk Invites — */
+    invitesBulk: "/invites/bulk",
+
+    /* — Activation (after pre-register) — */
+    activate: "/activate",
+
     /* — Member (scaffolded, no routes built yet) — */
     member: {
         dashboard: "/member/dashboard",
@@ -74,6 +91,7 @@ export const ROLE_DASHBOARD_ROUTES: Record<UserRole, string> = {
     [UserRole.CAMPUS_PASTOR]: APP_ROUTES.dashboard,
     [UserRole.CAMPUS_ADMIN]: APP_ROUTES.dashboard,
     [UserRole.DATA_ENTRY]: APP_ROUTES.reports,
+    [UserRole.USHER]: APP_ROUTES.quickForm,
     [UserRole.MEMBER]: APP_ROUTES.dashboard,
 };
 
@@ -181,4 +199,29 @@ export const API_ROUTES = {
         sessionDiscard: (id: string) => `/api/assets/sessions/${id}/discard`,
         cleanup: "/api/assets/cleanup",
     },
+    adminConfig: {
+        list: "/api/admin-config",
+        namespace: (ns: string) => `/api/admin-config/${ns}`,
+        reset: (ns: string) => `/api/admin-config/${ns}/reset`,
+    },
+    formAssignments: {
+        list: "/api/form-assignments",
+        detail: (id: string) => `/api/form-assignments/${id}`,
+        complete: (id: string) => `/api/form-assignments/${id}/complete`,
+        cancel: (id: string) => `/api/form-assignments/${id}/cancel`,
+    },
+    imports: {
+        list: "/api/imports",
+        detail: (id: string) => `/api/imports/${id}`,
+        file: (id: string) => `/api/imports/${id}/file`,
+        mapping: (id: string) => `/api/imports/${id}/mapping`,
+        validate: (id: string) => `/api/imports/${id}/validate`,
+        commit: (id: string) => `/api/imports/${id}/commit`,
+        cancel: (id: string) => `/api/imports/${id}/cancel`,
+        profiles: "/api/imports/profiles",
+    },
+    inviteLinksBulk: "/api/invite-links/bulk",
+    preregister: "/api/users/preregister",
+    activate: "/api/auth/activate",
+    pwaDismissal: "/api/notifications/pwa-dismissal",
 } as const;

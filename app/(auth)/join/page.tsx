@@ -24,6 +24,7 @@ import { CONTENT } from "@/config/content";
 import { API_ROUTES, APP_ROUTES } from "@/config/routes";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import { sanitiseJoinRedirect } from "@/lib/utils/joinRedirect";
 
 /* ── Invite metadata returned by GET /api/invite-links/[token] ───────────── */
 
@@ -51,21 +52,27 @@ function SuccessRedirect({
   router,
   email,
   emailServiceReady,
+  redirectTarget,
 }: {
   router: ReturnType<typeof useRouter>;
   email?: string;
   emailServiceReady?: boolean;
+  redirectTarget?: string;
 }) {
   const [seconds, setSeconds] = useState(5);
 
+  const loginHref = redirectTarget && redirectTarget !== APP_ROUTES.dashboard
+    ? `${APP_ROUTES.login}?from=${encodeURIComponent(redirectTarget)}`
+    : APP_ROUTES.login;
+
   useEffect(() => {
     if (seconds <= 0) {
-      router.push(APP_ROUTES.login);
+      router.push(loginHref);
       return;
     }
     const timer = setTimeout(() => setSeconds((s) => s - 1), 1000);
     return () => clearTimeout(timer);
-  }, [seconds, router]);
+  }, [seconds, router, loginHref]);
 
   return (
     <div className="flex flex-col items-center gap-4 text-center">
@@ -83,7 +90,7 @@ function SuccessRedirect({
       <p className="text-xs text-ds-text-subtle">
         {(CONTENT.auth.redirectingIn as string) ?? "Redirecting to login in"} {seconds}s…
       </p>
-      <Button type="primary" onClick={() => router.push(APP_ROUTES.login)}>
+      <Button type="primary" onClick={() => router.push(loginHref)}>
         {CONTENT.auth.loginButton as string}
       </Button>
     </div>
@@ -96,6 +103,7 @@ function JoinForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token") ?? "";
+  const redirectTarget = sanitiseJoinRedirect(searchParams.get("redirect"));
 
   const [invite, setInvite] = useState<InviteMeta | null>(null);
   const [status, setStatus] = useState<
@@ -233,6 +241,7 @@ function JoinForm() {
         router={router}
         email={registeredEmail}
         emailServiceReady={emailServiceReady}
+        redirectTarget={redirectTarget}
       />
     );
   }

@@ -34,6 +34,7 @@ export const CAMPUS_SCOPED_ROLES: UserRole[] = [
     UserRole.CAMPUS_PASTOR,
     UserRole.CAMPUS_ADMIN,
     UserRole.DATA_ENTRY,
+    UserRole.USHER,
 ];
 
 /** Which roles are scoped to the GROUP level */

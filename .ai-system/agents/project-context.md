@@ -33,6 +33,7 @@ The Harvesters Central Reporting System is a **standalone, role-based web applic
 | CAMPUS_PASTOR   | Campus Pastor   | /leader     | Reviews submitted campus reports; approves or requests edits                                                    |
 | CAMPUS_ADMIN    | Campus Admin    | /leader     | Primary report filler; compiles and submits consolidated campus report                                          |
 | DATA_ENTRY      | Data Entry      | /leader     | Enters historical/back-filled reports with custom date selection; no review/approval capabilities               |
+| USHER           | Usher           | /quick-form | Quick-form data entry only; sees only metrics assigned to them via `FormAssignment` and never the goal context  |
 | MEMBER          | Member          | /member     | Scaffolded only — defined in enums and ROLE_CONFIG but no routes built in this iteration                        |
 
 ---
@@ -47,6 +48,7 @@ The Harvesters Central Reporting System is a **standalone, role-based web applic
 - No relic CRM features (see Out of Scope)
 - All IDs are UUIDs; no hardcoded org/campus/group IDs
 - Design tokens (`--ds-*`) are the only allowed color/spacing source
+- Admin-editable config substrate (`lib/data/adminConfig.ts`) must remain DB-first with `config/*` as the immutable fallback. No role names, dashboard widget IDs, metric IDs, push install copy, or import-mapping shapes may be hardcoded in module code — bind them through the namespace loader so admins can tune them at runtime without a deploy.
 
 ---
 

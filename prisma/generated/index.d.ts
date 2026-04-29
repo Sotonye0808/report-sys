@@ -133,6 +133,46 @@ export type AssetUploadSession = $Result.DefaultSelection<Prisma.$AssetUploadSes
  * 
  */
 export type AssetLifecycleEvent = $Result.DefaultSelection<Prisma.$AssetLifecycleEventPayload>
+/**
+ * Model AdminConfigEntry
+ * 
+ */
+export type AdminConfigEntry = $Result.DefaultSelection<Prisma.$AdminConfigEntryPayload>
+/**
+ * Model FormAssignment
+ * 
+ */
+export type FormAssignment = $Result.DefaultSelection<Prisma.$FormAssignmentPayload>
+/**
+ * Model ImportJob
+ * 
+ */
+export type ImportJob = $Result.DefaultSelection<Prisma.$ImportJobPayload>
+/**
+ * Model ImportJobItem
+ * 
+ */
+export type ImportJobItem = $Result.DefaultSelection<Prisma.$ImportJobItemPayload>
+/**
+ * Model ImportMappingProfile
+ * 
+ */
+export type ImportMappingProfile = $Result.DefaultSelection<Prisma.$ImportMappingProfilePayload>
+/**
+ * Model BulkInviteBatch
+ * 
+ */
+export type BulkInviteBatch = $Result.DefaultSelection<Prisma.$BulkInviteBatchPayload>
+/**
+ * Model PwaPromptDismissal
+ * 
+ */
+export type PwaPromptDismissal = $Result.DefaultSelection<Prisma.$PwaPromptDismissalPayload>
+/**
+ * Model UserActivationToken
+ * 
+ */
+export type UserActivationToken = $Result.DefaultSelection<Prisma.$UserActivationTokenPayload>
 
 /**
  * Enums
@@ -149,7 +189,8 @@ export namespace $Enums {
   CAMPUS_ADMIN: 'CAMPUS_ADMIN',
   DATA_ENTRY: 'DATA_ENTRY',
   MEMBER: 'MEMBER',
-  OFFICE_OF_CEO: 'OFFICE_OF_CEO'
+  OFFICE_OF_CEO: 'OFFICE_OF_CEO',
+  USHER: 'USHER'
 };
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -401,6 +442,62 @@ export const AssetLifecycleEventType: {
 
 export type AssetLifecycleEventType = (typeof AssetLifecycleEventType)[keyof typeof AssetLifecycleEventType]
 
+
+export const ImportJobStatus: {
+  DRAFT: 'DRAFT',
+  FILE_UPLOADED: 'FILE_UPLOADED',
+  MAPPED: 'MAPPED',
+  VALIDATED: 'VALIDATED',
+  COMMITTED: 'COMMITTED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type ImportJobStatus = (typeof ImportJobStatus)[keyof typeof ImportJobStatus]
+
+
+export const ImportRowOutcome: {
+  OK: 'OK',
+  WARNING: 'WARNING',
+  ERROR: 'ERROR',
+  COMMITTED: 'COMMITTED'
+};
+
+export type ImportRowOutcome = (typeof ImportRowOutcome)[keyof typeof ImportRowOutcome]
+
+
+export const BulkInviteKind: {
+  INVITE_LINK: 'INVITE_LINK',
+  PRE_REGISTER: 'PRE_REGISTER'
+};
+
+export type BulkInviteKind = (typeof BulkInviteKind)[keyof typeof BulkInviteKind]
+
+
+export const PwaPromptKind: {
+  INSTALL: 'INSTALL',
+  PUSH: 'PUSH'
+};
+
+export type PwaPromptKind = (typeof PwaPromptKind)[keyof typeof PwaPromptKind]
+
+
+export const PwaPromptPlatform: {
+  IOS: 'IOS',
+  ANDROID: 'ANDROID',
+  DESKTOP: 'DESKTOP'
+};
+
+export type PwaPromptPlatform = (typeof PwaPromptPlatform)[keyof typeof PwaPromptPlatform]
+
+
+export const PwaDismissalMode: {
+  snooze: 'snooze',
+  never: 'never'
+};
+
+export type PwaDismissalMode = (typeof PwaDismissalMode)[keyof typeof PwaDismissalMode]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -494,6 +591,30 @@ export const AssetSessionState: typeof $Enums.AssetSessionState
 export type AssetLifecycleEventType = $Enums.AssetLifecycleEventType
 
 export const AssetLifecycleEventType: typeof $Enums.AssetLifecycleEventType
+
+export type ImportJobStatus = $Enums.ImportJobStatus
+
+export const ImportJobStatus: typeof $Enums.ImportJobStatus
+
+export type ImportRowOutcome = $Enums.ImportRowOutcome
+
+export const ImportRowOutcome: typeof $Enums.ImportRowOutcome
+
+export type BulkInviteKind = $Enums.BulkInviteKind
+
+export const BulkInviteKind: typeof $Enums.BulkInviteKind
+
+export type PwaPromptKind = $Enums.PwaPromptKind
+
+export const PwaPromptKind: typeof $Enums.PwaPromptKind
+
+export type PwaPromptPlatform = $Enums.PwaPromptPlatform
+
+export const PwaPromptPlatform: typeof $Enums.PwaPromptPlatform
+
+export type PwaDismissalMode = $Enums.PwaDismissalMode
+
+export const PwaDismissalMode: typeof $Enums.PwaDismissalMode
 
 /**
  * ##  Prisma Client ʲˢ
@@ -855,6 +976,86 @@ export class PrismaClient<
     * ```
     */
   get assetLifecycleEvent(): Prisma.AssetLifecycleEventDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.adminConfigEntry`: Exposes CRUD operations for the **AdminConfigEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AdminConfigEntries
+    * const adminConfigEntries = await prisma.adminConfigEntry.findMany()
+    * ```
+    */
+  get adminConfigEntry(): Prisma.AdminConfigEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.formAssignment`: Exposes CRUD operations for the **FormAssignment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FormAssignments
+    * const formAssignments = await prisma.formAssignment.findMany()
+    * ```
+    */
+  get formAssignment(): Prisma.FormAssignmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.importJob`: Exposes CRUD operations for the **ImportJob** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ImportJobs
+    * const importJobs = await prisma.importJob.findMany()
+    * ```
+    */
+  get importJob(): Prisma.ImportJobDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.importJobItem`: Exposes CRUD operations for the **ImportJobItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ImportJobItems
+    * const importJobItems = await prisma.importJobItem.findMany()
+    * ```
+    */
+  get importJobItem(): Prisma.ImportJobItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.importMappingProfile`: Exposes CRUD operations for the **ImportMappingProfile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ImportMappingProfiles
+    * const importMappingProfiles = await prisma.importMappingProfile.findMany()
+    * ```
+    */
+  get importMappingProfile(): Prisma.ImportMappingProfileDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.bulkInviteBatch`: Exposes CRUD operations for the **BulkInviteBatch** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BulkInviteBatches
+    * const bulkInviteBatches = await prisma.bulkInviteBatch.findMany()
+    * ```
+    */
+  get bulkInviteBatch(): Prisma.BulkInviteBatchDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pwaPromptDismissal`: Exposes CRUD operations for the **PwaPromptDismissal** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PwaPromptDismissals
+    * const pwaPromptDismissals = await prisma.pwaPromptDismissal.findMany()
+    * ```
+    */
+  get pwaPromptDismissal(): Prisma.PwaPromptDismissalDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userActivationToken`: Exposes CRUD operations for the **UserActivationToken** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserActivationTokens
+    * const userActivationTokens = await prisma.userActivationToken.findMany()
+    * ```
+    */
+  get userActivationToken(): Prisma.UserActivationTokenDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1312,7 +1513,15 @@ export namespace Prisma {
     BugReport: 'BugReport',
     MediaAsset: 'MediaAsset',
     AssetUploadSession: 'AssetUploadSession',
-    AssetLifecycleEvent: 'AssetLifecycleEvent'
+    AssetLifecycleEvent: 'AssetLifecycleEvent',
+    AdminConfigEntry: 'AdminConfigEntry',
+    FormAssignment: 'FormAssignment',
+    ImportJob: 'ImportJob',
+    ImportJobItem: 'ImportJobItem',
+    ImportMappingProfile: 'ImportMappingProfile',
+    BulkInviteBatch: 'BulkInviteBatch',
+    PwaPromptDismissal: 'PwaPromptDismissal',
+    UserActivationToken: 'UserActivationToken'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1328,7 +1537,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "orgGroup" | "campus" | "reportTemplate" | "reportTemplateSection" | "reportTemplateMetric" | "reportTemplateVersion" | "report" | "reportSection" | "reportMetric" | "reportEdit" | "reportUpdateRequest" | "reportEvent" | "reportVersion" | "goal" | "goalEditRequest" | "metricEntry" | "notification" | "emailActionToken" | "inviteLink" | "bugReport" | "mediaAsset" | "assetUploadSession" | "assetLifecycleEvent"
+      modelProps: "user" | "orgGroup" | "campus" | "reportTemplate" | "reportTemplateSection" | "reportTemplateMetric" | "reportTemplateVersion" | "report" | "reportSection" | "reportMetric" | "reportEdit" | "reportUpdateRequest" | "reportEvent" | "reportVersion" | "goal" | "goalEditRequest" | "metricEntry" | "notification" | "emailActionToken" | "inviteLink" | "bugReport" | "mediaAsset" | "assetUploadSession" | "assetLifecycleEvent" | "adminConfigEntry" | "formAssignment" | "importJob" | "importJobItem" | "importMappingProfile" | "bulkInviteBatch" | "pwaPromptDismissal" | "userActivationToken"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3108,6 +3317,598 @@ export namespace Prisma {
           }
         }
       }
+      AdminConfigEntry: {
+        payload: Prisma.$AdminConfigEntryPayload<ExtArgs>
+        fields: Prisma.AdminConfigEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AdminConfigEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminConfigEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AdminConfigEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminConfigEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.AdminConfigEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminConfigEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AdminConfigEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminConfigEntryPayload>
+          }
+          findMany: {
+            args: Prisma.AdminConfigEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminConfigEntryPayload>[]
+          }
+          create: {
+            args: Prisma.AdminConfigEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminConfigEntryPayload>
+          }
+          createMany: {
+            args: Prisma.AdminConfigEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AdminConfigEntryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminConfigEntryPayload>[]
+          }
+          delete: {
+            args: Prisma.AdminConfigEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminConfigEntryPayload>
+          }
+          update: {
+            args: Prisma.AdminConfigEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminConfigEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.AdminConfigEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AdminConfigEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AdminConfigEntryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminConfigEntryPayload>[]
+          }
+          upsert: {
+            args: Prisma.AdminConfigEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdminConfigEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.AdminConfigEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAdminConfigEntry>
+          }
+          groupBy: {
+            args: Prisma.AdminConfigEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AdminConfigEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AdminConfigEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<AdminConfigEntryCountAggregateOutputType> | number
+          }
+        }
+      }
+      FormAssignment: {
+        payload: Prisma.$FormAssignmentPayload<ExtArgs>
+        fields: Prisma.FormAssignmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FormAssignmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FormAssignmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentPayload>
+          }
+          findFirst: {
+            args: Prisma.FormAssignmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FormAssignmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentPayload>
+          }
+          findMany: {
+            args: Prisma.FormAssignmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentPayload>[]
+          }
+          create: {
+            args: Prisma.FormAssignmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentPayload>
+          }
+          createMany: {
+            args: Prisma.FormAssignmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FormAssignmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentPayload>[]
+          }
+          delete: {
+            args: Prisma.FormAssignmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentPayload>
+          }
+          update: {
+            args: Prisma.FormAssignmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.FormAssignmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FormAssignmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FormAssignmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.FormAssignmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentPayload>
+          }
+          aggregate: {
+            args: Prisma.FormAssignmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFormAssignment>
+          }
+          groupBy: {
+            args: Prisma.FormAssignmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FormAssignmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FormAssignmentCountArgs<ExtArgs>
+            result: $Utils.Optional<FormAssignmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      ImportJob: {
+        payload: Prisma.$ImportJobPayload<ExtArgs>
+        fields: Prisma.ImportJobFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ImportJobFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ImportJobFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobPayload>
+          }
+          findFirst: {
+            args: Prisma.ImportJobFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ImportJobFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobPayload>
+          }
+          findMany: {
+            args: Prisma.ImportJobFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobPayload>[]
+          }
+          create: {
+            args: Prisma.ImportJobCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobPayload>
+          }
+          createMany: {
+            args: Prisma.ImportJobCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ImportJobCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobPayload>[]
+          }
+          delete: {
+            args: Prisma.ImportJobDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobPayload>
+          }
+          update: {
+            args: Prisma.ImportJobUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobPayload>
+          }
+          deleteMany: {
+            args: Prisma.ImportJobDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ImportJobUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ImportJobUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobPayload>[]
+          }
+          upsert: {
+            args: Prisma.ImportJobUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobPayload>
+          }
+          aggregate: {
+            args: Prisma.ImportJobAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateImportJob>
+          }
+          groupBy: {
+            args: Prisma.ImportJobGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ImportJobGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ImportJobCountArgs<ExtArgs>
+            result: $Utils.Optional<ImportJobCountAggregateOutputType> | number
+          }
+        }
+      }
+      ImportJobItem: {
+        payload: Prisma.$ImportJobItemPayload<ExtArgs>
+        fields: Prisma.ImportJobItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ImportJobItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ImportJobItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobItemPayload>
+          }
+          findFirst: {
+            args: Prisma.ImportJobItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ImportJobItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobItemPayload>
+          }
+          findMany: {
+            args: Prisma.ImportJobItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobItemPayload>[]
+          }
+          create: {
+            args: Prisma.ImportJobItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobItemPayload>
+          }
+          createMany: {
+            args: Prisma.ImportJobItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ImportJobItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobItemPayload>[]
+          }
+          delete: {
+            args: Prisma.ImportJobItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobItemPayload>
+          }
+          update: {
+            args: Prisma.ImportJobItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.ImportJobItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ImportJobItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ImportJobItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.ImportJobItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportJobItemPayload>
+          }
+          aggregate: {
+            args: Prisma.ImportJobItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateImportJobItem>
+          }
+          groupBy: {
+            args: Prisma.ImportJobItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ImportJobItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ImportJobItemCountArgs<ExtArgs>
+            result: $Utils.Optional<ImportJobItemCountAggregateOutputType> | number
+          }
+        }
+      }
+      ImportMappingProfile: {
+        payload: Prisma.$ImportMappingProfilePayload<ExtArgs>
+        fields: Prisma.ImportMappingProfileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ImportMappingProfileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportMappingProfilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ImportMappingProfileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportMappingProfilePayload>
+          }
+          findFirst: {
+            args: Prisma.ImportMappingProfileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportMappingProfilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ImportMappingProfileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportMappingProfilePayload>
+          }
+          findMany: {
+            args: Prisma.ImportMappingProfileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportMappingProfilePayload>[]
+          }
+          create: {
+            args: Prisma.ImportMappingProfileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportMappingProfilePayload>
+          }
+          createMany: {
+            args: Prisma.ImportMappingProfileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ImportMappingProfileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportMappingProfilePayload>[]
+          }
+          delete: {
+            args: Prisma.ImportMappingProfileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportMappingProfilePayload>
+          }
+          update: {
+            args: Prisma.ImportMappingProfileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportMappingProfilePayload>
+          }
+          deleteMany: {
+            args: Prisma.ImportMappingProfileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ImportMappingProfileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ImportMappingProfileUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportMappingProfilePayload>[]
+          }
+          upsert: {
+            args: Prisma.ImportMappingProfileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImportMappingProfilePayload>
+          }
+          aggregate: {
+            args: Prisma.ImportMappingProfileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateImportMappingProfile>
+          }
+          groupBy: {
+            args: Prisma.ImportMappingProfileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ImportMappingProfileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ImportMappingProfileCountArgs<ExtArgs>
+            result: $Utils.Optional<ImportMappingProfileCountAggregateOutputType> | number
+          }
+        }
+      }
+      BulkInviteBatch: {
+        payload: Prisma.$BulkInviteBatchPayload<ExtArgs>
+        fields: Prisma.BulkInviteBatchFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BulkInviteBatchFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BulkInviteBatchPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BulkInviteBatchFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BulkInviteBatchPayload>
+          }
+          findFirst: {
+            args: Prisma.BulkInviteBatchFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BulkInviteBatchPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BulkInviteBatchFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BulkInviteBatchPayload>
+          }
+          findMany: {
+            args: Prisma.BulkInviteBatchFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BulkInviteBatchPayload>[]
+          }
+          create: {
+            args: Prisma.BulkInviteBatchCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BulkInviteBatchPayload>
+          }
+          createMany: {
+            args: Prisma.BulkInviteBatchCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BulkInviteBatchCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BulkInviteBatchPayload>[]
+          }
+          delete: {
+            args: Prisma.BulkInviteBatchDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BulkInviteBatchPayload>
+          }
+          update: {
+            args: Prisma.BulkInviteBatchUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BulkInviteBatchPayload>
+          }
+          deleteMany: {
+            args: Prisma.BulkInviteBatchDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BulkInviteBatchUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.BulkInviteBatchUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BulkInviteBatchPayload>[]
+          }
+          upsert: {
+            args: Prisma.BulkInviteBatchUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BulkInviteBatchPayload>
+          }
+          aggregate: {
+            args: Prisma.BulkInviteBatchAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBulkInviteBatch>
+          }
+          groupBy: {
+            args: Prisma.BulkInviteBatchGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BulkInviteBatchGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BulkInviteBatchCountArgs<ExtArgs>
+            result: $Utils.Optional<BulkInviteBatchCountAggregateOutputType> | number
+          }
+        }
+      }
+      PwaPromptDismissal: {
+        payload: Prisma.$PwaPromptDismissalPayload<ExtArgs>
+        fields: Prisma.PwaPromptDismissalFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PwaPromptDismissalFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PwaPromptDismissalPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PwaPromptDismissalFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PwaPromptDismissalPayload>
+          }
+          findFirst: {
+            args: Prisma.PwaPromptDismissalFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PwaPromptDismissalPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PwaPromptDismissalFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PwaPromptDismissalPayload>
+          }
+          findMany: {
+            args: Prisma.PwaPromptDismissalFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PwaPromptDismissalPayload>[]
+          }
+          create: {
+            args: Prisma.PwaPromptDismissalCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PwaPromptDismissalPayload>
+          }
+          createMany: {
+            args: Prisma.PwaPromptDismissalCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PwaPromptDismissalCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PwaPromptDismissalPayload>[]
+          }
+          delete: {
+            args: Prisma.PwaPromptDismissalDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PwaPromptDismissalPayload>
+          }
+          update: {
+            args: Prisma.PwaPromptDismissalUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PwaPromptDismissalPayload>
+          }
+          deleteMany: {
+            args: Prisma.PwaPromptDismissalDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PwaPromptDismissalUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PwaPromptDismissalUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PwaPromptDismissalPayload>[]
+          }
+          upsert: {
+            args: Prisma.PwaPromptDismissalUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PwaPromptDismissalPayload>
+          }
+          aggregate: {
+            args: Prisma.PwaPromptDismissalAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePwaPromptDismissal>
+          }
+          groupBy: {
+            args: Prisma.PwaPromptDismissalGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PwaPromptDismissalGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PwaPromptDismissalCountArgs<ExtArgs>
+            result: $Utils.Optional<PwaPromptDismissalCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserActivationToken: {
+        payload: Prisma.$UserActivationTokenPayload<ExtArgs>
+        fields: Prisma.UserActivationTokenFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserActivationTokenFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivationTokenPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserActivationTokenFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivationTokenPayload>
+          }
+          findFirst: {
+            args: Prisma.UserActivationTokenFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivationTokenPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserActivationTokenFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivationTokenPayload>
+          }
+          findMany: {
+            args: Prisma.UserActivationTokenFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivationTokenPayload>[]
+          }
+          create: {
+            args: Prisma.UserActivationTokenCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivationTokenPayload>
+          }
+          createMany: {
+            args: Prisma.UserActivationTokenCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserActivationTokenCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivationTokenPayload>[]
+          }
+          delete: {
+            args: Prisma.UserActivationTokenDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivationTokenPayload>
+          }
+          update: {
+            args: Prisma.UserActivationTokenUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivationTokenPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserActivationTokenDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserActivationTokenUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserActivationTokenUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivationTokenPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserActivationTokenUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserActivationTokenPayload>
+          }
+          aggregate: {
+            args: Prisma.UserActivationTokenAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserActivationToken>
+          }
+          groupBy: {
+            args: Prisma.UserActivationTokenGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserActivationTokenGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserActivationTokenCountArgs<ExtArgs>
+            result: $Utils.Optional<UserActivationTokenCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3240,6 +4041,14 @@ export namespace Prisma {
     mediaAsset?: MediaAssetOmit
     assetUploadSession?: AssetUploadSessionOmit
     assetLifecycleEvent?: AssetLifecycleEventOmit
+    adminConfigEntry?: AdminConfigEntryOmit
+    formAssignment?: FormAssignmentOmit
+    importJob?: ImportJobOmit
+    importJobItem?: ImportJobItemOmit
+    importMappingProfile?: ImportMappingProfileOmit
+    bulkInviteBatch?: BulkInviteBatchOmit
+    pwaPromptDismissal?: PwaPromptDismissalOmit
+    userActivationToken?: UserActivationTokenOmit
   }
 
   /* Types for Logging */
@@ -3347,6 +4156,14 @@ export namespace Prisma {
     dataEntryReports: number
     reviewedReports: number
     submittedReports: number
+    adminConfigEntries: number
+    formAssignmentsReceived: number
+    formAssignmentsCreated: number
+    importJobs: number
+    importMappingProfiles: number
+    bulkInviteBatches: number
+    pwaPromptDismissals: number
+    activationTokens: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3377,6 +4194,14 @@ export namespace Prisma {
     dataEntryReports?: boolean | UserCountOutputTypeCountDataEntryReportsArgs
     reviewedReports?: boolean | UserCountOutputTypeCountReviewedReportsArgs
     submittedReports?: boolean | UserCountOutputTypeCountSubmittedReportsArgs
+    adminConfigEntries?: boolean | UserCountOutputTypeCountAdminConfigEntriesArgs
+    formAssignmentsReceived?: boolean | UserCountOutputTypeCountFormAssignmentsReceivedArgs
+    formAssignmentsCreated?: boolean | UserCountOutputTypeCountFormAssignmentsCreatedArgs
+    importJobs?: boolean | UserCountOutputTypeCountImportJobsArgs
+    importMappingProfiles?: boolean | UserCountOutputTypeCountImportMappingProfilesArgs
+    bulkInviteBatches?: boolean | UserCountOutputTypeCountBulkInviteBatchesArgs
+    pwaPromptDismissals?: boolean | UserCountOutputTypeCountPwaPromptDismissalsArgs
+    activationTokens?: boolean | UserCountOutputTypeCountActivationTokensArgs
   }
 
   // Custom InputTypes
@@ -3577,6 +4402,62 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountSubmittedReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReportWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAdminConfigEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminConfigEntryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFormAssignmentsReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormAssignmentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFormAssignmentsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormAssignmentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountImportJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImportJobWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountImportMappingProfilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImportMappingProfileWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBulkInviteBatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BulkInviteBatchWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPwaPromptDismissalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PwaPromptDismissalWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountActivationTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserActivationTokenWhereInput
   }
 
 
@@ -3844,6 +4725,7 @@ export namespace Prisma {
     sections: number
     updateRequests: number
     versions: number
+    formAssignments: number
   }
 
   export type ReportCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3852,6 +4734,7 @@ export namespace Prisma {
     sections?: boolean | ReportCountOutputTypeCountSectionsArgs
     updateRequests?: boolean | ReportCountOutputTypeCountUpdateRequestsArgs
     versions?: boolean | ReportCountOutputTypeCountVersionsArgs
+    formAssignments?: boolean | ReportCountOutputTypeCountFormAssignmentsArgs
   }
 
   // Custom InputTypes
@@ -3898,6 +4781,13 @@ export namespace Prisma {
    */
   export type ReportCountOutputTypeCountVersionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReportVersionWhereInput
+  }
+
+  /**
+   * ReportCountOutputType without action
+   */
+  export type ReportCountOutputTypeCountFormAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormAssignmentWhereInput
   }
 
 
@@ -4040,6 +4930,99 @@ export namespace Prisma {
    */
   export type AssetUploadSessionCountOutputTypeCountLifecycleEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AssetLifecycleEventWhereInput
+  }
+
+
+  /**
+   * Count Type ImportJobCountOutputType
+   */
+
+  export type ImportJobCountOutputType = {
+    items: number
+  }
+
+  export type ImportJobCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | ImportJobCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ImportJobCountOutputType without action
+   */
+  export type ImportJobCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobCountOutputType
+     */
+    select?: ImportJobCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ImportJobCountOutputType without action
+   */
+  export type ImportJobCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImportJobItemWhereInput
+  }
+
+
+  /**
+   * Count Type ImportMappingProfileCountOutputType
+   */
+
+  export type ImportMappingProfileCountOutputType = {
+    jobs: number
+  }
+
+  export type ImportMappingProfileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    jobs?: boolean | ImportMappingProfileCountOutputTypeCountJobsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ImportMappingProfileCountOutputType without action
+   */
+  export type ImportMappingProfileCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfileCountOutputType
+     */
+    select?: ImportMappingProfileCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ImportMappingProfileCountOutputType without action
+   */
+  export type ImportMappingProfileCountOutputTypeCountJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImportJobWhereInput
+  }
+
+
+  /**
+   * Count Type BulkInviteBatchCountOutputType
+   */
+
+  export type BulkInviteBatchCountOutputType = {
+    invites: number
+  }
+
+  export type BulkInviteBatchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    invites?: boolean | BulkInviteBatchCountOutputTypeCountInvitesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BulkInviteBatchCountOutputType without action
+   */
+  export type BulkInviteBatchCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatchCountOutputType
+     */
+    select?: BulkInviteBatchCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BulkInviteBatchCountOutputType without action
+   */
+  export type BulkInviteBatchCountOutputTypeCountInvitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InviteLinkWhereInput
   }
 
 
@@ -4366,6 +5349,14 @@ export namespace Prisma {
     dataEntryReports?: boolean | User$dataEntryReportsArgs<ExtArgs>
     reviewedReports?: boolean | User$reviewedReportsArgs<ExtArgs>
     submittedReports?: boolean | User$submittedReportsArgs<ExtArgs>
+    adminConfigEntries?: boolean | User$adminConfigEntriesArgs<ExtArgs>
+    formAssignmentsReceived?: boolean | User$formAssignmentsReceivedArgs<ExtArgs>
+    formAssignmentsCreated?: boolean | User$formAssignmentsCreatedArgs<ExtArgs>
+    importJobs?: boolean | User$importJobsArgs<ExtArgs>
+    importMappingProfiles?: boolean | User$importMappingProfilesArgs<ExtArgs>
+    bulkInviteBatches?: boolean | User$bulkInviteBatchesArgs<ExtArgs>
+    pwaPromptDismissals?: boolean | User$pwaPromptDismissalsArgs<ExtArgs>
+    activationTokens?: boolean | User$activationTokensArgs<ExtArgs>
     campus?: boolean | User$campusArgs<ExtArgs>
     orgGroup?: boolean | User$orgGroupArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4476,6 +5467,14 @@ export namespace Prisma {
     dataEntryReports?: boolean | User$dataEntryReportsArgs<ExtArgs>
     reviewedReports?: boolean | User$reviewedReportsArgs<ExtArgs>
     submittedReports?: boolean | User$submittedReportsArgs<ExtArgs>
+    adminConfigEntries?: boolean | User$adminConfigEntriesArgs<ExtArgs>
+    formAssignmentsReceived?: boolean | User$formAssignmentsReceivedArgs<ExtArgs>
+    formAssignmentsCreated?: boolean | User$formAssignmentsCreatedArgs<ExtArgs>
+    importJobs?: boolean | User$importJobsArgs<ExtArgs>
+    importMappingProfiles?: boolean | User$importMappingProfilesArgs<ExtArgs>
+    bulkInviteBatches?: boolean | User$bulkInviteBatchesArgs<ExtArgs>
+    pwaPromptDismissals?: boolean | User$pwaPromptDismissalsArgs<ExtArgs>
+    activationTokens?: boolean | User$activationTokensArgs<ExtArgs>
     campus?: boolean | User$campusArgs<ExtArgs>
     orgGroup?: boolean | User$orgGroupArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4519,6 +5518,14 @@ export namespace Prisma {
       dataEntryReports: Prisma.$ReportPayload<ExtArgs>[]
       reviewedReports: Prisma.$ReportPayload<ExtArgs>[]
       submittedReports: Prisma.$ReportPayload<ExtArgs>[]
+      adminConfigEntries: Prisma.$AdminConfigEntryPayload<ExtArgs>[]
+      formAssignmentsReceived: Prisma.$FormAssignmentPayload<ExtArgs>[]
+      formAssignmentsCreated: Prisma.$FormAssignmentPayload<ExtArgs>[]
+      importJobs: Prisma.$ImportJobPayload<ExtArgs>[]
+      importMappingProfiles: Prisma.$ImportMappingProfilePayload<ExtArgs>[]
+      bulkInviteBatches: Prisma.$BulkInviteBatchPayload<ExtArgs>[]
+      pwaPromptDismissals: Prisma.$PwaPromptDismissalPayload<ExtArgs>[]
+      activationTokens: Prisma.$UserActivationTokenPayload<ExtArgs>[]
       campus: Prisma.$CampusPayload<ExtArgs> | null
       orgGroup: Prisma.$OrgGroupPayload<ExtArgs> | null
     }
@@ -4965,6 +5972,14 @@ export namespace Prisma {
     dataEntryReports<T extends User$dataEntryReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$dataEntryReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewedReports<T extends User$reviewedReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewedReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     submittedReports<T extends User$submittedReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$submittedReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    adminConfigEntries<T extends User$adminConfigEntriesArgs<ExtArgs> = {}>(args?: Subset<T, User$adminConfigEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    formAssignmentsReceived<T extends User$formAssignmentsReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$formAssignmentsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    formAssignmentsCreated<T extends User$formAssignmentsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$formAssignmentsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    importJobs<T extends User$importJobsArgs<ExtArgs> = {}>(args?: Subset<T, User$importJobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    importMappingProfiles<T extends User$importMappingProfilesArgs<ExtArgs> = {}>(args?: Subset<T, User$importMappingProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    bulkInviteBatches<T extends User$bulkInviteBatchesArgs<ExtArgs> = {}>(args?: Subset<T, User$bulkInviteBatchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    pwaPromptDismissals<T extends User$pwaPromptDismissalsArgs<ExtArgs> = {}>(args?: Subset<T, User$pwaPromptDismissalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    activationTokens<T extends User$activationTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$activationTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     campus<T extends User$campusArgs<ExtArgs> = {}>(args?: Subset<T, User$campusArgs<ExtArgs>>): Prisma__CampusClient<$Result.GetResult<Prisma.$CampusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orgGroup<T extends User$orgGroupArgs<ExtArgs> = {}>(args?: Subset<T, User$orgGroupArgs<ExtArgs>>): Prisma__OrgGroupClient<$Result.GetResult<Prisma.$OrgGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -6058,6 +7073,198 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReportScalarFieldEnum | ReportScalarFieldEnum[]
+  }
+
+  /**
+   * User.adminConfigEntries
+   */
+  export type User$adminConfigEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryInclude<ExtArgs> | null
+    where?: AdminConfigEntryWhereInput
+    orderBy?: AdminConfigEntryOrderByWithRelationInput | AdminConfigEntryOrderByWithRelationInput[]
+    cursor?: AdminConfigEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AdminConfigEntryScalarFieldEnum | AdminConfigEntryScalarFieldEnum[]
+  }
+
+  /**
+   * User.formAssignmentsReceived
+   */
+  export type User$formAssignmentsReceivedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    where?: FormAssignmentWhereInput
+    orderBy?: FormAssignmentOrderByWithRelationInput | FormAssignmentOrderByWithRelationInput[]
+    cursor?: FormAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormAssignmentScalarFieldEnum | FormAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * User.formAssignmentsCreated
+   */
+  export type User$formAssignmentsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    where?: FormAssignmentWhereInput
+    orderBy?: FormAssignmentOrderByWithRelationInput | FormAssignmentOrderByWithRelationInput[]
+    cursor?: FormAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormAssignmentScalarFieldEnum | FormAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * User.importJobs
+   */
+  export type User$importJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+    where?: ImportJobWhereInput
+    orderBy?: ImportJobOrderByWithRelationInput | ImportJobOrderByWithRelationInput[]
+    cursor?: ImportJobWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ImportJobScalarFieldEnum | ImportJobScalarFieldEnum[]
+  }
+
+  /**
+   * User.importMappingProfiles
+   */
+  export type User$importMappingProfilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+    where?: ImportMappingProfileWhereInput
+    orderBy?: ImportMappingProfileOrderByWithRelationInput | ImportMappingProfileOrderByWithRelationInput[]
+    cursor?: ImportMappingProfileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ImportMappingProfileScalarFieldEnum | ImportMappingProfileScalarFieldEnum[]
+  }
+
+  /**
+   * User.bulkInviteBatches
+   */
+  export type User$bulkInviteBatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+    where?: BulkInviteBatchWhereInput
+    orderBy?: BulkInviteBatchOrderByWithRelationInput | BulkInviteBatchOrderByWithRelationInput[]
+    cursor?: BulkInviteBatchWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BulkInviteBatchScalarFieldEnum | BulkInviteBatchScalarFieldEnum[]
+  }
+
+  /**
+   * User.pwaPromptDismissals
+   */
+  export type User$pwaPromptDismissalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalInclude<ExtArgs> | null
+    where?: PwaPromptDismissalWhereInput
+    orderBy?: PwaPromptDismissalOrderByWithRelationInput | PwaPromptDismissalOrderByWithRelationInput[]
+    cursor?: PwaPromptDismissalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PwaPromptDismissalScalarFieldEnum | PwaPromptDismissalScalarFieldEnum[]
+  }
+
+  /**
+   * User.activationTokens
+   */
+  export type User$activationTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenInclude<ExtArgs> | null
+    where?: UserActivationTokenWhereInput
+    orderBy?: UserActivationTokenOrderByWithRelationInput | UserActivationTokenOrderByWithRelationInput[]
+    cursor?: UserActivationTokenWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserActivationTokenScalarFieldEnum | UserActivationTokenScalarFieldEnum[]
   }
 
   /**
@@ -13929,6 +15136,7 @@ export namespace Prisma {
     sections?: boolean | Report$sectionsArgs<ExtArgs>
     updateRequests?: boolean | Report$updateRequestsArgs<ExtArgs>
     versions?: boolean | Report$versionsArgs<ExtArgs>
+    formAssignments?: boolean | Report$formAssignmentsArgs<ExtArgs>
     approvedBy?: boolean | Report$approvedByArgs<ExtArgs>
     campus?: boolean | CampusDefaultArgs<ExtArgs>
     createdBy?: boolean | Report$createdByArgs<ExtArgs>
@@ -14047,6 +15255,7 @@ export namespace Prisma {
     sections?: boolean | Report$sectionsArgs<ExtArgs>
     updateRequests?: boolean | Report$updateRequestsArgs<ExtArgs>
     versions?: boolean | Report$versionsArgs<ExtArgs>
+    formAssignments?: boolean | Report$formAssignmentsArgs<ExtArgs>
     approvedBy?: boolean | Report$approvedByArgs<ExtArgs>
     campus?: boolean | CampusDefaultArgs<ExtArgs>
     createdBy?: boolean | Report$createdByArgs<ExtArgs>
@@ -14086,6 +15295,7 @@ export namespace Prisma {
       sections: Prisma.$ReportSectionPayload<ExtArgs>[]
       updateRequests: Prisma.$ReportUpdateRequestPayload<ExtArgs>[]
       versions: Prisma.$ReportVersionPayload<ExtArgs>[]
+      formAssignments: Prisma.$FormAssignmentPayload<ExtArgs>[]
       approvedBy: Prisma.$UserPayload<ExtArgs> | null
       campus: Prisma.$CampusPayload<ExtArgs>
       createdBy: Prisma.$UserPayload<ExtArgs> | null
@@ -14520,6 +15730,7 @@ export namespace Prisma {
     sections<T extends Report$sectionsArgs<ExtArgs> = {}>(args?: Subset<T, Report$sectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportSectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     updateRequests<T extends Report$updateRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Report$updateRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportUpdateRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     versions<T extends Report$versionsArgs<ExtArgs> = {}>(args?: Subset<T, Report$versionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    formAssignments<T extends Report$formAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, Report$formAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     approvedBy<T extends Report$approvedByArgs<ExtArgs> = {}>(args?: Subset<T, Report$approvedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     campus<T extends CampusDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CampusDefaultArgs<ExtArgs>>): Prisma__CampusClient<$Result.GetResult<Prisma.$CampusPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     createdBy<T extends Report$createdByArgs<ExtArgs> = {}>(args?: Subset<T, Report$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -15095,6 +16306,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReportVersionScalarFieldEnum | ReportVersionScalarFieldEnum[]
+  }
+
+  /**
+   * Report.formAssignments
+   */
+  export type Report$formAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    where?: FormAssignmentWhereInput
+    orderBy?: FormAssignmentOrderByWithRelationInput | FormAssignmentOrderByWithRelationInput[]
+    cursor?: FormAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormAssignmentScalarFieldEnum | FormAssignmentScalarFieldEnum[]
   }
 
   /**
@@ -28102,6 +29337,8 @@ export namespace Prisma {
     usedAt: Date | null
     expiresAt: Date | null
     isActive: boolean | null
+    recipientEmail: string | null
+    batchId: string | null
     createdAt: Date | null
   }
 
@@ -28118,6 +29355,8 @@ export namespace Prisma {
     usedAt: Date | null
     expiresAt: Date | null
     isActive: boolean | null
+    recipientEmail: string | null
+    batchId: string | null
     createdAt: Date | null
   }
 
@@ -28134,6 +29373,8 @@ export namespace Prisma {
     usedAt: number
     expiresAt: number
     isActive: number
+    recipientEmail: number
+    batchId: number
     createdAt: number
     _all: number
   }
@@ -28152,6 +29393,8 @@ export namespace Prisma {
     usedAt?: true
     expiresAt?: true
     isActive?: true
+    recipientEmail?: true
+    batchId?: true
     createdAt?: true
   }
 
@@ -28168,6 +29411,8 @@ export namespace Prisma {
     usedAt?: true
     expiresAt?: true
     isActive?: true
+    recipientEmail?: true
+    batchId?: true
     createdAt?: true
   }
 
@@ -28184,6 +29429,8 @@ export namespace Prisma {
     usedAt?: true
     expiresAt?: true
     isActive?: true
+    recipientEmail?: true
+    batchId?: true
     createdAt?: true
     _all?: true
   }
@@ -28273,6 +29520,8 @@ export namespace Prisma {
     usedAt: Date | null
     expiresAt: Date | null
     isActive: boolean
+    recipientEmail: string | null
+    batchId: string | null
     createdAt: Date
     _count: InviteLinkCountAggregateOutputType | null
     _min: InviteLinkMinAggregateOutputType | null
@@ -28306,8 +29555,11 @@ export namespace Prisma {
     usedAt?: boolean
     expiresAt?: boolean
     isActive?: boolean
+    recipientEmail?: boolean
+    batchId?: boolean
     createdAt?: boolean
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | InviteLink$batchArgs<ExtArgs>
   }, ExtArgs["result"]["inviteLink"]>
 
   export type InviteLinkSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -28323,8 +29575,11 @@ export namespace Prisma {
     usedAt?: boolean
     expiresAt?: boolean
     isActive?: boolean
+    recipientEmail?: boolean
+    batchId?: boolean
     createdAt?: boolean
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | InviteLink$batchArgs<ExtArgs>
   }, ExtArgs["result"]["inviteLink"]>
 
   export type InviteLinkSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -28340,8 +29595,11 @@ export namespace Prisma {
     usedAt?: boolean
     expiresAt?: boolean
     isActive?: boolean
+    recipientEmail?: boolean
+    batchId?: boolean
     createdAt?: boolean
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | InviteLink$batchArgs<ExtArgs>
   }, ExtArgs["result"]["inviteLink"]>
 
   export type InviteLinkSelectScalar = {
@@ -28357,24 +29615,30 @@ export namespace Prisma {
     usedAt?: boolean
     expiresAt?: boolean
     isActive?: boolean
+    recipientEmail?: boolean
+    batchId?: boolean
     createdAt?: boolean
   }
 
-  export type InviteLinkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "token" | "type" | "targetId" | "targetRole" | "campusId" | "groupId" | "note" | "createdById" | "usedAt" | "expiresAt" | "isActive" | "createdAt", ExtArgs["result"]["inviteLink"]>
+  export type InviteLinkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "token" | "type" | "targetId" | "targetRole" | "campusId" | "groupId" | "note" | "createdById" | "usedAt" | "expiresAt" | "isActive" | "recipientEmail" | "batchId" | "createdAt", ExtArgs["result"]["inviteLink"]>
   export type InviteLinkInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | InviteLink$batchArgs<ExtArgs>
   }
   export type InviteLinkIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | InviteLink$batchArgs<ExtArgs>
   }
   export type InviteLinkIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | InviteLink$batchArgs<ExtArgs>
   }
 
   export type $InviteLinkPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "InviteLink"
     objects: {
       createdBy: Prisma.$UserPayload<ExtArgs>
+      batch: Prisma.$BulkInviteBatchPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -28389,6 +29653,8 @@ export namespace Prisma {
       usedAt: Date | null
       expiresAt: Date | null
       isActive: boolean
+      recipientEmail: string | null
+      batchId: string | null
       createdAt: Date
     }, ExtArgs["result"]["inviteLink"]>
     composites: {}
@@ -28785,6 +30051,7 @@ export namespace Prisma {
   export interface Prisma__InviteLinkClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    batch<T extends InviteLink$batchArgs<ExtArgs> = {}>(args?: Subset<T, InviteLink$batchArgs<ExtArgs>>): Prisma__BulkInviteBatchClient<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -28826,6 +30093,8 @@ export namespace Prisma {
     readonly usedAt: FieldRef<"InviteLink", 'DateTime'>
     readonly expiresAt: FieldRef<"InviteLink", 'DateTime'>
     readonly isActive: FieldRef<"InviteLink", 'Boolean'>
+    readonly recipientEmail: FieldRef<"InviteLink", 'String'>
+    readonly batchId: FieldRef<"InviteLink", 'String'>
     readonly createdAt: FieldRef<"InviteLink", 'DateTime'>
   }
     
@@ -29220,6 +30489,25 @@ export namespace Prisma {
      * Limit how many InviteLinks to delete.
      */
     limit?: number
+  }
+
+  /**
+   * InviteLink.batch
+   */
+  export type InviteLink$batchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+    where?: BulkInviteBatchWhereInput
   }
 
   /**
@@ -34193,6 +35481,9146 @@ export namespace Prisma {
 
 
   /**
+   * Model AdminConfigEntry
+   */
+
+  export type AggregateAdminConfigEntry = {
+    _count: AdminConfigEntryCountAggregateOutputType | null
+    _avg: AdminConfigEntryAvgAggregateOutputType | null
+    _sum: AdminConfigEntrySumAggregateOutputType | null
+    _min: AdminConfigEntryMinAggregateOutputType | null
+    _max: AdminConfigEntryMaxAggregateOutputType | null
+  }
+
+  export type AdminConfigEntryAvgAggregateOutputType = {
+    version: number | null
+  }
+
+  export type AdminConfigEntrySumAggregateOutputType = {
+    version: number | null
+  }
+
+  export type AdminConfigEntryMinAggregateOutputType = {
+    id: string | null
+    namespace: string | null
+    version: number | null
+    isFallback: boolean | null
+    actorId: string | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type AdminConfigEntryMaxAggregateOutputType = {
+    id: string | null
+    namespace: string | null
+    version: number | null
+    isFallback: boolean | null
+    actorId: string | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type AdminConfigEntryCountAggregateOutputType = {
+    id: number
+    namespace: number
+    version: number
+    payload: number
+    isFallback: number
+    actorId: number
+    notes: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type AdminConfigEntryAvgAggregateInputType = {
+    version?: true
+  }
+
+  export type AdminConfigEntrySumAggregateInputType = {
+    version?: true
+  }
+
+  export type AdminConfigEntryMinAggregateInputType = {
+    id?: true
+    namespace?: true
+    version?: true
+    isFallback?: true
+    actorId?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type AdminConfigEntryMaxAggregateInputType = {
+    id?: true
+    namespace?: true
+    version?: true
+    isFallback?: true
+    actorId?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type AdminConfigEntryCountAggregateInputType = {
+    id?: true
+    namespace?: true
+    version?: true
+    payload?: true
+    isFallback?: true
+    actorId?: true
+    notes?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type AdminConfigEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdminConfigEntry to aggregate.
+     */
+    where?: AdminConfigEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminConfigEntries to fetch.
+     */
+    orderBy?: AdminConfigEntryOrderByWithRelationInput | AdminConfigEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AdminConfigEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminConfigEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminConfigEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AdminConfigEntries
+    **/
+    _count?: true | AdminConfigEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AdminConfigEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AdminConfigEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AdminConfigEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AdminConfigEntryMaxAggregateInputType
+  }
+
+  export type GetAdminConfigEntryAggregateType<T extends AdminConfigEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateAdminConfigEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAdminConfigEntry[P]>
+      : GetScalarType<T[P], AggregateAdminConfigEntry[P]>
+  }
+
+
+
+
+  export type AdminConfigEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminConfigEntryWhereInput
+    orderBy?: AdminConfigEntryOrderByWithAggregationInput | AdminConfigEntryOrderByWithAggregationInput[]
+    by: AdminConfigEntryScalarFieldEnum[] | AdminConfigEntryScalarFieldEnum
+    having?: AdminConfigEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AdminConfigEntryCountAggregateInputType | true
+    _avg?: AdminConfigEntryAvgAggregateInputType
+    _sum?: AdminConfigEntrySumAggregateInputType
+    _min?: AdminConfigEntryMinAggregateInputType
+    _max?: AdminConfigEntryMaxAggregateInputType
+  }
+
+  export type AdminConfigEntryGroupByOutputType = {
+    id: string
+    namespace: string
+    version: number
+    payload: JsonValue
+    isFallback: boolean
+    actorId: string | null
+    notes: string | null
+    createdAt: Date
+    _count: AdminConfigEntryCountAggregateOutputType | null
+    _avg: AdminConfigEntryAvgAggregateOutputType | null
+    _sum: AdminConfigEntrySumAggregateOutputType | null
+    _min: AdminConfigEntryMinAggregateOutputType | null
+    _max: AdminConfigEntryMaxAggregateOutputType | null
+  }
+
+  type GetAdminConfigEntryGroupByPayload<T extends AdminConfigEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AdminConfigEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AdminConfigEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AdminConfigEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], AdminConfigEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AdminConfigEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    namespace?: boolean
+    version?: boolean
+    payload?: boolean
+    isFallback?: boolean
+    actorId?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    actor?: boolean | AdminConfigEntry$actorArgs<ExtArgs>
+  }, ExtArgs["result"]["adminConfigEntry"]>
+
+  export type AdminConfigEntrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    namespace?: boolean
+    version?: boolean
+    payload?: boolean
+    isFallback?: boolean
+    actorId?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    actor?: boolean | AdminConfigEntry$actorArgs<ExtArgs>
+  }, ExtArgs["result"]["adminConfigEntry"]>
+
+  export type AdminConfigEntrySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    namespace?: boolean
+    version?: boolean
+    payload?: boolean
+    isFallback?: boolean
+    actorId?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    actor?: boolean | AdminConfigEntry$actorArgs<ExtArgs>
+  }, ExtArgs["result"]["adminConfigEntry"]>
+
+  export type AdminConfigEntrySelectScalar = {
+    id?: boolean
+    namespace?: boolean
+    version?: boolean
+    payload?: boolean
+    isFallback?: boolean
+    actorId?: boolean
+    notes?: boolean
+    createdAt?: boolean
+  }
+
+  export type AdminConfigEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "namespace" | "version" | "payload" | "isFallback" | "actorId" | "notes" | "createdAt", ExtArgs["result"]["adminConfigEntry"]>
+  export type AdminConfigEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    actor?: boolean | AdminConfigEntry$actorArgs<ExtArgs>
+  }
+  export type AdminConfigEntryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    actor?: boolean | AdminConfigEntry$actorArgs<ExtArgs>
+  }
+  export type AdminConfigEntryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    actor?: boolean | AdminConfigEntry$actorArgs<ExtArgs>
+  }
+
+  export type $AdminConfigEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AdminConfigEntry"
+    objects: {
+      actor: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      namespace: string
+      version: number
+      payload: Prisma.JsonValue
+      isFallback: boolean
+      actorId: string | null
+      notes: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["adminConfigEntry"]>
+    composites: {}
+  }
+
+  type AdminConfigEntryGetPayload<S extends boolean | null | undefined | AdminConfigEntryDefaultArgs> = $Result.GetResult<Prisma.$AdminConfigEntryPayload, S>
+
+  type AdminConfigEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AdminConfigEntryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AdminConfigEntryCountAggregateInputType | true
+    }
+
+  export interface AdminConfigEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AdminConfigEntry'], meta: { name: 'AdminConfigEntry' } }
+    /**
+     * Find zero or one AdminConfigEntry that matches the filter.
+     * @param {AdminConfigEntryFindUniqueArgs} args - Arguments to find a AdminConfigEntry
+     * @example
+     * // Get one AdminConfigEntry
+     * const adminConfigEntry = await prisma.adminConfigEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AdminConfigEntryFindUniqueArgs>(args: SelectSubset<T, AdminConfigEntryFindUniqueArgs<ExtArgs>>): Prisma__AdminConfigEntryClient<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AdminConfigEntry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AdminConfigEntryFindUniqueOrThrowArgs} args - Arguments to find a AdminConfigEntry
+     * @example
+     * // Get one AdminConfigEntry
+     * const adminConfigEntry = await prisma.adminConfigEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AdminConfigEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, AdminConfigEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AdminConfigEntryClient<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdminConfigEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminConfigEntryFindFirstArgs} args - Arguments to find a AdminConfigEntry
+     * @example
+     * // Get one AdminConfigEntry
+     * const adminConfigEntry = await prisma.adminConfigEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AdminConfigEntryFindFirstArgs>(args?: SelectSubset<T, AdminConfigEntryFindFirstArgs<ExtArgs>>): Prisma__AdminConfigEntryClient<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdminConfigEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminConfigEntryFindFirstOrThrowArgs} args - Arguments to find a AdminConfigEntry
+     * @example
+     * // Get one AdminConfigEntry
+     * const adminConfigEntry = await prisma.adminConfigEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AdminConfigEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, AdminConfigEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__AdminConfigEntryClient<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AdminConfigEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminConfigEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AdminConfigEntries
+     * const adminConfigEntries = await prisma.adminConfigEntry.findMany()
+     * 
+     * // Get first 10 AdminConfigEntries
+     * const adminConfigEntries = await prisma.adminConfigEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const adminConfigEntryWithIdOnly = await prisma.adminConfigEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AdminConfigEntryFindManyArgs>(args?: SelectSubset<T, AdminConfigEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AdminConfigEntry.
+     * @param {AdminConfigEntryCreateArgs} args - Arguments to create a AdminConfigEntry.
+     * @example
+     * // Create one AdminConfigEntry
+     * const AdminConfigEntry = await prisma.adminConfigEntry.create({
+     *   data: {
+     *     // ... data to create a AdminConfigEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends AdminConfigEntryCreateArgs>(args: SelectSubset<T, AdminConfigEntryCreateArgs<ExtArgs>>): Prisma__AdminConfigEntryClient<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AdminConfigEntries.
+     * @param {AdminConfigEntryCreateManyArgs} args - Arguments to create many AdminConfigEntries.
+     * @example
+     * // Create many AdminConfigEntries
+     * const adminConfigEntry = await prisma.adminConfigEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AdminConfigEntryCreateManyArgs>(args?: SelectSubset<T, AdminConfigEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AdminConfigEntries and returns the data saved in the database.
+     * @param {AdminConfigEntryCreateManyAndReturnArgs} args - Arguments to create many AdminConfigEntries.
+     * @example
+     * // Create many AdminConfigEntries
+     * const adminConfigEntry = await prisma.adminConfigEntry.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AdminConfigEntries and only return the `id`
+     * const adminConfigEntryWithIdOnly = await prisma.adminConfigEntry.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AdminConfigEntryCreateManyAndReturnArgs>(args?: SelectSubset<T, AdminConfigEntryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AdminConfigEntry.
+     * @param {AdminConfigEntryDeleteArgs} args - Arguments to delete one AdminConfigEntry.
+     * @example
+     * // Delete one AdminConfigEntry
+     * const AdminConfigEntry = await prisma.adminConfigEntry.delete({
+     *   where: {
+     *     // ... filter to delete one AdminConfigEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AdminConfigEntryDeleteArgs>(args: SelectSubset<T, AdminConfigEntryDeleteArgs<ExtArgs>>): Prisma__AdminConfigEntryClient<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AdminConfigEntry.
+     * @param {AdminConfigEntryUpdateArgs} args - Arguments to update one AdminConfigEntry.
+     * @example
+     * // Update one AdminConfigEntry
+     * const adminConfigEntry = await prisma.adminConfigEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AdminConfigEntryUpdateArgs>(args: SelectSubset<T, AdminConfigEntryUpdateArgs<ExtArgs>>): Prisma__AdminConfigEntryClient<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AdminConfigEntries.
+     * @param {AdminConfigEntryDeleteManyArgs} args - Arguments to filter AdminConfigEntries to delete.
+     * @example
+     * // Delete a few AdminConfigEntries
+     * const { count } = await prisma.adminConfigEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AdminConfigEntryDeleteManyArgs>(args?: SelectSubset<T, AdminConfigEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdminConfigEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminConfigEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AdminConfigEntries
+     * const adminConfigEntry = await prisma.adminConfigEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AdminConfigEntryUpdateManyArgs>(args: SelectSubset<T, AdminConfigEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdminConfigEntries and returns the data updated in the database.
+     * @param {AdminConfigEntryUpdateManyAndReturnArgs} args - Arguments to update many AdminConfigEntries.
+     * @example
+     * // Update many AdminConfigEntries
+     * const adminConfigEntry = await prisma.adminConfigEntry.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AdminConfigEntries and only return the `id`
+     * const adminConfigEntryWithIdOnly = await prisma.adminConfigEntry.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AdminConfigEntryUpdateManyAndReturnArgs>(args: SelectSubset<T, AdminConfigEntryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AdminConfigEntry.
+     * @param {AdminConfigEntryUpsertArgs} args - Arguments to update or create a AdminConfigEntry.
+     * @example
+     * // Update or create a AdminConfigEntry
+     * const adminConfigEntry = await prisma.adminConfigEntry.upsert({
+     *   create: {
+     *     // ... data to create a AdminConfigEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AdminConfigEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AdminConfigEntryUpsertArgs>(args: SelectSubset<T, AdminConfigEntryUpsertArgs<ExtArgs>>): Prisma__AdminConfigEntryClient<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AdminConfigEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminConfigEntryCountArgs} args - Arguments to filter AdminConfigEntries to count.
+     * @example
+     * // Count the number of AdminConfigEntries
+     * const count = await prisma.adminConfigEntry.count({
+     *   where: {
+     *     // ... the filter for the AdminConfigEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends AdminConfigEntryCountArgs>(
+      args?: Subset<T, AdminConfigEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AdminConfigEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AdminConfigEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminConfigEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AdminConfigEntryAggregateArgs>(args: Subset<T, AdminConfigEntryAggregateArgs>): Prisma.PrismaPromise<GetAdminConfigEntryAggregateType<T>>
+
+    /**
+     * Group by AdminConfigEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdminConfigEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AdminConfigEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AdminConfigEntryGroupByArgs['orderBy'] }
+        : { orderBy?: AdminConfigEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AdminConfigEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAdminConfigEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AdminConfigEntry model
+   */
+  readonly fields: AdminConfigEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AdminConfigEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AdminConfigEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    actor<T extends AdminConfigEntry$actorArgs<ExtArgs> = {}>(args?: Subset<T, AdminConfigEntry$actorArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AdminConfigEntry model
+   */
+  interface AdminConfigEntryFieldRefs {
+    readonly id: FieldRef<"AdminConfigEntry", 'String'>
+    readonly namespace: FieldRef<"AdminConfigEntry", 'String'>
+    readonly version: FieldRef<"AdminConfigEntry", 'Int'>
+    readonly payload: FieldRef<"AdminConfigEntry", 'Json'>
+    readonly isFallback: FieldRef<"AdminConfigEntry", 'Boolean'>
+    readonly actorId: FieldRef<"AdminConfigEntry", 'String'>
+    readonly notes: FieldRef<"AdminConfigEntry", 'String'>
+    readonly createdAt: FieldRef<"AdminConfigEntry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AdminConfigEntry findUnique
+   */
+  export type AdminConfigEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminConfigEntry to fetch.
+     */
+    where: AdminConfigEntryWhereUniqueInput
+  }
+
+  /**
+   * AdminConfigEntry findUniqueOrThrow
+   */
+  export type AdminConfigEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminConfigEntry to fetch.
+     */
+    where: AdminConfigEntryWhereUniqueInput
+  }
+
+  /**
+   * AdminConfigEntry findFirst
+   */
+  export type AdminConfigEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminConfigEntry to fetch.
+     */
+    where?: AdminConfigEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminConfigEntries to fetch.
+     */
+    orderBy?: AdminConfigEntryOrderByWithRelationInput | AdminConfigEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdminConfigEntries.
+     */
+    cursor?: AdminConfigEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminConfigEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminConfigEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminConfigEntries.
+     */
+    distinct?: AdminConfigEntryScalarFieldEnum | AdminConfigEntryScalarFieldEnum[]
+  }
+
+  /**
+   * AdminConfigEntry findFirstOrThrow
+   */
+  export type AdminConfigEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminConfigEntry to fetch.
+     */
+    where?: AdminConfigEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminConfigEntries to fetch.
+     */
+    orderBy?: AdminConfigEntryOrderByWithRelationInput | AdminConfigEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdminConfigEntries.
+     */
+    cursor?: AdminConfigEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminConfigEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminConfigEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdminConfigEntries.
+     */
+    distinct?: AdminConfigEntryScalarFieldEnum | AdminConfigEntryScalarFieldEnum[]
+  }
+
+  /**
+   * AdminConfigEntry findMany
+   */
+  export type AdminConfigEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which AdminConfigEntries to fetch.
+     */
+    where?: AdminConfigEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdminConfigEntries to fetch.
+     */
+    orderBy?: AdminConfigEntryOrderByWithRelationInput | AdminConfigEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AdminConfigEntries.
+     */
+    cursor?: AdminConfigEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdminConfigEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdminConfigEntries.
+     */
+    skip?: number
+    distinct?: AdminConfigEntryScalarFieldEnum | AdminConfigEntryScalarFieldEnum[]
+  }
+
+  /**
+   * AdminConfigEntry create
+   */
+  export type AdminConfigEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AdminConfigEntry.
+     */
+    data: XOR<AdminConfigEntryCreateInput, AdminConfigEntryUncheckedCreateInput>
+  }
+
+  /**
+   * AdminConfigEntry createMany
+   */
+  export type AdminConfigEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AdminConfigEntries.
+     */
+    data: AdminConfigEntryCreateManyInput | AdminConfigEntryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AdminConfigEntry createManyAndReturn
+   */
+  export type AdminConfigEntryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * The data used to create many AdminConfigEntries.
+     */
+    data: AdminConfigEntryCreateManyInput | AdminConfigEntryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdminConfigEntry update
+   */
+  export type AdminConfigEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AdminConfigEntry.
+     */
+    data: XOR<AdminConfigEntryUpdateInput, AdminConfigEntryUncheckedUpdateInput>
+    /**
+     * Choose, which AdminConfigEntry to update.
+     */
+    where: AdminConfigEntryWhereUniqueInput
+  }
+
+  /**
+   * AdminConfigEntry updateMany
+   */
+  export type AdminConfigEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AdminConfigEntries.
+     */
+    data: XOR<AdminConfigEntryUpdateManyMutationInput, AdminConfigEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which AdminConfigEntries to update
+     */
+    where?: AdminConfigEntryWhereInput
+    /**
+     * Limit how many AdminConfigEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdminConfigEntry updateManyAndReturn
+   */
+  export type AdminConfigEntryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * The data used to update AdminConfigEntries.
+     */
+    data: XOR<AdminConfigEntryUpdateManyMutationInput, AdminConfigEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which AdminConfigEntries to update
+     */
+    where?: AdminConfigEntryWhereInput
+    /**
+     * Limit how many AdminConfigEntries to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdminConfigEntry upsert
+   */
+  export type AdminConfigEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AdminConfigEntry to update in case it exists.
+     */
+    where: AdminConfigEntryWhereUniqueInput
+    /**
+     * In case the AdminConfigEntry found by the `where` argument doesn't exist, create a new AdminConfigEntry with this data.
+     */
+    create: XOR<AdminConfigEntryCreateInput, AdminConfigEntryUncheckedCreateInput>
+    /**
+     * In case the AdminConfigEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AdminConfigEntryUpdateInput, AdminConfigEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * AdminConfigEntry delete
+   */
+  export type AdminConfigEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryInclude<ExtArgs> | null
+    /**
+     * Filter which AdminConfigEntry to delete.
+     */
+    where: AdminConfigEntryWhereUniqueInput
+  }
+
+  /**
+   * AdminConfigEntry deleteMany
+   */
+  export type AdminConfigEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdminConfigEntries to delete
+     */
+    where?: AdminConfigEntryWhereInput
+    /**
+     * Limit how many AdminConfigEntries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdminConfigEntry.actor
+   */
+  export type AdminConfigEntry$actorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * AdminConfigEntry without action
+   */
+  export type AdminConfigEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminConfigEntry
+     */
+    select?: AdminConfigEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminConfigEntry
+     */
+    omit?: AdminConfigEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminConfigEntryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FormAssignment
+   */
+
+  export type AggregateFormAssignment = {
+    _count: FormAssignmentCountAggregateOutputType | null
+    _min: FormAssignmentMinAggregateOutputType | null
+    _max: FormAssignmentMaxAggregateOutputType | null
+  }
+
+  export type FormAssignmentMinAggregateOutputType = {
+    id: string | null
+    reportId: string | null
+    assigneeId: string | null
+    assignedById: string | null
+    dueAt: Date | null
+    completedAt: Date | null
+    cancelledAt: Date | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FormAssignmentMaxAggregateOutputType = {
+    id: string | null
+    reportId: string | null
+    assigneeId: string | null
+    assignedById: string | null
+    dueAt: Date | null
+    completedAt: Date | null
+    cancelledAt: Date | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FormAssignmentCountAggregateOutputType = {
+    id: number
+    reportId: number
+    assigneeId: number
+    assignedById: number
+    metricIds: number
+    dueAt: number
+    completedAt: number
+    cancelledAt: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FormAssignmentMinAggregateInputType = {
+    id?: true
+    reportId?: true
+    assigneeId?: true
+    assignedById?: true
+    dueAt?: true
+    completedAt?: true
+    cancelledAt?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FormAssignmentMaxAggregateInputType = {
+    id?: true
+    reportId?: true
+    assigneeId?: true
+    assignedById?: true
+    dueAt?: true
+    completedAt?: true
+    cancelledAt?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FormAssignmentCountAggregateInputType = {
+    id?: true
+    reportId?: true
+    assigneeId?: true
+    assignedById?: true
+    metricIds?: true
+    dueAt?: true
+    completedAt?: true
+    cancelledAt?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FormAssignmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FormAssignment to aggregate.
+     */
+    where?: FormAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormAssignments to fetch.
+     */
+    orderBy?: FormAssignmentOrderByWithRelationInput | FormAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FormAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FormAssignments
+    **/
+    _count?: true | FormAssignmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FormAssignmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FormAssignmentMaxAggregateInputType
+  }
+
+  export type GetFormAssignmentAggregateType<T extends FormAssignmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateFormAssignment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFormAssignment[P]>
+      : GetScalarType<T[P], AggregateFormAssignment[P]>
+  }
+
+
+
+
+  export type FormAssignmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormAssignmentWhereInput
+    orderBy?: FormAssignmentOrderByWithAggregationInput | FormAssignmentOrderByWithAggregationInput[]
+    by: FormAssignmentScalarFieldEnum[] | FormAssignmentScalarFieldEnum
+    having?: FormAssignmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FormAssignmentCountAggregateInputType | true
+    _min?: FormAssignmentMinAggregateInputType
+    _max?: FormAssignmentMaxAggregateInputType
+  }
+
+  export type FormAssignmentGroupByOutputType = {
+    id: string
+    reportId: string
+    assigneeId: string
+    assignedById: string
+    metricIds: string[]
+    dueAt: Date | null
+    completedAt: Date | null
+    cancelledAt: Date | null
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: FormAssignmentCountAggregateOutputType | null
+    _min: FormAssignmentMinAggregateOutputType | null
+    _max: FormAssignmentMaxAggregateOutputType | null
+  }
+
+  type GetFormAssignmentGroupByPayload<T extends FormAssignmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FormAssignmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FormAssignmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FormAssignmentGroupByOutputType[P]>
+            : GetScalarType<T[P], FormAssignmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FormAssignmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reportId?: boolean
+    assigneeId?: boolean
+    assignedById?: boolean
+    metricIds?: boolean
+    dueAt?: boolean
+    completedAt?: boolean
+    cancelledAt?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    report?: boolean | ReportDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formAssignment"]>
+
+  export type FormAssignmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reportId?: boolean
+    assigneeId?: boolean
+    assignedById?: boolean
+    metricIds?: boolean
+    dueAt?: boolean
+    completedAt?: boolean
+    cancelledAt?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    report?: boolean | ReportDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formAssignment"]>
+
+  export type FormAssignmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reportId?: boolean
+    assigneeId?: boolean
+    assignedById?: boolean
+    metricIds?: boolean
+    dueAt?: boolean
+    completedAt?: boolean
+    cancelledAt?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    report?: boolean | ReportDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formAssignment"]>
+
+  export type FormAssignmentSelectScalar = {
+    id?: boolean
+    reportId?: boolean
+    assigneeId?: boolean
+    assignedById?: boolean
+    metricIds?: boolean
+    dueAt?: boolean
+    completedAt?: boolean
+    cancelledAt?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FormAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reportId" | "assigneeId" | "assignedById" | "metricIds" | "dueAt" | "completedAt" | "cancelledAt" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["formAssignment"]>
+  export type FormAssignmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    report?: boolean | ReportDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FormAssignmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    report?: boolean | ReportDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type FormAssignmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    report?: boolean | ReportDefaultArgs<ExtArgs>
+    assignee?: boolean | UserDefaultArgs<ExtArgs>
+    assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $FormAssignmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FormAssignment"
+    objects: {
+      report: Prisma.$ReportPayload<ExtArgs>
+      assignee: Prisma.$UserPayload<ExtArgs>
+      assignedBy: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      reportId: string
+      assigneeId: string
+      assignedById: string
+      metricIds: string[]
+      dueAt: Date | null
+      completedAt: Date | null
+      cancelledAt: Date | null
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["formAssignment"]>
+    composites: {}
+  }
+
+  type FormAssignmentGetPayload<S extends boolean | null | undefined | FormAssignmentDefaultArgs> = $Result.GetResult<Prisma.$FormAssignmentPayload, S>
+
+  type FormAssignmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FormAssignmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FormAssignmentCountAggregateInputType | true
+    }
+
+  export interface FormAssignmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FormAssignment'], meta: { name: 'FormAssignment' } }
+    /**
+     * Find zero or one FormAssignment that matches the filter.
+     * @param {FormAssignmentFindUniqueArgs} args - Arguments to find a FormAssignment
+     * @example
+     * // Get one FormAssignment
+     * const formAssignment = await prisma.formAssignment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FormAssignmentFindUniqueArgs>(args: SelectSubset<T, FormAssignmentFindUniqueArgs<ExtArgs>>): Prisma__FormAssignmentClient<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FormAssignment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FormAssignmentFindUniqueOrThrowArgs} args - Arguments to find a FormAssignment
+     * @example
+     * // Get one FormAssignment
+     * const formAssignment = await prisma.formAssignment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FormAssignmentFindUniqueOrThrowArgs>(args: SelectSubset<T, FormAssignmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FormAssignmentClient<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FormAssignment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentFindFirstArgs} args - Arguments to find a FormAssignment
+     * @example
+     * // Get one FormAssignment
+     * const formAssignment = await prisma.formAssignment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FormAssignmentFindFirstArgs>(args?: SelectSubset<T, FormAssignmentFindFirstArgs<ExtArgs>>): Prisma__FormAssignmentClient<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FormAssignment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentFindFirstOrThrowArgs} args - Arguments to find a FormAssignment
+     * @example
+     * // Get one FormAssignment
+     * const formAssignment = await prisma.formAssignment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FormAssignmentFindFirstOrThrowArgs>(args?: SelectSubset<T, FormAssignmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__FormAssignmentClient<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FormAssignments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FormAssignments
+     * const formAssignments = await prisma.formAssignment.findMany()
+     * 
+     * // Get first 10 FormAssignments
+     * const formAssignments = await prisma.formAssignment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const formAssignmentWithIdOnly = await prisma.formAssignment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FormAssignmentFindManyArgs>(args?: SelectSubset<T, FormAssignmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FormAssignment.
+     * @param {FormAssignmentCreateArgs} args - Arguments to create a FormAssignment.
+     * @example
+     * // Create one FormAssignment
+     * const FormAssignment = await prisma.formAssignment.create({
+     *   data: {
+     *     // ... data to create a FormAssignment
+     *   }
+     * })
+     * 
+     */
+    create<T extends FormAssignmentCreateArgs>(args: SelectSubset<T, FormAssignmentCreateArgs<ExtArgs>>): Prisma__FormAssignmentClient<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FormAssignments.
+     * @param {FormAssignmentCreateManyArgs} args - Arguments to create many FormAssignments.
+     * @example
+     * // Create many FormAssignments
+     * const formAssignment = await prisma.formAssignment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FormAssignmentCreateManyArgs>(args?: SelectSubset<T, FormAssignmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FormAssignments and returns the data saved in the database.
+     * @param {FormAssignmentCreateManyAndReturnArgs} args - Arguments to create many FormAssignments.
+     * @example
+     * // Create many FormAssignments
+     * const formAssignment = await prisma.formAssignment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FormAssignments and only return the `id`
+     * const formAssignmentWithIdOnly = await prisma.formAssignment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FormAssignmentCreateManyAndReturnArgs>(args?: SelectSubset<T, FormAssignmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FormAssignment.
+     * @param {FormAssignmentDeleteArgs} args - Arguments to delete one FormAssignment.
+     * @example
+     * // Delete one FormAssignment
+     * const FormAssignment = await prisma.formAssignment.delete({
+     *   where: {
+     *     // ... filter to delete one FormAssignment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FormAssignmentDeleteArgs>(args: SelectSubset<T, FormAssignmentDeleteArgs<ExtArgs>>): Prisma__FormAssignmentClient<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FormAssignment.
+     * @param {FormAssignmentUpdateArgs} args - Arguments to update one FormAssignment.
+     * @example
+     * // Update one FormAssignment
+     * const formAssignment = await prisma.formAssignment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FormAssignmentUpdateArgs>(args: SelectSubset<T, FormAssignmentUpdateArgs<ExtArgs>>): Prisma__FormAssignmentClient<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FormAssignments.
+     * @param {FormAssignmentDeleteManyArgs} args - Arguments to filter FormAssignments to delete.
+     * @example
+     * // Delete a few FormAssignments
+     * const { count } = await prisma.formAssignment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FormAssignmentDeleteManyArgs>(args?: SelectSubset<T, FormAssignmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FormAssignments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FormAssignments
+     * const formAssignment = await prisma.formAssignment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FormAssignmentUpdateManyArgs>(args: SelectSubset<T, FormAssignmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FormAssignments and returns the data updated in the database.
+     * @param {FormAssignmentUpdateManyAndReturnArgs} args - Arguments to update many FormAssignments.
+     * @example
+     * // Update many FormAssignments
+     * const formAssignment = await prisma.formAssignment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FormAssignments and only return the `id`
+     * const formAssignmentWithIdOnly = await prisma.formAssignment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FormAssignmentUpdateManyAndReturnArgs>(args: SelectSubset<T, FormAssignmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FormAssignment.
+     * @param {FormAssignmentUpsertArgs} args - Arguments to update or create a FormAssignment.
+     * @example
+     * // Update or create a FormAssignment
+     * const formAssignment = await prisma.formAssignment.upsert({
+     *   create: {
+     *     // ... data to create a FormAssignment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FormAssignment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FormAssignmentUpsertArgs>(args: SelectSubset<T, FormAssignmentUpsertArgs<ExtArgs>>): Prisma__FormAssignmentClient<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FormAssignments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentCountArgs} args - Arguments to filter FormAssignments to count.
+     * @example
+     * // Count the number of FormAssignments
+     * const count = await prisma.formAssignment.count({
+     *   where: {
+     *     // ... the filter for the FormAssignments we want to count
+     *   }
+     * })
+    **/
+    count<T extends FormAssignmentCountArgs>(
+      args?: Subset<T, FormAssignmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FormAssignmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FormAssignment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FormAssignmentAggregateArgs>(args: Subset<T, FormAssignmentAggregateArgs>): Prisma.PrismaPromise<GetFormAssignmentAggregateType<T>>
+
+    /**
+     * Group by FormAssignment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FormAssignmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FormAssignmentGroupByArgs['orderBy'] }
+        : { orderBy?: FormAssignmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FormAssignmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFormAssignmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FormAssignment model
+   */
+  readonly fields: FormAssignmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FormAssignment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FormAssignmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    report<T extends ReportDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReportDefaultArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    assignee<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    assignedBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FormAssignment model
+   */
+  interface FormAssignmentFieldRefs {
+    readonly id: FieldRef<"FormAssignment", 'String'>
+    readonly reportId: FieldRef<"FormAssignment", 'String'>
+    readonly assigneeId: FieldRef<"FormAssignment", 'String'>
+    readonly assignedById: FieldRef<"FormAssignment", 'String'>
+    readonly metricIds: FieldRef<"FormAssignment", 'String[]'>
+    readonly dueAt: FieldRef<"FormAssignment", 'DateTime'>
+    readonly completedAt: FieldRef<"FormAssignment", 'DateTime'>
+    readonly cancelledAt: FieldRef<"FormAssignment", 'DateTime'>
+    readonly notes: FieldRef<"FormAssignment", 'String'>
+    readonly createdAt: FieldRef<"FormAssignment", 'DateTime'>
+    readonly updatedAt: FieldRef<"FormAssignment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FormAssignment findUnique
+   */
+  export type FormAssignmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which FormAssignment to fetch.
+     */
+    where: FormAssignmentWhereUniqueInput
+  }
+
+  /**
+   * FormAssignment findUniqueOrThrow
+   */
+  export type FormAssignmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which FormAssignment to fetch.
+     */
+    where: FormAssignmentWhereUniqueInput
+  }
+
+  /**
+   * FormAssignment findFirst
+   */
+  export type FormAssignmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which FormAssignment to fetch.
+     */
+    where?: FormAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormAssignments to fetch.
+     */
+    orderBy?: FormAssignmentOrderByWithRelationInput | FormAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FormAssignments.
+     */
+    cursor?: FormAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FormAssignments.
+     */
+    distinct?: FormAssignmentScalarFieldEnum | FormAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * FormAssignment findFirstOrThrow
+   */
+  export type FormAssignmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which FormAssignment to fetch.
+     */
+    where?: FormAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormAssignments to fetch.
+     */
+    orderBy?: FormAssignmentOrderByWithRelationInput | FormAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FormAssignments.
+     */
+    cursor?: FormAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormAssignments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FormAssignments.
+     */
+    distinct?: FormAssignmentScalarFieldEnum | FormAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * FormAssignment findMany
+   */
+  export type FormAssignmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter, which FormAssignments to fetch.
+     */
+    where?: FormAssignmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormAssignments to fetch.
+     */
+    orderBy?: FormAssignmentOrderByWithRelationInput | FormAssignmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FormAssignments.
+     */
+    cursor?: FormAssignmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormAssignments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormAssignments.
+     */
+    skip?: number
+    distinct?: FormAssignmentScalarFieldEnum | FormAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * FormAssignment create
+   */
+  export type FormAssignmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FormAssignment.
+     */
+    data: XOR<FormAssignmentCreateInput, FormAssignmentUncheckedCreateInput>
+  }
+
+  /**
+   * FormAssignment createMany
+   */
+  export type FormAssignmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FormAssignments.
+     */
+    data: FormAssignmentCreateManyInput | FormAssignmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FormAssignment createManyAndReturn
+   */
+  export type FormAssignmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many FormAssignments.
+     */
+    data: FormAssignmentCreateManyInput | FormAssignmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FormAssignment update
+   */
+  export type FormAssignmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FormAssignment.
+     */
+    data: XOR<FormAssignmentUpdateInput, FormAssignmentUncheckedUpdateInput>
+    /**
+     * Choose, which FormAssignment to update.
+     */
+    where: FormAssignmentWhereUniqueInput
+  }
+
+  /**
+   * FormAssignment updateMany
+   */
+  export type FormAssignmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FormAssignments.
+     */
+    data: XOR<FormAssignmentUpdateManyMutationInput, FormAssignmentUncheckedUpdateManyInput>
+    /**
+     * Filter which FormAssignments to update
+     */
+    where?: FormAssignmentWhereInput
+    /**
+     * Limit how many FormAssignments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FormAssignment updateManyAndReturn
+   */
+  export type FormAssignmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * The data used to update FormAssignments.
+     */
+    data: XOR<FormAssignmentUpdateManyMutationInput, FormAssignmentUncheckedUpdateManyInput>
+    /**
+     * Filter which FormAssignments to update
+     */
+    where?: FormAssignmentWhereInput
+    /**
+     * Limit how many FormAssignments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FormAssignment upsert
+   */
+  export type FormAssignmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FormAssignment to update in case it exists.
+     */
+    where: FormAssignmentWhereUniqueInput
+    /**
+     * In case the FormAssignment found by the `where` argument doesn't exist, create a new FormAssignment with this data.
+     */
+    create: XOR<FormAssignmentCreateInput, FormAssignmentUncheckedCreateInput>
+    /**
+     * In case the FormAssignment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FormAssignmentUpdateInput, FormAssignmentUncheckedUpdateInput>
+  }
+
+  /**
+   * FormAssignment delete
+   */
+  export type FormAssignmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    /**
+     * Filter which FormAssignment to delete.
+     */
+    where: FormAssignmentWhereUniqueInput
+  }
+
+  /**
+   * FormAssignment deleteMany
+   */
+  export type FormAssignmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FormAssignments to delete
+     */
+    where?: FormAssignmentWhereInput
+    /**
+     * Limit how many FormAssignments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FormAssignment without action
+   */
+  export type FormAssignmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ImportJob
+   */
+
+  export type AggregateImportJob = {
+    _count: ImportJobCountAggregateOutputType | null
+    _avg: ImportJobAvgAggregateOutputType | null
+    _sum: ImportJobSumAggregateOutputType | null
+    _min: ImportJobMinAggregateOutputType | null
+    _max: ImportJobMaxAggregateOutputType | null
+  }
+
+  export type ImportJobAvgAggregateOutputType = {
+    fileBytes: number | null
+  }
+
+  export type ImportJobSumAggregateOutputType = {
+    fileBytes: number | null
+  }
+
+  export type ImportJobMinAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    templateId: string | null
+    status: $Enums.ImportJobStatus | null
+    fileName: string | null
+    fileMime: string | null
+    fileBytes: number | null
+    storageRef: string | null
+    mappingProfileId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ImportJobMaxAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    templateId: string | null
+    status: $Enums.ImportJobStatus | null
+    fileName: string | null
+    fileMime: string | null
+    fileBytes: number | null
+    storageRef: string | null
+    mappingProfileId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ImportJobCountAggregateOutputType = {
+    id: number
+    ownerId: number
+    templateId: number
+    status: number
+    fileName: number
+    fileMime: number
+    fileBytes: number
+    storageRef: number
+    mappingProfileId: number
+    mapping: number
+    validationSummary: number
+    commitSummary: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ImportJobAvgAggregateInputType = {
+    fileBytes?: true
+  }
+
+  export type ImportJobSumAggregateInputType = {
+    fileBytes?: true
+  }
+
+  export type ImportJobMinAggregateInputType = {
+    id?: true
+    ownerId?: true
+    templateId?: true
+    status?: true
+    fileName?: true
+    fileMime?: true
+    fileBytes?: true
+    storageRef?: true
+    mappingProfileId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ImportJobMaxAggregateInputType = {
+    id?: true
+    ownerId?: true
+    templateId?: true
+    status?: true
+    fileName?: true
+    fileMime?: true
+    fileBytes?: true
+    storageRef?: true
+    mappingProfileId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ImportJobCountAggregateInputType = {
+    id?: true
+    ownerId?: true
+    templateId?: true
+    status?: true
+    fileName?: true
+    fileMime?: true
+    fileBytes?: true
+    storageRef?: true
+    mappingProfileId?: true
+    mapping?: true
+    validationSummary?: true
+    commitSummary?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ImportJobAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ImportJob to aggregate.
+     */
+    where?: ImportJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportJobs to fetch.
+     */
+    orderBy?: ImportJobOrderByWithRelationInput | ImportJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ImportJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ImportJobs
+    **/
+    _count?: true | ImportJobCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ImportJobAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ImportJobSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ImportJobMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ImportJobMaxAggregateInputType
+  }
+
+  export type GetImportJobAggregateType<T extends ImportJobAggregateArgs> = {
+        [P in keyof T & keyof AggregateImportJob]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateImportJob[P]>
+      : GetScalarType<T[P], AggregateImportJob[P]>
+  }
+
+
+
+
+  export type ImportJobGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImportJobWhereInput
+    orderBy?: ImportJobOrderByWithAggregationInput | ImportJobOrderByWithAggregationInput[]
+    by: ImportJobScalarFieldEnum[] | ImportJobScalarFieldEnum
+    having?: ImportJobScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ImportJobCountAggregateInputType | true
+    _avg?: ImportJobAvgAggregateInputType
+    _sum?: ImportJobSumAggregateInputType
+    _min?: ImportJobMinAggregateInputType
+    _max?: ImportJobMaxAggregateInputType
+  }
+
+  export type ImportJobGroupByOutputType = {
+    id: string
+    ownerId: string
+    templateId: string | null
+    status: $Enums.ImportJobStatus
+    fileName: string | null
+    fileMime: string | null
+    fileBytes: number | null
+    storageRef: string | null
+    mappingProfileId: string | null
+    mapping: JsonValue | null
+    validationSummary: JsonValue | null
+    commitSummary: JsonValue | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ImportJobCountAggregateOutputType | null
+    _avg: ImportJobAvgAggregateOutputType | null
+    _sum: ImportJobSumAggregateOutputType | null
+    _min: ImportJobMinAggregateOutputType | null
+    _max: ImportJobMaxAggregateOutputType | null
+  }
+
+  type GetImportJobGroupByPayload<T extends ImportJobGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ImportJobGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ImportJobGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ImportJobGroupByOutputType[P]>
+            : GetScalarType<T[P], ImportJobGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ImportJobSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    status?: boolean
+    fileName?: boolean
+    fileMime?: boolean
+    fileBytes?: boolean
+    storageRef?: boolean
+    mappingProfileId?: boolean
+    mapping?: boolean
+    validationSummary?: boolean
+    commitSummary?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    mappingProfile?: boolean | ImportJob$mappingProfileArgs<ExtArgs>
+    items?: boolean | ImportJob$itemsArgs<ExtArgs>
+    _count?: boolean | ImportJobCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["importJob"]>
+
+  export type ImportJobSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    status?: boolean
+    fileName?: boolean
+    fileMime?: boolean
+    fileBytes?: boolean
+    storageRef?: boolean
+    mappingProfileId?: boolean
+    mapping?: boolean
+    validationSummary?: boolean
+    commitSummary?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    mappingProfile?: boolean | ImportJob$mappingProfileArgs<ExtArgs>
+  }, ExtArgs["result"]["importJob"]>
+
+  export type ImportJobSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    status?: boolean
+    fileName?: boolean
+    fileMime?: boolean
+    fileBytes?: boolean
+    storageRef?: boolean
+    mappingProfileId?: boolean
+    mapping?: boolean
+    validationSummary?: boolean
+    commitSummary?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    mappingProfile?: boolean | ImportJob$mappingProfileArgs<ExtArgs>
+  }, ExtArgs["result"]["importJob"]>
+
+  export type ImportJobSelectScalar = {
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    status?: boolean
+    fileName?: boolean
+    fileMime?: boolean
+    fileBytes?: boolean
+    storageRef?: boolean
+    mappingProfileId?: boolean
+    mapping?: boolean
+    validationSummary?: boolean
+    commitSummary?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ImportJobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ownerId" | "templateId" | "status" | "fileName" | "fileMime" | "fileBytes" | "storageRef" | "mappingProfileId" | "mapping" | "validationSummary" | "commitSummary" | "createdAt" | "updatedAt", ExtArgs["result"]["importJob"]>
+  export type ImportJobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    mappingProfile?: boolean | ImportJob$mappingProfileArgs<ExtArgs>
+    items?: boolean | ImportJob$itemsArgs<ExtArgs>
+    _count?: boolean | ImportJobCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ImportJobIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    mappingProfile?: boolean | ImportJob$mappingProfileArgs<ExtArgs>
+  }
+  export type ImportJobIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    mappingProfile?: boolean | ImportJob$mappingProfileArgs<ExtArgs>
+  }
+
+  export type $ImportJobPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ImportJob"
+    objects: {
+      owner: Prisma.$UserPayload<ExtArgs>
+      mappingProfile: Prisma.$ImportMappingProfilePayload<ExtArgs> | null
+      items: Prisma.$ImportJobItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ownerId: string
+      templateId: string | null
+      status: $Enums.ImportJobStatus
+      fileName: string | null
+      fileMime: string | null
+      fileBytes: number | null
+      storageRef: string | null
+      mappingProfileId: string | null
+      mapping: Prisma.JsonValue | null
+      validationSummary: Prisma.JsonValue | null
+      commitSummary: Prisma.JsonValue | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["importJob"]>
+    composites: {}
+  }
+
+  type ImportJobGetPayload<S extends boolean | null | undefined | ImportJobDefaultArgs> = $Result.GetResult<Prisma.$ImportJobPayload, S>
+
+  type ImportJobCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ImportJobFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ImportJobCountAggregateInputType | true
+    }
+
+  export interface ImportJobDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ImportJob'], meta: { name: 'ImportJob' } }
+    /**
+     * Find zero or one ImportJob that matches the filter.
+     * @param {ImportJobFindUniqueArgs} args - Arguments to find a ImportJob
+     * @example
+     * // Get one ImportJob
+     * const importJob = await prisma.importJob.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ImportJobFindUniqueArgs>(args: SelectSubset<T, ImportJobFindUniqueArgs<ExtArgs>>): Prisma__ImportJobClient<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ImportJob that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ImportJobFindUniqueOrThrowArgs} args - Arguments to find a ImportJob
+     * @example
+     * // Get one ImportJob
+     * const importJob = await prisma.importJob.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ImportJobFindUniqueOrThrowArgs>(args: SelectSubset<T, ImportJobFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ImportJobClient<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ImportJob that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobFindFirstArgs} args - Arguments to find a ImportJob
+     * @example
+     * // Get one ImportJob
+     * const importJob = await prisma.importJob.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ImportJobFindFirstArgs>(args?: SelectSubset<T, ImportJobFindFirstArgs<ExtArgs>>): Prisma__ImportJobClient<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ImportJob that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobFindFirstOrThrowArgs} args - Arguments to find a ImportJob
+     * @example
+     * // Get one ImportJob
+     * const importJob = await prisma.importJob.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ImportJobFindFirstOrThrowArgs>(args?: SelectSubset<T, ImportJobFindFirstOrThrowArgs<ExtArgs>>): Prisma__ImportJobClient<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ImportJobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ImportJobs
+     * const importJobs = await prisma.importJob.findMany()
+     * 
+     * // Get first 10 ImportJobs
+     * const importJobs = await prisma.importJob.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const importJobWithIdOnly = await prisma.importJob.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ImportJobFindManyArgs>(args?: SelectSubset<T, ImportJobFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ImportJob.
+     * @param {ImportJobCreateArgs} args - Arguments to create a ImportJob.
+     * @example
+     * // Create one ImportJob
+     * const ImportJob = await prisma.importJob.create({
+     *   data: {
+     *     // ... data to create a ImportJob
+     *   }
+     * })
+     * 
+     */
+    create<T extends ImportJobCreateArgs>(args: SelectSubset<T, ImportJobCreateArgs<ExtArgs>>): Prisma__ImportJobClient<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ImportJobs.
+     * @param {ImportJobCreateManyArgs} args - Arguments to create many ImportJobs.
+     * @example
+     * // Create many ImportJobs
+     * const importJob = await prisma.importJob.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ImportJobCreateManyArgs>(args?: SelectSubset<T, ImportJobCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ImportJobs and returns the data saved in the database.
+     * @param {ImportJobCreateManyAndReturnArgs} args - Arguments to create many ImportJobs.
+     * @example
+     * // Create many ImportJobs
+     * const importJob = await prisma.importJob.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ImportJobs and only return the `id`
+     * const importJobWithIdOnly = await prisma.importJob.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ImportJobCreateManyAndReturnArgs>(args?: SelectSubset<T, ImportJobCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ImportJob.
+     * @param {ImportJobDeleteArgs} args - Arguments to delete one ImportJob.
+     * @example
+     * // Delete one ImportJob
+     * const ImportJob = await prisma.importJob.delete({
+     *   where: {
+     *     // ... filter to delete one ImportJob
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ImportJobDeleteArgs>(args: SelectSubset<T, ImportJobDeleteArgs<ExtArgs>>): Prisma__ImportJobClient<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ImportJob.
+     * @param {ImportJobUpdateArgs} args - Arguments to update one ImportJob.
+     * @example
+     * // Update one ImportJob
+     * const importJob = await prisma.importJob.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ImportJobUpdateArgs>(args: SelectSubset<T, ImportJobUpdateArgs<ExtArgs>>): Prisma__ImportJobClient<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ImportJobs.
+     * @param {ImportJobDeleteManyArgs} args - Arguments to filter ImportJobs to delete.
+     * @example
+     * // Delete a few ImportJobs
+     * const { count } = await prisma.importJob.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ImportJobDeleteManyArgs>(args?: SelectSubset<T, ImportJobDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ImportJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ImportJobs
+     * const importJob = await prisma.importJob.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ImportJobUpdateManyArgs>(args: SelectSubset<T, ImportJobUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ImportJobs and returns the data updated in the database.
+     * @param {ImportJobUpdateManyAndReturnArgs} args - Arguments to update many ImportJobs.
+     * @example
+     * // Update many ImportJobs
+     * const importJob = await prisma.importJob.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ImportJobs and only return the `id`
+     * const importJobWithIdOnly = await prisma.importJob.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ImportJobUpdateManyAndReturnArgs>(args: SelectSubset<T, ImportJobUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ImportJob.
+     * @param {ImportJobUpsertArgs} args - Arguments to update or create a ImportJob.
+     * @example
+     * // Update or create a ImportJob
+     * const importJob = await prisma.importJob.upsert({
+     *   create: {
+     *     // ... data to create a ImportJob
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ImportJob we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ImportJobUpsertArgs>(args: SelectSubset<T, ImportJobUpsertArgs<ExtArgs>>): Prisma__ImportJobClient<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ImportJobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobCountArgs} args - Arguments to filter ImportJobs to count.
+     * @example
+     * // Count the number of ImportJobs
+     * const count = await prisma.importJob.count({
+     *   where: {
+     *     // ... the filter for the ImportJobs we want to count
+     *   }
+     * })
+    **/
+    count<T extends ImportJobCountArgs>(
+      args?: Subset<T, ImportJobCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ImportJobCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ImportJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ImportJobAggregateArgs>(args: Subset<T, ImportJobAggregateArgs>): Prisma.PrismaPromise<GetImportJobAggregateType<T>>
+
+    /**
+     * Group by ImportJob.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ImportJobGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ImportJobGroupByArgs['orderBy'] }
+        : { orderBy?: ImportJobGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ImportJobGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetImportJobGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ImportJob model
+   */
+  readonly fields: ImportJobFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ImportJob.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ImportJobClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    mappingProfile<T extends ImportJob$mappingProfileArgs<ExtArgs> = {}>(args?: Subset<T, ImportJob$mappingProfileArgs<ExtArgs>>): Prisma__ImportMappingProfileClient<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    items<T extends ImportJob$itemsArgs<ExtArgs> = {}>(args?: Subset<T, ImportJob$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ImportJob model
+   */
+  interface ImportJobFieldRefs {
+    readonly id: FieldRef<"ImportJob", 'String'>
+    readonly ownerId: FieldRef<"ImportJob", 'String'>
+    readonly templateId: FieldRef<"ImportJob", 'String'>
+    readonly status: FieldRef<"ImportJob", 'ImportJobStatus'>
+    readonly fileName: FieldRef<"ImportJob", 'String'>
+    readonly fileMime: FieldRef<"ImportJob", 'String'>
+    readonly fileBytes: FieldRef<"ImportJob", 'Int'>
+    readonly storageRef: FieldRef<"ImportJob", 'String'>
+    readonly mappingProfileId: FieldRef<"ImportJob", 'String'>
+    readonly mapping: FieldRef<"ImportJob", 'Json'>
+    readonly validationSummary: FieldRef<"ImportJob", 'Json'>
+    readonly commitSummary: FieldRef<"ImportJob", 'Json'>
+    readonly createdAt: FieldRef<"ImportJob", 'DateTime'>
+    readonly updatedAt: FieldRef<"ImportJob", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ImportJob findUnique
+   */
+  export type ImportJobFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportJob to fetch.
+     */
+    where: ImportJobWhereUniqueInput
+  }
+
+  /**
+   * ImportJob findUniqueOrThrow
+   */
+  export type ImportJobFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportJob to fetch.
+     */
+    where: ImportJobWhereUniqueInput
+  }
+
+  /**
+   * ImportJob findFirst
+   */
+  export type ImportJobFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportJob to fetch.
+     */
+    where?: ImportJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportJobs to fetch.
+     */
+    orderBy?: ImportJobOrderByWithRelationInput | ImportJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ImportJobs.
+     */
+    cursor?: ImportJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ImportJobs.
+     */
+    distinct?: ImportJobScalarFieldEnum | ImportJobScalarFieldEnum[]
+  }
+
+  /**
+   * ImportJob findFirstOrThrow
+   */
+  export type ImportJobFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportJob to fetch.
+     */
+    where?: ImportJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportJobs to fetch.
+     */
+    orderBy?: ImportJobOrderByWithRelationInput | ImportJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ImportJobs.
+     */
+    cursor?: ImportJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportJobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ImportJobs.
+     */
+    distinct?: ImportJobScalarFieldEnum | ImportJobScalarFieldEnum[]
+  }
+
+  /**
+   * ImportJob findMany
+   */
+  export type ImportJobFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportJobs to fetch.
+     */
+    where?: ImportJobWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportJobs to fetch.
+     */
+    orderBy?: ImportJobOrderByWithRelationInput | ImportJobOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ImportJobs.
+     */
+    cursor?: ImportJobWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportJobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportJobs.
+     */
+    skip?: number
+    distinct?: ImportJobScalarFieldEnum | ImportJobScalarFieldEnum[]
+  }
+
+  /**
+   * ImportJob create
+   */
+  export type ImportJobCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ImportJob.
+     */
+    data: XOR<ImportJobCreateInput, ImportJobUncheckedCreateInput>
+  }
+
+  /**
+   * ImportJob createMany
+   */
+  export type ImportJobCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ImportJobs.
+     */
+    data: ImportJobCreateManyInput | ImportJobCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ImportJob createManyAndReturn
+   */
+  export type ImportJobCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * The data used to create many ImportJobs.
+     */
+    data: ImportJobCreateManyInput | ImportJobCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ImportJob update
+   */
+  export type ImportJobUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ImportJob.
+     */
+    data: XOR<ImportJobUpdateInput, ImportJobUncheckedUpdateInput>
+    /**
+     * Choose, which ImportJob to update.
+     */
+    where: ImportJobWhereUniqueInput
+  }
+
+  /**
+   * ImportJob updateMany
+   */
+  export type ImportJobUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ImportJobs.
+     */
+    data: XOR<ImportJobUpdateManyMutationInput, ImportJobUncheckedUpdateManyInput>
+    /**
+     * Filter which ImportJobs to update
+     */
+    where?: ImportJobWhereInput
+    /**
+     * Limit how many ImportJobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ImportJob updateManyAndReturn
+   */
+  export type ImportJobUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * The data used to update ImportJobs.
+     */
+    data: XOR<ImportJobUpdateManyMutationInput, ImportJobUncheckedUpdateManyInput>
+    /**
+     * Filter which ImportJobs to update
+     */
+    where?: ImportJobWhereInput
+    /**
+     * Limit how many ImportJobs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ImportJob upsert
+   */
+  export type ImportJobUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ImportJob to update in case it exists.
+     */
+    where: ImportJobWhereUniqueInput
+    /**
+     * In case the ImportJob found by the `where` argument doesn't exist, create a new ImportJob with this data.
+     */
+    create: XOR<ImportJobCreateInput, ImportJobUncheckedCreateInput>
+    /**
+     * In case the ImportJob was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ImportJobUpdateInput, ImportJobUncheckedUpdateInput>
+  }
+
+  /**
+   * ImportJob delete
+   */
+  export type ImportJobDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+    /**
+     * Filter which ImportJob to delete.
+     */
+    where: ImportJobWhereUniqueInput
+  }
+
+  /**
+   * ImportJob deleteMany
+   */
+  export type ImportJobDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ImportJobs to delete
+     */
+    where?: ImportJobWhereInput
+    /**
+     * Limit how many ImportJobs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ImportJob.mappingProfile
+   */
+  export type ImportJob$mappingProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+    where?: ImportMappingProfileWhereInput
+  }
+
+  /**
+   * ImportJob.items
+   */
+  export type ImportJob$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemInclude<ExtArgs> | null
+    where?: ImportJobItemWhereInput
+    orderBy?: ImportJobItemOrderByWithRelationInput | ImportJobItemOrderByWithRelationInput[]
+    cursor?: ImportJobItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ImportJobItemScalarFieldEnum | ImportJobItemScalarFieldEnum[]
+  }
+
+  /**
+   * ImportJob without action
+   */
+  export type ImportJobDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ImportJobItem
+   */
+
+  export type AggregateImportJobItem = {
+    _count: ImportJobItemCountAggregateOutputType | null
+    _avg: ImportJobItemAvgAggregateOutputType | null
+    _sum: ImportJobItemSumAggregateOutputType | null
+    _min: ImportJobItemMinAggregateOutputType | null
+    _max: ImportJobItemMaxAggregateOutputType | null
+  }
+
+  export type ImportJobItemAvgAggregateOutputType = {
+    rowIndex: number | null
+  }
+
+  export type ImportJobItemSumAggregateOutputType = {
+    rowIndex: number | null
+  }
+
+  export type ImportJobItemMinAggregateOutputType = {
+    id: string | null
+    jobId: string | null
+    rowIndex: number | null
+    outcome: $Enums.ImportRowOutcome | null
+    createdAt: Date | null
+  }
+
+  export type ImportJobItemMaxAggregateOutputType = {
+    id: string | null
+    jobId: string | null
+    rowIndex: number | null
+    outcome: $Enums.ImportRowOutcome | null
+    createdAt: Date | null
+  }
+
+  export type ImportJobItemCountAggregateOutputType = {
+    id: number
+    jobId: number
+    rowIndex: number
+    rawValues: number
+    normalizedValues: number
+    outcome: number
+    errors: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ImportJobItemAvgAggregateInputType = {
+    rowIndex?: true
+  }
+
+  export type ImportJobItemSumAggregateInputType = {
+    rowIndex?: true
+  }
+
+  export type ImportJobItemMinAggregateInputType = {
+    id?: true
+    jobId?: true
+    rowIndex?: true
+    outcome?: true
+    createdAt?: true
+  }
+
+  export type ImportJobItemMaxAggregateInputType = {
+    id?: true
+    jobId?: true
+    rowIndex?: true
+    outcome?: true
+    createdAt?: true
+  }
+
+  export type ImportJobItemCountAggregateInputType = {
+    id?: true
+    jobId?: true
+    rowIndex?: true
+    rawValues?: true
+    normalizedValues?: true
+    outcome?: true
+    errors?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ImportJobItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ImportJobItem to aggregate.
+     */
+    where?: ImportJobItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportJobItems to fetch.
+     */
+    orderBy?: ImportJobItemOrderByWithRelationInput | ImportJobItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ImportJobItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportJobItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportJobItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ImportJobItems
+    **/
+    _count?: true | ImportJobItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ImportJobItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ImportJobItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ImportJobItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ImportJobItemMaxAggregateInputType
+  }
+
+  export type GetImportJobItemAggregateType<T extends ImportJobItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateImportJobItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateImportJobItem[P]>
+      : GetScalarType<T[P], AggregateImportJobItem[P]>
+  }
+
+
+
+
+  export type ImportJobItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImportJobItemWhereInput
+    orderBy?: ImportJobItemOrderByWithAggregationInput | ImportJobItemOrderByWithAggregationInput[]
+    by: ImportJobItemScalarFieldEnum[] | ImportJobItemScalarFieldEnum
+    having?: ImportJobItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ImportJobItemCountAggregateInputType | true
+    _avg?: ImportJobItemAvgAggregateInputType
+    _sum?: ImportJobItemSumAggregateInputType
+    _min?: ImportJobItemMinAggregateInputType
+    _max?: ImportJobItemMaxAggregateInputType
+  }
+
+  export type ImportJobItemGroupByOutputType = {
+    id: string
+    jobId: string
+    rowIndex: number
+    rawValues: JsonValue
+    normalizedValues: JsonValue | null
+    outcome: $Enums.ImportRowOutcome
+    errors: string[]
+    createdAt: Date
+    _count: ImportJobItemCountAggregateOutputType | null
+    _avg: ImportJobItemAvgAggregateOutputType | null
+    _sum: ImportJobItemSumAggregateOutputType | null
+    _min: ImportJobItemMinAggregateOutputType | null
+    _max: ImportJobItemMaxAggregateOutputType | null
+  }
+
+  type GetImportJobItemGroupByPayload<T extends ImportJobItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ImportJobItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ImportJobItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ImportJobItemGroupByOutputType[P]>
+            : GetScalarType<T[P], ImportJobItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ImportJobItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    jobId?: boolean
+    rowIndex?: boolean
+    rawValues?: boolean
+    normalizedValues?: boolean
+    outcome?: boolean
+    errors?: boolean
+    createdAt?: boolean
+    job?: boolean | ImportJobDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["importJobItem"]>
+
+  export type ImportJobItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    jobId?: boolean
+    rowIndex?: boolean
+    rawValues?: boolean
+    normalizedValues?: boolean
+    outcome?: boolean
+    errors?: boolean
+    createdAt?: boolean
+    job?: boolean | ImportJobDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["importJobItem"]>
+
+  export type ImportJobItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    jobId?: boolean
+    rowIndex?: boolean
+    rawValues?: boolean
+    normalizedValues?: boolean
+    outcome?: boolean
+    errors?: boolean
+    createdAt?: boolean
+    job?: boolean | ImportJobDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["importJobItem"]>
+
+  export type ImportJobItemSelectScalar = {
+    id?: boolean
+    jobId?: boolean
+    rowIndex?: boolean
+    rawValues?: boolean
+    normalizedValues?: boolean
+    outcome?: boolean
+    errors?: boolean
+    createdAt?: boolean
+  }
+
+  export type ImportJobItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "jobId" | "rowIndex" | "rawValues" | "normalizedValues" | "outcome" | "errors" | "createdAt", ExtArgs["result"]["importJobItem"]>
+  export type ImportJobItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    job?: boolean | ImportJobDefaultArgs<ExtArgs>
+  }
+  export type ImportJobItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    job?: boolean | ImportJobDefaultArgs<ExtArgs>
+  }
+  export type ImportJobItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    job?: boolean | ImportJobDefaultArgs<ExtArgs>
+  }
+
+  export type $ImportJobItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ImportJobItem"
+    objects: {
+      job: Prisma.$ImportJobPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      jobId: string
+      rowIndex: number
+      rawValues: Prisma.JsonValue
+      normalizedValues: Prisma.JsonValue | null
+      outcome: $Enums.ImportRowOutcome
+      errors: string[]
+      createdAt: Date
+    }, ExtArgs["result"]["importJobItem"]>
+    composites: {}
+  }
+
+  type ImportJobItemGetPayload<S extends boolean | null | undefined | ImportJobItemDefaultArgs> = $Result.GetResult<Prisma.$ImportJobItemPayload, S>
+
+  type ImportJobItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ImportJobItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ImportJobItemCountAggregateInputType | true
+    }
+
+  export interface ImportJobItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ImportJobItem'], meta: { name: 'ImportJobItem' } }
+    /**
+     * Find zero or one ImportJobItem that matches the filter.
+     * @param {ImportJobItemFindUniqueArgs} args - Arguments to find a ImportJobItem
+     * @example
+     * // Get one ImportJobItem
+     * const importJobItem = await prisma.importJobItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ImportJobItemFindUniqueArgs>(args: SelectSubset<T, ImportJobItemFindUniqueArgs<ExtArgs>>): Prisma__ImportJobItemClient<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ImportJobItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ImportJobItemFindUniqueOrThrowArgs} args - Arguments to find a ImportJobItem
+     * @example
+     * // Get one ImportJobItem
+     * const importJobItem = await prisma.importJobItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ImportJobItemFindUniqueOrThrowArgs>(args: SelectSubset<T, ImportJobItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ImportJobItemClient<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ImportJobItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobItemFindFirstArgs} args - Arguments to find a ImportJobItem
+     * @example
+     * // Get one ImportJobItem
+     * const importJobItem = await prisma.importJobItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ImportJobItemFindFirstArgs>(args?: SelectSubset<T, ImportJobItemFindFirstArgs<ExtArgs>>): Prisma__ImportJobItemClient<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ImportJobItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobItemFindFirstOrThrowArgs} args - Arguments to find a ImportJobItem
+     * @example
+     * // Get one ImportJobItem
+     * const importJobItem = await prisma.importJobItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ImportJobItemFindFirstOrThrowArgs>(args?: SelectSubset<T, ImportJobItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__ImportJobItemClient<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ImportJobItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ImportJobItems
+     * const importJobItems = await prisma.importJobItem.findMany()
+     * 
+     * // Get first 10 ImportJobItems
+     * const importJobItems = await prisma.importJobItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const importJobItemWithIdOnly = await prisma.importJobItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ImportJobItemFindManyArgs>(args?: SelectSubset<T, ImportJobItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ImportJobItem.
+     * @param {ImportJobItemCreateArgs} args - Arguments to create a ImportJobItem.
+     * @example
+     * // Create one ImportJobItem
+     * const ImportJobItem = await prisma.importJobItem.create({
+     *   data: {
+     *     // ... data to create a ImportJobItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends ImportJobItemCreateArgs>(args: SelectSubset<T, ImportJobItemCreateArgs<ExtArgs>>): Prisma__ImportJobItemClient<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ImportJobItems.
+     * @param {ImportJobItemCreateManyArgs} args - Arguments to create many ImportJobItems.
+     * @example
+     * // Create many ImportJobItems
+     * const importJobItem = await prisma.importJobItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ImportJobItemCreateManyArgs>(args?: SelectSubset<T, ImportJobItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ImportJobItems and returns the data saved in the database.
+     * @param {ImportJobItemCreateManyAndReturnArgs} args - Arguments to create many ImportJobItems.
+     * @example
+     * // Create many ImportJobItems
+     * const importJobItem = await prisma.importJobItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ImportJobItems and only return the `id`
+     * const importJobItemWithIdOnly = await prisma.importJobItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ImportJobItemCreateManyAndReturnArgs>(args?: SelectSubset<T, ImportJobItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ImportJobItem.
+     * @param {ImportJobItemDeleteArgs} args - Arguments to delete one ImportJobItem.
+     * @example
+     * // Delete one ImportJobItem
+     * const ImportJobItem = await prisma.importJobItem.delete({
+     *   where: {
+     *     // ... filter to delete one ImportJobItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ImportJobItemDeleteArgs>(args: SelectSubset<T, ImportJobItemDeleteArgs<ExtArgs>>): Prisma__ImportJobItemClient<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ImportJobItem.
+     * @param {ImportJobItemUpdateArgs} args - Arguments to update one ImportJobItem.
+     * @example
+     * // Update one ImportJobItem
+     * const importJobItem = await prisma.importJobItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ImportJobItemUpdateArgs>(args: SelectSubset<T, ImportJobItemUpdateArgs<ExtArgs>>): Prisma__ImportJobItemClient<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ImportJobItems.
+     * @param {ImportJobItemDeleteManyArgs} args - Arguments to filter ImportJobItems to delete.
+     * @example
+     * // Delete a few ImportJobItems
+     * const { count } = await prisma.importJobItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ImportJobItemDeleteManyArgs>(args?: SelectSubset<T, ImportJobItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ImportJobItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ImportJobItems
+     * const importJobItem = await prisma.importJobItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ImportJobItemUpdateManyArgs>(args: SelectSubset<T, ImportJobItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ImportJobItems and returns the data updated in the database.
+     * @param {ImportJobItemUpdateManyAndReturnArgs} args - Arguments to update many ImportJobItems.
+     * @example
+     * // Update many ImportJobItems
+     * const importJobItem = await prisma.importJobItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ImportJobItems and only return the `id`
+     * const importJobItemWithIdOnly = await prisma.importJobItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ImportJobItemUpdateManyAndReturnArgs>(args: SelectSubset<T, ImportJobItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ImportJobItem.
+     * @param {ImportJobItemUpsertArgs} args - Arguments to update or create a ImportJobItem.
+     * @example
+     * // Update or create a ImportJobItem
+     * const importJobItem = await prisma.importJobItem.upsert({
+     *   create: {
+     *     // ... data to create a ImportJobItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ImportJobItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ImportJobItemUpsertArgs>(args: SelectSubset<T, ImportJobItemUpsertArgs<ExtArgs>>): Prisma__ImportJobItemClient<$Result.GetResult<Prisma.$ImportJobItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ImportJobItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobItemCountArgs} args - Arguments to filter ImportJobItems to count.
+     * @example
+     * // Count the number of ImportJobItems
+     * const count = await prisma.importJobItem.count({
+     *   where: {
+     *     // ... the filter for the ImportJobItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends ImportJobItemCountArgs>(
+      args?: Subset<T, ImportJobItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ImportJobItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ImportJobItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ImportJobItemAggregateArgs>(args: Subset<T, ImportJobItemAggregateArgs>): Prisma.PrismaPromise<GetImportJobItemAggregateType<T>>
+
+    /**
+     * Group by ImportJobItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportJobItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ImportJobItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ImportJobItemGroupByArgs['orderBy'] }
+        : { orderBy?: ImportJobItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ImportJobItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetImportJobItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ImportJobItem model
+   */
+  readonly fields: ImportJobItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ImportJobItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ImportJobItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    job<T extends ImportJobDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ImportJobDefaultArgs<ExtArgs>>): Prisma__ImportJobClient<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ImportJobItem model
+   */
+  interface ImportJobItemFieldRefs {
+    readonly id: FieldRef<"ImportJobItem", 'String'>
+    readonly jobId: FieldRef<"ImportJobItem", 'String'>
+    readonly rowIndex: FieldRef<"ImportJobItem", 'Int'>
+    readonly rawValues: FieldRef<"ImportJobItem", 'Json'>
+    readonly normalizedValues: FieldRef<"ImportJobItem", 'Json'>
+    readonly outcome: FieldRef<"ImportJobItem", 'ImportRowOutcome'>
+    readonly errors: FieldRef<"ImportJobItem", 'String[]'>
+    readonly createdAt: FieldRef<"ImportJobItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ImportJobItem findUnique
+   */
+  export type ImportJobItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportJobItem to fetch.
+     */
+    where: ImportJobItemWhereUniqueInput
+  }
+
+  /**
+   * ImportJobItem findUniqueOrThrow
+   */
+  export type ImportJobItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportJobItem to fetch.
+     */
+    where: ImportJobItemWhereUniqueInput
+  }
+
+  /**
+   * ImportJobItem findFirst
+   */
+  export type ImportJobItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportJobItem to fetch.
+     */
+    where?: ImportJobItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportJobItems to fetch.
+     */
+    orderBy?: ImportJobItemOrderByWithRelationInput | ImportJobItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ImportJobItems.
+     */
+    cursor?: ImportJobItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportJobItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportJobItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ImportJobItems.
+     */
+    distinct?: ImportJobItemScalarFieldEnum | ImportJobItemScalarFieldEnum[]
+  }
+
+  /**
+   * ImportJobItem findFirstOrThrow
+   */
+  export type ImportJobItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportJobItem to fetch.
+     */
+    where?: ImportJobItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportJobItems to fetch.
+     */
+    orderBy?: ImportJobItemOrderByWithRelationInput | ImportJobItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ImportJobItems.
+     */
+    cursor?: ImportJobItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportJobItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportJobItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ImportJobItems.
+     */
+    distinct?: ImportJobItemScalarFieldEnum | ImportJobItemScalarFieldEnum[]
+  }
+
+  /**
+   * ImportJobItem findMany
+   */
+  export type ImportJobItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportJobItems to fetch.
+     */
+    where?: ImportJobItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportJobItems to fetch.
+     */
+    orderBy?: ImportJobItemOrderByWithRelationInput | ImportJobItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ImportJobItems.
+     */
+    cursor?: ImportJobItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportJobItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportJobItems.
+     */
+    skip?: number
+    distinct?: ImportJobItemScalarFieldEnum | ImportJobItemScalarFieldEnum[]
+  }
+
+  /**
+   * ImportJobItem create
+   */
+  export type ImportJobItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ImportJobItem.
+     */
+    data: XOR<ImportJobItemCreateInput, ImportJobItemUncheckedCreateInput>
+  }
+
+  /**
+   * ImportJobItem createMany
+   */
+  export type ImportJobItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ImportJobItems.
+     */
+    data: ImportJobItemCreateManyInput | ImportJobItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ImportJobItem createManyAndReturn
+   */
+  export type ImportJobItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many ImportJobItems.
+     */
+    data: ImportJobItemCreateManyInput | ImportJobItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ImportJobItem update
+   */
+  export type ImportJobItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ImportJobItem.
+     */
+    data: XOR<ImportJobItemUpdateInput, ImportJobItemUncheckedUpdateInput>
+    /**
+     * Choose, which ImportJobItem to update.
+     */
+    where: ImportJobItemWhereUniqueInput
+  }
+
+  /**
+   * ImportJobItem updateMany
+   */
+  export type ImportJobItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ImportJobItems.
+     */
+    data: XOR<ImportJobItemUpdateManyMutationInput, ImportJobItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ImportJobItems to update
+     */
+    where?: ImportJobItemWhereInput
+    /**
+     * Limit how many ImportJobItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ImportJobItem updateManyAndReturn
+   */
+  export type ImportJobItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * The data used to update ImportJobItems.
+     */
+    data: XOR<ImportJobItemUpdateManyMutationInput, ImportJobItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ImportJobItems to update
+     */
+    where?: ImportJobItemWhereInput
+    /**
+     * Limit how many ImportJobItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ImportJobItem upsert
+   */
+  export type ImportJobItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ImportJobItem to update in case it exists.
+     */
+    where: ImportJobItemWhereUniqueInput
+    /**
+     * In case the ImportJobItem found by the `where` argument doesn't exist, create a new ImportJobItem with this data.
+     */
+    create: XOR<ImportJobItemCreateInput, ImportJobItemUncheckedCreateInput>
+    /**
+     * In case the ImportJobItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ImportJobItemUpdateInput, ImportJobItemUncheckedUpdateInput>
+  }
+
+  /**
+   * ImportJobItem delete
+   */
+  export type ImportJobItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemInclude<ExtArgs> | null
+    /**
+     * Filter which ImportJobItem to delete.
+     */
+    where: ImportJobItemWhereUniqueInput
+  }
+
+  /**
+   * ImportJobItem deleteMany
+   */
+  export type ImportJobItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ImportJobItems to delete
+     */
+    where?: ImportJobItemWhereInput
+    /**
+     * Limit how many ImportJobItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ImportJobItem without action
+   */
+  export type ImportJobItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJobItem
+     */
+    select?: ImportJobItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJobItem
+     */
+    omit?: ImportJobItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobItemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ImportMappingProfile
+   */
+
+  export type AggregateImportMappingProfile = {
+    _count: ImportMappingProfileCountAggregateOutputType | null
+    _min: ImportMappingProfileMinAggregateOutputType | null
+    _max: ImportMappingProfileMaxAggregateOutputType | null
+  }
+
+  export type ImportMappingProfileMinAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    templateId: string | null
+    name: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ImportMappingProfileMaxAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    templateId: string | null
+    name: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ImportMappingProfileCountAggregateOutputType = {
+    id: number
+    ownerId: number
+    templateId: number
+    name: number
+    mapping: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ImportMappingProfileMinAggregateInputType = {
+    id?: true
+    ownerId?: true
+    templateId?: true
+    name?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ImportMappingProfileMaxAggregateInputType = {
+    id?: true
+    ownerId?: true
+    templateId?: true
+    name?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ImportMappingProfileCountAggregateInputType = {
+    id?: true
+    ownerId?: true
+    templateId?: true
+    name?: true
+    mapping?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ImportMappingProfileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ImportMappingProfile to aggregate.
+     */
+    where?: ImportMappingProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportMappingProfiles to fetch.
+     */
+    orderBy?: ImportMappingProfileOrderByWithRelationInput | ImportMappingProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ImportMappingProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportMappingProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportMappingProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ImportMappingProfiles
+    **/
+    _count?: true | ImportMappingProfileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ImportMappingProfileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ImportMappingProfileMaxAggregateInputType
+  }
+
+  export type GetImportMappingProfileAggregateType<T extends ImportMappingProfileAggregateArgs> = {
+        [P in keyof T & keyof AggregateImportMappingProfile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateImportMappingProfile[P]>
+      : GetScalarType<T[P], AggregateImportMappingProfile[P]>
+  }
+
+
+
+
+  export type ImportMappingProfileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImportMappingProfileWhereInput
+    orderBy?: ImportMappingProfileOrderByWithAggregationInput | ImportMappingProfileOrderByWithAggregationInput[]
+    by: ImportMappingProfileScalarFieldEnum[] | ImportMappingProfileScalarFieldEnum
+    having?: ImportMappingProfileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ImportMappingProfileCountAggregateInputType | true
+    _min?: ImportMappingProfileMinAggregateInputType
+    _max?: ImportMappingProfileMaxAggregateInputType
+  }
+
+  export type ImportMappingProfileGroupByOutputType = {
+    id: string
+    ownerId: string
+    templateId: string | null
+    name: string
+    mapping: JsonValue
+    createdAt: Date
+    updatedAt: Date
+    _count: ImportMappingProfileCountAggregateOutputType | null
+    _min: ImportMappingProfileMinAggregateOutputType | null
+    _max: ImportMappingProfileMaxAggregateOutputType | null
+  }
+
+  type GetImportMappingProfileGroupByPayload<T extends ImportMappingProfileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ImportMappingProfileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ImportMappingProfileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ImportMappingProfileGroupByOutputType[P]>
+            : GetScalarType<T[P], ImportMappingProfileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ImportMappingProfileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    name?: boolean
+    mapping?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    jobs?: boolean | ImportMappingProfile$jobsArgs<ExtArgs>
+    _count?: boolean | ImportMappingProfileCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["importMappingProfile"]>
+
+  export type ImportMappingProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    name?: boolean
+    mapping?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["importMappingProfile"]>
+
+  export type ImportMappingProfileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    name?: boolean
+    mapping?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["importMappingProfile"]>
+
+  export type ImportMappingProfileSelectScalar = {
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    name?: boolean
+    mapping?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ImportMappingProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ownerId" | "templateId" | "name" | "mapping" | "createdAt" | "updatedAt", ExtArgs["result"]["importMappingProfile"]>
+  export type ImportMappingProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    jobs?: boolean | ImportMappingProfile$jobsArgs<ExtArgs>
+    _count?: boolean | ImportMappingProfileCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ImportMappingProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ImportMappingProfileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ImportMappingProfilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ImportMappingProfile"
+    objects: {
+      owner: Prisma.$UserPayload<ExtArgs>
+      jobs: Prisma.$ImportJobPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ownerId: string
+      templateId: string | null
+      name: string
+      mapping: Prisma.JsonValue
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["importMappingProfile"]>
+    composites: {}
+  }
+
+  type ImportMappingProfileGetPayload<S extends boolean | null | undefined | ImportMappingProfileDefaultArgs> = $Result.GetResult<Prisma.$ImportMappingProfilePayload, S>
+
+  type ImportMappingProfileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ImportMappingProfileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ImportMappingProfileCountAggregateInputType | true
+    }
+
+  export interface ImportMappingProfileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ImportMappingProfile'], meta: { name: 'ImportMappingProfile' } }
+    /**
+     * Find zero or one ImportMappingProfile that matches the filter.
+     * @param {ImportMappingProfileFindUniqueArgs} args - Arguments to find a ImportMappingProfile
+     * @example
+     * // Get one ImportMappingProfile
+     * const importMappingProfile = await prisma.importMappingProfile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ImportMappingProfileFindUniqueArgs>(args: SelectSubset<T, ImportMappingProfileFindUniqueArgs<ExtArgs>>): Prisma__ImportMappingProfileClient<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ImportMappingProfile that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ImportMappingProfileFindUniqueOrThrowArgs} args - Arguments to find a ImportMappingProfile
+     * @example
+     * // Get one ImportMappingProfile
+     * const importMappingProfile = await prisma.importMappingProfile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ImportMappingProfileFindUniqueOrThrowArgs>(args: SelectSubset<T, ImportMappingProfileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ImportMappingProfileClient<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ImportMappingProfile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportMappingProfileFindFirstArgs} args - Arguments to find a ImportMappingProfile
+     * @example
+     * // Get one ImportMappingProfile
+     * const importMappingProfile = await prisma.importMappingProfile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ImportMappingProfileFindFirstArgs>(args?: SelectSubset<T, ImportMappingProfileFindFirstArgs<ExtArgs>>): Prisma__ImportMappingProfileClient<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ImportMappingProfile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportMappingProfileFindFirstOrThrowArgs} args - Arguments to find a ImportMappingProfile
+     * @example
+     * // Get one ImportMappingProfile
+     * const importMappingProfile = await prisma.importMappingProfile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ImportMappingProfileFindFirstOrThrowArgs>(args?: SelectSubset<T, ImportMappingProfileFindFirstOrThrowArgs<ExtArgs>>): Prisma__ImportMappingProfileClient<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ImportMappingProfiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportMappingProfileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ImportMappingProfiles
+     * const importMappingProfiles = await prisma.importMappingProfile.findMany()
+     * 
+     * // Get first 10 ImportMappingProfiles
+     * const importMappingProfiles = await prisma.importMappingProfile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const importMappingProfileWithIdOnly = await prisma.importMappingProfile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ImportMappingProfileFindManyArgs>(args?: SelectSubset<T, ImportMappingProfileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ImportMappingProfile.
+     * @param {ImportMappingProfileCreateArgs} args - Arguments to create a ImportMappingProfile.
+     * @example
+     * // Create one ImportMappingProfile
+     * const ImportMappingProfile = await prisma.importMappingProfile.create({
+     *   data: {
+     *     // ... data to create a ImportMappingProfile
+     *   }
+     * })
+     * 
+     */
+    create<T extends ImportMappingProfileCreateArgs>(args: SelectSubset<T, ImportMappingProfileCreateArgs<ExtArgs>>): Prisma__ImportMappingProfileClient<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ImportMappingProfiles.
+     * @param {ImportMappingProfileCreateManyArgs} args - Arguments to create many ImportMappingProfiles.
+     * @example
+     * // Create many ImportMappingProfiles
+     * const importMappingProfile = await prisma.importMappingProfile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ImportMappingProfileCreateManyArgs>(args?: SelectSubset<T, ImportMappingProfileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ImportMappingProfiles and returns the data saved in the database.
+     * @param {ImportMappingProfileCreateManyAndReturnArgs} args - Arguments to create many ImportMappingProfiles.
+     * @example
+     * // Create many ImportMappingProfiles
+     * const importMappingProfile = await prisma.importMappingProfile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ImportMappingProfiles and only return the `id`
+     * const importMappingProfileWithIdOnly = await prisma.importMappingProfile.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ImportMappingProfileCreateManyAndReturnArgs>(args?: SelectSubset<T, ImportMappingProfileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ImportMappingProfile.
+     * @param {ImportMappingProfileDeleteArgs} args - Arguments to delete one ImportMappingProfile.
+     * @example
+     * // Delete one ImportMappingProfile
+     * const ImportMappingProfile = await prisma.importMappingProfile.delete({
+     *   where: {
+     *     // ... filter to delete one ImportMappingProfile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ImportMappingProfileDeleteArgs>(args: SelectSubset<T, ImportMappingProfileDeleteArgs<ExtArgs>>): Prisma__ImportMappingProfileClient<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ImportMappingProfile.
+     * @param {ImportMappingProfileUpdateArgs} args - Arguments to update one ImportMappingProfile.
+     * @example
+     * // Update one ImportMappingProfile
+     * const importMappingProfile = await prisma.importMappingProfile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ImportMappingProfileUpdateArgs>(args: SelectSubset<T, ImportMappingProfileUpdateArgs<ExtArgs>>): Prisma__ImportMappingProfileClient<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ImportMappingProfiles.
+     * @param {ImportMappingProfileDeleteManyArgs} args - Arguments to filter ImportMappingProfiles to delete.
+     * @example
+     * // Delete a few ImportMappingProfiles
+     * const { count } = await prisma.importMappingProfile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ImportMappingProfileDeleteManyArgs>(args?: SelectSubset<T, ImportMappingProfileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ImportMappingProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportMappingProfileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ImportMappingProfiles
+     * const importMappingProfile = await prisma.importMappingProfile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ImportMappingProfileUpdateManyArgs>(args: SelectSubset<T, ImportMappingProfileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ImportMappingProfiles and returns the data updated in the database.
+     * @param {ImportMappingProfileUpdateManyAndReturnArgs} args - Arguments to update many ImportMappingProfiles.
+     * @example
+     * // Update many ImportMappingProfiles
+     * const importMappingProfile = await prisma.importMappingProfile.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ImportMappingProfiles and only return the `id`
+     * const importMappingProfileWithIdOnly = await prisma.importMappingProfile.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ImportMappingProfileUpdateManyAndReturnArgs>(args: SelectSubset<T, ImportMappingProfileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ImportMappingProfile.
+     * @param {ImportMappingProfileUpsertArgs} args - Arguments to update or create a ImportMappingProfile.
+     * @example
+     * // Update or create a ImportMappingProfile
+     * const importMappingProfile = await prisma.importMappingProfile.upsert({
+     *   create: {
+     *     // ... data to create a ImportMappingProfile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ImportMappingProfile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ImportMappingProfileUpsertArgs>(args: SelectSubset<T, ImportMappingProfileUpsertArgs<ExtArgs>>): Prisma__ImportMappingProfileClient<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ImportMappingProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportMappingProfileCountArgs} args - Arguments to filter ImportMappingProfiles to count.
+     * @example
+     * // Count the number of ImportMappingProfiles
+     * const count = await prisma.importMappingProfile.count({
+     *   where: {
+     *     // ... the filter for the ImportMappingProfiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends ImportMappingProfileCountArgs>(
+      args?: Subset<T, ImportMappingProfileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ImportMappingProfileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ImportMappingProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportMappingProfileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ImportMappingProfileAggregateArgs>(args: Subset<T, ImportMappingProfileAggregateArgs>): Prisma.PrismaPromise<GetImportMappingProfileAggregateType<T>>
+
+    /**
+     * Group by ImportMappingProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImportMappingProfileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ImportMappingProfileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ImportMappingProfileGroupByArgs['orderBy'] }
+        : { orderBy?: ImportMappingProfileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ImportMappingProfileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetImportMappingProfileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ImportMappingProfile model
+   */
+  readonly fields: ImportMappingProfileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ImportMappingProfile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ImportMappingProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    jobs<T extends ImportMappingProfile$jobsArgs<ExtArgs> = {}>(args?: Subset<T, ImportMappingProfile$jobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ImportMappingProfile model
+   */
+  interface ImportMappingProfileFieldRefs {
+    readonly id: FieldRef<"ImportMappingProfile", 'String'>
+    readonly ownerId: FieldRef<"ImportMappingProfile", 'String'>
+    readonly templateId: FieldRef<"ImportMappingProfile", 'String'>
+    readonly name: FieldRef<"ImportMappingProfile", 'String'>
+    readonly mapping: FieldRef<"ImportMappingProfile", 'Json'>
+    readonly createdAt: FieldRef<"ImportMappingProfile", 'DateTime'>
+    readonly updatedAt: FieldRef<"ImportMappingProfile", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ImportMappingProfile findUnique
+   */
+  export type ImportMappingProfileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportMappingProfile to fetch.
+     */
+    where: ImportMappingProfileWhereUniqueInput
+  }
+
+  /**
+   * ImportMappingProfile findUniqueOrThrow
+   */
+  export type ImportMappingProfileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportMappingProfile to fetch.
+     */
+    where: ImportMappingProfileWhereUniqueInput
+  }
+
+  /**
+   * ImportMappingProfile findFirst
+   */
+  export type ImportMappingProfileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportMappingProfile to fetch.
+     */
+    where?: ImportMappingProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportMappingProfiles to fetch.
+     */
+    orderBy?: ImportMappingProfileOrderByWithRelationInput | ImportMappingProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ImportMappingProfiles.
+     */
+    cursor?: ImportMappingProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportMappingProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportMappingProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ImportMappingProfiles.
+     */
+    distinct?: ImportMappingProfileScalarFieldEnum | ImportMappingProfileScalarFieldEnum[]
+  }
+
+  /**
+   * ImportMappingProfile findFirstOrThrow
+   */
+  export type ImportMappingProfileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportMappingProfile to fetch.
+     */
+    where?: ImportMappingProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportMappingProfiles to fetch.
+     */
+    orderBy?: ImportMappingProfileOrderByWithRelationInput | ImportMappingProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ImportMappingProfiles.
+     */
+    cursor?: ImportMappingProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportMappingProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportMappingProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ImportMappingProfiles.
+     */
+    distinct?: ImportMappingProfileScalarFieldEnum | ImportMappingProfileScalarFieldEnum[]
+  }
+
+  /**
+   * ImportMappingProfile findMany
+   */
+  export type ImportMappingProfileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which ImportMappingProfiles to fetch.
+     */
+    where?: ImportMappingProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImportMappingProfiles to fetch.
+     */
+    orderBy?: ImportMappingProfileOrderByWithRelationInput | ImportMappingProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ImportMappingProfiles.
+     */
+    cursor?: ImportMappingProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImportMappingProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImportMappingProfiles.
+     */
+    skip?: number
+    distinct?: ImportMappingProfileScalarFieldEnum | ImportMappingProfileScalarFieldEnum[]
+  }
+
+  /**
+   * ImportMappingProfile create
+   */
+  export type ImportMappingProfileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ImportMappingProfile.
+     */
+    data: XOR<ImportMappingProfileCreateInput, ImportMappingProfileUncheckedCreateInput>
+  }
+
+  /**
+   * ImportMappingProfile createMany
+   */
+  export type ImportMappingProfileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ImportMappingProfiles.
+     */
+    data: ImportMappingProfileCreateManyInput | ImportMappingProfileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ImportMappingProfile createManyAndReturn
+   */
+  export type ImportMappingProfileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * The data used to create many ImportMappingProfiles.
+     */
+    data: ImportMappingProfileCreateManyInput | ImportMappingProfileCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ImportMappingProfile update
+   */
+  export type ImportMappingProfileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ImportMappingProfile.
+     */
+    data: XOR<ImportMappingProfileUpdateInput, ImportMappingProfileUncheckedUpdateInput>
+    /**
+     * Choose, which ImportMappingProfile to update.
+     */
+    where: ImportMappingProfileWhereUniqueInput
+  }
+
+  /**
+   * ImportMappingProfile updateMany
+   */
+  export type ImportMappingProfileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ImportMappingProfiles.
+     */
+    data: XOR<ImportMappingProfileUpdateManyMutationInput, ImportMappingProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which ImportMappingProfiles to update
+     */
+    where?: ImportMappingProfileWhereInput
+    /**
+     * Limit how many ImportMappingProfiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ImportMappingProfile updateManyAndReturn
+   */
+  export type ImportMappingProfileUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * The data used to update ImportMappingProfiles.
+     */
+    data: XOR<ImportMappingProfileUpdateManyMutationInput, ImportMappingProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which ImportMappingProfiles to update
+     */
+    where?: ImportMappingProfileWhereInput
+    /**
+     * Limit how many ImportMappingProfiles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ImportMappingProfile upsert
+   */
+  export type ImportMappingProfileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ImportMappingProfile to update in case it exists.
+     */
+    where: ImportMappingProfileWhereUniqueInput
+    /**
+     * In case the ImportMappingProfile found by the `where` argument doesn't exist, create a new ImportMappingProfile with this data.
+     */
+    create: XOR<ImportMappingProfileCreateInput, ImportMappingProfileUncheckedCreateInput>
+    /**
+     * In case the ImportMappingProfile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ImportMappingProfileUpdateInput, ImportMappingProfileUncheckedUpdateInput>
+  }
+
+  /**
+   * ImportMappingProfile delete
+   */
+  export type ImportMappingProfileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+    /**
+     * Filter which ImportMappingProfile to delete.
+     */
+    where: ImportMappingProfileWhereUniqueInput
+  }
+
+  /**
+   * ImportMappingProfile deleteMany
+   */
+  export type ImportMappingProfileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ImportMappingProfiles to delete
+     */
+    where?: ImportMappingProfileWhereInput
+    /**
+     * Limit how many ImportMappingProfiles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ImportMappingProfile.jobs
+   */
+  export type ImportMappingProfile$jobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportJob
+     */
+    select?: ImportJobSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportJob
+     */
+    omit?: ImportJobOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportJobInclude<ExtArgs> | null
+    where?: ImportJobWhereInput
+    orderBy?: ImportJobOrderByWithRelationInput | ImportJobOrderByWithRelationInput[]
+    cursor?: ImportJobWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ImportJobScalarFieldEnum | ImportJobScalarFieldEnum[]
+  }
+
+  /**
+   * ImportMappingProfile without action
+   */
+  export type ImportMappingProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImportMappingProfile
+     */
+    select?: ImportMappingProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImportMappingProfile
+     */
+    omit?: ImportMappingProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImportMappingProfileInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BulkInviteBatch
+   */
+
+  export type AggregateBulkInviteBatch = {
+    _count: BulkInviteBatchCountAggregateOutputType | null
+    _avg: BulkInviteBatchAvgAggregateOutputType | null
+    _sum: BulkInviteBatchSumAggregateOutputType | null
+    _min: BulkInviteBatchMinAggregateOutputType | null
+    _max: BulkInviteBatchMaxAggregateOutputType | null
+  }
+
+  export type BulkInviteBatchAvgAggregateOutputType = {
+    totalEntries: number | null
+    successCount: number | null
+    skippedCount: number | null
+    failedCount: number | null
+  }
+
+  export type BulkInviteBatchSumAggregateOutputType = {
+    totalEntries: number | null
+    successCount: number | null
+    skippedCount: number | null
+    failedCount: number | null
+  }
+
+  export type BulkInviteBatchMinAggregateOutputType = {
+    id: string | null
+    createdById: string | null
+    kind: $Enums.BulkInviteKind | null
+    totalEntries: number | null
+    successCount: number | null
+    skippedCount: number | null
+    failedCount: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BulkInviteBatchMaxAggregateOutputType = {
+    id: string | null
+    createdById: string | null
+    kind: $Enums.BulkInviteKind | null
+    totalEntries: number | null
+    successCount: number | null
+    skippedCount: number | null
+    failedCount: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BulkInviteBatchCountAggregateOutputType = {
+    id: number
+    createdById: number
+    kind: number
+    sharedAttrs: number
+    totalEntries: number
+    successCount: number
+    skippedCount: number
+    failedCount: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BulkInviteBatchAvgAggregateInputType = {
+    totalEntries?: true
+    successCount?: true
+    skippedCount?: true
+    failedCount?: true
+  }
+
+  export type BulkInviteBatchSumAggregateInputType = {
+    totalEntries?: true
+    successCount?: true
+    skippedCount?: true
+    failedCount?: true
+  }
+
+  export type BulkInviteBatchMinAggregateInputType = {
+    id?: true
+    createdById?: true
+    kind?: true
+    totalEntries?: true
+    successCount?: true
+    skippedCount?: true
+    failedCount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BulkInviteBatchMaxAggregateInputType = {
+    id?: true
+    createdById?: true
+    kind?: true
+    totalEntries?: true
+    successCount?: true
+    skippedCount?: true
+    failedCount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BulkInviteBatchCountAggregateInputType = {
+    id?: true
+    createdById?: true
+    kind?: true
+    sharedAttrs?: true
+    totalEntries?: true
+    successCount?: true
+    skippedCount?: true
+    failedCount?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BulkInviteBatchAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BulkInviteBatch to aggregate.
+     */
+    where?: BulkInviteBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BulkInviteBatches to fetch.
+     */
+    orderBy?: BulkInviteBatchOrderByWithRelationInput | BulkInviteBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BulkInviteBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BulkInviteBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BulkInviteBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BulkInviteBatches
+    **/
+    _count?: true | BulkInviteBatchCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BulkInviteBatchAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BulkInviteBatchSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BulkInviteBatchMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BulkInviteBatchMaxAggregateInputType
+  }
+
+  export type GetBulkInviteBatchAggregateType<T extends BulkInviteBatchAggregateArgs> = {
+        [P in keyof T & keyof AggregateBulkInviteBatch]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBulkInviteBatch[P]>
+      : GetScalarType<T[P], AggregateBulkInviteBatch[P]>
+  }
+
+
+
+
+  export type BulkInviteBatchGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BulkInviteBatchWhereInput
+    orderBy?: BulkInviteBatchOrderByWithAggregationInput | BulkInviteBatchOrderByWithAggregationInput[]
+    by: BulkInviteBatchScalarFieldEnum[] | BulkInviteBatchScalarFieldEnum
+    having?: BulkInviteBatchScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BulkInviteBatchCountAggregateInputType | true
+    _avg?: BulkInviteBatchAvgAggregateInputType
+    _sum?: BulkInviteBatchSumAggregateInputType
+    _min?: BulkInviteBatchMinAggregateInputType
+    _max?: BulkInviteBatchMaxAggregateInputType
+  }
+
+  export type BulkInviteBatchGroupByOutputType = {
+    id: string
+    createdById: string
+    kind: $Enums.BulkInviteKind
+    sharedAttrs: JsonValue | null
+    totalEntries: number
+    successCount: number
+    skippedCount: number
+    failedCount: number
+    createdAt: Date
+    updatedAt: Date
+    _count: BulkInviteBatchCountAggregateOutputType | null
+    _avg: BulkInviteBatchAvgAggregateOutputType | null
+    _sum: BulkInviteBatchSumAggregateOutputType | null
+    _min: BulkInviteBatchMinAggregateOutputType | null
+    _max: BulkInviteBatchMaxAggregateOutputType | null
+  }
+
+  type GetBulkInviteBatchGroupByPayload<T extends BulkInviteBatchGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BulkInviteBatchGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BulkInviteBatchGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BulkInviteBatchGroupByOutputType[P]>
+            : GetScalarType<T[P], BulkInviteBatchGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BulkInviteBatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdById?: boolean
+    kind?: boolean
+    sharedAttrs?: boolean
+    totalEntries?: boolean
+    successCount?: boolean
+    skippedCount?: boolean
+    failedCount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    invites?: boolean | BulkInviteBatch$invitesArgs<ExtArgs>
+    _count?: boolean | BulkInviteBatchCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bulkInviteBatch"]>
+
+  export type BulkInviteBatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdById?: boolean
+    kind?: boolean
+    sharedAttrs?: boolean
+    totalEntries?: boolean
+    successCount?: boolean
+    skippedCount?: boolean
+    failedCount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bulkInviteBatch"]>
+
+  export type BulkInviteBatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdById?: boolean
+    kind?: boolean
+    sharedAttrs?: boolean
+    totalEntries?: boolean
+    successCount?: boolean
+    skippedCount?: boolean
+    failedCount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["bulkInviteBatch"]>
+
+  export type BulkInviteBatchSelectScalar = {
+    id?: boolean
+    createdById?: boolean
+    kind?: boolean
+    sharedAttrs?: boolean
+    totalEntries?: boolean
+    successCount?: boolean
+    skippedCount?: boolean
+    failedCount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type BulkInviteBatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdById" | "kind" | "sharedAttrs" | "totalEntries" | "successCount" | "skippedCount" | "failedCount" | "createdAt" | "updatedAt", ExtArgs["result"]["bulkInviteBatch"]>
+  export type BulkInviteBatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+    invites?: boolean | BulkInviteBatch$invitesArgs<ExtArgs>
+    _count?: boolean | BulkInviteBatchCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type BulkInviteBatchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type BulkInviteBatchIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $BulkInviteBatchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BulkInviteBatch"
+    objects: {
+      createdBy: Prisma.$UserPayload<ExtArgs>
+      invites: Prisma.$InviteLinkPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdById: string
+      kind: $Enums.BulkInviteKind
+      sharedAttrs: Prisma.JsonValue | null
+      totalEntries: number
+      successCount: number
+      skippedCount: number
+      failedCount: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["bulkInviteBatch"]>
+    composites: {}
+  }
+
+  type BulkInviteBatchGetPayload<S extends boolean | null | undefined | BulkInviteBatchDefaultArgs> = $Result.GetResult<Prisma.$BulkInviteBatchPayload, S>
+
+  type BulkInviteBatchCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<BulkInviteBatchFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: BulkInviteBatchCountAggregateInputType | true
+    }
+
+  export interface BulkInviteBatchDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BulkInviteBatch'], meta: { name: 'BulkInviteBatch' } }
+    /**
+     * Find zero or one BulkInviteBatch that matches the filter.
+     * @param {BulkInviteBatchFindUniqueArgs} args - Arguments to find a BulkInviteBatch
+     * @example
+     * // Get one BulkInviteBatch
+     * const bulkInviteBatch = await prisma.bulkInviteBatch.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BulkInviteBatchFindUniqueArgs>(args: SelectSubset<T, BulkInviteBatchFindUniqueArgs<ExtArgs>>): Prisma__BulkInviteBatchClient<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one BulkInviteBatch that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {BulkInviteBatchFindUniqueOrThrowArgs} args - Arguments to find a BulkInviteBatch
+     * @example
+     * // Get one BulkInviteBatch
+     * const bulkInviteBatch = await prisma.bulkInviteBatch.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BulkInviteBatchFindUniqueOrThrowArgs>(args: SelectSubset<T, BulkInviteBatchFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BulkInviteBatchClient<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BulkInviteBatch that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BulkInviteBatchFindFirstArgs} args - Arguments to find a BulkInviteBatch
+     * @example
+     * // Get one BulkInviteBatch
+     * const bulkInviteBatch = await prisma.bulkInviteBatch.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BulkInviteBatchFindFirstArgs>(args?: SelectSubset<T, BulkInviteBatchFindFirstArgs<ExtArgs>>): Prisma__BulkInviteBatchClient<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first BulkInviteBatch that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BulkInviteBatchFindFirstOrThrowArgs} args - Arguments to find a BulkInviteBatch
+     * @example
+     * // Get one BulkInviteBatch
+     * const bulkInviteBatch = await prisma.bulkInviteBatch.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BulkInviteBatchFindFirstOrThrowArgs>(args?: SelectSubset<T, BulkInviteBatchFindFirstOrThrowArgs<ExtArgs>>): Prisma__BulkInviteBatchClient<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more BulkInviteBatches that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BulkInviteBatchFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BulkInviteBatches
+     * const bulkInviteBatches = await prisma.bulkInviteBatch.findMany()
+     * 
+     * // Get first 10 BulkInviteBatches
+     * const bulkInviteBatches = await prisma.bulkInviteBatch.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const bulkInviteBatchWithIdOnly = await prisma.bulkInviteBatch.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BulkInviteBatchFindManyArgs>(args?: SelectSubset<T, BulkInviteBatchFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a BulkInviteBatch.
+     * @param {BulkInviteBatchCreateArgs} args - Arguments to create a BulkInviteBatch.
+     * @example
+     * // Create one BulkInviteBatch
+     * const BulkInviteBatch = await prisma.bulkInviteBatch.create({
+     *   data: {
+     *     // ... data to create a BulkInviteBatch
+     *   }
+     * })
+     * 
+     */
+    create<T extends BulkInviteBatchCreateArgs>(args: SelectSubset<T, BulkInviteBatchCreateArgs<ExtArgs>>): Prisma__BulkInviteBatchClient<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many BulkInviteBatches.
+     * @param {BulkInviteBatchCreateManyArgs} args - Arguments to create many BulkInviteBatches.
+     * @example
+     * // Create many BulkInviteBatches
+     * const bulkInviteBatch = await prisma.bulkInviteBatch.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BulkInviteBatchCreateManyArgs>(args?: SelectSubset<T, BulkInviteBatchCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BulkInviteBatches and returns the data saved in the database.
+     * @param {BulkInviteBatchCreateManyAndReturnArgs} args - Arguments to create many BulkInviteBatches.
+     * @example
+     * // Create many BulkInviteBatches
+     * const bulkInviteBatch = await prisma.bulkInviteBatch.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BulkInviteBatches and only return the `id`
+     * const bulkInviteBatchWithIdOnly = await prisma.bulkInviteBatch.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BulkInviteBatchCreateManyAndReturnArgs>(args?: SelectSubset<T, BulkInviteBatchCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a BulkInviteBatch.
+     * @param {BulkInviteBatchDeleteArgs} args - Arguments to delete one BulkInviteBatch.
+     * @example
+     * // Delete one BulkInviteBatch
+     * const BulkInviteBatch = await prisma.bulkInviteBatch.delete({
+     *   where: {
+     *     // ... filter to delete one BulkInviteBatch
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BulkInviteBatchDeleteArgs>(args: SelectSubset<T, BulkInviteBatchDeleteArgs<ExtArgs>>): Prisma__BulkInviteBatchClient<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one BulkInviteBatch.
+     * @param {BulkInviteBatchUpdateArgs} args - Arguments to update one BulkInviteBatch.
+     * @example
+     * // Update one BulkInviteBatch
+     * const bulkInviteBatch = await prisma.bulkInviteBatch.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BulkInviteBatchUpdateArgs>(args: SelectSubset<T, BulkInviteBatchUpdateArgs<ExtArgs>>): Prisma__BulkInviteBatchClient<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more BulkInviteBatches.
+     * @param {BulkInviteBatchDeleteManyArgs} args - Arguments to filter BulkInviteBatches to delete.
+     * @example
+     * // Delete a few BulkInviteBatches
+     * const { count } = await prisma.bulkInviteBatch.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BulkInviteBatchDeleteManyArgs>(args?: SelectSubset<T, BulkInviteBatchDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BulkInviteBatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BulkInviteBatchUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BulkInviteBatches
+     * const bulkInviteBatch = await prisma.bulkInviteBatch.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BulkInviteBatchUpdateManyArgs>(args: SelectSubset<T, BulkInviteBatchUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BulkInviteBatches and returns the data updated in the database.
+     * @param {BulkInviteBatchUpdateManyAndReturnArgs} args - Arguments to update many BulkInviteBatches.
+     * @example
+     * // Update many BulkInviteBatches
+     * const bulkInviteBatch = await prisma.bulkInviteBatch.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more BulkInviteBatches and only return the `id`
+     * const bulkInviteBatchWithIdOnly = await prisma.bulkInviteBatch.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends BulkInviteBatchUpdateManyAndReturnArgs>(args: SelectSubset<T, BulkInviteBatchUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one BulkInviteBatch.
+     * @param {BulkInviteBatchUpsertArgs} args - Arguments to update or create a BulkInviteBatch.
+     * @example
+     * // Update or create a BulkInviteBatch
+     * const bulkInviteBatch = await prisma.bulkInviteBatch.upsert({
+     *   create: {
+     *     // ... data to create a BulkInviteBatch
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BulkInviteBatch we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BulkInviteBatchUpsertArgs>(args: SelectSubset<T, BulkInviteBatchUpsertArgs<ExtArgs>>): Prisma__BulkInviteBatchClient<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of BulkInviteBatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BulkInviteBatchCountArgs} args - Arguments to filter BulkInviteBatches to count.
+     * @example
+     * // Count the number of BulkInviteBatches
+     * const count = await prisma.bulkInviteBatch.count({
+     *   where: {
+     *     // ... the filter for the BulkInviteBatches we want to count
+     *   }
+     * })
+    **/
+    count<T extends BulkInviteBatchCountArgs>(
+      args?: Subset<T, BulkInviteBatchCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BulkInviteBatchCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BulkInviteBatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BulkInviteBatchAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BulkInviteBatchAggregateArgs>(args: Subset<T, BulkInviteBatchAggregateArgs>): Prisma.PrismaPromise<GetBulkInviteBatchAggregateType<T>>
+
+    /**
+     * Group by BulkInviteBatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BulkInviteBatchGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BulkInviteBatchGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BulkInviteBatchGroupByArgs['orderBy'] }
+        : { orderBy?: BulkInviteBatchGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BulkInviteBatchGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBulkInviteBatchGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BulkInviteBatch model
+   */
+  readonly fields: BulkInviteBatchFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BulkInviteBatch.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BulkInviteBatchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    invites<T extends BulkInviteBatch$invitesArgs<ExtArgs> = {}>(args?: Subset<T, BulkInviteBatch$invitesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InviteLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BulkInviteBatch model
+   */
+  interface BulkInviteBatchFieldRefs {
+    readonly id: FieldRef<"BulkInviteBatch", 'String'>
+    readonly createdById: FieldRef<"BulkInviteBatch", 'String'>
+    readonly kind: FieldRef<"BulkInviteBatch", 'BulkInviteKind'>
+    readonly sharedAttrs: FieldRef<"BulkInviteBatch", 'Json'>
+    readonly totalEntries: FieldRef<"BulkInviteBatch", 'Int'>
+    readonly successCount: FieldRef<"BulkInviteBatch", 'Int'>
+    readonly skippedCount: FieldRef<"BulkInviteBatch", 'Int'>
+    readonly failedCount: FieldRef<"BulkInviteBatch", 'Int'>
+    readonly createdAt: FieldRef<"BulkInviteBatch", 'DateTime'>
+    readonly updatedAt: FieldRef<"BulkInviteBatch", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BulkInviteBatch findUnique
+   */
+  export type BulkInviteBatchFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which BulkInviteBatch to fetch.
+     */
+    where: BulkInviteBatchWhereUniqueInput
+  }
+
+  /**
+   * BulkInviteBatch findUniqueOrThrow
+   */
+  export type BulkInviteBatchFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which BulkInviteBatch to fetch.
+     */
+    where: BulkInviteBatchWhereUniqueInput
+  }
+
+  /**
+   * BulkInviteBatch findFirst
+   */
+  export type BulkInviteBatchFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which BulkInviteBatch to fetch.
+     */
+    where?: BulkInviteBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BulkInviteBatches to fetch.
+     */
+    orderBy?: BulkInviteBatchOrderByWithRelationInput | BulkInviteBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BulkInviteBatches.
+     */
+    cursor?: BulkInviteBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BulkInviteBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BulkInviteBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BulkInviteBatches.
+     */
+    distinct?: BulkInviteBatchScalarFieldEnum | BulkInviteBatchScalarFieldEnum[]
+  }
+
+  /**
+   * BulkInviteBatch findFirstOrThrow
+   */
+  export type BulkInviteBatchFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which BulkInviteBatch to fetch.
+     */
+    where?: BulkInviteBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BulkInviteBatches to fetch.
+     */
+    orderBy?: BulkInviteBatchOrderByWithRelationInput | BulkInviteBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BulkInviteBatches.
+     */
+    cursor?: BulkInviteBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BulkInviteBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BulkInviteBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BulkInviteBatches.
+     */
+    distinct?: BulkInviteBatchScalarFieldEnum | BulkInviteBatchScalarFieldEnum[]
+  }
+
+  /**
+   * BulkInviteBatch findMany
+   */
+  export type BulkInviteBatchFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which BulkInviteBatches to fetch.
+     */
+    where?: BulkInviteBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BulkInviteBatches to fetch.
+     */
+    orderBy?: BulkInviteBatchOrderByWithRelationInput | BulkInviteBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BulkInviteBatches.
+     */
+    cursor?: BulkInviteBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BulkInviteBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BulkInviteBatches.
+     */
+    skip?: number
+    distinct?: BulkInviteBatchScalarFieldEnum | BulkInviteBatchScalarFieldEnum[]
+  }
+
+  /**
+   * BulkInviteBatch create
+   */
+  export type BulkInviteBatchCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BulkInviteBatch.
+     */
+    data: XOR<BulkInviteBatchCreateInput, BulkInviteBatchUncheckedCreateInput>
+  }
+
+  /**
+   * BulkInviteBatch createMany
+   */
+  export type BulkInviteBatchCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BulkInviteBatches.
+     */
+    data: BulkInviteBatchCreateManyInput | BulkInviteBatchCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BulkInviteBatch createManyAndReturn
+   */
+  export type BulkInviteBatchCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * The data used to create many BulkInviteBatches.
+     */
+    data: BulkInviteBatchCreateManyInput | BulkInviteBatchCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BulkInviteBatch update
+   */
+  export type BulkInviteBatchUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BulkInviteBatch.
+     */
+    data: XOR<BulkInviteBatchUpdateInput, BulkInviteBatchUncheckedUpdateInput>
+    /**
+     * Choose, which BulkInviteBatch to update.
+     */
+    where: BulkInviteBatchWhereUniqueInput
+  }
+
+  /**
+   * BulkInviteBatch updateMany
+   */
+  export type BulkInviteBatchUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BulkInviteBatches.
+     */
+    data: XOR<BulkInviteBatchUpdateManyMutationInput, BulkInviteBatchUncheckedUpdateManyInput>
+    /**
+     * Filter which BulkInviteBatches to update
+     */
+    where?: BulkInviteBatchWhereInput
+    /**
+     * Limit how many BulkInviteBatches to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * BulkInviteBatch updateManyAndReturn
+   */
+  export type BulkInviteBatchUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * The data used to update BulkInviteBatches.
+     */
+    data: XOR<BulkInviteBatchUpdateManyMutationInput, BulkInviteBatchUncheckedUpdateManyInput>
+    /**
+     * Filter which BulkInviteBatches to update
+     */
+    where?: BulkInviteBatchWhereInput
+    /**
+     * Limit how many BulkInviteBatches to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * BulkInviteBatch upsert
+   */
+  export type BulkInviteBatchUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BulkInviteBatch to update in case it exists.
+     */
+    where: BulkInviteBatchWhereUniqueInput
+    /**
+     * In case the BulkInviteBatch found by the `where` argument doesn't exist, create a new BulkInviteBatch with this data.
+     */
+    create: XOR<BulkInviteBatchCreateInput, BulkInviteBatchUncheckedCreateInput>
+    /**
+     * In case the BulkInviteBatch was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BulkInviteBatchUpdateInput, BulkInviteBatchUncheckedUpdateInput>
+  }
+
+  /**
+   * BulkInviteBatch delete
+   */
+  export type BulkInviteBatchDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+    /**
+     * Filter which BulkInviteBatch to delete.
+     */
+    where: BulkInviteBatchWhereUniqueInput
+  }
+
+  /**
+   * BulkInviteBatch deleteMany
+   */
+  export type BulkInviteBatchDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BulkInviteBatches to delete
+     */
+    where?: BulkInviteBatchWhereInput
+    /**
+     * Limit how many BulkInviteBatches to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * BulkInviteBatch.invites
+   */
+  export type BulkInviteBatch$invitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InviteLink
+     */
+    select?: InviteLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InviteLink
+     */
+    omit?: InviteLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InviteLinkInclude<ExtArgs> | null
+    where?: InviteLinkWhereInput
+    orderBy?: InviteLinkOrderByWithRelationInput | InviteLinkOrderByWithRelationInput[]
+    cursor?: InviteLinkWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InviteLinkScalarFieldEnum | InviteLinkScalarFieldEnum[]
+  }
+
+  /**
+   * BulkInviteBatch without action
+   */
+  export type BulkInviteBatchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BulkInviteBatch
+     */
+    select?: BulkInviteBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BulkInviteBatch
+     */
+    omit?: BulkInviteBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BulkInviteBatchInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PwaPromptDismissal
+   */
+
+  export type AggregatePwaPromptDismissal = {
+    _count: PwaPromptDismissalCountAggregateOutputType | null
+    _min: PwaPromptDismissalMinAggregateOutputType | null
+    _max: PwaPromptDismissalMaxAggregateOutputType | null
+  }
+
+  export type PwaPromptDismissalMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    kind: $Enums.PwaPromptKind | null
+    platform: $Enums.PwaPromptPlatform | null
+    mode: $Enums.PwaDismissalMode | null
+    nextEligibleAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PwaPromptDismissalMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    kind: $Enums.PwaPromptKind | null
+    platform: $Enums.PwaPromptPlatform | null
+    mode: $Enums.PwaDismissalMode | null
+    nextEligibleAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PwaPromptDismissalCountAggregateOutputType = {
+    id: number
+    userId: number
+    kind: number
+    platform: number
+    mode: number
+    nextEligibleAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PwaPromptDismissalMinAggregateInputType = {
+    id?: true
+    userId?: true
+    kind?: true
+    platform?: true
+    mode?: true
+    nextEligibleAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PwaPromptDismissalMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    kind?: true
+    platform?: true
+    mode?: true
+    nextEligibleAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PwaPromptDismissalCountAggregateInputType = {
+    id?: true
+    userId?: true
+    kind?: true
+    platform?: true
+    mode?: true
+    nextEligibleAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PwaPromptDismissalAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PwaPromptDismissal to aggregate.
+     */
+    where?: PwaPromptDismissalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PwaPromptDismissals to fetch.
+     */
+    orderBy?: PwaPromptDismissalOrderByWithRelationInput | PwaPromptDismissalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PwaPromptDismissalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PwaPromptDismissals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PwaPromptDismissals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PwaPromptDismissals
+    **/
+    _count?: true | PwaPromptDismissalCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PwaPromptDismissalMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PwaPromptDismissalMaxAggregateInputType
+  }
+
+  export type GetPwaPromptDismissalAggregateType<T extends PwaPromptDismissalAggregateArgs> = {
+        [P in keyof T & keyof AggregatePwaPromptDismissal]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePwaPromptDismissal[P]>
+      : GetScalarType<T[P], AggregatePwaPromptDismissal[P]>
+  }
+
+
+
+
+  export type PwaPromptDismissalGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PwaPromptDismissalWhereInput
+    orderBy?: PwaPromptDismissalOrderByWithAggregationInput | PwaPromptDismissalOrderByWithAggregationInput[]
+    by: PwaPromptDismissalScalarFieldEnum[] | PwaPromptDismissalScalarFieldEnum
+    having?: PwaPromptDismissalScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PwaPromptDismissalCountAggregateInputType | true
+    _min?: PwaPromptDismissalMinAggregateInputType
+    _max?: PwaPromptDismissalMaxAggregateInputType
+  }
+
+  export type PwaPromptDismissalGroupByOutputType = {
+    id: string
+    userId: string
+    kind: $Enums.PwaPromptKind
+    platform: $Enums.PwaPromptPlatform
+    mode: $Enums.PwaDismissalMode
+    nextEligibleAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PwaPromptDismissalCountAggregateOutputType | null
+    _min: PwaPromptDismissalMinAggregateOutputType | null
+    _max: PwaPromptDismissalMaxAggregateOutputType | null
+  }
+
+  type GetPwaPromptDismissalGroupByPayload<T extends PwaPromptDismissalGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PwaPromptDismissalGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PwaPromptDismissalGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PwaPromptDismissalGroupByOutputType[P]>
+            : GetScalarType<T[P], PwaPromptDismissalGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PwaPromptDismissalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    kind?: boolean
+    platform?: boolean
+    mode?: boolean
+    nextEligibleAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pwaPromptDismissal"]>
+
+  export type PwaPromptDismissalSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    kind?: boolean
+    platform?: boolean
+    mode?: boolean
+    nextEligibleAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pwaPromptDismissal"]>
+
+  export type PwaPromptDismissalSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    kind?: boolean
+    platform?: boolean
+    mode?: boolean
+    nextEligibleAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pwaPromptDismissal"]>
+
+  export type PwaPromptDismissalSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    kind?: boolean
+    platform?: boolean
+    mode?: boolean
+    nextEligibleAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PwaPromptDismissalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "kind" | "platform" | "mode" | "nextEligibleAt" | "createdAt" | "updatedAt", ExtArgs["result"]["pwaPromptDismissal"]>
+  export type PwaPromptDismissalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PwaPromptDismissalIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PwaPromptDismissalIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $PwaPromptDismissalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PwaPromptDismissal"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      kind: $Enums.PwaPromptKind
+      platform: $Enums.PwaPromptPlatform
+      mode: $Enums.PwaDismissalMode
+      nextEligibleAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["pwaPromptDismissal"]>
+    composites: {}
+  }
+
+  type PwaPromptDismissalGetPayload<S extends boolean | null | undefined | PwaPromptDismissalDefaultArgs> = $Result.GetResult<Prisma.$PwaPromptDismissalPayload, S>
+
+  type PwaPromptDismissalCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PwaPromptDismissalFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PwaPromptDismissalCountAggregateInputType | true
+    }
+
+  export interface PwaPromptDismissalDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PwaPromptDismissal'], meta: { name: 'PwaPromptDismissal' } }
+    /**
+     * Find zero or one PwaPromptDismissal that matches the filter.
+     * @param {PwaPromptDismissalFindUniqueArgs} args - Arguments to find a PwaPromptDismissal
+     * @example
+     * // Get one PwaPromptDismissal
+     * const pwaPromptDismissal = await prisma.pwaPromptDismissal.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PwaPromptDismissalFindUniqueArgs>(args: SelectSubset<T, PwaPromptDismissalFindUniqueArgs<ExtArgs>>): Prisma__PwaPromptDismissalClient<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PwaPromptDismissal that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PwaPromptDismissalFindUniqueOrThrowArgs} args - Arguments to find a PwaPromptDismissal
+     * @example
+     * // Get one PwaPromptDismissal
+     * const pwaPromptDismissal = await prisma.pwaPromptDismissal.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PwaPromptDismissalFindUniqueOrThrowArgs>(args: SelectSubset<T, PwaPromptDismissalFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PwaPromptDismissalClient<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PwaPromptDismissal that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PwaPromptDismissalFindFirstArgs} args - Arguments to find a PwaPromptDismissal
+     * @example
+     * // Get one PwaPromptDismissal
+     * const pwaPromptDismissal = await prisma.pwaPromptDismissal.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PwaPromptDismissalFindFirstArgs>(args?: SelectSubset<T, PwaPromptDismissalFindFirstArgs<ExtArgs>>): Prisma__PwaPromptDismissalClient<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PwaPromptDismissal that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PwaPromptDismissalFindFirstOrThrowArgs} args - Arguments to find a PwaPromptDismissal
+     * @example
+     * // Get one PwaPromptDismissal
+     * const pwaPromptDismissal = await prisma.pwaPromptDismissal.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PwaPromptDismissalFindFirstOrThrowArgs>(args?: SelectSubset<T, PwaPromptDismissalFindFirstOrThrowArgs<ExtArgs>>): Prisma__PwaPromptDismissalClient<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PwaPromptDismissals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PwaPromptDismissalFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PwaPromptDismissals
+     * const pwaPromptDismissals = await prisma.pwaPromptDismissal.findMany()
+     * 
+     * // Get first 10 PwaPromptDismissals
+     * const pwaPromptDismissals = await prisma.pwaPromptDismissal.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pwaPromptDismissalWithIdOnly = await prisma.pwaPromptDismissal.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PwaPromptDismissalFindManyArgs>(args?: SelectSubset<T, PwaPromptDismissalFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PwaPromptDismissal.
+     * @param {PwaPromptDismissalCreateArgs} args - Arguments to create a PwaPromptDismissal.
+     * @example
+     * // Create one PwaPromptDismissal
+     * const PwaPromptDismissal = await prisma.pwaPromptDismissal.create({
+     *   data: {
+     *     // ... data to create a PwaPromptDismissal
+     *   }
+     * })
+     * 
+     */
+    create<T extends PwaPromptDismissalCreateArgs>(args: SelectSubset<T, PwaPromptDismissalCreateArgs<ExtArgs>>): Prisma__PwaPromptDismissalClient<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PwaPromptDismissals.
+     * @param {PwaPromptDismissalCreateManyArgs} args - Arguments to create many PwaPromptDismissals.
+     * @example
+     * // Create many PwaPromptDismissals
+     * const pwaPromptDismissal = await prisma.pwaPromptDismissal.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PwaPromptDismissalCreateManyArgs>(args?: SelectSubset<T, PwaPromptDismissalCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PwaPromptDismissals and returns the data saved in the database.
+     * @param {PwaPromptDismissalCreateManyAndReturnArgs} args - Arguments to create many PwaPromptDismissals.
+     * @example
+     * // Create many PwaPromptDismissals
+     * const pwaPromptDismissal = await prisma.pwaPromptDismissal.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PwaPromptDismissals and only return the `id`
+     * const pwaPromptDismissalWithIdOnly = await prisma.pwaPromptDismissal.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PwaPromptDismissalCreateManyAndReturnArgs>(args?: SelectSubset<T, PwaPromptDismissalCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PwaPromptDismissal.
+     * @param {PwaPromptDismissalDeleteArgs} args - Arguments to delete one PwaPromptDismissal.
+     * @example
+     * // Delete one PwaPromptDismissal
+     * const PwaPromptDismissal = await prisma.pwaPromptDismissal.delete({
+     *   where: {
+     *     // ... filter to delete one PwaPromptDismissal
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PwaPromptDismissalDeleteArgs>(args: SelectSubset<T, PwaPromptDismissalDeleteArgs<ExtArgs>>): Prisma__PwaPromptDismissalClient<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PwaPromptDismissal.
+     * @param {PwaPromptDismissalUpdateArgs} args - Arguments to update one PwaPromptDismissal.
+     * @example
+     * // Update one PwaPromptDismissal
+     * const pwaPromptDismissal = await prisma.pwaPromptDismissal.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PwaPromptDismissalUpdateArgs>(args: SelectSubset<T, PwaPromptDismissalUpdateArgs<ExtArgs>>): Prisma__PwaPromptDismissalClient<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PwaPromptDismissals.
+     * @param {PwaPromptDismissalDeleteManyArgs} args - Arguments to filter PwaPromptDismissals to delete.
+     * @example
+     * // Delete a few PwaPromptDismissals
+     * const { count } = await prisma.pwaPromptDismissal.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PwaPromptDismissalDeleteManyArgs>(args?: SelectSubset<T, PwaPromptDismissalDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PwaPromptDismissals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PwaPromptDismissalUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PwaPromptDismissals
+     * const pwaPromptDismissal = await prisma.pwaPromptDismissal.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PwaPromptDismissalUpdateManyArgs>(args: SelectSubset<T, PwaPromptDismissalUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PwaPromptDismissals and returns the data updated in the database.
+     * @param {PwaPromptDismissalUpdateManyAndReturnArgs} args - Arguments to update many PwaPromptDismissals.
+     * @example
+     * // Update many PwaPromptDismissals
+     * const pwaPromptDismissal = await prisma.pwaPromptDismissal.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PwaPromptDismissals and only return the `id`
+     * const pwaPromptDismissalWithIdOnly = await prisma.pwaPromptDismissal.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PwaPromptDismissalUpdateManyAndReturnArgs>(args: SelectSubset<T, PwaPromptDismissalUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PwaPromptDismissal.
+     * @param {PwaPromptDismissalUpsertArgs} args - Arguments to update or create a PwaPromptDismissal.
+     * @example
+     * // Update or create a PwaPromptDismissal
+     * const pwaPromptDismissal = await prisma.pwaPromptDismissal.upsert({
+     *   create: {
+     *     // ... data to create a PwaPromptDismissal
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PwaPromptDismissal we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PwaPromptDismissalUpsertArgs>(args: SelectSubset<T, PwaPromptDismissalUpsertArgs<ExtArgs>>): Prisma__PwaPromptDismissalClient<$Result.GetResult<Prisma.$PwaPromptDismissalPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PwaPromptDismissals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PwaPromptDismissalCountArgs} args - Arguments to filter PwaPromptDismissals to count.
+     * @example
+     * // Count the number of PwaPromptDismissals
+     * const count = await prisma.pwaPromptDismissal.count({
+     *   where: {
+     *     // ... the filter for the PwaPromptDismissals we want to count
+     *   }
+     * })
+    **/
+    count<T extends PwaPromptDismissalCountArgs>(
+      args?: Subset<T, PwaPromptDismissalCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PwaPromptDismissalCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PwaPromptDismissal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PwaPromptDismissalAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PwaPromptDismissalAggregateArgs>(args: Subset<T, PwaPromptDismissalAggregateArgs>): Prisma.PrismaPromise<GetPwaPromptDismissalAggregateType<T>>
+
+    /**
+     * Group by PwaPromptDismissal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PwaPromptDismissalGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PwaPromptDismissalGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PwaPromptDismissalGroupByArgs['orderBy'] }
+        : { orderBy?: PwaPromptDismissalGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PwaPromptDismissalGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPwaPromptDismissalGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PwaPromptDismissal model
+   */
+  readonly fields: PwaPromptDismissalFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PwaPromptDismissal.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PwaPromptDismissalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PwaPromptDismissal model
+   */
+  interface PwaPromptDismissalFieldRefs {
+    readonly id: FieldRef<"PwaPromptDismissal", 'String'>
+    readonly userId: FieldRef<"PwaPromptDismissal", 'String'>
+    readonly kind: FieldRef<"PwaPromptDismissal", 'PwaPromptKind'>
+    readonly platform: FieldRef<"PwaPromptDismissal", 'PwaPromptPlatform'>
+    readonly mode: FieldRef<"PwaPromptDismissal", 'PwaDismissalMode'>
+    readonly nextEligibleAt: FieldRef<"PwaPromptDismissal", 'DateTime'>
+    readonly createdAt: FieldRef<"PwaPromptDismissal", 'DateTime'>
+    readonly updatedAt: FieldRef<"PwaPromptDismissal", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PwaPromptDismissal findUnique
+   */
+  export type PwaPromptDismissalFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalInclude<ExtArgs> | null
+    /**
+     * Filter, which PwaPromptDismissal to fetch.
+     */
+    where: PwaPromptDismissalWhereUniqueInput
+  }
+
+  /**
+   * PwaPromptDismissal findUniqueOrThrow
+   */
+  export type PwaPromptDismissalFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalInclude<ExtArgs> | null
+    /**
+     * Filter, which PwaPromptDismissal to fetch.
+     */
+    where: PwaPromptDismissalWhereUniqueInput
+  }
+
+  /**
+   * PwaPromptDismissal findFirst
+   */
+  export type PwaPromptDismissalFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalInclude<ExtArgs> | null
+    /**
+     * Filter, which PwaPromptDismissal to fetch.
+     */
+    where?: PwaPromptDismissalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PwaPromptDismissals to fetch.
+     */
+    orderBy?: PwaPromptDismissalOrderByWithRelationInput | PwaPromptDismissalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PwaPromptDismissals.
+     */
+    cursor?: PwaPromptDismissalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PwaPromptDismissals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PwaPromptDismissals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PwaPromptDismissals.
+     */
+    distinct?: PwaPromptDismissalScalarFieldEnum | PwaPromptDismissalScalarFieldEnum[]
+  }
+
+  /**
+   * PwaPromptDismissal findFirstOrThrow
+   */
+  export type PwaPromptDismissalFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalInclude<ExtArgs> | null
+    /**
+     * Filter, which PwaPromptDismissal to fetch.
+     */
+    where?: PwaPromptDismissalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PwaPromptDismissals to fetch.
+     */
+    orderBy?: PwaPromptDismissalOrderByWithRelationInput | PwaPromptDismissalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PwaPromptDismissals.
+     */
+    cursor?: PwaPromptDismissalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PwaPromptDismissals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PwaPromptDismissals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PwaPromptDismissals.
+     */
+    distinct?: PwaPromptDismissalScalarFieldEnum | PwaPromptDismissalScalarFieldEnum[]
+  }
+
+  /**
+   * PwaPromptDismissal findMany
+   */
+  export type PwaPromptDismissalFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalInclude<ExtArgs> | null
+    /**
+     * Filter, which PwaPromptDismissals to fetch.
+     */
+    where?: PwaPromptDismissalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PwaPromptDismissals to fetch.
+     */
+    orderBy?: PwaPromptDismissalOrderByWithRelationInput | PwaPromptDismissalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PwaPromptDismissals.
+     */
+    cursor?: PwaPromptDismissalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PwaPromptDismissals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PwaPromptDismissals.
+     */
+    skip?: number
+    distinct?: PwaPromptDismissalScalarFieldEnum | PwaPromptDismissalScalarFieldEnum[]
+  }
+
+  /**
+   * PwaPromptDismissal create
+   */
+  export type PwaPromptDismissalCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PwaPromptDismissal.
+     */
+    data: XOR<PwaPromptDismissalCreateInput, PwaPromptDismissalUncheckedCreateInput>
+  }
+
+  /**
+   * PwaPromptDismissal createMany
+   */
+  export type PwaPromptDismissalCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PwaPromptDismissals.
+     */
+    data: PwaPromptDismissalCreateManyInput | PwaPromptDismissalCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PwaPromptDismissal createManyAndReturn
+   */
+  export type PwaPromptDismissalCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * The data used to create many PwaPromptDismissals.
+     */
+    data: PwaPromptDismissalCreateManyInput | PwaPromptDismissalCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PwaPromptDismissal update
+   */
+  export type PwaPromptDismissalUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PwaPromptDismissal.
+     */
+    data: XOR<PwaPromptDismissalUpdateInput, PwaPromptDismissalUncheckedUpdateInput>
+    /**
+     * Choose, which PwaPromptDismissal to update.
+     */
+    where: PwaPromptDismissalWhereUniqueInput
+  }
+
+  /**
+   * PwaPromptDismissal updateMany
+   */
+  export type PwaPromptDismissalUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PwaPromptDismissals.
+     */
+    data: XOR<PwaPromptDismissalUpdateManyMutationInput, PwaPromptDismissalUncheckedUpdateManyInput>
+    /**
+     * Filter which PwaPromptDismissals to update
+     */
+    where?: PwaPromptDismissalWhereInput
+    /**
+     * Limit how many PwaPromptDismissals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PwaPromptDismissal updateManyAndReturn
+   */
+  export type PwaPromptDismissalUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * The data used to update PwaPromptDismissals.
+     */
+    data: XOR<PwaPromptDismissalUpdateManyMutationInput, PwaPromptDismissalUncheckedUpdateManyInput>
+    /**
+     * Filter which PwaPromptDismissals to update
+     */
+    where?: PwaPromptDismissalWhereInput
+    /**
+     * Limit how many PwaPromptDismissals to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PwaPromptDismissal upsert
+   */
+  export type PwaPromptDismissalUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PwaPromptDismissal to update in case it exists.
+     */
+    where: PwaPromptDismissalWhereUniqueInput
+    /**
+     * In case the PwaPromptDismissal found by the `where` argument doesn't exist, create a new PwaPromptDismissal with this data.
+     */
+    create: XOR<PwaPromptDismissalCreateInput, PwaPromptDismissalUncheckedCreateInput>
+    /**
+     * In case the PwaPromptDismissal was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PwaPromptDismissalUpdateInput, PwaPromptDismissalUncheckedUpdateInput>
+  }
+
+  /**
+   * PwaPromptDismissal delete
+   */
+  export type PwaPromptDismissalDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalInclude<ExtArgs> | null
+    /**
+     * Filter which PwaPromptDismissal to delete.
+     */
+    where: PwaPromptDismissalWhereUniqueInput
+  }
+
+  /**
+   * PwaPromptDismissal deleteMany
+   */
+  export type PwaPromptDismissalDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PwaPromptDismissals to delete
+     */
+    where?: PwaPromptDismissalWhereInput
+    /**
+     * Limit how many PwaPromptDismissals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PwaPromptDismissal without action
+   */
+  export type PwaPromptDismissalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PwaPromptDismissal
+     */
+    select?: PwaPromptDismissalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PwaPromptDismissal
+     */
+    omit?: PwaPromptDismissalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PwaPromptDismissalInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserActivationToken
+   */
+
+  export type AggregateUserActivationToken = {
+    _count: UserActivationTokenCountAggregateOutputType | null
+    _min: UserActivationTokenMinAggregateOutputType | null
+    _max: UserActivationTokenMaxAggregateOutputType | null
+  }
+
+  export type UserActivationTokenMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    tokenHash: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type UserActivationTokenMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    tokenHash: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type UserActivationTokenCountAggregateOutputType = {
+    id: number
+    userId: number
+    tokenHash: number
+    expiresAt: number
+    usedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type UserActivationTokenMinAggregateInputType = {
+    id?: true
+    userId?: true
+    tokenHash?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+  }
+
+  export type UserActivationTokenMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    tokenHash?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+  }
+
+  export type UserActivationTokenCountAggregateInputType = {
+    id?: true
+    userId?: true
+    tokenHash?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type UserActivationTokenAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserActivationToken to aggregate.
+     */
+    where?: UserActivationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivationTokens to fetch.
+     */
+    orderBy?: UserActivationTokenOrderByWithRelationInput | UserActivationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserActivationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivationTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserActivationTokens
+    **/
+    _count?: true | UserActivationTokenCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserActivationTokenMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserActivationTokenMaxAggregateInputType
+  }
+
+  export type GetUserActivationTokenAggregateType<T extends UserActivationTokenAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserActivationToken]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserActivationToken[P]>
+      : GetScalarType<T[P], AggregateUserActivationToken[P]>
+  }
+
+
+
+
+  export type UserActivationTokenGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserActivationTokenWhereInput
+    orderBy?: UserActivationTokenOrderByWithAggregationInput | UserActivationTokenOrderByWithAggregationInput[]
+    by: UserActivationTokenScalarFieldEnum[] | UserActivationTokenScalarFieldEnum
+    having?: UserActivationTokenScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserActivationTokenCountAggregateInputType | true
+    _min?: UserActivationTokenMinAggregateInputType
+    _max?: UserActivationTokenMaxAggregateInputType
+  }
+
+  export type UserActivationTokenGroupByOutputType = {
+    id: string
+    userId: string
+    tokenHash: string
+    expiresAt: Date
+    usedAt: Date | null
+    createdAt: Date
+    _count: UserActivationTokenCountAggregateOutputType | null
+    _min: UserActivationTokenMinAggregateOutputType | null
+    _max: UserActivationTokenMaxAggregateOutputType | null
+  }
+
+  type GetUserActivationTokenGroupByPayload<T extends UserActivationTokenGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserActivationTokenGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserActivationTokenGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserActivationTokenGroupByOutputType[P]>
+            : GetScalarType<T[P], UserActivationTokenGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserActivationTokenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    tokenHash?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userActivationToken"]>
+
+  export type UserActivationTokenSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    tokenHash?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userActivationToken"]>
+
+  export type UserActivationTokenSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    tokenHash?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userActivationToken"]>
+
+  export type UserActivationTokenSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    tokenHash?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type UserActivationTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "tokenHash" | "expiresAt" | "usedAt" | "createdAt", ExtArgs["result"]["userActivationToken"]>
+  export type UserActivationTokenInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserActivationTokenIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserActivationTokenIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserActivationTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserActivationToken"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      tokenHash: string
+      expiresAt: Date
+      usedAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["userActivationToken"]>
+    composites: {}
+  }
+
+  type UserActivationTokenGetPayload<S extends boolean | null | undefined | UserActivationTokenDefaultArgs> = $Result.GetResult<Prisma.$UserActivationTokenPayload, S>
+
+  type UserActivationTokenCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserActivationTokenFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserActivationTokenCountAggregateInputType | true
+    }
+
+  export interface UserActivationTokenDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserActivationToken'], meta: { name: 'UserActivationToken' } }
+    /**
+     * Find zero or one UserActivationToken that matches the filter.
+     * @param {UserActivationTokenFindUniqueArgs} args - Arguments to find a UserActivationToken
+     * @example
+     * // Get one UserActivationToken
+     * const userActivationToken = await prisma.userActivationToken.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserActivationTokenFindUniqueArgs>(args: SelectSubset<T, UserActivationTokenFindUniqueArgs<ExtArgs>>): Prisma__UserActivationTokenClient<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserActivationToken that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserActivationTokenFindUniqueOrThrowArgs} args - Arguments to find a UserActivationToken
+     * @example
+     * // Get one UserActivationToken
+     * const userActivationToken = await prisma.userActivationToken.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserActivationTokenFindUniqueOrThrowArgs>(args: SelectSubset<T, UserActivationTokenFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserActivationTokenClient<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserActivationToken that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivationTokenFindFirstArgs} args - Arguments to find a UserActivationToken
+     * @example
+     * // Get one UserActivationToken
+     * const userActivationToken = await prisma.userActivationToken.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserActivationTokenFindFirstArgs>(args?: SelectSubset<T, UserActivationTokenFindFirstArgs<ExtArgs>>): Prisma__UserActivationTokenClient<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserActivationToken that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivationTokenFindFirstOrThrowArgs} args - Arguments to find a UserActivationToken
+     * @example
+     * // Get one UserActivationToken
+     * const userActivationToken = await prisma.userActivationToken.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserActivationTokenFindFirstOrThrowArgs>(args?: SelectSubset<T, UserActivationTokenFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserActivationTokenClient<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserActivationTokens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivationTokenFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserActivationTokens
+     * const userActivationTokens = await prisma.userActivationToken.findMany()
+     * 
+     * // Get first 10 UserActivationTokens
+     * const userActivationTokens = await prisma.userActivationToken.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userActivationTokenWithIdOnly = await prisma.userActivationToken.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserActivationTokenFindManyArgs>(args?: SelectSubset<T, UserActivationTokenFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserActivationToken.
+     * @param {UserActivationTokenCreateArgs} args - Arguments to create a UserActivationToken.
+     * @example
+     * // Create one UserActivationToken
+     * const UserActivationToken = await prisma.userActivationToken.create({
+     *   data: {
+     *     // ... data to create a UserActivationToken
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserActivationTokenCreateArgs>(args: SelectSubset<T, UserActivationTokenCreateArgs<ExtArgs>>): Prisma__UserActivationTokenClient<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserActivationTokens.
+     * @param {UserActivationTokenCreateManyArgs} args - Arguments to create many UserActivationTokens.
+     * @example
+     * // Create many UserActivationTokens
+     * const userActivationToken = await prisma.userActivationToken.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserActivationTokenCreateManyArgs>(args?: SelectSubset<T, UserActivationTokenCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserActivationTokens and returns the data saved in the database.
+     * @param {UserActivationTokenCreateManyAndReturnArgs} args - Arguments to create many UserActivationTokens.
+     * @example
+     * // Create many UserActivationTokens
+     * const userActivationToken = await prisma.userActivationToken.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserActivationTokens and only return the `id`
+     * const userActivationTokenWithIdOnly = await prisma.userActivationToken.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserActivationTokenCreateManyAndReturnArgs>(args?: SelectSubset<T, UserActivationTokenCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserActivationToken.
+     * @param {UserActivationTokenDeleteArgs} args - Arguments to delete one UserActivationToken.
+     * @example
+     * // Delete one UserActivationToken
+     * const UserActivationToken = await prisma.userActivationToken.delete({
+     *   where: {
+     *     // ... filter to delete one UserActivationToken
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserActivationTokenDeleteArgs>(args: SelectSubset<T, UserActivationTokenDeleteArgs<ExtArgs>>): Prisma__UserActivationTokenClient<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserActivationToken.
+     * @param {UserActivationTokenUpdateArgs} args - Arguments to update one UserActivationToken.
+     * @example
+     * // Update one UserActivationToken
+     * const userActivationToken = await prisma.userActivationToken.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserActivationTokenUpdateArgs>(args: SelectSubset<T, UserActivationTokenUpdateArgs<ExtArgs>>): Prisma__UserActivationTokenClient<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserActivationTokens.
+     * @param {UserActivationTokenDeleteManyArgs} args - Arguments to filter UserActivationTokens to delete.
+     * @example
+     * // Delete a few UserActivationTokens
+     * const { count } = await prisma.userActivationToken.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserActivationTokenDeleteManyArgs>(args?: SelectSubset<T, UserActivationTokenDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserActivationTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivationTokenUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserActivationTokens
+     * const userActivationToken = await prisma.userActivationToken.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserActivationTokenUpdateManyArgs>(args: SelectSubset<T, UserActivationTokenUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserActivationTokens and returns the data updated in the database.
+     * @param {UserActivationTokenUpdateManyAndReturnArgs} args - Arguments to update many UserActivationTokens.
+     * @example
+     * // Update many UserActivationTokens
+     * const userActivationToken = await prisma.userActivationToken.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserActivationTokens and only return the `id`
+     * const userActivationTokenWithIdOnly = await prisma.userActivationToken.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserActivationTokenUpdateManyAndReturnArgs>(args: SelectSubset<T, UserActivationTokenUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserActivationToken.
+     * @param {UserActivationTokenUpsertArgs} args - Arguments to update or create a UserActivationToken.
+     * @example
+     * // Update or create a UserActivationToken
+     * const userActivationToken = await prisma.userActivationToken.upsert({
+     *   create: {
+     *     // ... data to create a UserActivationToken
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserActivationToken we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserActivationTokenUpsertArgs>(args: SelectSubset<T, UserActivationTokenUpsertArgs<ExtArgs>>): Prisma__UserActivationTokenClient<$Result.GetResult<Prisma.$UserActivationTokenPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserActivationTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivationTokenCountArgs} args - Arguments to filter UserActivationTokens to count.
+     * @example
+     * // Count the number of UserActivationTokens
+     * const count = await prisma.userActivationToken.count({
+     *   where: {
+     *     // ... the filter for the UserActivationTokens we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserActivationTokenCountArgs>(
+      args?: Subset<T, UserActivationTokenCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserActivationTokenCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserActivationToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivationTokenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserActivationTokenAggregateArgs>(args: Subset<T, UserActivationTokenAggregateArgs>): Prisma.PrismaPromise<GetUserActivationTokenAggregateType<T>>
+
+    /**
+     * Group by UserActivationToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserActivationTokenGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserActivationTokenGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserActivationTokenGroupByArgs['orderBy'] }
+        : { orderBy?: UserActivationTokenGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserActivationTokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserActivationTokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserActivationToken model
+   */
+  readonly fields: UserActivationTokenFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserActivationToken.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserActivationTokenClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserActivationToken model
+   */
+  interface UserActivationTokenFieldRefs {
+    readonly id: FieldRef<"UserActivationToken", 'String'>
+    readonly userId: FieldRef<"UserActivationToken", 'String'>
+    readonly tokenHash: FieldRef<"UserActivationToken", 'String'>
+    readonly expiresAt: FieldRef<"UserActivationToken", 'DateTime'>
+    readonly usedAt: FieldRef<"UserActivationToken", 'DateTime'>
+    readonly createdAt: FieldRef<"UserActivationToken", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserActivationToken findUnique
+   */
+  export type UserActivationTokenFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivationToken to fetch.
+     */
+    where: UserActivationTokenWhereUniqueInput
+  }
+
+  /**
+   * UserActivationToken findUniqueOrThrow
+   */
+  export type UserActivationTokenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivationToken to fetch.
+     */
+    where: UserActivationTokenWhereUniqueInput
+  }
+
+  /**
+   * UserActivationToken findFirst
+   */
+  export type UserActivationTokenFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivationToken to fetch.
+     */
+    where?: UserActivationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivationTokens to fetch.
+     */
+    orderBy?: UserActivationTokenOrderByWithRelationInput | UserActivationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserActivationTokens.
+     */
+    cursor?: UserActivationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivationTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserActivationTokens.
+     */
+    distinct?: UserActivationTokenScalarFieldEnum | UserActivationTokenScalarFieldEnum[]
+  }
+
+  /**
+   * UserActivationToken findFirstOrThrow
+   */
+  export type UserActivationTokenFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivationToken to fetch.
+     */
+    where?: UserActivationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivationTokens to fetch.
+     */
+    orderBy?: UserActivationTokenOrderByWithRelationInput | UserActivationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserActivationTokens.
+     */
+    cursor?: UserActivationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivationTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserActivationTokens.
+     */
+    distinct?: UserActivationTokenScalarFieldEnum | UserActivationTokenScalarFieldEnum[]
+  }
+
+  /**
+   * UserActivationToken findMany
+   */
+  export type UserActivationTokenFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which UserActivationTokens to fetch.
+     */
+    where?: UserActivationTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserActivationTokens to fetch.
+     */
+    orderBy?: UserActivationTokenOrderByWithRelationInput | UserActivationTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserActivationTokens.
+     */
+    cursor?: UserActivationTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserActivationTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserActivationTokens.
+     */
+    skip?: number
+    distinct?: UserActivationTokenScalarFieldEnum | UserActivationTokenScalarFieldEnum[]
+  }
+
+  /**
+   * UserActivationToken create
+   */
+  export type UserActivationTokenCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserActivationToken.
+     */
+    data: XOR<UserActivationTokenCreateInput, UserActivationTokenUncheckedCreateInput>
+  }
+
+  /**
+   * UserActivationToken createMany
+   */
+  export type UserActivationTokenCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserActivationTokens.
+     */
+    data: UserActivationTokenCreateManyInput | UserActivationTokenCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserActivationToken createManyAndReturn
+   */
+  export type UserActivationTokenCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserActivationTokens.
+     */
+    data: UserActivationTokenCreateManyInput | UserActivationTokenCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserActivationToken update
+   */
+  export type UserActivationTokenUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserActivationToken.
+     */
+    data: XOR<UserActivationTokenUpdateInput, UserActivationTokenUncheckedUpdateInput>
+    /**
+     * Choose, which UserActivationToken to update.
+     */
+    where: UserActivationTokenWhereUniqueInput
+  }
+
+  /**
+   * UserActivationToken updateMany
+   */
+  export type UserActivationTokenUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserActivationTokens.
+     */
+    data: XOR<UserActivationTokenUpdateManyMutationInput, UserActivationTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which UserActivationTokens to update
+     */
+    where?: UserActivationTokenWhereInput
+    /**
+     * Limit how many UserActivationTokens to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserActivationToken updateManyAndReturn
+   */
+  export type UserActivationTokenUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * The data used to update UserActivationTokens.
+     */
+    data: XOR<UserActivationTokenUpdateManyMutationInput, UserActivationTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which UserActivationTokens to update
+     */
+    where?: UserActivationTokenWhereInput
+    /**
+     * Limit how many UserActivationTokens to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserActivationToken upsert
+   */
+  export type UserActivationTokenUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserActivationToken to update in case it exists.
+     */
+    where: UserActivationTokenWhereUniqueInput
+    /**
+     * In case the UserActivationToken found by the `where` argument doesn't exist, create a new UserActivationToken with this data.
+     */
+    create: XOR<UserActivationTokenCreateInput, UserActivationTokenUncheckedCreateInput>
+    /**
+     * In case the UserActivationToken was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserActivationTokenUpdateInput, UserActivationTokenUncheckedUpdateInput>
+  }
+
+  /**
+   * UserActivationToken delete
+   */
+  export type UserActivationTokenDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenInclude<ExtArgs> | null
+    /**
+     * Filter which UserActivationToken to delete.
+     */
+    where: UserActivationTokenWhereUniqueInput
+  }
+
+  /**
+   * UserActivationToken deleteMany
+   */
+  export type UserActivationTokenDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserActivationTokens to delete
+     */
+    where?: UserActivationTokenWhereInput
+    /**
+     * Limit how many UserActivationTokens to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserActivationToken without action
+   */
+  export type UserActivationTokenDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserActivationToken
+     */
+    select?: UserActivationTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserActivationToken
+     */
+    omit?: UserActivationTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserActivationTokenInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -34550,6 +44978,8 @@ export namespace Prisma {
     usedAt: 'usedAt',
     expiresAt: 'expiresAt',
     isActive: 'isActive',
+    recipientEmail: 'recipientEmail',
+    batchId: 'batchId',
     createdAt: 'createdAt'
   };
 
@@ -34632,6 +45062,126 @@ export namespace Prisma {
   };
 
   export type AssetLifecycleEventScalarFieldEnum = (typeof AssetLifecycleEventScalarFieldEnum)[keyof typeof AssetLifecycleEventScalarFieldEnum]
+
+
+  export const AdminConfigEntryScalarFieldEnum: {
+    id: 'id',
+    namespace: 'namespace',
+    version: 'version',
+    payload: 'payload',
+    isFallback: 'isFallback',
+    actorId: 'actorId',
+    notes: 'notes',
+    createdAt: 'createdAt'
+  };
+
+  export type AdminConfigEntryScalarFieldEnum = (typeof AdminConfigEntryScalarFieldEnum)[keyof typeof AdminConfigEntryScalarFieldEnum]
+
+
+  export const FormAssignmentScalarFieldEnum: {
+    id: 'id',
+    reportId: 'reportId',
+    assigneeId: 'assigneeId',
+    assignedById: 'assignedById',
+    metricIds: 'metricIds',
+    dueAt: 'dueAt',
+    completedAt: 'completedAt',
+    cancelledAt: 'cancelledAt',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FormAssignmentScalarFieldEnum = (typeof FormAssignmentScalarFieldEnum)[keyof typeof FormAssignmentScalarFieldEnum]
+
+
+  export const ImportJobScalarFieldEnum: {
+    id: 'id',
+    ownerId: 'ownerId',
+    templateId: 'templateId',
+    status: 'status',
+    fileName: 'fileName',
+    fileMime: 'fileMime',
+    fileBytes: 'fileBytes',
+    storageRef: 'storageRef',
+    mappingProfileId: 'mappingProfileId',
+    mapping: 'mapping',
+    validationSummary: 'validationSummary',
+    commitSummary: 'commitSummary',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ImportJobScalarFieldEnum = (typeof ImportJobScalarFieldEnum)[keyof typeof ImportJobScalarFieldEnum]
+
+
+  export const ImportJobItemScalarFieldEnum: {
+    id: 'id',
+    jobId: 'jobId',
+    rowIndex: 'rowIndex',
+    rawValues: 'rawValues',
+    normalizedValues: 'normalizedValues',
+    outcome: 'outcome',
+    errors: 'errors',
+    createdAt: 'createdAt'
+  };
+
+  export type ImportJobItemScalarFieldEnum = (typeof ImportJobItemScalarFieldEnum)[keyof typeof ImportJobItemScalarFieldEnum]
+
+
+  export const ImportMappingProfileScalarFieldEnum: {
+    id: 'id',
+    ownerId: 'ownerId',
+    templateId: 'templateId',
+    name: 'name',
+    mapping: 'mapping',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ImportMappingProfileScalarFieldEnum = (typeof ImportMappingProfileScalarFieldEnum)[keyof typeof ImportMappingProfileScalarFieldEnum]
+
+
+  export const BulkInviteBatchScalarFieldEnum: {
+    id: 'id',
+    createdById: 'createdById',
+    kind: 'kind',
+    sharedAttrs: 'sharedAttrs',
+    totalEntries: 'totalEntries',
+    successCount: 'successCount',
+    skippedCount: 'skippedCount',
+    failedCount: 'failedCount',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BulkInviteBatchScalarFieldEnum = (typeof BulkInviteBatchScalarFieldEnum)[keyof typeof BulkInviteBatchScalarFieldEnum]
+
+
+  export const PwaPromptDismissalScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    kind: 'kind',
+    platform: 'platform',
+    mode: 'mode',
+    nextEligibleAt: 'nextEligibleAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PwaPromptDismissalScalarFieldEnum = (typeof PwaPromptDismissalScalarFieldEnum)[keyof typeof PwaPromptDismissalScalarFieldEnum]
+
+
+  export const UserActivationTokenScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    tokenHash: 'tokenHash',
+    expiresAt: 'expiresAt',
+    usedAt: 'usedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type UserActivationTokenScalarFieldEnum = (typeof UserActivationTokenScalarFieldEnum)[keyof typeof UserActivationTokenScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -35084,6 +45634,90 @@ export namespace Prisma {
    */
   export type ListEnumAssetLifecycleEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetLifecycleEventType[]'>
     
+
+
+  /**
+   * Reference to a field of type 'ImportJobStatus'
+   */
+  export type EnumImportJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImportJobStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ImportJobStatus[]'
+   */
+  export type ListEnumImportJobStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImportJobStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ImportRowOutcome'
+   */
+  export type EnumImportRowOutcomeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImportRowOutcome'>
+    
+
+
+  /**
+   * Reference to a field of type 'ImportRowOutcome[]'
+   */
+  export type ListEnumImportRowOutcomeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImportRowOutcome[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'BulkInviteKind'
+   */
+  export type EnumBulkInviteKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BulkInviteKind'>
+    
+
+
+  /**
+   * Reference to a field of type 'BulkInviteKind[]'
+   */
+  export type ListEnumBulkInviteKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BulkInviteKind[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PwaPromptKind'
+   */
+  export type EnumPwaPromptKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PwaPromptKind'>
+    
+
+
+  /**
+   * Reference to a field of type 'PwaPromptKind[]'
+   */
+  export type ListEnumPwaPromptKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PwaPromptKind[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PwaPromptPlatform'
+   */
+  export type EnumPwaPromptPlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PwaPromptPlatform'>
+    
+
+
+  /**
+   * Reference to a field of type 'PwaPromptPlatform[]'
+   */
+  export type ListEnumPwaPromptPlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PwaPromptPlatform[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PwaDismissalMode'
+   */
+  export type EnumPwaDismissalModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PwaDismissalMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'PwaDismissalMode[]'
+   */
+  export type ListEnumPwaDismissalModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PwaDismissalMode[]'>
+    
   /**
    * Deep Input Types
    */
@@ -35141,6 +45775,14 @@ export namespace Prisma {
     dataEntryReports?: ReportListRelationFilter
     reviewedReports?: ReportListRelationFilter
     submittedReports?: ReportListRelationFilter
+    adminConfigEntries?: AdminConfigEntryListRelationFilter
+    formAssignmentsReceived?: FormAssignmentListRelationFilter
+    formAssignmentsCreated?: FormAssignmentListRelationFilter
+    importJobs?: ImportJobListRelationFilter
+    importMappingProfiles?: ImportMappingProfileListRelationFilter
+    bulkInviteBatches?: BulkInviteBatchListRelationFilter
+    pwaPromptDismissals?: PwaPromptDismissalListRelationFilter
+    activationTokens?: UserActivationTokenListRelationFilter
     campus?: XOR<CampusNullableScalarRelationFilter, CampusWhereInput> | null
     orgGroup?: XOR<OrgGroupNullableScalarRelationFilter, OrgGroupWhereInput> | null
   }
@@ -35194,6 +45836,14 @@ export namespace Prisma {
     dataEntryReports?: ReportOrderByRelationAggregateInput
     reviewedReports?: ReportOrderByRelationAggregateInput
     submittedReports?: ReportOrderByRelationAggregateInput
+    adminConfigEntries?: AdminConfigEntryOrderByRelationAggregateInput
+    formAssignmentsReceived?: FormAssignmentOrderByRelationAggregateInput
+    formAssignmentsCreated?: FormAssignmentOrderByRelationAggregateInput
+    importJobs?: ImportJobOrderByRelationAggregateInput
+    importMappingProfiles?: ImportMappingProfileOrderByRelationAggregateInput
+    bulkInviteBatches?: BulkInviteBatchOrderByRelationAggregateInput
+    pwaPromptDismissals?: PwaPromptDismissalOrderByRelationAggregateInput
+    activationTokens?: UserActivationTokenOrderByRelationAggregateInput
     campus?: CampusOrderByWithRelationInput
     orgGroup?: OrgGroupOrderByWithRelationInput
   }
@@ -35250,6 +45900,14 @@ export namespace Prisma {
     dataEntryReports?: ReportListRelationFilter
     reviewedReports?: ReportListRelationFilter
     submittedReports?: ReportListRelationFilter
+    adminConfigEntries?: AdminConfigEntryListRelationFilter
+    formAssignmentsReceived?: FormAssignmentListRelationFilter
+    formAssignmentsCreated?: FormAssignmentListRelationFilter
+    importJobs?: ImportJobListRelationFilter
+    importMappingProfiles?: ImportMappingProfileListRelationFilter
+    bulkInviteBatches?: BulkInviteBatchListRelationFilter
+    pwaPromptDismissals?: PwaPromptDismissalListRelationFilter
+    activationTokens?: UserActivationTokenListRelationFilter
     campus?: XOR<CampusNullableScalarRelationFilter, CampusWhereInput> | null
     orgGroup?: XOR<OrgGroupNullableScalarRelationFilter, OrgGroupWhereInput> | null
   }, "id" | "email" | "pendingEmail">
@@ -35891,6 +46549,7 @@ export namespace Prisma {
     sections?: ReportSectionListRelationFilter
     updateRequests?: ReportUpdateRequestListRelationFilter
     versions?: ReportVersionListRelationFilter
+    formAssignments?: FormAssignmentListRelationFilter
     approvedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     campus?: XOR<CampusScalarRelationFilter, CampusWhereInput>
     createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -35932,6 +46591,7 @@ export namespace Prisma {
     sections?: ReportSectionOrderByRelationAggregateInput
     updateRequests?: ReportUpdateRequestOrderByRelationAggregateInput
     versions?: ReportVersionOrderByRelationAggregateInput
+    formAssignments?: FormAssignmentOrderByRelationAggregateInput
     approvedBy?: UserOrderByWithRelationInput
     campus?: CampusOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
@@ -35976,6 +46636,7 @@ export namespace Prisma {
     sections?: ReportSectionListRelationFilter
     updateRequests?: ReportUpdateRequestListRelationFilter
     versions?: ReportVersionListRelationFilter
+    formAssignments?: FormAssignmentListRelationFilter
     approvedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     campus?: XOR<CampusScalarRelationFilter, CampusWhereInput>
     createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -37011,8 +47672,11 @@ export namespace Prisma {
     usedAt?: DateTimeNullableFilter<"InviteLink"> | Date | string | null
     expiresAt?: DateTimeNullableFilter<"InviteLink"> | Date | string | null
     isActive?: BoolFilter<"InviteLink"> | boolean
+    recipientEmail?: StringNullableFilter<"InviteLink"> | string | null
+    batchId?: StringNullableFilter<"InviteLink"> | string | null
     createdAt?: DateTimeFilter<"InviteLink"> | Date | string
     createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    batch?: XOR<BulkInviteBatchNullableScalarRelationFilter, BulkInviteBatchWhereInput> | null
   }
 
   export type InviteLinkOrderByWithRelationInput = {
@@ -37028,8 +47692,11 @@ export namespace Prisma {
     usedAt?: SortOrderInput | SortOrder
     expiresAt?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    recipientEmail?: SortOrderInput | SortOrder
+    batchId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     createdBy?: UserOrderByWithRelationInput
+    batch?: BulkInviteBatchOrderByWithRelationInput
   }
 
   export type InviteLinkWhereUniqueInput = Prisma.AtLeast<{
@@ -37048,8 +47715,11 @@ export namespace Prisma {
     usedAt?: DateTimeNullableFilter<"InviteLink"> | Date | string | null
     expiresAt?: DateTimeNullableFilter<"InviteLink"> | Date | string | null
     isActive?: BoolFilter<"InviteLink"> | boolean
+    recipientEmail?: StringNullableFilter<"InviteLink"> | string | null
+    batchId?: StringNullableFilter<"InviteLink"> | string | null
     createdAt?: DateTimeFilter<"InviteLink"> | Date | string
     createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    batch?: XOR<BulkInviteBatchNullableScalarRelationFilter, BulkInviteBatchWhereInput> | null
   }, "id" | "token">
 
   export type InviteLinkOrderByWithAggregationInput = {
@@ -37065,6 +47735,8 @@ export namespace Prisma {
     usedAt?: SortOrderInput | SortOrder
     expiresAt?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    recipientEmail?: SortOrderInput | SortOrder
+    batchId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: InviteLinkCountOrderByAggregateInput
     _max?: InviteLinkMaxOrderByAggregateInput
@@ -37087,6 +47759,8 @@ export namespace Prisma {
     usedAt?: DateTimeNullableWithAggregatesFilter<"InviteLink"> | Date | string | null
     expiresAt?: DateTimeNullableWithAggregatesFilter<"InviteLink"> | Date | string | null
     isActive?: BoolWithAggregatesFilter<"InviteLink"> | boolean
+    recipientEmail?: StringNullableWithAggregatesFilter<"InviteLink"> | string | null
+    batchId?: StringNullableWithAggregatesFilter<"InviteLink"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"InviteLink"> | Date | string
   }
 
@@ -37507,6 +48181,633 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"AssetLifecycleEvent"> | Date | string
   }
 
+  export type AdminConfigEntryWhereInput = {
+    AND?: AdminConfigEntryWhereInput | AdminConfigEntryWhereInput[]
+    OR?: AdminConfigEntryWhereInput[]
+    NOT?: AdminConfigEntryWhereInput | AdminConfigEntryWhereInput[]
+    id?: StringFilter<"AdminConfigEntry"> | string
+    namespace?: StringFilter<"AdminConfigEntry"> | string
+    version?: IntFilter<"AdminConfigEntry"> | number
+    payload?: JsonFilter<"AdminConfigEntry">
+    isFallback?: BoolFilter<"AdminConfigEntry"> | boolean
+    actorId?: StringNullableFilter<"AdminConfigEntry"> | string | null
+    notes?: StringNullableFilter<"AdminConfigEntry"> | string | null
+    createdAt?: DateTimeFilter<"AdminConfigEntry"> | Date | string
+    actor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type AdminConfigEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    namespace?: SortOrder
+    version?: SortOrder
+    payload?: SortOrder
+    isFallback?: SortOrder
+    actorId?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    actor?: UserOrderByWithRelationInput
+  }
+
+  export type AdminConfigEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AdminConfigEntryWhereInput | AdminConfigEntryWhereInput[]
+    OR?: AdminConfigEntryWhereInput[]
+    NOT?: AdminConfigEntryWhereInput | AdminConfigEntryWhereInput[]
+    namespace?: StringFilter<"AdminConfigEntry"> | string
+    version?: IntFilter<"AdminConfigEntry"> | number
+    payload?: JsonFilter<"AdminConfigEntry">
+    isFallback?: BoolFilter<"AdminConfigEntry"> | boolean
+    actorId?: StringNullableFilter<"AdminConfigEntry"> | string | null
+    notes?: StringNullableFilter<"AdminConfigEntry"> | string | null
+    createdAt?: DateTimeFilter<"AdminConfigEntry"> | Date | string
+    actor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type AdminConfigEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    namespace?: SortOrder
+    version?: SortOrder
+    payload?: SortOrder
+    isFallback?: SortOrder
+    actorId?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: AdminConfigEntryCountOrderByAggregateInput
+    _avg?: AdminConfigEntryAvgOrderByAggregateInput
+    _max?: AdminConfigEntryMaxOrderByAggregateInput
+    _min?: AdminConfigEntryMinOrderByAggregateInput
+    _sum?: AdminConfigEntrySumOrderByAggregateInput
+  }
+
+  export type AdminConfigEntryScalarWhereWithAggregatesInput = {
+    AND?: AdminConfigEntryScalarWhereWithAggregatesInput | AdminConfigEntryScalarWhereWithAggregatesInput[]
+    OR?: AdminConfigEntryScalarWhereWithAggregatesInput[]
+    NOT?: AdminConfigEntryScalarWhereWithAggregatesInput | AdminConfigEntryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AdminConfigEntry"> | string
+    namespace?: StringWithAggregatesFilter<"AdminConfigEntry"> | string
+    version?: IntWithAggregatesFilter<"AdminConfigEntry"> | number
+    payload?: JsonWithAggregatesFilter<"AdminConfigEntry">
+    isFallback?: BoolWithAggregatesFilter<"AdminConfigEntry"> | boolean
+    actorId?: StringNullableWithAggregatesFilter<"AdminConfigEntry"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"AdminConfigEntry"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"AdminConfigEntry"> | Date | string
+  }
+
+  export type FormAssignmentWhereInput = {
+    AND?: FormAssignmentWhereInput | FormAssignmentWhereInput[]
+    OR?: FormAssignmentWhereInput[]
+    NOT?: FormAssignmentWhereInput | FormAssignmentWhereInput[]
+    id?: StringFilter<"FormAssignment"> | string
+    reportId?: StringFilter<"FormAssignment"> | string
+    assigneeId?: StringFilter<"FormAssignment"> | string
+    assignedById?: StringFilter<"FormAssignment"> | string
+    metricIds?: StringNullableListFilter<"FormAssignment">
+    dueAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
+    cancelledAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
+    notes?: StringNullableFilter<"FormAssignment"> | string | null
+    createdAt?: DateTimeFilter<"FormAssignment"> | Date | string
+    updatedAt?: DateTimeFilter<"FormAssignment"> | Date | string
+    report?: XOR<ReportScalarRelationFilter, ReportWhereInput>
+    assignee?: XOR<UserScalarRelationFilter, UserWhereInput>
+    assignedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type FormAssignmentOrderByWithRelationInput = {
+    id?: SortOrder
+    reportId?: SortOrder
+    assigneeId?: SortOrder
+    assignedById?: SortOrder
+    metricIds?: SortOrder
+    dueAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    cancelledAt?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    report?: ReportOrderByWithRelationInput
+    assignee?: UserOrderByWithRelationInput
+    assignedBy?: UserOrderByWithRelationInput
+  }
+
+  export type FormAssignmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FormAssignmentWhereInput | FormAssignmentWhereInput[]
+    OR?: FormAssignmentWhereInput[]
+    NOT?: FormAssignmentWhereInput | FormAssignmentWhereInput[]
+    reportId?: StringFilter<"FormAssignment"> | string
+    assigneeId?: StringFilter<"FormAssignment"> | string
+    assignedById?: StringFilter<"FormAssignment"> | string
+    metricIds?: StringNullableListFilter<"FormAssignment">
+    dueAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
+    cancelledAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
+    notes?: StringNullableFilter<"FormAssignment"> | string | null
+    createdAt?: DateTimeFilter<"FormAssignment"> | Date | string
+    updatedAt?: DateTimeFilter<"FormAssignment"> | Date | string
+    report?: XOR<ReportScalarRelationFilter, ReportWhereInput>
+    assignee?: XOR<UserScalarRelationFilter, UserWhereInput>
+    assignedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type FormAssignmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    reportId?: SortOrder
+    assigneeId?: SortOrder
+    assignedById?: SortOrder
+    metricIds?: SortOrder
+    dueAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    cancelledAt?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FormAssignmentCountOrderByAggregateInput
+    _max?: FormAssignmentMaxOrderByAggregateInput
+    _min?: FormAssignmentMinOrderByAggregateInput
+  }
+
+  export type FormAssignmentScalarWhereWithAggregatesInput = {
+    AND?: FormAssignmentScalarWhereWithAggregatesInput | FormAssignmentScalarWhereWithAggregatesInput[]
+    OR?: FormAssignmentScalarWhereWithAggregatesInput[]
+    NOT?: FormAssignmentScalarWhereWithAggregatesInput | FormAssignmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FormAssignment"> | string
+    reportId?: StringWithAggregatesFilter<"FormAssignment"> | string
+    assigneeId?: StringWithAggregatesFilter<"FormAssignment"> | string
+    assignedById?: StringWithAggregatesFilter<"FormAssignment"> | string
+    metricIds?: StringNullableListFilter<"FormAssignment">
+    dueAt?: DateTimeNullableWithAggregatesFilter<"FormAssignment"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"FormAssignment"> | Date | string | null
+    cancelledAt?: DateTimeNullableWithAggregatesFilter<"FormAssignment"> | Date | string | null
+    notes?: StringNullableWithAggregatesFilter<"FormAssignment"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"FormAssignment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FormAssignment"> | Date | string
+  }
+
+  export type ImportJobWhereInput = {
+    AND?: ImportJobWhereInput | ImportJobWhereInput[]
+    OR?: ImportJobWhereInput[]
+    NOT?: ImportJobWhereInput | ImportJobWhereInput[]
+    id?: StringFilter<"ImportJob"> | string
+    ownerId?: StringFilter<"ImportJob"> | string
+    templateId?: StringNullableFilter<"ImportJob"> | string | null
+    status?: EnumImportJobStatusFilter<"ImportJob"> | $Enums.ImportJobStatus
+    fileName?: StringNullableFilter<"ImportJob"> | string | null
+    fileMime?: StringNullableFilter<"ImportJob"> | string | null
+    fileBytes?: IntNullableFilter<"ImportJob"> | number | null
+    storageRef?: StringNullableFilter<"ImportJob"> | string | null
+    mappingProfileId?: StringNullableFilter<"ImportJob"> | string | null
+    mapping?: JsonNullableFilter<"ImportJob">
+    validationSummary?: JsonNullableFilter<"ImportJob">
+    commitSummary?: JsonNullableFilter<"ImportJob">
+    createdAt?: DateTimeFilter<"ImportJob"> | Date | string
+    updatedAt?: DateTimeFilter<"ImportJob"> | Date | string
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    mappingProfile?: XOR<ImportMappingProfileNullableScalarRelationFilter, ImportMappingProfileWhereInput> | null
+    items?: ImportJobItemListRelationFilter
+  }
+
+  export type ImportJobOrderByWithRelationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    fileName?: SortOrderInput | SortOrder
+    fileMime?: SortOrderInput | SortOrder
+    fileBytes?: SortOrderInput | SortOrder
+    storageRef?: SortOrderInput | SortOrder
+    mappingProfileId?: SortOrderInput | SortOrder
+    mapping?: SortOrderInput | SortOrder
+    validationSummary?: SortOrderInput | SortOrder
+    commitSummary?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    owner?: UserOrderByWithRelationInput
+    mappingProfile?: ImportMappingProfileOrderByWithRelationInput
+    items?: ImportJobItemOrderByRelationAggregateInput
+  }
+
+  export type ImportJobWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ImportJobWhereInput | ImportJobWhereInput[]
+    OR?: ImportJobWhereInput[]
+    NOT?: ImportJobWhereInput | ImportJobWhereInput[]
+    ownerId?: StringFilter<"ImportJob"> | string
+    templateId?: StringNullableFilter<"ImportJob"> | string | null
+    status?: EnumImportJobStatusFilter<"ImportJob"> | $Enums.ImportJobStatus
+    fileName?: StringNullableFilter<"ImportJob"> | string | null
+    fileMime?: StringNullableFilter<"ImportJob"> | string | null
+    fileBytes?: IntNullableFilter<"ImportJob"> | number | null
+    storageRef?: StringNullableFilter<"ImportJob"> | string | null
+    mappingProfileId?: StringNullableFilter<"ImportJob"> | string | null
+    mapping?: JsonNullableFilter<"ImportJob">
+    validationSummary?: JsonNullableFilter<"ImportJob">
+    commitSummary?: JsonNullableFilter<"ImportJob">
+    createdAt?: DateTimeFilter<"ImportJob"> | Date | string
+    updatedAt?: DateTimeFilter<"ImportJob"> | Date | string
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    mappingProfile?: XOR<ImportMappingProfileNullableScalarRelationFilter, ImportMappingProfileWhereInput> | null
+    items?: ImportJobItemListRelationFilter
+  }, "id">
+
+  export type ImportJobOrderByWithAggregationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    fileName?: SortOrderInput | SortOrder
+    fileMime?: SortOrderInput | SortOrder
+    fileBytes?: SortOrderInput | SortOrder
+    storageRef?: SortOrderInput | SortOrder
+    mappingProfileId?: SortOrderInput | SortOrder
+    mapping?: SortOrderInput | SortOrder
+    validationSummary?: SortOrderInput | SortOrder
+    commitSummary?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ImportJobCountOrderByAggregateInput
+    _avg?: ImportJobAvgOrderByAggregateInput
+    _max?: ImportJobMaxOrderByAggregateInput
+    _min?: ImportJobMinOrderByAggregateInput
+    _sum?: ImportJobSumOrderByAggregateInput
+  }
+
+  export type ImportJobScalarWhereWithAggregatesInput = {
+    AND?: ImportJobScalarWhereWithAggregatesInput | ImportJobScalarWhereWithAggregatesInput[]
+    OR?: ImportJobScalarWhereWithAggregatesInput[]
+    NOT?: ImportJobScalarWhereWithAggregatesInput | ImportJobScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ImportJob"> | string
+    ownerId?: StringWithAggregatesFilter<"ImportJob"> | string
+    templateId?: StringNullableWithAggregatesFilter<"ImportJob"> | string | null
+    status?: EnumImportJobStatusWithAggregatesFilter<"ImportJob"> | $Enums.ImportJobStatus
+    fileName?: StringNullableWithAggregatesFilter<"ImportJob"> | string | null
+    fileMime?: StringNullableWithAggregatesFilter<"ImportJob"> | string | null
+    fileBytes?: IntNullableWithAggregatesFilter<"ImportJob"> | number | null
+    storageRef?: StringNullableWithAggregatesFilter<"ImportJob"> | string | null
+    mappingProfileId?: StringNullableWithAggregatesFilter<"ImportJob"> | string | null
+    mapping?: JsonNullableWithAggregatesFilter<"ImportJob">
+    validationSummary?: JsonNullableWithAggregatesFilter<"ImportJob">
+    commitSummary?: JsonNullableWithAggregatesFilter<"ImportJob">
+    createdAt?: DateTimeWithAggregatesFilter<"ImportJob"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ImportJob"> | Date | string
+  }
+
+  export type ImportJobItemWhereInput = {
+    AND?: ImportJobItemWhereInput | ImportJobItemWhereInput[]
+    OR?: ImportJobItemWhereInput[]
+    NOT?: ImportJobItemWhereInput | ImportJobItemWhereInput[]
+    id?: StringFilter<"ImportJobItem"> | string
+    jobId?: StringFilter<"ImportJobItem"> | string
+    rowIndex?: IntFilter<"ImportJobItem"> | number
+    rawValues?: JsonFilter<"ImportJobItem">
+    normalizedValues?: JsonNullableFilter<"ImportJobItem">
+    outcome?: EnumImportRowOutcomeFilter<"ImportJobItem"> | $Enums.ImportRowOutcome
+    errors?: StringNullableListFilter<"ImportJobItem">
+    createdAt?: DateTimeFilter<"ImportJobItem"> | Date | string
+    job?: XOR<ImportJobScalarRelationFilter, ImportJobWhereInput>
+  }
+
+  export type ImportJobItemOrderByWithRelationInput = {
+    id?: SortOrder
+    jobId?: SortOrder
+    rowIndex?: SortOrder
+    rawValues?: SortOrder
+    normalizedValues?: SortOrderInput | SortOrder
+    outcome?: SortOrder
+    errors?: SortOrder
+    createdAt?: SortOrder
+    job?: ImportJobOrderByWithRelationInput
+  }
+
+  export type ImportJobItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ImportJobItemWhereInput | ImportJobItemWhereInput[]
+    OR?: ImportJobItemWhereInput[]
+    NOT?: ImportJobItemWhereInput | ImportJobItemWhereInput[]
+    jobId?: StringFilter<"ImportJobItem"> | string
+    rowIndex?: IntFilter<"ImportJobItem"> | number
+    rawValues?: JsonFilter<"ImportJobItem">
+    normalizedValues?: JsonNullableFilter<"ImportJobItem">
+    outcome?: EnumImportRowOutcomeFilter<"ImportJobItem"> | $Enums.ImportRowOutcome
+    errors?: StringNullableListFilter<"ImportJobItem">
+    createdAt?: DateTimeFilter<"ImportJobItem"> | Date | string
+    job?: XOR<ImportJobScalarRelationFilter, ImportJobWhereInput>
+  }, "id">
+
+  export type ImportJobItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    jobId?: SortOrder
+    rowIndex?: SortOrder
+    rawValues?: SortOrder
+    normalizedValues?: SortOrderInput | SortOrder
+    outcome?: SortOrder
+    errors?: SortOrder
+    createdAt?: SortOrder
+    _count?: ImportJobItemCountOrderByAggregateInput
+    _avg?: ImportJobItemAvgOrderByAggregateInput
+    _max?: ImportJobItemMaxOrderByAggregateInput
+    _min?: ImportJobItemMinOrderByAggregateInput
+    _sum?: ImportJobItemSumOrderByAggregateInput
+  }
+
+  export type ImportJobItemScalarWhereWithAggregatesInput = {
+    AND?: ImportJobItemScalarWhereWithAggregatesInput | ImportJobItemScalarWhereWithAggregatesInput[]
+    OR?: ImportJobItemScalarWhereWithAggregatesInput[]
+    NOT?: ImportJobItemScalarWhereWithAggregatesInput | ImportJobItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ImportJobItem"> | string
+    jobId?: StringWithAggregatesFilter<"ImportJobItem"> | string
+    rowIndex?: IntWithAggregatesFilter<"ImportJobItem"> | number
+    rawValues?: JsonWithAggregatesFilter<"ImportJobItem">
+    normalizedValues?: JsonNullableWithAggregatesFilter<"ImportJobItem">
+    outcome?: EnumImportRowOutcomeWithAggregatesFilter<"ImportJobItem"> | $Enums.ImportRowOutcome
+    errors?: StringNullableListFilter<"ImportJobItem">
+    createdAt?: DateTimeWithAggregatesFilter<"ImportJobItem"> | Date | string
+  }
+
+  export type ImportMappingProfileWhereInput = {
+    AND?: ImportMappingProfileWhereInput | ImportMappingProfileWhereInput[]
+    OR?: ImportMappingProfileWhereInput[]
+    NOT?: ImportMappingProfileWhereInput | ImportMappingProfileWhereInput[]
+    id?: StringFilter<"ImportMappingProfile"> | string
+    ownerId?: StringFilter<"ImportMappingProfile"> | string
+    templateId?: StringNullableFilter<"ImportMappingProfile"> | string | null
+    name?: StringFilter<"ImportMappingProfile"> | string
+    mapping?: JsonFilter<"ImportMappingProfile">
+    createdAt?: DateTimeFilter<"ImportMappingProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"ImportMappingProfile"> | Date | string
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    jobs?: ImportJobListRelationFilter
+  }
+
+  export type ImportMappingProfileOrderByWithRelationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    mapping?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    owner?: UserOrderByWithRelationInput
+    jobs?: ImportJobOrderByRelationAggregateInput
+  }
+
+  export type ImportMappingProfileWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ImportMappingProfileWhereInput | ImportMappingProfileWhereInput[]
+    OR?: ImportMappingProfileWhereInput[]
+    NOT?: ImportMappingProfileWhereInput | ImportMappingProfileWhereInput[]
+    ownerId?: StringFilter<"ImportMappingProfile"> | string
+    templateId?: StringNullableFilter<"ImportMappingProfile"> | string | null
+    name?: StringFilter<"ImportMappingProfile"> | string
+    mapping?: JsonFilter<"ImportMappingProfile">
+    createdAt?: DateTimeFilter<"ImportMappingProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"ImportMappingProfile"> | Date | string
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    jobs?: ImportJobListRelationFilter
+  }, "id">
+
+  export type ImportMappingProfileOrderByWithAggregationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrderInput | SortOrder
+    name?: SortOrder
+    mapping?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ImportMappingProfileCountOrderByAggregateInput
+    _max?: ImportMappingProfileMaxOrderByAggregateInput
+    _min?: ImportMappingProfileMinOrderByAggregateInput
+  }
+
+  export type ImportMappingProfileScalarWhereWithAggregatesInput = {
+    AND?: ImportMappingProfileScalarWhereWithAggregatesInput | ImportMappingProfileScalarWhereWithAggregatesInput[]
+    OR?: ImportMappingProfileScalarWhereWithAggregatesInput[]
+    NOT?: ImportMappingProfileScalarWhereWithAggregatesInput | ImportMappingProfileScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ImportMappingProfile"> | string
+    ownerId?: StringWithAggregatesFilter<"ImportMappingProfile"> | string
+    templateId?: StringNullableWithAggregatesFilter<"ImportMappingProfile"> | string | null
+    name?: StringWithAggregatesFilter<"ImportMappingProfile"> | string
+    mapping?: JsonWithAggregatesFilter<"ImportMappingProfile">
+    createdAt?: DateTimeWithAggregatesFilter<"ImportMappingProfile"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ImportMappingProfile"> | Date | string
+  }
+
+  export type BulkInviteBatchWhereInput = {
+    AND?: BulkInviteBatchWhereInput | BulkInviteBatchWhereInput[]
+    OR?: BulkInviteBatchWhereInput[]
+    NOT?: BulkInviteBatchWhereInput | BulkInviteBatchWhereInput[]
+    id?: StringFilter<"BulkInviteBatch"> | string
+    createdById?: StringFilter<"BulkInviteBatch"> | string
+    kind?: EnumBulkInviteKindFilter<"BulkInviteBatch"> | $Enums.BulkInviteKind
+    sharedAttrs?: JsonNullableFilter<"BulkInviteBatch">
+    totalEntries?: IntFilter<"BulkInviteBatch"> | number
+    successCount?: IntFilter<"BulkInviteBatch"> | number
+    skippedCount?: IntFilter<"BulkInviteBatch"> | number
+    failedCount?: IntFilter<"BulkInviteBatch"> | number
+    createdAt?: DateTimeFilter<"BulkInviteBatch"> | Date | string
+    updatedAt?: DateTimeFilter<"BulkInviteBatch"> | Date | string
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    invites?: InviteLinkListRelationFilter
+  }
+
+  export type BulkInviteBatchOrderByWithRelationInput = {
+    id?: SortOrder
+    createdById?: SortOrder
+    kind?: SortOrder
+    sharedAttrs?: SortOrderInput | SortOrder
+    totalEntries?: SortOrder
+    successCount?: SortOrder
+    skippedCount?: SortOrder
+    failedCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdBy?: UserOrderByWithRelationInput
+    invites?: InviteLinkOrderByRelationAggregateInput
+  }
+
+  export type BulkInviteBatchWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: BulkInviteBatchWhereInput | BulkInviteBatchWhereInput[]
+    OR?: BulkInviteBatchWhereInput[]
+    NOT?: BulkInviteBatchWhereInput | BulkInviteBatchWhereInput[]
+    createdById?: StringFilter<"BulkInviteBatch"> | string
+    kind?: EnumBulkInviteKindFilter<"BulkInviteBatch"> | $Enums.BulkInviteKind
+    sharedAttrs?: JsonNullableFilter<"BulkInviteBatch">
+    totalEntries?: IntFilter<"BulkInviteBatch"> | number
+    successCount?: IntFilter<"BulkInviteBatch"> | number
+    skippedCount?: IntFilter<"BulkInviteBatch"> | number
+    failedCount?: IntFilter<"BulkInviteBatch"> | number
+    createdAt?: DateTimeFilter<"BulkInviteBatch"> | Date | string
+    updatedAt?: DateTimeFilter<"BulkInviteBatch"> | Date | string
+    createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    invites?: InviteLinkListRelationFilter
+  }, "id">
+
+  export type BulkInviteBatchOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdById?: SortOrder
+    kind?: SortOrder
+    sharedAttrs?: SortOrderInput | SortOrder
+    totalEntries?: SortOrder
+    successCount?: SortOrder
+    skippedCount?: SortOrder
+    failedCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BulkInviteBatchCountOrderByAggregateInput
+    _avg?: BulkInviteBatchAvgOrderByAggregateInput
+    _max?: BulkInviteBatchMaxOrderByAggregateInput
+    _min?: BulkInviteBatchMinOrderByAggregateInput
+    _sum?: BulkInviteBatchSumOrderByAggregateInput
+  }
+
+  export type BulkInviteBatchScalarWhereWithAggregatesInput = {
+    AND?: BulkInviteBatchScalarWhereWithAggregatesInput | BulkInviteBatchScalarWhereWithAggregatesInput[]
+    OR?: BulkInviteBatchScalarWhereWithAggregatesInput[]
+    NOT?: BulkInviteBatchScalarWhereWithAggregatesInput | BulkInviteBatchScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"BulkInviteBatch"> | string
+    createdById?: StringWithAggregatesFilter<"BulkInviteBatch"> | string
+    kind?: EnumBulkInviteKindWithAggregatesFilter<"BulkInviteBatch"> | $Enums.BulkInviteKind
+    sharedAttrs?: JsonNullableWithAggregatesFilter<"BulkInviteBatch">
+    totalEntries?: IntWithAggregatesFilter<"BulkInviteBatch"> | number
+    successCount?: IntWithAggregatesFilter<"BulkInviteBatch"> | number
+    skippedCount?: IntWithAggregatesFilter<"BulkInviteBatch"> | number
+    failedCount?: IntWithAggregatesFilter<"BulkInviteBatch"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"BulkInviteBatch"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"BulkInviteBatch"> | Date | string
+  }
+
+  export type PwaPromptDismissalWhereInput = {
+    AND?: PwaPromptDismissalWhereInput | PwaPromptDismissalWhereInput[]
+    OR?: PwaPromptDismissalWhereInput[]
+    NOT?: PwaPromptDismissalWhereInput | PwaPromptDismissalWhereInput[]
+    id?: StringFilter<"PwaPromptDismissal"> | string
+    userId?: StringFilter<"PwaPromptDismissal"> | string
+    kind?: EnumPwaPromptKindFilter<"PwaPromptDismissal"> | $Enums.PwaPromptKind
+    platform?: EnumPwaPromptPlatformFilter<"PwaPromptDismissal"> | $Enums.PwaPromptPlatform
+    mode?: EnumPwaDismissalModeFilter<"PwaPromptDismissal"> | $Enums.PwaDismissalMode
+    nextEligibleAt?: DateTimeNullableFilter<"PwaPromptDismissal"> | Date | string | null
+    createdAt?: DateTimeFilter<"PwaPromptDismissal"> | Date | string
+    updatedAt?: DateTimeFilter<"PwaPromptDismissal"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type PwaPromptDismissalOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    kind?: SortOrder
+    platform?: SortOrder
+    mode?: SortOrder
+    nextEligibleAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type PwaPromptDismissalWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_kind_platform?: PwaPromptDismissalUserIdKindPlatformCompoundUniqueInput
+    AND?: PwaPromptDismissalWhereInput | PwaPromptDismissalWhereInput[]
+    OR?: PwaPromptDismissalWhereInput[]
+    NOT?: PwaPromptDismissalWhereInput | PwaPromptDismissalWhereInput[]
+    userId?: StringFilter<"PwaPromptDismissal"> | string
+    kind?: EnumPwaPromptKindFilter<"PwaPromptDismissal"> | $Enums.PwaPromptKind
+    platform?: EnumPwaPromptPlatformFilter<"PwaPromptDismissal"> | $Enums.PwaPromptPlatform
+    mode?: EnumPwaDismissalModeFilter<"PwaPromptDismissal"> | $Enums.PwaDismissalMode
+    nextEligibleAt?: DateTimeNullableFilter<"PwaPromptDismissal"> | Date | string | null
+    createdAt?: DateTimeFilter<"PwaPromptDismissal"> | Date | string
+    updatedAt?: DateTimeFilter<"PwaPromptDismissal"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId_kind_platform">
+
+  export type PwaPromptDismissalOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    kind?: SortOrder
+    platform?: SortOrder
+    mode?: SortOrder
+    nextEligibleAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PwaPromptDismissalCountOrderByAggregateInput
+    _max?: PwaPromptDismissalMaxOrderByAggregateInput
+    _min?: PwaPromptDismissalMinOrderByAggregateInput
+  }
+
+  export type PwaPromptDismissalScalarWhereWithAggregatesInput = {
+    AND?: PwaPromptDismissalScalarWhereWithAggregatesInput | PwaPromptDismissalScalarWhereWithAggregatesInput[]
+    OR?: PwaPromptDismissalScalarWhereWithAggregatesInput[]
+    NOT?: PwaPromptDismissalScalarWhereWithAggregatesInput | PwaPromptDismissalScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PwaPromptDismissal"> | string
+    userId?: StringWithAggregatesFilter<"PwaPromptDismissal"> | string
+    kind?: EnumPwaPromptKindWithAggregatesFilter<"PwaPromptDismissal"> | $Enums.PwaPromptKind
+    platform?: EnumPwaPromptPlatformWithAggregatesFilter<"PwaPromptDismissal"> | $Enums.PwaPromptPlatform
+    mode?: EnumPwaDismissalModeWithAggregatesFilter<"PwaPromptDismissal"> | $Enums.PwaDismissalMode
+    nextEligibleAt?: DateTimeNullableWithAggregatesFilter<"PwaPromptDismissal"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PwaPromptDismissal"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PwaPromptDismissal"> | Date | string
+  }
+
+  export type UserActivationTokenWhereInput = {
+    AND?: UserActivationTokenWhereInput | UserActivationTokenWhereInput[]
+    OR?: UserActivationTokenWhereInput[]
+    NOT?: UserActivationTokenWhereInput | UserActivationTokenWhereInput[]
+    id?: StringFilter<"UserActivationToken"> | string
+    userId?: StringFilter<"UserActivationToken"> | string
+    tokenHash?: StringFilter<"UserActivationToken"> | string
+    expiresAt?: DateTimeFilter<"UserActivationToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"UserActivationToken"> | Date | string | null
+    createdAt?: DateTimeFilter<"UserActivationToken"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserActivationTokenOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tokenHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserActivationTokenWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    tokenHash?: string
+    AND?: UserActivationTokenWhereInput | UserActivationTokenWhereInput[]
+    OR?: UserActivationTokenWhereInput[]
+    NOT?: UserActivationTokenWhereInput | UserActivationTokenWhereInput[]
+    userId?: StringFilter<"UserActivationToken"> | string
+    expiresAt?: DateTimeFilter<"UserActivationToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"UserActivationToken"> | Date | string | null
+    createdAt?: DateTimeFilter<"UserActivationToken"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "tokenHash">
+
+  export type UserActivationTokenOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tokenHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: UserActivationTokenCountOrderByAggregateInput
+    _max?: UserActivationTokenMaxOrderByAggregateInput
+    _min?: UserActivationTokenMinOrderByAggregateInput
+  }
+
+  export type UserActivationTokenScalarWhereWithAggregatesInput = {
+    AND?: UserActivationTokenScalarWhereWithAggregatesInput | UserActivationTokenScalarWhereWithAggregatesInput[]
+    OR?: UserActivationTokenScalarWhereWithAggregatesInput[]
+    NOT?: UserActivationTokenScalarWhereWithAggregatesInput | UserActivationTokenScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserActivationToken"> | string
+    userId?: StringWithAggregatesFilter<"UserActivationToken"> | string
+    tokenHash?: StringWithAggregatesFilter<"UserActivationToken"> | string
+    expiresAt?: DateTimeWithAggregatesFilter<"UserActivationToken"> | Date | string
+    usedAt?: DateTimeNullableWithAggregatesFilter<"UserActivationToken"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"UserActivationToken"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     organisationId?: string | null
@@ -37554,6 +48855,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -37607,6 +48916,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -37656,6 +48973,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -37709,6 +49034,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -38413,6 +49746,7 @@ export namespace Prisma {
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
@@ -38454,6 +49788,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportUpdateInput = {
@@ -38479,6 +49814,7 @@ export namespace Prisma {
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
@@ -38520,6 +49856,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportCreateManyInput = {
@@ -39592,8 +50929,10 @@ export namespace Prisma {
     usedAt?: Date | string | null
     expiresAt?: Date | string | null
     isActive?: boolean
+    recipientEmail?: string | null
     createdAt?: Date | string
     createdBy: UserCreateNestedOneWithoutCreatedInviteLinksInput
+    batch?: BulkInviteBatchCreateNestedOneWithoutInvitesInput
   }
 
   export type InviteLinkUncheckedCreateInput = {
@@ -39609,6 +50948,8 @@ export namespace Prisma {
     usedAt?: Date | string | null
     expiresAt?: Date | string | null
     isActive?: boolean
+    recipientEmail?: string | null
+    batchId?: string | null
     createdAt?: Date | string
   }
 
@@ -39624,8 +50965,10 @@ export namespace Prisma {
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: UserUpdateOneRequiredWithoutCreatedInviteLinksNestedInput
+    batch?: BulkInviteBatchUpdateOneWithoutInvitesNestedInput
   }
 
   export type InviteLinkUncheckedUpdateInput = {
@@ -39641,6 +50984,8 @@ export namespace Prisma {
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -39657,6 +51002,8 @@ export namespace Prisma {
     usedAt?: Date | string | null
     expiresAt?: Date | string | null
     isActive?: boolean
+    recipientEmail?: string | null
+    batchId?: string | null
     createdAt?: Date | string
   }
 
@@ -39672,6 +51019,7 @@ export namespace Prisma {
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -39688,6 +51036,8 @@ export namespace Prisma {
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -40161,6 +51511,679 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type AdminConfigEntryCreateInput = {
+    id?: string
+    namespace: string
+    version?: number
+    payload: JsonNullValueInput | InputJsonValue
+    isFallback?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    actor?: UserCreateNestedOneWithoutAdminConfigEntriesInput
+  }
+
+  export type AdminConfigEntryUncheckedCreateInput = {
+    id?: string
+    namespace: string
+    version?: number
+    payload: JsonNullValueInput | InputJsonValue
+    isFallback?: boolean
+    actorId?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AdminConfigEntryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    namespace?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    payload?: JsonNullValueInput | InputJsonValue
+    isFallback?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actor?: UserUpdateOneWithoutAdminConfigEntriesNestedInput
+  }
+
+  export type AdminConfigEntryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    namespace?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    payload?: JsonNullValueInput | InputJsonValue
+    isFallback?: BoolFieldUpdateOperationsInput | boolean
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminConfigEntryCreateManyInput = {
+    id?: string
+    namespace: string
+    version?: number
+    payload: JsonNullValueInput | InputJsonValue
+    isFallback?: boolean
+    actorId?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AdminConfigEntryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    namespace?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    payload?: JsonNullValueInput | InputJsonValue
+    isFallback?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminConfigEntryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    namespace?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    payload?: JsonNullValueInput | InputJsonValue
+    isFallback?: BoolFieldUpdateOperationsInput | boolean
+    actorId?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentCreateInput = {
+    id?: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    report: ReportCreateNestedOneWithoutFormAssignmentsInput
+    assignee: UserCreateNestedOneWithoutFormAssignmentsReceivedInput
+    assignedBy: UserCreateNestedOneWithoutFormAssignmentsCreatedInput
+  }
+
+  export type FormAssignmentUncheckedCreateInput = {
+    id?: string
+    reportId: string
+    assigneeId: string
+    assignedById: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    report?: ReportUpdateOneRequiredWithoutFormAssignmentsNestedInput
+    assignee?: UserUpdateOneRequiredWithoutFormAssignmentsReceivedNestedInput
+    assignedBy?: UserUpdateOneRequiredWithoutFormAssignmentsCreatedNestedInput
+  }
+
+  export type FormAssignmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    assigneeId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentCreateManyInput = {
+    id?: string
+    reportId: string
+    assigneeId: string
+    assignedById: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    assigneeId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportJobCreateInput = {
+    id?: string
+    templateId?: string | null
+    status?: $Enums.ImportJobStatus
+    fileName?: string | null
+    fileMime?: string | null
+    fileBytes?: number | null
+    storageRef?: string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutImportJobsInput
+    mappingProfile?: ImportMappingProfileCreateNestedOneWithoutJobsInput
+    items?: ImportJobItemCreateNestedManyWithoutJobInput
+  }
+
+  export type ImportJobUncheckedCreateInput = {
+    id?: string
+    ownerId: string
+    templateId?: string | null
+    status?: $Enums.ImportJobStatus
+    fileName?: string | null
+    fileMime?: string | null
+    fileBytes?: number | null
+    storageRef?: string | null
+    mappingProfileId?: string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: ImportJobItemUncheckedCreateNestedManyWithoutJobInput
+  }
+
+  export type ImportJobUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutImportJobsNestedInput
+    mappingProfile?: ImportMappingProfileUpdateOneWithoutJobsNestedInput
+    items?: ImportJobItemUpdateManyWithoutJobNestedInput
+  }
+
+  export type ImportJobUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mappingProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ImportJobItemUncheckedUpdateManyWithoutJobNestedInput
+  }
+
+  export type ImportJobCreateManyInput = {
+    id?: string
+    ownerId: string
+    templateId?: string | null
+    status?: $Enums.ImportJobStatus
+    fileName?: string | null
+    fileMime?: string | null
+    fileBytes?: number | null
+    storageRef?: string | null
+    mappingProfileId?: string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ImportJobUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportJobUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mappingProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportJobItemCreateInput = {
+    id?: string
+    rowIndex: number
+    rawValues: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: $Enums.ImportRowOutcome
+    errors?: ImportJobItemCreateerrorsInput | string[]
+    createdAt?: Date | string
+    job: ImportJobCreateNestedOneWithoutItemsInput
+  }
+
+  export type ImportJobItemUncheckedCreateInput = {
+    id?: string
+    jobId: string
+    rowIndex: number
+    rawValues: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: $Enums.ImportRowOutcome
+    errors?: ImportJobItemCreateerrorsInput | string[]
+    createdAt?: Date | string
+  }
+
+  export type ImportJobItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rowIndex?: IntFieldUpdateOperationsInput | number
+    rawValues?: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: EnumImportRowOutcomeFieldUpdateOperationsInput | $Enums.ImportRowOutcome
+    errors?: ImportJobItemUpdateerrorsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    job?: ImportJobUpdateOneRequiredWithoutItemsNestedInput
+  }
+
+  export type ImportJobItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    jobId?: StringFieldUpdateOperationsInput | string
+    rowIndex?: IntFieldUpdateOperationsInput | number
+    rawValues?: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: EnumImportRowOutcomeFieldUpdateOperationsInput | $Enums.ImportRowOutcome
+    errors?: ImportJobItemUpdateerrorsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportJobItemCreateManyInput = {
+    id?: string
+    jobId: string
+    rowIndex: number
+    rawValues: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: $Enums.ImportRowOutcome
+    errors?: ImportJobItemCreateerrorsInput | string[]
+    createdAt?: Date | string
+  }
+
+  export type ImportJobItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rowIndex?: IntFieldUpdateOperationsInput | number
+    rawValues?: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: EnumImportRowOutcomeFieldUpdateOperationsInput | $Enums.ImportRowOutcome
+    errors?: ImportJobItemUpdateerrorsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportJobItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    jobId?: StringFieldUpdateOperationsInput | string
+    rowIndex?: IntFieldUpdateOperationsInput | number
+    rawValues?: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: EnumImportRowOutcomeFieldUpdateOperationsInput | $Enums.ImportRowOutcome
+    errors?: ImportJobItemUpdateerrorsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportMappingProfileCreateInput = {
+    id?: string
+    templateId?: string | null
+    name: string
+    mapping: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutImportMappingProfilesInput
+    jobs?: ImportJobCreateNestedManyWithoutMappingProfileInput
+  }
+
+  export type ImportMappingProfileUncheckedCreateInput = {
+    id?: string
+    ownerId: string
+    templateId?: string | null
+    name: string
+    mapping: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    jobs?: ImportJobUncheckedCreateNestedManyWithoutMappingProfileInput
+  }
+
+  export type ImportMappingProfileUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    mapping?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutImportMappingProfilesNestedInput
+    jobs?: ImportJobUpdateManyWithoutMappingProfileNestedInput
+  }
+
+  export type ImportMappingProfileUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    mapping?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    jobs?: ImportJobUncheckedUpdateManyWithoutMappingProfileNestedInput
+  }
+
+  export type ImportMappingProfileCreateManyInput = {
+    id?: string
+    ownerId: string
+    templateId?: string | null
+    name: string
+    mapping: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ImportMappingProfileUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    mapping?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportMappingProfileUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    mapping?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BulkInviteBatchCreateInput = {
+    id?: string
+    kind: $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: number
+    successCount?: number
+    skippedCount?: number
+    failedCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy: UserCreateNestedOneWithoutBulkInviteBatchesInput
+    invites?: InviteLinkCreateNestedManyWithoutBatchInput
+  }
+
+  export type BulkInviteBatchUncheckedCreateInput = {
+    id?: string
+    createdById: string
+    kind: $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: number
+    successCount?: number
+    skippedCount?: number
+    failedCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    invites?: InviteLinkUncheckedCreateNestedManyWithoutBatchInput
+  }
+
+  export type BulkInviteBatchUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumBulkInviteKindFieldUpdateOperationsInput | $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    skippedCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneRequiredWithoutBulkInviteBatchesNestedInput
+    invites?: InviteLinkUpdateManyWithoutBatchNestedInput
+  }
+
+  export type BulkInviteBatchUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    kind?: EnumBulkInviteKindFieldUpdateOperationsInput | $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    skippedCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invites?: InviteLinkUncheckedUpdateManyWithoutBatchNestedInput
+  }
+
+  export type BulkInviteBatchCreateManyInput = {
+    id?: string
+    createdById: string
+    kind: $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: number
+    successCount?: number
+    skippedCount?: number
+    failedCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BulkInviteBatchUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumBulkInviteKindFieldUpdateOperationsInput | $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    skippedCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BulkInviteBatchUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    kind?: EnumBulkInviteKindFieldUpdateOperationsInput | $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    skippedCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PwaPromptDismissalCreateInput = {
+    id?: string
+    kind: $Enums.PwaPromptKind
+    platform: $Enums.PwaPromptPlatform
+    mode?: $Enums.PwaDismissalMode
+    nextEligibleAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPwaPromptDismissalsInput
+  }
+
+  export type PwaPromptDismissalUncheckedCreateInput = {
+    id?: string
+    userId: string
+    kind: $Enums.PwaPromptKind
+    platform: $Enums.PwaPromptPlatform
+    mode?: $Enums.PwaDismissalMode
+    nextEligibleAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PwaPromptDismissalUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumPwaPromptKindFieldUpdateOperationsInput | $Enums.PwaPromptKind
+    platform?: EnumPwaPromptPlatformFieldUpdateOperationsInput | $Enums.PwaPromptPlatform
+    mode?: EnumPwaDismissalModeFieldUpdateOperationsInput | $Enums.PwaDismissalMode
+    nextEligibleAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPwaPromptDismissalsNestedInput
+  }
+
+  export type PwaPromptDismissalUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumPwaPromptKindFieldUpdateOperationsInput | $Enums.PwaPromptKind
+    platform?: EnumPwaPromptPlatformFieldUpdateOperationsInput | $Enums.PwaPromptPlatform
+    mode?: EnumPwaDismissalModeFieldUpdateOperationsInput | $Enums.PwaDismissalMode
+    nextEligibleAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PwaPromptDismissalCreateManyInput = {
+    id?: string
+    userId: string
+    kind: $Enums.PwaPromptKind
+    platform: $Enums.PwaPromptPlatform
+    mode?: $Enums.PwaDismissalMode
+    nextEligibleAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PwaPromptDismissalUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumPwaPromptKindFieldUpdateOperationsInput | $Enums.PwaPromptKind
+    platform?: EnumPwaPromptPlatformFieldUpdateOperationsInput | $Enums.PwaPromptPlatform
+    mode?: EnumPwaDismissalModeFieldUpdateOperationsInput | $Enums.PwaDismissalMode
+    nextEligibleAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PwaPromptDismissalUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    kind?: EnumPwaPromptKindFieldUpdateOperationsInput | $Enums.PwaPromptKind
+    platform?: EnumPwaPromptPlatformFieldUpdateOperationsInput | $Enums.PwaPromptPlatform
+    mode?: EnumPwaDismissalModeFieldUpdateOperationsInput | $Enums.PwaDismissalMode
+    nextEligibleAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivationTokenCreateInput = {
+    id?: string
+    tokenHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutActivationTokensInput
+  }
+
+  export type UserActivationTokenUncheckedCreateInput = {
+    id?: string
+    userId: string
+    tokenHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type UserActivationTokenUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutActivationTokensNestedInput
+  }
+
+  export type UserActivationTokenUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivationTokenCreateManyInput = {
+    id?: string
+    userId: string
+    tokenHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type UserActivationTokenUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivationTokenUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -40346,6 +52369,48 @@ export namespace Prisma {
     none?: ReportWhereInput
   }
 
+  export type AdminConfigEntryListRelationFilter = {
+    every?: AdminConfigEntryWhereInput
+    some?: AdminConfigEntryWhereInput
+    none?: AdminConfigEntryWhereInput
+  }
+
+  export type FormAssignmentListRelationFilter = {
+    every?: FormAssignmentWhereInput
+    some?: FormAssignmentWhereInput
+    none?: FormAssignmentWhereInput
+  }
+
+  export type ImportJobListRelationFilter = {
+    every?: ImportJobWhereInput
+    some?: ImportJobWhereInput
+    none?: ImportJobWhereInput
+  }
+
+  export type ImportMappingProfileListRelationFilter = {
+    every?: ImportMappingProfileWhereInput
+    some?: ImportMappingProfileWhereInput
+    none?: ImportMappingProfileWhereInput
+  }
+
+  export type BulkInviteBatchListRelationFilter = {
+    every?: BulkInviteBatchWhereInput
+    some?: BulkInviteBatchWhereInput
+    none?: BulkInviteBatchWhereInput
+  }
+
+  export type PwaPromptDismissalListRelationFilter = {
+    every?: PwaPromptDismissalWhereInput
+    some?: PwaPromptDismissalWhereInput
+    none?: PwaPromptDismissalWhereInput
+  }
+
+  export type UserActivationTokenListRelationFilter = {
+    every?: UserActivationTokenWhereInput
+    some?: UserActivationTokenWhereInput
+    none?: UserActivationTokenWhereInput
+  }
+
   export type CampusNullableScalarRelationFilter = {
     is?: CampusWhereInput | null
     isNot?: CampusWhereInput | null
@@ -40434,6 +52499,34 @@ export namespace Prisma {
   }
 
   export type ReportOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AdminConfigEntryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FormAssignmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ImportJobOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ImportMappingProfileOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type BulkInviteBatchOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PwaPromptDismissalOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserActivationTokenOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -41964,6 +54057,11 @@ export namespace Prisma {
     not?: NestedEnumUserRoleNullableFilter<$PrismaModel> | $Enums.UserRole | null
   }
 
+  export type BulkInviteBatchNullableScalarRelationFilter = {
+    is?: BulkInviteBatchWhereInput | null
+    isNot?: BulkInviteBatchWhereInput | null
+  }
+
   export type InviteLinkCountOrderByAggregateInput = {
     id?: SortOrder
     token?: SortOrder
@@ -41977,6 +54075,8 @@ export namespace Prisma {
     usedAt?: SortOrder
     expiresAt?: SortOrder
     isActive?: SortOrder
+    recipientEmail?: SortOrder
+    batchId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -41993,6 +54093,8 @@ export namespace Prisma {
     usedAt?: SortOrder
     expiresAt?: SortOrder
     isActive?: SortOrder
+    recipientEmail?: SortOrder
+    batchId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -42009,6 +54111,8 @@ export namespace Prisma {
     usedAt?: SortOrder
     expiresAt?: SortOrder
     isActive?: SortOrder
+    recipientEmail?: SortOrder
+    batchId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -42438,6 +54542,448 @@ export namespace Prisma {
     _max?: NestedEnumAssetLifecycleEventTypeFilter<$PrismaModel>
   }
 
+  export type AdminConfigEntryCountOrderByAggregateInput = {
+    id?: SortOrder
+    namespace?: SortOrder
+    version?: SortOrder
+    payload?: SortOrder
+    isFallback?: SortOrder
+    actorId?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AdminConfigEntryAvgOrderByAggregateInput = {
+    version?: SortOrder
+  }
+
+  export type AdminConfigEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    namespace?: SortOrder
+    version?: SortOrder
+    isFallback?: SortOrder
+    actorId?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AdminConfigEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    namespace?: SortOrder
+    version?: SortOrder
+    isFallback?: SortOrder
+    actorId?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AdminConfigEntrySumOrderByAggregateInput = {
+    version?: SortOrder
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type FormAssignmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    reportId?: SortOrder
+    assigneeId?: SortOrder
+    assignedById?: SortOrder
+    metricIds?: SortOrder
+    dueAt?: SortOrder
+    completedAt?: SortOrder
+    cancelledAt?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FormAssignmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    reportId?: SortOrder
+    assigneeId?: SortOrder
+    assignedById?: SortOrder
+    dueAt?: SortOrder
+    completedAt?: SortOrder
+    cancelledAt?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FormAssignmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    reportId?: SortOrder
+    assigneeId?: SortOrder
+    assignedById?: SortOrder
+    dueAt?: SortOrder
+    completedAt?: SortOrder
+    cancelledAt?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumImportJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImportJobStatus | EnumImportJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ImportJobStatus[] | ListEnumImportJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImportJobStatus[] | ListEnumImportJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumImportJobStatusFilter<$PrismaModel> | $Enums.ImportJobStatus
+  }
+
+  export type ImportMappingProfileNullableScalarRelationFilter = {
+    is?: ImportMappingProfileWhereInput | null
+    isNot?: ImportMappingProfileWhereInput | null
+  }
+
+  export type ImportJobItemListRelationFilter = {
+    every?: ImportJobItemWhereInput
+    some?: ImportJobItemWhereInput
+    none?: ImportJobItemWhereInput
+  }
+
+  export type ImportJobItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ImportJobCountOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrder
+    status?: SortOrder
+    fileName?: SortOrder
+    fileMime?: SortOrder
+    fileBytes?: SortOrder
+    storageRef?: SortOrder
+    mappingProfileId?: SortOrder
+    mapping?: SortOrder
+    validationSummary?: SortOrder
+    commitSummary?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ImportJobAvgOrderByAggregateInput = {
+    fileBytes?: SortOrder
+  }
+
+  export type ImportJobMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrder
+    status?: SortOrder
+    fileName?: SortOrder
+    fileMime?: SortOrder
+    fileBytes?: SortOrder
+    storageRef?: SortOrder
+    mappingProfileId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ImportJobMinOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrder
+    status?: SortOrder
+    fileName?: SortOrder
+    fileMime?: SortOrder
+    fileBytes?: SortOrder
+    storageRef?: SortOrder
+    mappingProfileId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ImportJobSumOrderByAggregateInput = {
+    fileBytes?: SortOrder
+  }
+
+  export type EnumImportJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImportJobStatus | EnumImportJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ImportJobStatus[] | ListEnumImportJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImportJobStatus[] | ListEnumImportJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumImportJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.ImportJobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumImportJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumImportJobStatusFilter<$PrismaModel>
+  }
+
+  export type EnumImportRowOutcomeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImportRowOutcome | EnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImportRowOutcome[] | ListEnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImportRowOutcome[] | ListEnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImportRowOutcomeFilter<$PrismaModel> | $Enums.ImportRowOutcome
+  }
+
+  export type ImportJobScalarRelationFilter = {
+    is?: ImportJobWhereInput
+    isNot?: ImportJobWhereInput
+  }
+
+  export type ImportJobItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    jobId?: SortOrder
+    rowIndex?: SortOrder
+    rawValues?: SortOrder
+    normalizedValues?: SortOrder
+    outcome?: SortOrder
+    errors?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ImportJobItemAvgOrderByAggregateInput = {
+    rowIndex?: SortOrder
+  }
+
+  export type ImportJobItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    jobId?: SortOrder
+    rowIndex?: SortOrder
+    outcome?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ImportJobItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    jobId?: SortOrder
+    rowIndex?: SortOrder
+    outcome?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ImportJobItemSumOrderByAggregateInput = {
+    rowIndex?: SortOrder
+  }
+
+  export type EnumImportRowOutcomeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImportRowOutcome | EnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImportRowOutcome[] | ListEnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImportRowOutcome[] | ListEnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImportRowOutcomeWithAggregatesFilter<$PrismaModel> | $Enums.ImportRowOutcome
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumImportRowOutcomeFilter<$PrismaModel>
+    _max?: NestedEnumImportRowOutcomeFilter<$PrismaModel>
+  }
+
+  export type ImportMappingProfileCountOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrder
+    name?: SortOrder
+    mapping?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ImportMappingProfileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ImportMappingProfileMinOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumBulkInviteKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.BulkInviteKind | EnumBulkInviteKindFieldRefInput<$PrismaModel>
+    in?: $Enums.BulkInviteKind[] | ListEnumBulkInviteKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BulkInviteKind[] | ListEnumBulkInviteKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumBulkInviteKindFilter<$PrismaModel> | $Enums.BulkInviteKind
+  }
+
+  export type BulkInviteBatchCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdById?: SortOrder
+    kind?: SortOrder
+    sharedAttrs?: SortOrder
+    totalEntries?: SortOrder
+    successCount?: SortOrder
+    skippedCount?: SortOrder
+    failedCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BulkInviteBatchAvgOrderByAggregateInput = {
+    totalEntries?: SortOrder
+    successCount?: SortOrder
+    skippedCount?: SortOrder
+    failedCount?: SortOrder
+  }
+
+  export type BulkInviteBatchMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdById?: SortOrder
+    kind?: SortOrder
+    totalEntries?: SortOrder
+    successCount?: SortOrder
+    skippedCount?: SortOrder
+    failedCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BulkInviteBatchMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdById?: SortOrder
+    kind?: SortOrder
+    totalEntries?: SortOrder
+    successCount?: SortOrder
+    skippedCount?: SortOrder
+    failedCount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BulkInviteBatchSumOrderByAggregateInput = {
+    totalEntries?: SortOrder
+    successCount?: SortOrder
+    skippedCount?: SortOrder
+    failedCount?: SortOrder
+  }
+
+  export type EnumBulkInviteKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BulkInviteKind | EnumBulkInviteKindFieldRefInput<$PrismaModel>
+    in?: $Enums.BulkInviteKind[] | ListEnumBulkInviteKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BulkInviteKind[] | ListEnumBulkInviteKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumBulkInviteKindWithAggregatesFilter<$PrismaModel> | $Enums.BulkInviteKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBulkInviteKindFilter<$PrismaModel>
+    _max?: NestedEnumBulkInviteKindFilter<$PrismaModel>
+  }
+
+  export type EnumPwaPromptKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaPromptKind | EnumPwaPromptKindFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaPromptKind[] | ListEnumPwaPromptKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaPromptKind[] | ListEnumPwaPromptKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaPromptKindFilter<$PrismaModel> | $Enums.PwaPromptKind
+  }
+
+  export type EnumPwaPromptPlatformFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaPromptPlatform | EnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaPromptPlatform[] | ListEnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaPromptPlatform[] | ListEnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaPromptPlatformFilter<$PrismaModel> | $Enums.PwaPromptPlatform
+  }
+
+  export type EnumPwaDismissalModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaDismissalMode | EnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaDismissalMode[] | ListEnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaDismissalMode[] | ListEnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaDismissalModeFilter<$PrismaModel> | $Enums.PwaDismissalMode
+  }
+
+  export type PwaPromptDismissalUserIdKindPlatformCompoundUniqueInput = {
+    userId: string
+    kind: $Enums.PwaPromptKind
+    platform: $Enums.PwaPromptPlatform
+  }
+
+  export type PwaPromptDismissalCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    kind?: SortOrder
+    platform?: SortOrder
+    mode?: SortOrder
+    nextEligibleAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PwaPromptDismissalMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    kind?: SortOrder
+    platform?: SortOrder
+    mode?: SortOrder
+    nextEligibleAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PwaPromptDismissalMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    kind?: SortOrder
+    platform?: SortOrder
+    mode?: SortOrder
+    nextEligibleAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumPwaPromptKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaPromptKind | EnumPwaPromptKindFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaPromptKind[] | ListEnumPwaPromptKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaPromptKind[] | ListEnumPwaPromptKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaPromptKindWithAggregatesFilter<$PrismaModel> | $Enums.PwaPromptKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPwaPromptKindFilter<$PrismaModel>
+    _max?: NestedEnumPwaPromptKindFilter<$PrismaModel>
+  }
+
+  export type EnumPwaPromptPlatformWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaPromptPlatform | EnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaPromptPlatform[] | ListEnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaPromptPlatform[] | ListEnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaPromptPlatformWithAggregatesFilter<$PrismaModel> | $Enums.PwaPromptPlatform
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPwaPromptPlatformFilter<$PrismaModel>
+    _max?: NestedEnumPwaPromptPlatformFilter<$PrismaModel>
+  }
+
+  export type EnumPwaDismissalModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaDismissalMode | EnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaDismissalMode[] | ListEnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaDismissalMode[] | ListEnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaDismissalModeWithAggregatesFilter<$PrismaModel> | $Enums.PwaDismissalMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPwaDismissalModeFilter<$PrismaModel>
+    _max?: NestedEnumPwaDismissalModeFilter<$PrismaModel>
+  }
+
+  export type UserActivationTokenCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tokenHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserActivationTokenMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tokenHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserActivationTokenMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tokenHash?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
   export type BugReportCreateNestedManyWithoutCreatedByInput = {
     create?: XOR<BugReportCreateWithoutCreatedByInput, BugReportUncheckedCreateWithoutCreatedByInput> | BugReportCreateWithoutCreatedByInput[] | BugReportUncheckedCreateWithoutCreatedByInput[]
     connectOrCreate?: BugReportCreateOrConnectWithoutCreatedByInput | BugReportCreateOrConnectWithoutCreatedByInput[]
@@ -42625,6 +55171,62 @@ export namespace Prisma {
     connectOrCreate?: ReportCreateOrConnectWithoutSubmittedByInput | ReportCreateOrConnectWithoutSubmittedByInput[]
     createMany?: ReportCreateManySubmittedByInputEnvelope
     connect?: ReportWhereUniqueInput | ReportWhereUniqueInput[]
+  }
+
+  export type AdminConfigEntryCreateNestedManyWithoutActorInput = {
+    create?: XOR<AdminConfigEntryCreateWithoutActorInput, AdminConfigEntryUncheckedCreateWithoutActorInput> | AdminConfigEntryCreateWithoutActorInput[] | AdminConfigEntryUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AdminConfigEntryCreateOrConnectWithoutActorInput | AdminConfigEntryCreateOrConnectWithoutActorInput[]
+    createMany?: AdminConfigEntryCreateManyActorInputEnvelope
+    connect?: AdminConfigEntryWhereUniqueInput | AdminConfigEntryWhereUniqueInput[]
+  }
+
+  export type FormAssignmentCreateNestedManyWithoutAssigneeInput = {
+    create?: XOR<FormAssignmentCreateWithoutAssigneeInput, FormAssignmentUncheckedCreateWithoutAssigneeInput> | FormAssignmentCreateWithoutAssigneeInput[] | FormAssignmentUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutAssigneeInput | FormAssignmentCreateOrConnectWithoutAssigneeInput[]
+    createMany?: FormAssignmentCreateManyAssigneeInputEnvelope
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+  }
+
+  export type FormAssignmentCreateNestedManyWithoutAssignedByInput = {
+    create?: XOR<FormAssignmentCreateWithoutAssignedByInput, FormAssignmentUncheckedCreateWithoutAssignedByInput> | FormAssignmentCreateWithoutAssignedByInput[] | FormAssignmentUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutAssignedByInput | FormAssignmentCreateOrConnectWithoutAssignedByInput[]
+    createMany?: FormAssignmentCreateManyAssignedByInputEnvelope
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+  }
+
+  export type ImportJobCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<ImportJobCreateWithoutOwnerInput, ImportJobUncheckedCreateWithoutOwnerInput> | ImportJobCreateWithoutOwnerInput[] | ImportJobUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ImportJobCreateOrConnectWithoutOwnerInput | ImportJobCreateOrConnectWithoutOwnerInput[]
+    createMany?: ImportJobCreateManyOwnerInputEnvelope
+    connect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+  }
+
+  export type ImportMappingProfileCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<ImportMappingProfileCreateWithoutOwnerInput, ImportMappingProfileUncheckedCreateWithoutOwnerInput> | ImportMappingProfileCreateWithoutOwnerInput[] | ImportMappingProfileUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ImportMappingProfileCreateOrConnectWithoutOwnerInput | ImportMappingProfileCreateOrConnectWithoutOwnerInput[]
+    createMany?: ImportMappingProfileCreateManyOwnerInputEnvelope
+    connect?: ImportMappingProfileWhereUniqueInput | ImportMappingProfileWhereUniqueInput[]
+  }
+
+  export type BulkInviteBatchCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<BulkInviteBatchCreateWithoutCreatedByInput, BulkInviteBatchUncheckedCreateWithoutCreatedByInput> | BulkInviteBatchCreateWithoutCreatedByInput[] | BulkInviteBatchUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: BulkInviteBatchCreateOrConnectWithoutCreatedByInput | BulkInviteBatchCreateOrConnectWithoutCreatedByInput[]
+    createMany?: BulkInviteBatchCreateManyCreatedByInputEnvelope
+    connect?: BulkInviteBatchWhereUniqueInput | BulkInviteBatchWhereUniqueInput[]
+  }
+
+  export type PwaPromptDismissalCreateNestedManyWithoutUserInput = {
+    create?: XOR<PwaPromptDismissalCreateWithoutUserInput, PwaPromptDismissalUncheckedCreateWithoutUserInput> | PwaPromptDismissalCreateWithoutUserInput[] | PwaPromptDismissalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PwaPromptDismissalCreateOrConnectWithoutUserInput | PwaPromptDismissalCreateOrConnectWithoutUserInput[]
+    createMany?: PwaPromptDismissalCreateManyUserInputEnvelope
+    connect?: PwaPromptDismissalWhereUniqueInput | PwaPromptDismissalWhereUniqueInput[]
+  }
+
+  export type UserActivationTokenCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserActivationTokenCreateWithoutUserInput, UserActivationTokenUncheckedCreateWithoutUserInput> | UserActivationTokenCreateWithoutUserInput[] | UserActivationTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserActivationTokenCreateOrConnectWithoutUserInput | UserActivationTokenCreateOrConnectWithoutUserInput[]
+    createMany?: UserActivationTokenCreateManyUserInputEnvelope
+    connect?: UserActivationTokenWhereUniqueInput | UserActivationTokenWhereUniqueInput[]
   }
 
   export type CampusCreateNestedOneWithoutUsersInput = {
@@ -42826,6 +55428,62 @@ export namespace Prisma {
     connectOrCreate?: ReportCreateOrConnectWithoutSubmittedByInput | ReportCreateOrConnectWithoutSubmittedByInput[]
     createMany?: ReportCreateManySubmittedByInputEnvelope
     connect?: ReportWhereUniqueInput | ReportWhereUniqueInput[]
+  }
+
+  export type AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput = {
+    create?: XOR<AdminConfigEntryCreateWithoutActorInput, AdminConfigEntryUncheckedCreateWithoutActorInput> | AdminConfigEntryCreateWithoutActorInput[] | AdminConfigEntryUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AdminConfigEntryCreateOrConnectWithoutActorInput | AdminConfigEntryCreateOrConnectWithoutActorInput[]
+    createMany?: AdminConfigEntryCreateManyActorInputEnvelope
+    connect?: AdminConfigEntryWhereUniqueInput | AdminConfigEntryWhereUniqueInput[]
+  }
+
+  export type FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput = {
+    create?: XOR<FormAssignmentCreateWithoutAssigneeInput, FormAssignmentUncheckedCreateWithoutAssigneeInput> | FormAssignmentCreateWithoutAssigneeInput[] | FormAssignmentUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutAssigneeInput | FormAssignmentCreateOrConnectWithoutAssigneeInput[]
+    createMany?: FormAssignmentCreateManyAssigneeInputEnvelope
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+  }
+
+  export type FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput = {
+    create?: XOR<FormAssignmentCreateWithoutAssignedByInput, FormAssignmentUncheckedCreateWithoutAssignedByInput> | FormAssignmentCreateWithoutAssignedByInput[] | FormAssignmentUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutAssignedByInput | FormAssignmentCreateOrConnectWithoutAssignedByInput[]
+    createMany?: FormAssignmentCreateManyAssignedByInputEnvelope
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+  }
+
+  export type ImportJobUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<ImportJobCreateWithoutOwnerInput, ImportJobUncheckedCreateWithoutOwnerInput> | ImportJobCreateWithoutOwnerInput[] | ImportJobUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ImportJobCreateOrConnectWithoutOwnerInput | ImportJobCreateOrConnectWithoutOwnerInput[]
+    createMany?: ImportJobCreateManyOwnerInputEnvelope
+    connect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+  }
+
+  export type ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<ImportMappingProfileCreateWithoutOwnerInput, ImportMappingProfileUncheckedCreateWithoutOwnerInput> | ImportMappingProfileCreateWithoutOwnerInput[] | ImportMappingProfileUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ImportMappingProfileCreateOrConnectWithoutOwnerInput | ImportMappingProfileCreateOrConnectWithoutOwnerInput[]
+    createMany?: ImportMappingProfileCreateManyOwnerInputEnvelope
+    connect?: ImportMappingProfileWhereUniqueInput | ImportMappingProfileWhereUniqueInput[]
+  }
+
+  export type BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<BulkInviteBatchCreateWithoutCreatedByInput, BulkInviteBatchUncheckedCreateWithoutCreatedByInput> | BulkInviteBatchCreateWithoutCreatedByInput[] | BulkInviteBatchUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: BulkInviteBatchCreateOrConnectWithoutCreatedByInput | BulkInviteBatchCreateOrConnectWithoutCreatedByInput[]
+    createMany?: BulkInviteBatchCreateManyCreatedByInputEnvelope
+    connect?: BulkInviteBatchWhereUniqueInput | BulkInviteBatchWhereUniqueInput[]
+  }
+
+  export type PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PwaPromptDismissalCreateWithoutUserInput, PwaPromptDismissalUncheckedCreateWithoutUserInput> | PwaPromptDismissalCreateWithoutUserInput[] | PwaPromptDismissalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PwaPromptDismissalCreateOrConnectWithoutUserInput | PwaPromptDismissalCreateOrConnectWithoutUserInput[]
+    createMany?: PwaPromptDismissalCreateManyUserInputEnvelope
+    connect?: PwaPromptDismissalWhereUniqueInput | PwaPromptDismissalWhereUniqueInput[]
+  }
+
+  export type UserActivationTokenUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserActivationTokenCreateWithoutUserInput, UserActivationTokenUncheckedCreateWithoutUserInput> | UserActivationTokenCreateWithoutUserInput[] | UserActivationTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserActivationTokenCreateOrConnectWithoutUserInput | UserActivationTokenCreateOrConnectWithoutUserInput[]
+    createMany?: UserActivationTokenCreateManyUserInputEnvelope
+    connect?: UserActivationTokenWhereUniqueInput | UserActivationTokenWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -43234,6 +55892,118 @@ export namespace Prisma {
     deleteMany?: ReportScalarWhereInput | ReportScalarWhereInput[]
   }
 
+  export type AdminConfigEntryUpdateManyWithoutActorNestedInput = {
+    create?: XOR<AdminConfigEntryCreateWithoutActorInput, AdminConfigEntryUncheckedCreateWithoutActorInput> | AdminConfigEntryCreateWithoutActorInput[] | AdminConfigEntryUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AdminConfigEntryCreateOrConnectWithoutActorInput | AdminConfigEntryCreateOrConnectWithoutActorInput[]
+    upsert?: AdminConfigEntryUpsertWithWhereUniqueWithoutActorInput | AdminConfigEntryUpsertWithWhereUniqueWithoutActorInput[]
+    createMany?: AdminConfigEntryCreateManyActorInputEnvelope
+    set?: AdminConfigEntryWhereUniqueInput | AdminConfigEntryWhereUniqueInput[]
+    disconnect?: AdminConfigEntryWhereUniqueInput | AdminConfigEntryWhereUniqueInput[]
+    delete?: AdminConfigEntryWhereUniqueInput | AdminConfigEntryWhereUniqueInput[]
+    connect?: AdminConfigEntryWhereUniqueInput | AdminConfigEntryWhereUniqueInput[]
+    update?: AdminConfigEntryUpdateWithWhereUniqueWithoutActorInput | AdminConfigEntryUpdateWithWhereUniqueWithoutActorInput[]
+    updateMany?: AdminConfigEntryUpdateManyWithWhereWithoutActorInput | AdminConfigEntryUpdateManyWithWhereWithoutActorInput[]
+    deleteMany?: AdminConfigEntryScalarWhereInput | AdminConfigEntryScalarWhereInput[]
+  }
+
+  export type FormAssignmentUpdateManyWithoutAssigneeNestedInput = {
+    create?: XOR<FormAssignmentCreateWithoutAssigneeInput, FormAssignmentUncheckedCreateWithoutAssigneeInput> | FormAssignmentCreateWithoutAssigneeInput[] | FormAssignmentUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutAssigneeInput | FormAssignmentCreateOrConnectWithoutAssigneeInput[]
+    upsert?: FormAssignmentUpsertWithWhereUniqueWithoutAssigneeInput | FormAssignmentUpsertWithWhereUniqueWithoutAssigneeInput[]
+    createMany?: FormAssignmentCreateManyAssigneeInputEnvelope
+    set?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    disconnect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    delete?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    update?: FormAssignmentUpdateWithWhereUniqueWithoutAssigneeInput | FormAssignmentUpdateWithWhereUniqueWithoutAssigneeInput[]
+    updateMany?: FormAssignmentUpdateManyWithWhereWithoutAssigneeInput | FormAssignmentUpdateManyWithWhereWithoutAssigneeInput[]
+    deleteMany?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
+  }
+
+  export type FormAssignmentUpdateManyWithoutAssignedByNestedInput = {
+    create?: XOR<FormAssignmentCreateWithoutAssignedByInput, FormAssignmentUncheckedCreateWithoutAssignedByInput> | FormAssignmentCreateWithoutAssignedByInput[] | FormAssignmentUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutAssignedByInput | FormAssignmentCreateOrConnectWithoutAssignedByInput[]
+    upsert?: FormAssignmentUpsertWithWhereUniqueWithoutAssignedByInput | FormAssignmentUpsertWithWhereUniqueWithoutAssignedByInput[]
+    createMany?: FormAssignmentCreateManyAssignedByInputEnvelope
+    set?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    disconnect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    delete?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    update?: FormAssignmentUpdateWithWhereUniqueWithoutAssignedByInput | FormAssignmentUpdateWithWhereUniqueWithoutAssignedByInput[]
+    updateMany?: FormAssignmentUpdateManyWithWhereWithoutAssignedByInput | FormAssignmentUpdateManyWithWhereWithoutAssignedByInput[]
+    deleteMany?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
+  }
+
+  export type ImportJobUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<ImportJobCreateWithoutOwnerInput, ImportJobUncheckedCreateWithoutOwnerInput> | ImportJobCreateWithoutOwnerInput[] | ImportJobUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ImportJobCreateOrConnectWithoutOwnerInput | ImportJobCreateOrConnectWithoutOwnerInput[]
+    upsert?: ImportJobUpsertWithWhereUniqueWithoutOwnerInput | ImportJobUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: ImportJobCreateManyOwnerInputEnvelope
+    set?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    disconnect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    delete?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    connect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    update?: ImportJobUpdateWithWhereUniqueWithoutOwnerInput | ImportJobUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: ImportJobUpdateManyWithWhereWithoutOwnerInput | ImportJobUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: ImportJobScalarWhereInput | ImportJobScalarWhereInput[]
+  }
+
+  export type ImportMappingProfileUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<ImportMappingProfileCreateWithoutOwnerInput, ImportMappingProfileUncheckedCreateWithoutOwnerInput> | ImportMappingProfileCreateWithoutOwnerInput[] | ImportMappingProfileUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ImportMappingProfileCreateOrConnectWithoutOwnerInput | ImportMappingProfileCreateOrConnectWithoutOwnerInput[]
+    upsert?: ImportMappingProfileUpsertWithWhereUniqueWithoutOwnerInput | ImportMappingProfileUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: ImportMappingProfileCreateManyOwnerInputEnvelope
+    set?: ImportMappingProfileWhereUniqueInput | ImportMappingProfileWhereUniqueInput[]
+    disconnect?: ImportMappingProfileWhereUniqueInput | ImportMappingProfileWhereUniqueInput[]
+    delete?: ImportMappingProfileWhereUniqueInput | ImportMappingProfileWhereUniqueInput[]
+    connect?: ImportMappingProfileWhereUniqueInput | ImportMappingProfileWhereUniqueInput[]
+    update?: ImportMappingProfileUpdateWithWhereUniqueWithoutOwnerInput | ImportMappingProfileUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: ImportMappingProfileUpdateManyWithWhereWithoutOwnerInput | ImportMappingProfileUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: ImportMappingProfileScalarWhereInput | ImportMappingProfileScalarWhereInput[]
+  }
+
+  export type BulkInviteBatchUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<BulkInviteBatchCreateWithoutCreatedByInput, BulkInviteBatchUncheckedCreateWithoutCreatedByInput> | BulkInviteBatchCreateWithoutCreatedByInput[] | BulkInviteBatchUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: BulkInviteBatchCreateOrConnectWithoutCreatedByInput | BulkInviteBatchCreateOrConnectWithoutCreatedByInput[]
+    upsert?: BulkInviteBatchUpsertWithWhereUniqueWithoutCreatedByInput | BulkInviteBatchUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: BulkInviteBatchCreateManyCreatedByInputEnvelope
+    set?: BulkInviteBatchWhereUniqueInput | BulkInviteBatchWhereUniqueInput[]
+    disconnect?: BulkInviteBatchWhereUniqueInput | BulkInviteBatchWhereUniqueInput[]
+    delete?: BulkInviteBatchWhereUniqueInput | BulkInviteBatchWhereUniqueInput[]
+    connect?: BulkInviteBatchWhereUniqueInput | BulkInviteBatchWhereUniqueInput[]
+    update?: BulkInviteBatchUpdateWithWhereUniqueWithoutCreatedByInput | BulkInviteBatchUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: BulkInviteBatchUpdateManyWithWhereWithoutCreatedByInput | BulkInviteBatchUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: BulkInviteBatchScalarWhereInput | BulkInviteBatchScalarWhereInput[]
+  }
+
+  export type PwaPromptDismissalUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PwaPromptDismissalCreateWithoutUserInput, PwaPromptDismissalUncheckedCreateWithoutUserInput> | PwaPromptDismissalCreateWithoutUserInput[] | PwaPromptDismissalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PwaPromptDismissalCreateOrConnectWithoutUserInput | PwaPromptDismissalCreateOrConnectWithoutUserInput[]
+    upsert?: PwaPromptDismissalUpsertWithWhereUniqueWithoutUserInput | PwaPromptDismissalUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PwaPromptDismissalCreateManyUserInputEnvelope
+    set?: PwaPromptDismissalWhereUniqueInput | PwaPromptDismissalWhereUniqueInput[]
+    disconnect?: PwaPromptDismissalWhereUniqueInput | PwaPromptDismissalWhereUniqueInput[]
+    delete?: PwaPromptDismissalWhereUniqueInput | PwaPromptDismissalWhereUniqueInput[]
+    connect?: PwaPromptDismissalWhereUniqueInput | PwaPromptDismissalWhereUniqueInput[]
+    update?: PwaPromptDismissalUpdateWithWhereUniqueWithoutUserInput | PwaPromptDismissalUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PwaPromptDismissalUpdateManyWithWhereWithoutUserInput | PwaPromptDismissalUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PwaPromptDismissalScalarWhereInput | PwaPromptDismissalScalarWhereInput[]
+  }
+
+  export type UserActivationTokenUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserActivationTokenCreateWithoutUserInput, UserActivationTokenUncheckedCreateWithoutUserInput> | UserActivationTokenCreateWithoutUserInput[] | UserActivationTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserActivationTokenCreateOrConnectWithoutUserInput | UserActivationTokenCreateOrConnectWithoutUserInput[]
+    upsert?: UserActivationTokenUpsertWithWhereUniqueWithoutUserInput | UserActivationTokenUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserActivationTokenCreateManyUserInputEnvelope
+    set?: UserActivationTokenWhereUniqueInput | UserActivationTokenWhereUniqueInput[]
+    disconnect?: UserActivationTokenWhereUniqueInput | UserActivationTokenWhereUniqueInput[]
+    delete?: UserActivationTokenWhereUniqueInput | UserActivationTokenWhereUniqueInput[]
+    connect?: UserActivationTokenWhereUniqueInput | UserActivationTokenWhereUniqueInput[]
+    update?: UserActivationTokenUpdateWithWhereUniqueWithoutUserInput | UserActivationTokenUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserActivationTokenUpdateManyWithWhereWithoutUserInput | UserActivationTokenUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserActivationTokenScalarWhereInput | UserActivationTokenScalarWhereInput[]
+  }
+
   export type CampusUpdateOneWithoutUsersNestedInput = {
     create?: XOR<CampusCreateWithoutUsersInput, CampusUncheckedCreateWithoutUsersInput>
     connectOrCreate?: CampusCreateOrConnectWithoutUsersInput
@@ -43630,6 +56400,118 @@ export namespace Prisma {
     update?: ReportUpdateWithWhereUniqueWithoutSubmittedByInput | ReportUpdateWithWhereUniqueWithoutSubmittedByInput[]
     updateMany?: ReportUpdateManyWithWhereWithoutSubmittedByInput | ReportUpdateManyWithWhereWithoutSubmittedByInput[]
     deleteMany?: ReportScalarWhereInput | ReportScalarWhereInput[]
+  }
+
+  export type AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput = {
+    create?: XOR<AdminConfigEntryCreateWithoutActorInput, AdminConfigEntryUncheckedCreateWithoutActorInput> | AdminConfigEntryCreateWithoutActorInput[] | AdminConfigEntryUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: AdminConfigEntryCreateOrConnectWithoutActorInput | AdminConfigEntryCreateOrConnectWithoutActorInput[]
+    upsert?: AdminConfigEntryUpsertWithWhereUniqueWithoutActorInput | AdminConfigEntryUpsertWithWhereUniqueWithoutActorInput[]
+    createMany?: AdminConfigEntryCreateManyActorInputEnvelope
+    set?: AdminConfigEntryWhereUniqueInput | AdminConfigEntryWhereUniqueInput[]
+    disconnect?: AdminConfigEntryWhereUniqueInput | AdminConfigEntryWhereUniqueInput[]
+    delete?: AdminConfigEntryWhereUniqueInput | AdminConfigEntryWhereUniqueInput[]
+    connect?: AdminConfigEntryWhereUniqueInput | AdminConfigEntryWhereUniqueInput[]
+    update?: AdminConfigEntryUpdateWithWhereUniqueWithoutActorInput | AdminConfigEntryUpdateWithWhereUniqueWithoutActorInput[]
+    updateMany?: AdminConfigEntryUpdateManyWithWhereWithoutActorInput | AdminConfigEntryUpdateManyWithWhereWithoutActorInput[]
+    deleteMany?: AdminConfigEntryScalarWhereInput | AdminConfigEntryScalarWhereInput[]
+  }
+
+  export type FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput = {
+    create?: XOR<FormAssignmentCreateWithoutAssigneeInput, FormAssignmentUncheckedCreateWithoutAssigneeInput> | FormAssignmentCreateWithoutAssigneeInput[] | FormAssignmentUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutAssigneeInput | FormAssignmentCreateOrConnectWithoutAssigneeInput[]
+    upsert?: FormAssignmentUpsertWithWhereUniqueWithoutAssigneeInput | FormAssignmentUpsertWithWhereUniqueWithoutAssigneeInput[]
+    createMany?: FormAssignmentCreateManyAssigneeInputEnvelope
+    set?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    disconnect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    delete?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    update?: FormAssignmentUpdateWithWhereUniqueWithoutAssigneeInput | FormAssignmentUpdateWithWhereUniqueWithoutAssigneeInput[]
+    updateMany?: FormAssignmentUpdateManyWithWhereWithoutAssigneeInput | FormAssignmentUpdateManyWithWhereWithoutAssigneeInput[]
+    deleteMany?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
+  }
+
+  export type FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput = {
+    create?: XOR<FormAssignmentCreateWithoutAssignedByInput, FormAssignmentUncheckedCreateWithoutAssignedByInput> | FormAssignmentCreateWithoutAssignedByInput[] | FormAssignmentUncheckedCreateWithoutAssignedByInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutAssignedByInput | FormAssignmentCreateOrConnectWithoutAssignedByInput[]
+    upsert?: FormAssignmentUpsertWithWhereUniqueWithoutAssignedByInput | FormAssignmentUpsertWithWhereUniqueWithoutAssignedByInput[]
+    createMany?: FormAssignmentCreateManyAssignedByInputEnvelope
+    set?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    disconnect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    delete?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    update?: FormAssignmentUpdateWithWhereUniqueWithoutAssignedByInput | FormAssignmentUpdateWithWhereUniqueWithoutAssignedByInput[]
+    updateMany?: FormAssignmentUpdateManyWithWhereWithoutAssignedByInput | FormAssignmentUpdateManyWithWhereWithoutAssignedByInput[]
+    deleteMany?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
+  }
+
+  export type ImportJobUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<ImportJobCreateWithoutOwnerInput, ImportJobUncheckedCreateWithoutOwnerInput> | ImportJobCreateWithoutOwnerInput[] | ImportJobUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ImportJobCreateOrConnectWithoutOwnerInput | ImportJobCreateOrConnectWithoutOwnerInput[]
+    upsert?: ImportJobUpsertWithWhereUniqueWithoutOwnerInput | ImportJobUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: ImportJobCreateManyOwnerInputEnvelope
+    set?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    disconnect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    delete?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    connect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    update?: ImportJobUpdateWithWhereUniqueWithoutOwnerInput | ImportJobUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: ImportJobUpdateManyWithWhereWithoutOwnerInput | ImportJobUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: ImportJobScalarWhereInput | ImportJobScalarWhereInput[]
+  }
+
+  export type ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<ImportMappingProfileCreateWithoutOwnerInput, ImportMappingProfileUncheckedCreateWithoutOwnerInput> | ImportMappingProfileCreateWithoutOwnerInput[] | ImportMappingProfileUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ImportMappingProfileCreateOrConnectWithoutOwnerInput | ImportMappingProfileCreateOrConnectWithoutOwnerInput[]
+    upsert?: ImportMappingProfileUpsertWithWhereUniqueWithoutOwnerInput | ImportMappingProfileUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: ImportMappingProfileCreateManyOwnerInputEnvelope
+    set?: ImportMappingProfileWhereUniqueInput | ImportMappingProfileWhereUniqueInput[]
+    disconnect?: ImportMappingProfileWhereUniqueInput | ImportMappingProfileWhereUniqueInput[]
+    delete?: ImportMappingProfileWhereUniqueInput | ImportMappingProfileWhereUniqueInput[]
+    connect?: ImportMappingProfileWhereUniqueInput | ImportMappingProfileWhereUniqueInput[]
+    update?: ImportMappingProfileUpdateWithWhereUniqueWithoutOwnerInput | ImportMappingProfileUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: ImportMappingProfileUpdateManyWithWhereWithoutOwnerInput | ImportMappingProfileUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: ImportMappingProfileScalarWhereInput | ImportMappingProfileScalarWhereInput[]
+  }
+
+  export type BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<BulkInviteBatchCreateWithoutCreatedByInput, BulkInviteBatchUncheckedCreateWithoutCreatedByInput> | BulkInviteBatchCreateWithoutCreatedByInput[] | BulkInviteBatchUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: BulkInviteBatchCreateOrConnectWithoutCreatedByInput | BulkInviteBatchCreateOrConnectWithoutCreatedByInput[]
+    upsert?: BulkInviteBatchUpsertWithWhereUniqueWithoutCreatedByInput | BulkInviteBatchUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: BulkInviteBatchCreateManyCreatedByInputEnvelope
+    set?: BulkInviteBatchWhereUniqueInput | BulkInviteBatchWhereUniqueInput[]
+    disconnect?: BulkInviteBatchWhereUniqueInput | BulkInviteBatchWhereUniqueInput[]
+    delete?: BulkInviteBatchWhereUniqueInput | BulkInviteBatchWhereUniqueInput[]
+    connect?: BulkInviteBatchWhereUniqueInput | BulkInviteBatchWhereUniqueInput[]
+    update?: BulkInviteBatchUpdateWithWhereUniqueWithoutCreatedByInput | BulkInviteBatchUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: BulkInviteBatchUpdateManyWithWhereWithoutCreatedByInput | BulkInviteBatchUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: BulkInviteBatchScalarWhereInput | BulkInviteBatchScalarWhereInput[]
+  }
+
+  export type PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PwaPromptDismissalCreateWithoutUserInput, PwaPromptDismissalUncheckedCreateWithoutUserInput> | PwaPromptDismissalCreateWithoutUserInput[] | PwaPromptDismissalUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PwaPromptDismissalCreateOrConnectWithoutUserInput | PwaPromptDismissalCreateOrConnectWithoutUserInput[]
+    upsert?: PwaPromptDismissalUpsertWithWhereUniqueWithoutUserInput | PwaPromptDismissalUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PwaPromptDismissalCreateManyUserInputEnvelope
+    set?: PwaPromptDismissalWhereUniqueInput | PwaPromptDismissalWhereUniqueInput[]
+    disconnect?: PwaPromptDismissalWhereUniqueInput | PwaPromptDismissalWhereUniqueInput[]
+    delete?: PwaPromptDismissalWhereUniqueInput | PwaPromptDismissalWhereUniqueInput[]
+    connect?: PwaPromptDismissalWhereUniqueInput | PwaPromptDismissalWhereUniqueInput[]
+    update?: PwaPromptDismissalUpdateWithWhereUniqueWithoutUserInput | PwaPromptDismissalUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PwaPromptDismissalUpdateManyWithWhereWithoutUserInput | PwaPromptDismissalUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PwaPromptDismissalScalarWhereInput | PwaPromptDismissalScalarWhereInput[]
+  }
+
+  export type UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserActivationTokenCreateWithoutUserInput, UserActivationTokenUncheckedCreateWithoutUserInput> | UserActivationTokenCreateWithoutUserInput[] | UserActivationTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserActivationTokenCreateOrConnectWithoutUserInput | UserActivationTokenCreateOrConnectWithoutUserInput[]
+    upsert?: UserActivationTokenUpsertWithWhereUniqueWithoutUserInput | UserActivationTokenUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserActivationTokenCreateManyUserInputEnvelope
+    set?: UserActivationTokenWhereUniqueInput | UserActivationTokenWhereUniqueInput[]
+    disconnect?: UserActivationTokenWhereUniqueInput | UserActivationTokenWhereUniqueInput[]
+    delete?: UserActivationTokenWhereUniqueInput | UserActivationTokenWhereUniqueInput[]
+    connect?: UserActivationTokenWhereUniqueInput | UserActivationTokenWhereUniqueInput[]
+    update?: UserActivationTokenUpdateWithWhereUniqueWithoutUserInput | UserActivationTokenUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserActivationTokenUpdateManyWithWhereWithoutUserInput | UserActivationTokenUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserActivationTokenScalarWhereInput | UserActivationTokenScalarWhereInput[]
   }
 
   export type CampusCreateNestedManyWithoutOrgGroupInput = {
@@ -44491,6 +57373,13 @@ export namespace Prisma {
     connect?: ReportVersionWhereUniqueInput | ReportVersionWhereUniqueInput[]
   }
 
+  export type FormAssignmentCreateNestedManyWithoutReportInput = {
+    create?: XOR<FormAssignmentCreateWithoutReportInput, FormAssignmentUncheckedCreateWithoutReportInput> | FormAssignmentCreateWithoutReportInput[] | FormAssignmentUncheckedCreateWithoutReportInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutReportInput | FormAssignmentCreateOrConnectWithoutReportInput[]
+    createMany?: FormAssignmentCreateManyReportInputEnvelope
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+  }
+
   export type UserCreateNestedOneWithoutApprovedReportsInput = {
     create?: XOR<UserCreateWithoutApprovedReportsInput, UserUncheckedCreateWithoutApprovedReportsInput>
     connectOrCreate?: UserCreateOrConnectWithoutApprovedReportsInput
@@ -44574,6 +57463,13 @@ export namespace Prisma {
     connect?: ReportVersionWhereUniqueInput | ReportVersionWhereUniqueInput[]
   }
 
+  export type FormAssignmentUncheckedCreateNestedManyWithoutReportInput = {
+    create?: XOR<FormAssignmentCreateWithoutReportInput, FormAssignmentUncheckedCreateWithoutReportInput> | FormAssignmentCreateWithoutReportInput[] | FormAssignmentUncheckedCreateWithoutReportInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutReportInput | FormAssignmentCreateOrConnectWithoutReportInput[]
+    createMany?: FormAssignmentCreateManyReportInputEnvelope
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+  }
+
   export type EnumReportPeriodTypeFieldUpdateOperationsInput = {
     set?: $Enums.ReportPeriodType
   }
@@ -44650,6 +57546,20 @@ export namespace Prisma {
     update?: ReportVersionUpdateWithWhereUniqueWithoutReportInput | ReportVersionUpdateWithWhereUniqueWithoutReportInput[]
     updateMany?: ReportVersionUpdateManyWithWhereWithoutReportInput | ReportVersionUpdateManyWithWhereWithoutReportInput[]
     deleteMany?: ReportVersionScalarWhereInput | ReportVersionScalarWhereInput[]
+  }
+
+  export type FormAssignmentUpdateManyWithoutReportNestedInput = {
+    create?: XOR<FormAssignmentCreateWithoutReportInput, FormAssignmentUncheckedCreateWithoutReportInput> | FormAssignmentCreateWithoutReportInput[] | FormAssignmentUncheckedCreateWithoutReportInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutReportInput | FormAssignmentCreateOrConnectWithoutReportInput[]
+    upsert?: FormAssignmentUpsertWithWhereUniqueWithoutReportInput | FormAssignmentUpsertWithWhereUniqueWithoutReportInput[]
+    createMany?: FormAssignmentCreateManyReportInputEnvelope
+    set?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    disconnect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    delete?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    update?: FormAssignmentUpdateWithWhereUniqueWithoutReportInput | FormAssignmentUpdateWithWhereUniqueWithoutReportInput[]
+    updateMany?: FormAssignmentUpdateManyWithWhereWithoutReportInput | FormAssignmentUpdateManyWithWhereWithoutReportInput[]
+    deleteMany?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
   }
 
   export type UserUpdateOneWithoutApprovedReportsNestedInput = {
@@ -44794,6 +57704,20 @@ export namespace Prisma {
     update?: ReportVersionUpdateWithWhereUniqueWithoutReportInput | ReportVersionUpdateWithWhereUniqueWithoutReportInput[]
     updateMany?: ReportVersionUpdateManyWithWhereWithoutReportInput | ReportVersionUpdateManyWithWhereWithoutReportInput[]
     deleteMany?: ReportVersionScalarWhereInput | ReportVersionScalarWhereInput[]
+  }
+
+  export type FormAssignmentUncheckedUpdateManyWithoutReportNestedInput = {
+    create?: XOR<FormAssignmentCreateWithoutReportInput, FormAssignmentUncheckedCreateWithoutReportInput> | FormAssignmentCreateWithoutReportInput[] | FormAssignmentUncheckedCreateWithoutReportInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutReportInput | FormAssignmentCreateOrConnectWithoutReportInput[]
+    upsert?: FormAssignmentUpsertWithWhereUniqueWithoutReportInput | FormAssignmentUpsertWithWhereUniqueWithoutReportInput[]
+    createMany?: FormAssignmentCreateManyReportInputEnvelope
+    set?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    disconnect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    delete?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    update?: FormAssignmentUpdateWithWhereUniqueWithoutReportInput | FormAssignmentUpdateWithWhereUniqueWithoutReportInput[]
+    updateMany?: FormAssignmentUpdateManyWithWhereWithoutReportInput | FormAssignmentUpdateManyWithWhereWithoutReportInput[]
+    deleteMany?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
   }
 
   export type ReportMetricCreateNestedManyWithoutSectionInput = {
@@ -45318,6 +58242,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type BulkInviteBatchCreateNestedOneWithoutInvitesInput = {
+    create?: XOR<BulkInviteBatchCreateWithoutInvitesInput, BulkInviteBatchUncheckedCreateWithoutInvitesInput>
+    connectOrCreate?: BulkInviteBatchCreateOrConnectWithoutInvitesInput
+    connect?: BulkInviteBatchWhereUniqueInput
+  }
+
   export type EnumInviteLinkTypeFieldUpdateOperationsInput = {
     set?: $Enums.InviteLinkType
   }
@@ -45332,6 +58262,16 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutCreatedInviteLinksInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedInviteLinksInput, UserUpdateWithoutCreatedInviteLinksInput>, UserUncheckedUpdateWithoutCreatedInviteLinksInput>
+  }
+
+  export type BulkInviteBatchUpdateOneWithoutInvitesNestedInput = {
+    create?: XOR<BulkInviteBatchCreateWithoutInvitesInput, BulkInviteBatchUncheckedCreateWithoutInvitesInput>
+    connectOrCreate?: BulkInviteBatchCreateOrConnectWithoutInvitesInput
+    upsert?: BulkInviteBatchUpsertWithoutInvitesInput
+    disconnect?: BulkInviteBatchWhereInput | boolean
+    delete?: BulkInviteBatchWhereInput | boolean
+    connect?: BulkInviteBatchWhereUniqueInput
+    update?: XOR<XOR<BulkInviteBatchUpdateToOneWithWhereWithoutInvitesInput, BulkInviteBatchUpdateWithoutInvitesInput>, BulkInviteBatchUncheckedUpdateWithoutInvitesInput>
   }
 
   export type UserCreateNestedOneWithoutBugReportsInput = {
@@ -45654,6 +58594,332 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssetLifecycleEventsInput, UserUpdateWithoutAssetLifecycleEventsInput>, UserUncheckedUpdateWithoutAssetLifecycleEventsInput>
+  }
+
+  export type UserCreateNestedOneWithoutAdminConfigEntriesInput = {
+    create?: XOR<UserCreateWithoutAdminConfigEntriesInput, UserUncheckedCreateWithoutAdminConfigEntriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAdminConfigEntriesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneWithoutAdminConfigEntriesNestedInput = {
+    create?: XOR<UserCreateWithoutAdminConfigEntriesInput, UserUncheckedCreateWithoutAdminConfigEntriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAdminConfigEntriesInput
+    upsert?: UserUpsertWithoutAdminConfigEntriesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAdminConfigEntriesInput, UserUpdateWithoutAdminConfigEntriesInput>, UserUncheckedUpdateWithoutAdminConfigEntriesInput>
+  }
+
+  export type FormAssignmentCreatemetricIdsInput = {
+    set: string[]
+  }
+
+  export type ReportCreateNestedOneWithoutFormAssignmentsInput = {
+    create?: XOR<ReportCreateWithoutFormAssignmentsInput, ReportUncheckedCreateWithoutFormAssignmentsInput>
+    connectOrCreate?: ReportCreateOrConnectWithoutFormAssignmentsInput
+    connect?: ReportWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutFormAssignmentsReceivedInput = {
+    create?: XOR<UserCreateWithoutFormAssignmentsReceivedInput, UserUncheckedCreateWithoutFormAssignmentsReceivedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFormAssignmentsReceivedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutFormAssignmentsCreatedInput = {
+    create?: XOR<UserCreateWithoutFormAssignmentsCreatedInput, UserUncheckedCreateWithoutFormAssignmentsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFormAssignmentsCreatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type FormAssignmentUpdatemetricIdsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type ReportUpdateOneRequiredWithoutFormAssignmentsNestedInput = {
+    create?: XOR<ReportCreateWithoutFormAssignmentsInput, ReportUncheckedCreateWithoutFormAssignmentsInput>
+    connectOrCreate?: ReportCreateOrConnectWithoutFormAssignmentsInput
+    upsert?: ReportUpsertWithoutFormAssignmentsInput
+    connect?: ReportWhereUniqueInput
+    update?: XOR<XOR<ReportUpdateToOneWithWhereWithoutFormAssignmentsInput, ReportUpdateWithoutFormAssignmentsInput>, ReportUncheckedUpdateWithoutFormAssignmentsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutFormAssignmentsReceivedNestedInput = {
+    create?: XOR<UserCreateWithoutFormAssignmentsReceivedInput, UserUncheckedCreateWithoutFormAssignmentsReceivedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFormAssignmentsReceivedInput
+    upsert?: UserUpsertWithoutFormAssignmentsReceivedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFormAssignmentsReceivedInput, UserUpdateWithoutFormAssignmentsReceivedInput>, UserUncheckedUpdateWithoutFormAssignmentsReceivedInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutFormAssignmentsCreatedNestedInput = {
+    create?: XOR<UserCreateWithoutFormAssignmentsCreatedInput, UserUncheckedCreateWithoutFormAssignmentsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFormAssignmentsCreatedInput
+    upsert?: UserUpsertWithoutFormAssignmentsCreatedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFormAssignmentsCreatedInput, UserUpdateWithoutFormAssignmentsCreatedInput>, UserUncheckedUpdateWithoutFormAssignmentsCreatedInput>
+  }
+
+  export type UserCreateNestedOneWithoutImportJobsInput = {
+    create?: XOR<UserCreateWithoutImportJobsInput, UserUncheckedCreateWithoutImportJobsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutImportJobsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ImportMappingProfileCreateNestedOneWithoutJobsInput = {
+    create?: XOR<ImportMappingProfileCreateWithoutJobsInput, ImportMappingProfileUncheckedCreateWithoutJobsInput>
+    connectOrCreate?: ImportMappingProfileCreateOrConnectWithoutJobsInput
+    connect?: ImportMappingProfileWhereUniqueInput
+  }
+
+  export type ImportJobItemCreateNestedManyWithoutJobInput = {
+    create?: XOR<ImportJobItemCreateWithoutJobInput, ImportJobItemUncheckedCreateWithoutJobInput> | ImportJobItemCreateWithoutJobInput[] | ImportJobItemUncheckedCreateWithoutJobInput[]
+    connectOrCreate?: ImportJobItemCreateOrConnectWithoutJobInput | ImportJobItemCreateOrConnectWithoutJobInput[]
+    createMany?: ImportJobItemCreateManyJobInputEnvelope
+    connect?: ImportJobItemWhereUniqueInput | ImportJobItemWhereUniqueInput[]
+  }
+
+  export type ImportJobItemUncheckedCreateNestedManyWithoutJobInput = {
+    create?: XOR<ImportJobItemCreateWithoutJobInput, ImportJobItemUncheckedCreateWithoutJobInput> | ImportJobItemCreateWithoutJobInput[] | ImportJobItemUncheckedCreateWithoutJobInput[]
+    connectOrCreate?: ImportJobItemCreateOrConnectWithoutJobInput | ImportJobItemCreateOrConnectWithoutJobInput[]
+    createMany?: ImportJobItemCreateManyJobInputEnvelope
+    connect?: ImportJobItemWhereUniqueInput | ImportJobItemWhereUniqueInput[]
+  }
+
+  export type EnumImportJobStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ImportJobStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutImportJobsNestedInput = {
+    create?: XOR<UserCreateWithoutImportJobsInput, UserUncheckedCreateWithoutImportJobsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutImportJobsInput
+    upsert?: UserUpsertWithoutImportJobsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutImportJobsInput, UserUpdateWithoutImportJobsInput>, UserUncheckedUpdateWithoutImportJobsInput>
+  }
+
+  export type ImportMappingProfileUpdateOneWithoutJobsNestedInput = {
+    create?: XOR<ImportMappingProfileCreateWithoutJobsInput, ImportMappingProfileUncheckedCreateWithoutJobsInput>
+    connectOrCreate?: ImportMappingProfileCreateOrConnectWithoutJobsInput
+    upsert?: ImportMappingProfileUpsertWithoutJobsInput
+    disconnect?: ImportMappingProfileWhereInput | boolean
+    delete?: ImportMappingProfileWhereInput | boolean
+    connect?: ImportMappingProfileWhereUniqueInput
+    update?: XOR<XOR<ImportMappingProfileUpdateToOneWithWhereWithoutJobsInput, ImportMappingProfileUpdateWithoutJobsInput>, ImportMappingProfileUncheckedUpdateWithoutJobsInput>
+  }
+
+  export type ImportJobItemUpdateManyWithoutJobNestedInput = {
+    create?: XOR<ImportJobItemCreateWithoutJobInput, ImportJobItemUncheckedCreateWithoutJobInput> | ImportJobItemCreateWithoutJobInput[] | ImportJobItemUncheckedCreateWithoutJobInput[]
+    connectOrCreate?: ImportJobItemCreateOrConnectWithoutJobInput | ImportJobItemCreateOrConnectWithoutJobInput[]
+    upsert?: ImportJobItemUpsertWithWhereUniqueWithoutJobInput | ImportJobItemUpsertWithWhereUniqueWithoutJobInput[]
+    createMany?: ImportJobItemCreateManyJobInputEnvelope
+    set?: ImportJobItemWhereUniqueInput | ImportJobItemWhereUniqueInput[]
+    disconnect?: ImportJobItemWhereUniqueInput | ImportJobItemWhereUniqueInput[]
+    delete?: ImportJobItemWhereUniqueInput | ImportJobItemWhereUniqueInput[]
+    connect?: ImportJobItemWhereUniqueInput | ImportJobItemWhereUniqueInput[]
+    update?: ImportJobItemUpdateWithWhereUniqueWithoutJobInput | ImportJobItemUpdateWithWhereUniqueWithoutJobInput[]
+    updateMany?: ImportJobItemUpdateManyWithWhereWithoutJobInput | ImportJobItemUpdateManyWithWhereWithoutJobInput[]
+    deleteMany?: ImportJobItemScalarWhereInput | ImportJobItemScalarWhereInput[]
+  }
+
+  export type ImportJobItemUncheckedUpdateManyWithoutJobNestedInput = {
+    create?: XOR<ImportJobItemCreateWithoutJobInput, ImportJobItemUncheckedCreateWithoutJobInput> | ImportJobItemCreateWithoutJobInput[] | ImportJobItemUncheckedCreateWithoutJobInput[]
+    connectOrCreate?: ImportJobItemCreateOrConnectWithoutJobInput | ImportJobItemCreateOrConnectWithoutJobInput[]
+    upsert?: ImportJobItemUpsertWithWhereUniqueWithoutJobInput | ImportJobItemUpsertWithWhereUniqueWithoutJobInput[]
+    createMany?: ImportJobItemCreateManyJobInputEnvelope
+    set?: ImportJobItemWhereUniqueInput | ImportJobItemWhereUniqueInput[]
+    disconnect?: ImportJobItemWhereUniqueInput | ImportJobItemWhereUniqueInput[]
+    delete?: ImportJobItemWhereUniqueInput | ImportJobItemWhereUniqueInput[]
+    connect?: ImportJobItemWhereUniqueInput | ImportJobItemWhereUniqueInput[]
+    update?: ImportJobItemUpdateWithWhereUniqueWithoutJobInput | ImportJobItemUpdateWithWhereUniqueWithoutJobInput[]
+    updateMany?: ImportJobItemUpdateManyWithWhereWithoutJobInput | ImportJobItemUpdateManyWithWhereWithoutJobInput[]
+    deleteMany?: ImportJobItemScalarWhereInput | ImportJobItemScalarWhereInput[]
+  }
+
+  export type ImportJobItemCreateerrorsInput = {
+    set: string[]
+  }
+
+  export type ImportJobCreateNestedOneWithoutItemsInput = {
+    create?: XOR<ImportJobCreateWithoutItemsInput, ImportJobUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: ImportJobCreateOrConnectWithoutItemsInput
+    connect?: ImportJobWhereUniqueInput
+  }
+
+  export type EnumImportRowOutcomeFieldUpdateOperationsInput = {
+    set?: $Enums.ImportRowOutcome
+  }
+
+  export type ImportJobItemUpdateerrorsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type ImportJobUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<ImportJobCreateWithoutItemsInput, ImportJobUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: ImportJobCreateOrConnectWithoutItemsInput
+    upsert?: ImportJobUpsertWithoutItemsInput
+    connect?: ImportJobWhereUniqueInput
+    update?: XOR<XOR<ImportJobUpdateToOneWithWhereWithoutItemsInput, ImportJobUpdateWithoutItemsInput>, ImportJobUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type UserCreateNestedOneWithoutImportMappingProfilesInput = {
+    create?: XOR<UserCreateWithoutImportMappingProfilesInput, UserUncheckedCreateWithoutImportMappingProfilesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutImportMappingProfilesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ImportJobCreateNestedManyWithoutMappingProfileInput = {
+    create?: XOR<ImportJobCreateWithoutMappingProfileInput, ImportJobUncheckedCreateWithoutMappingProfileInput> | ImportJobCreateWithoutMappingProfileInput[] | ImportJobUncheckedCreateWithoutMappingProfileInput[]
+    connectOrCreate?: ImportJobCreateOrConnectWithoutMappingProfileInput | ImportJobCreateOrConnectWithoutMappingProfileInput[]
+    createMany?: ImportJobCreateManyMappingProfileInputEnvelope
+    connect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+  }
+
+  export type ImportJobUncheckedCreateNestedManyWithoutMappingProfileInput = {
+    create?: XOR<ImportJobCreateWithoutMappingProfileInput, ImportJobUncheckedCreateWithoutMappingProfileInput> | ImportJobCreateWithoutMappingProfileInput[] | ImportJobUncheckedCreateWithoutMappingProfileInput[]
+    connectOrCreate?: ImportJobCreateOrConnectWithoutMappingProfileInput | ImportJobCreateOrConnectWithoutMappingProfileInput[]
+    createMany?: ImportJobCreateManyMappingProfileInputEnvelope
+    connect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutImportMappingProfilesNestedInput = {
+    create?: XOR<UserCreateWithoutImportMappingProfilesInput, UserUncheckedCreateWithoutImportMappingProfilesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutImportMappingProfilesInput
+    upsert?: UserUpsertWithoutImportMappingProfilesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutImportMappingProfilesInput, UserUpdateWithoutImportMappingProfilesInput>, UserUncheckedUpdateWithoutImportMappingProfilesInput>
+  }
+
+  export type ImportJobUpdateManyWithoutMappingProfileNestedInput = {
+    create?: XOR<ImportJobCreateWithoutMappingProfileInput, ImportJobUncheckedCreateWithoutMappingProfileInput> | ImportJobCreateWithoutMappingProfileInput[] | ImportJobUncheckedCreateWithoutMappingProfileInput[]
+    connectOrCreate?: ImportJobCreateOrConnectWithoutMappingProfileInput | ImportJobCreateOrConnectWithoutMappingProfileInput[]
+    upsert?: ImportJobUpsertWithWhereUniqueWithoutMappingProfileInput | ImportJobUpsertWithWhereUniqueWithoutMappingProfileInput[]
+    createMany?: ImportJobCreateManyMappingProfileInputEnvelope
+    set?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    disconnect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    delete?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    connect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    update?: ImportJobUpdateWithWhereUniqueWithoutMappingProfileInput | ImportJobUpdateWithWhereUniqueWithoutMappingProfileInput[]
+    updateMany?: ImportJobUpdateManyWithWhereWithoutMappingProfileInput | ImportJobUpdateManyWithWhereWithoutMappingProfileInput[]
+    deleteMany?: ImportJobScalarWhereInput | ImportJobScalarWhereInput[]
+  }
+
+  export type ImportJobUncheckedUpdateManyWithoutMappingProfileNestedInput = {
+    create?: XOR<ImportJobCreateWithoutMappingProfileInput, ImportJobUncheckedCreateWithoutMappingProfileInput> | ImportJobCreateWithoutMappingProfileInput[] | ImportJobUncheckedCreateWithoutMappingProfileInput[]
+    connectOrCreate?: ImportJobCreateOrConnectWithoutMappingProfileInput | ImportJobCreateOrConnectWithoutMappingProfileInput[]
+    upsert?: ImportJobUpsertWithWhereUniqueWithoutMappingProfileInput | ImportJobUpsertWithWhereUniqueWithoutMappingProfileInput[]
+    createMany?: ImportJobCreateManyMappingProfileInputEnvelope
+    set?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    disconnect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    delete?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    connect?: ImportJobWhereUniqueInput | ImportJobWhereUniqueInput[]
+    update?: ImportJobUpdateWithWhereUniqueWithoutMappingProfileInput | ImportJobUpdateWithWhereUniqueWithoutMappingProfileInput[]
+    updateMany?: ImportJobUpdateManyWithWhereWithoutMappingProfileInput | ImportJobUpdateManyWithWhereWithoutMappingProfileInput[]
+    deleteMany?: ImportJobScalarWhereInput | ImportJobScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutBulkInviteBatchesInput = {
+    create?: XOR<UserCreateWithoutBulkInviteBatchesInput, UserUncheckedCreateWithoutBulkInviteBatchesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBulkInviteBatchesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type InviteLinkCreateNestedManyWithoutBatchInput = {
+    create?: XOR<InviteLinkCreateWithoutBatchInput, InviteLinkUncheckedCreateWithoutBatchInput> | InviteLinkCreateWithoutBatchInput[] | InviteLinkUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: InviteLinkCreateOrConnectWithoutBatchInput | InviteLinkCreateOrConnectWithoutBatchInput[]
+    createMany?: InviteLinkCreateManyBatchInputEnvelope
+    connect?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+  }
+
+  export type InviteLinkUncheckedCreateNestedManyWithoutBatchInput = {
+    create?: XOR<InviteLinkCreateWithoutBatchInput, InviteLinkUncheckedCreateWithoutBatchInput> | InviteLinkCreateWithoutBatchInput[] | InviteLinkUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: InviteLinkCreateOrConnectWithoutBatchInput | InviteLinkCreateOrConnectWithoutBatchInput[]
+    createMany?: InviteLinkCreateManyBatchInputEnvelope
+    connect?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+  }
+
+  export type EnumBulkInviteKindFieldUpdateOperationsInput = {
+    set?: $Enums.BulkInviteKind
+  }
+
+  export type UserUpdateOneRequiredWithoutBulkInviteBatchesNestedInput = {
+    create?: XOR<UserCreateWithoutBulkInviteBatchesInput, UserUncheckedCreateWithoutBulkInviteBatchesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBulkInviteBatchesInput
+    upsert?: UserUpsertWithoutBulkInviteBatchesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBulkInviteBatchesInput, UserUpdateWithoutBulkInviteBatchesInput>, UserUncheckedUpdateWithoutBulkInviteBatchesInput>
+  }
+
+  export type InviteLinkUpdateManyWithoutBatchNestedInput = {
+    create?: XOR<InviteLinkCreateWithoutBatchInput, InviteLinkUncheckedCreateWithoutBatchInput> | InviteLinkCreateWithoutBatchInput[] | InviteLinkUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: InviteLinkCreateOrConnectWithoutBatchInput | InviteLinkCreateOrConnectWithoutBatchInput[]
+    upsert?: InviteLinkUpsertWithWhereUniqueWithoutBatchInput | InviteLinkUpsertWithWhereUniqueWithoutBatchInput[]
+    createMany?: InviteLinkCreateManyBatchInputEnvelope
+    set?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+    disconnect?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+    delete?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+    connect?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+    update?: InviteLinkUpdateWithWhereUniqueWithoutBatchInput | InviteLinkUpdateWithWhereUniqueWithoutBatchInput[]
+    updateMany?: InviteLinkUpdateManyWithWhereWithoutBatchInput | InviteLinkUpdateManyWithWhereWithoutBatchInput[]
+    deleteMany?: InviteLinkScalarWhereInput | InviteLinkScalarWhereInput[]
+  }
+
+  export type InviteLinkUncheckedUpdateManyWithoutBatchNestedInput = {
+    create?: XOR<InviteLinkCreateWithoutBatchInput, InviteLinkUncheckedCreateWithoutBatchInput> | InviteLinkCreateWithoutBatchInput[] | InviteLinkUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: InviteLinkCreateOrConnectWithoutBatchInput | InviteLinkCreateOrConnectWithoutBatchInput[]
+    upsert?: InviteLinkUpsertWithWhereUniqueWithoutBatchInput | InviteLinkUpsertWithWhereUniqueWithoutBatchInput[]
+    createMany?: InviteLinkCreateManyBatchInputEnvelope
+    set?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+    disconnect?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+    delete?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+    connect?: InviteLinkWhereUniqueInput | InviteLinkWhereUniqueInput[]
+    update?: InviteLinkUpdateWithWhereUniqueWithoutBatchInput | InviteLinkUpdateWithWhereUniqueWithoutBatchInput[]
+    updateMany?: InviteLinkUpdateManyWithWhereWithoutBatchInput | InviteLinkUpdateManyWithWhereWithoutBatchInput[]
+    deleteMany?: InviteLinkScalarWhereInput | InviteLinkScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutPwaPromptDismissalsInput = {
+    create?: XOR<UserCreateWithoutPwaPromptDismissalsInput, UserUncheckedCreateWithoutPwaPromptDismissalsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPwaPromptDismissalsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumPwaPromptKindFieldUpdateOperationsInput = {
+    set?: $Enums.PwaPromptKind
+  }
+
+  export type EnumPwaPromptPlatformFieldUpdateOperationsInput = {
+    set?: $Enums.PwaPromptPlatform
+  }
+
+  export type EnumPwaDismissalModeFieldUpdateOperationsInput = {
+    set?: $Enums.PwaDismissalMode
+  }
+
+  export type UserUpdateOneRequiredWithoutPwaPromptDismissalsNestedInput = {
+    create?: XOR<UserCreateWithoutPwaPromptDismissalsInput, UserUncheckedCreateWithoutPwaPromptDismissalsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPwaPromptDismissalsInput
+    upsert?: UserUpsertWithoutPwaPromptDismissalsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPwaPromptDismissalsInput, UserUpdateWithoutPwaPromptDismissalsInput>, UserUncheckedUpdateWithoutPwaPromptDismissalsInput>
+  }
+
+  export type UserCreateNestedOneWithoutActivationTokensInput = {
+    create?: XOR<UserCreateWithoutActivationTokensInput, UserUncheckedCreateWithoutActivationTokensInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivationTokensInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutActivationTokensNestedInput = {
+    create?: XOR<UserCreateWithoutActivationTokensInput, UserUncheckedCreateWithoutActivationTokensInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivationTokensInput
+    upsert?: UserUpsertWithoutActivationTokensInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActivationTokensInput, UserUpdateWithoutActivationTokensInput>, UserUncheckedUpdateWithoutActivationTokensInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -46360,6 +59626,108 @@ export namespace Prisma {
     _max?: NestedEnumAssetLifecycleEventTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumImportJobStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImportJobStatus | EnumImportJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ImportJobStatus[] | ListEnumImportJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImportJobStatus[] | ListEnumImportJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumImportJobStatusFilter<$PrismaModel> | $Enums.ImportJobStatus
+  }
+
+  export type NestedEnumImportJobStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImportJobStatus | EnumImportJobStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ImportJobStatus[] | ListEnumImportJobStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImportJobStatus[] | ListEnumImportJobStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumImportJobStatusWithAggregatesFilter<$PrismaModel> | $Enums.ImportJobStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumImportJobStatusFilter<$PrismaModel>
+    _max?: NestedEnumImportJobStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumImportRowOutcomeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImportRowOutcome | EnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImportRowOutcome[] | ListEnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImportRowOutcome[] | ListEnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImportRowOutcomeFilter<$PrismaModel> | $Enums.ImportRowOutcome
+  }
+
+  export type NestedEnumImportRowOutcomeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImportRowOutcome | EnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImportRowOutcome[] | ListEnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImportRowOutcome[] | ListEnumImportRowOutcomeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImportRowOutcomeWithAggregatesFilter<$PrismaModel> | $Enums.ImportRowOutcome
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumImportRowOutcomeFilter<$PrismaModel>
+    _max?: NestedEnumImportRowOutcomeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumBulkInviteKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.BulkInviteKind | EnumBulkInviteKindFieldRefInput<$PrismaModel>
+    in?: $Enums.BulkInviteKind[] | ListEnumBulkInviteKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BulkInviteKind[] | ListEnumBulkInviteKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumBulkInviteKindFilter<$PrismaModel> | $Enums.BulkInviteKind
+  }
+
+  export type NestedEnumBulkInviteKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BulkInviteKind | EnumBulkInviteKindFieldRefInput<$PrismaModel>
+    in?: $Enums.BulkInviteKind[] | ListEnumBulkInviteKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.BulkInviteKind[] | ListEnumBulkInviteKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumBulkInviteKindWithAggregatesFilter<$PrismaModel> | $Enums.BulkInviteKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBulkInviteKindFilter<$PrismaModel>
+    _max?: NestedEnumBulkInviteKindFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPwaPromptKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaPromptKind | EnumPwaPromptKindFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaPromptKind[] | ListEnumPwaPromptKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaPromptKind[] | ListEnumPwaPromptKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaPromptKindFilter<$PrismaModel> | $Enums.PwaPromptKind
+  }
+
+  export type NestedEnumPwaPromptPlatformFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaPromptPlatform | EnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaPromptPlatform[] | ListEnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaPromptPlatform[] | ListEnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaPromptPlatformFilter<$PrismaModel> | $Enums.PwaPromptPlatform
+  }
+
+  export type NestedEnumPwaDismissalModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaDismissalMode | EnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaDismissalMode[] | ListEnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaDismissalMode[] | ListEnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaDismissalModeFilter<$PrismaModel> | $Enums.PwaDismissalMode
+  }
+
+  export type NestedEnumPwaPromptKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaPromptKind | EnumPwaPromptKindFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaPromptKind[] | ListEnumPwaPromptKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaPromptKind[] | ListEnumPwaPromptKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaPromptKindWithAggregatesFilter<$PrismaModel> | $Enums.PwaPromptKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPwaPromptKindFilter<$PrismaModel>
+    _max?: NestedEnumPwaPromptKindFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPwaPromptPlatformWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaPromptPlatform | EnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaPromptPlatform[] | ListEnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaPromptPlatform[] | ListEnumPwaPromptPlatformFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaPromptPlatformWithAggregatesFilter<$PrismaModel> | $Enums.PwaPromptPlatform
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPwaPromptPlatformFilter<$PrismaModel>
+    _max?: NestedEnumPwaPromptPlatformFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPwaDismissalModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PwaDismissalMode | EnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    in?: $Enums.PwaDismissalMode[] | ListEnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PwaDismissalMode[] | ListEnumPwaDismissalModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPwaDismissalModeWithAggregatesFilter<$PrismaModel> | $Enums.PwaDismissalMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPwaDismissalModeFilter<$PrismaModel>
+    _max?: NestedEnumPwaDismissalModeFilter<$PrismaModel>
+  }
+
   export type BugReportCreateWithoutCreatedByInput = {
     id?: string
     category: $Enums.BugReportCategory
@@ -46622,7 +59990,9 @@ export namespace Prisma {
     usedAt?: Date | string | null
     expiresAt?: Date | string | null
     isActive?: boolean
+    recipientEmail?: string | null
     createdAt?: Date | string
+    batch?: BulkInviteBatchCreateNestedOneWithoutInvitesInput
   }
 
   export type InviteLinkUncheckedCreateWithoutCreatedByInput = {
@@ -46637,6 +60007,8 @@ export namespace Prisma {
     usedAt?: Date | string | null
     expiresAt?: Date | string | null
     isActive?: boolean
+    recipientEmail?: string | null
+    batchId?: string | null
     createdAt?: Date | string
   }
 
@@ -47227,6 +60599,7 @@ export namespace Prisma {
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
     dataEntryBy?: UserCreateNestedOneWithoutDataEntryReportsInput
@@ -47266,6 +60639,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutApprovedByInput = {
@@ -47301,6 +60675,7 @@ export namespace Prisma {
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     dataEntryBy?: UserCreateNestedOneWithoutDataEntryReportsInput
@@ -47340,6 +60715,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutCreatedByInput = {
@@ -47375,6 +60751,7 @@ export namespace Prisma {
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
@@ -47414,6 +60791,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutDataEntryByInput = {
@@ -47449,6 +60827,7 @@ export namespace Prisma {
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
@@ -47488,6 +60867,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutReviewedByInput = {
@@ -47523,6 +60903,7 @@ export namespace Prisma {
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
@@ -47562,6 +60943,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutSubmittedByInput = {
@@ -47571,6 +60953,274 @@ export namespace Prisma {
 
   export type ReportCreateManySubmittedByInputEnvelope = {
     data: ReportCreateManySubmittedByInput | ReportCreateManySubmittedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AdminConfigEntryCreateWithoutActorInput = {
+    id?: string
+    namespace: string
+    version?: number
+    payload: JsonNullValueInput | InputJsonValue
+    isFallback?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AdminConfigEntryUncheckedCreateWithoutActorInput = {
+    id?: string
+    namespace: string
+    version?: number
+    payload: JsonNullValueInput | InputJsonValue
+    isFallback?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type AdminConfigEntryCreateOrConnectWithoutActorInput = {
+    where: AdminConfigEntryWhereUniqueInput
+    create: XOR<AdminConfigEntryCreateWithoutActorInput, AdminConfigEntryUncheckedCreateWithoutActorInput>
+  }
+
+  export type AdminConfigEntryCreateManyActorInputEnvelope = {
+    data: AdminConfigEntryCreateManyActorInput | AdminConfigEntryCreateManyActorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FormAssignmentCreateWithoutAssigneeInput = {
+    id?: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    report: ReportCreateNestedOneWithoutFormAssignmentsInput
+    assignedBy: UserCreateNestedOneWithoutFormAssignmentsCreatedInput
+  }
+
+  export type FormAssignmentUncheckedCreateWithoutAssigneeInput = {
+    id?: string
+    reportId: string
+    assignedById: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentCreateOrConnectWithoutAssigneeInput = {
+    where: FormAssignmentWhereUniqueInput
+    create: XOR<FormAssignmentCreateWithoutAssigneeInput, FormAssignmentUncheckedCreateWithoutAssigneeInput>
+  }
+
+  export type FormAssignmentCreateManyAssigneeInputEnvelope = {
+    data: FormAssignmentCreateManyAssigneeInput | FormAssignmentCreateManyAssigneeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FormAssignmentCreateWithoutAssignedByInput = {
+    id?: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    report: ReportCreateNestedOneWithoutFormAssignmentsInput
+    assignee: UserCreateNestedOneWithoutFormAssignmentsReceivedInput
+  }
+
+  export type FormAssignmentUncheckedCreateWithoutAssignedByInput = {
+    id?: string
+    reportId: string
+    assigneeId: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentCreateOrConnectWithoutAssignedByInput = {
+    where: FormAssignmentWhereUniqueInput
+    create: XOR<FormAssignmentCreateWithoutAssignedByInput, FormAssignmentUncheckedCreateWithoutAssignedByInput>
+  }
+
+  export type FormAssignmentCreateManyAssignedByInputEnvelope = {
+    data: FormAssignmentCreateManyAssignedByInput | FormAssignmentCreateManyAssignedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ImportJobCreateWithoutOwnerInput = {
+    id?: string
+    templateId?: string | null
+    status?: $Enums.ImportJobStatus
+    fileName?: string | null
+    fileMime?: string | null
+    fileBytes?: number | null
+    storageRef?: string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    mappingProfile?: ImportMappingProfileCreateNestedOneWithoutJobsInput
+    items?: ImportJobItemCreateNestedManyWithoutJobInput
+  }
+
+  export type ImportJobUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    templateId?: string | null
+    status?: $Enums.ImportJobStatus
+    fileName?: string | null
+    fileMime?: string | null
+    fileBytes?: number | null
+    storageRef?: string | null
+    mappingProfileId?: string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: ImportJobItemUncheckedCreateNestedManyWithoutJobInput
+  }
+
+  export type ImportJobCreateOrConnectWithoutOwnerInput = {
+    where: ImportJobWhereUniqueInput
+    create: XOR<ImportJobCreateWithoutOwnerInput, ImportJobUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type ImportJobCreateManyOwnerInputEnvelope = {
+    data: ImportJobCreateManyOwnerInput | ImportJobCreateManyOwnerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ImportMappingProfileCreateWithoutOwnerInput = {
+    id?: string
+    templateId?: string | null
+    name: string
+    mapping: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    jobs?: ImportJobCreateNestedManyWithoutMappingProfileInput
+  }
+
+  export type ImportMappingProfileUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    templateId?: string | null
+    name: string
+    mapping: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    jobs?: ImportJobUncheckedCreateNestedManyWithoutMappingProfileInput
+  }
+
+  export type ImportMappingProfileCreateOrConnectWithoutOwnerInput = {
+    where: ImportMappingProfileWhereUniqueInput
+    create: XOR<ImportMappingProfileCreateWithoutOwnerInput, ImportMappingProfileUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type ImportMappingProfileCreateManyOwnerInputEnvelope = {
+    data: ImportMappingProfileCreateManyOwnerInput | ImportMappingProfileCreateManyOwnerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BulkInviteBatchCreateWithoutCreatedByInput = {
+    id?: string
+    kind: $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: number
+    successCount?: number
+    skippedCount?: number
+    failedCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    invites?: InviteLinkCreateNestedManyWithoutBatchInput
+  }
+
+  export type BulkInviteBatchUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    kind: $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: number
+    successCount?: number
+    skippedCount?: number
+    failedCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    invites?: InviteLinkUncheckedCreateNestedManyWithoutBatchInput
+  }
+
+  export type BulkInviteBatchCreateOrConnectWithoutCreatedByInput = {
+    where: BulkInviteBatchWhereUniqueInput
+    create: XOR<BulkInviteBatchCreateWithoutCreatedByInput, BulkInviteBatchUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type BulkInviteBatchCreateManyCreatedByInputEnvelope = {
+    data: BulkInviteBatchCreateManyCreatedByInput | BulkInviteBatchCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PwaPromptDismissalCreateWithoutUserInput = {
+    id?: string
+    kind: $Enums.PwaPromptKind
+    platform: $Enums.PwaPromptPlatform
+    mode?: $Enums.PwaDismissalMode
+    nextEligibleAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PwaPromptDismissalUncheckedCreateWithoutUserInput = {
+    id?: string
+    kind: $Enums.PwaPromptKind
+    platform: $Enums.PwaPromptPlatform
+    mode?: $Enums.PwaDismissalMode
+    nextEligibleAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PwaPromptDismissalCreateOrConnectWithoutUserInput = {
+    where: PwaPromptDismissalWhereUniqueInput
+    create: XOR<PwaPromptDismissalCreateWithoutUserInput, PwaPromptDismissalUncheckedCreateWithoutUserInput>
+  }
+
+  export type PwaPromptDismissalCreateManyUserInputEnvelope = {
+    data: PwaPromptDismissalCreateManyUserInput | PwaPromptDismissalCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserActivationTokenCreateWithoutUserInput = {
+    id?: string
+    tokenHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type UserActivationTokenUncheckedCreateWithoutUserInput = {
+    id?: string
+    tokenHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type UserActivationTokenCreateOrConnectWithoutUserInput = {
+    where: UserActivationTokenWhereUniqueInput
+    create: XOR<UserActivationTokenCreateWithoutUserInput, UserActivationTokenUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserActivationTokenCreateManyUserInputEnvelope = {
+    data: UserActivationTokenCreateManyUserInput | UserActivationTokenCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -47855,6 +61505,8 @@ export namespace Prisma {
     usedAt?: DateTimeNullableFilter<"InviteLink"> | Date | string | null
     expiresAt?: DateTimeNullableFilter<"InviteLink"> | Date | string | null
     isActive?: BoolFilter<"InviteLink"> | boolean
+    recipientEmail?: StringNullableFilter<"InviteLink"> | string | null
+    batchId?: StringNullableFilter<"InviteLink"> | string | null
     createdAt?: DateTimeFilter<"InviteLink"> | Date | string
   }
 
@@ -48427,6 +62079,240 @@ export namespace Prisma {
     data: XOR<ReportUpdateManyMutationInput, ReportUncheckedUpdateManyWithoutSubmittedByInput>
   }
 
+  export type AdminConfigEntryUpsertWithWhereUniqueWithoutActorInput = {
+    where: AdminConfigEntryWhereUniqueInput
+    update: XOR<AdminConfigEntryUpdateWithoutActorInput, AdminConfigEntryUncheckedUpdateWithoutActorInput>
+    create: XOR<AdminConfigEntryCreateWithoutActorInput, AdminConfigEntryUncheckedCreateWithoutActorInput>
+  }
+
+  export type AdminConfigEntryUpdateWithWhereUniqueWithoutActorInput = {
+    where: AdminConfigEntryWhereUniqueInput
+    data: XOR<AdminConfigEntryUpdateWithoutActorInput, AdminConfigEntryUncheckedUpdateWithoutActorInput>
+  }
+
+  export type AdminConfigEntryUpdateManyWithWhereWithoutActorInput = {
+    where: AdminConfigEntryScalarWhereInput
+    data: XOR<AdminConfigEntryUpdateManyMutationInput, AdminConfigEntryUncheckedUpdateManyWithoutActorInput>
+  }
+
+  export type AdminConfigEntryScalarWhereInput = {
+    AND?: AdminConfigEntryScalarWhereInput | AdminConfigEntryScalarWhereInput[]
+    OR?: AdminConfigEntryScalarWhereInput[]
+    NOT?: AdminConfigEntryScalarWhereInput | AdminConfigEntryScalarWhereInput[]
+    id?: StringFilter<"AdminConfigEntry"> | string
+    namespace?: StringFilter<"AdminConfigEntry"> | string
+    version?: IntFilter<"AdminConfigEntry"> | number
+    payload?: JsonFilter<"AdminConfigEntry">
+    isFallback?: BoolFilter<"AdminConfigEntry"> | boolean
+    actorId?: StringNullableFilter<"AdminConfigEntry"> | string | null
+    notes?: StringNullableFilter<"AdminConfigEntry"> | string | null
+    createdAt?: DateTimeFilter<"AdminConfigEntry"> | Date | string
+  }
+
+  export type FormAssignmentUpsertWithWhereUniqueWithoutAssigneeInput = {
+    where: FormAssignmentWhereUniqueInput
+    update: XOR<FormAssignmentUpdateWithoutAssigneeInput, FormAssignmentUncheckedUpdateWithoutAssigneeInput>
+    create: XOR<FormAssignmentCreateWithoutAssigneeInput, FormAssignmentUncheckedCreateWithoutAssigneeInput>
+  }
+
+  export type FormAssignmentUpdateWithWhereUniqueWithoutAssigneeInput = {
+    where: FormAssignmentWhereUniqueInput
+    data: XOR<FormAssignmentUpdateWithoutAssigneeInput, FormAssignmentUncheckedUpdateWithoutAssigneeInput>
+  }
+
+  export type FormAssignmentUpdateManyWithWhereWithoutAssigneeInput = {
+    where: FormAssignmentScalarWhereInput
+    data: XOR<FormAssignmentUpdateManyMutationInput, FormAssignmentUncheckedUpdateManyWithoutAssigneeInput>
+  }
+
+  export type FormAssignmentScalarWhereInput = {
+    AND?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
+    OR?: FormAssignmentScalarWhereInput[]
+    NOT?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
+    id?: StringFilter<"FormAssignment"> | string
+    reportId?: StringFilter<"FormAssignment"> | string
+    assigneeId?: StringFilter<"FormAssignment"> | string
+    assignedById?: StringFilter<"FormAssignment"> | string
+    metricIds?: StringNullableListFilter<"FormAssignment">
+    dueAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
+    cancelledAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
+    notes?: StringNullableFilter<"FormAssignment"> | string | null
+    createdAt?: DateTimeFilter<"FormAssignment"> | Date | string
+    updatedAt?: DateTimeFilter<"FormAssignment"> | Date | string
+  }
+
+  export type FormAssignmentUpsertWithWhereUniqueWithoutAssignedByInput = {
+    where: FormAssignmentWhereUniqueInput
+    update: XOR<FormAssignmentUpdateWithoutAssignedByInput, FormAssignmentUncheckedUpdateWithoutAssignedByInput>
+    create: XOR<FormAssignmentCreateWithoutAssignedByInput, FormAssignmentUncheckedCreateWithoutAssignedByInput>
+  }
+
+  export type FormAssignmentUpdateWithWhereUniqueWithoutAssignedByInput = {
+    where: FormAssignmentWhereUniqueInput
+    data: XOR<FormAssignmentUpdateWithoutAssignedByInput, FormAssignmentUncheckedUpdateWithoutAssignedByInput>
+  }
+
+  export type FormAssignmentUpdateManyWithWhereWithoutAssignedByInput = {
+    where: FormAssignmentScalarWhereInput
+    data: XOR<FormAssignmentUpdateManyMutationInput, FormAssignmentUncheckedUpdateManyWithoutAssignedByInput>
+  }
+
+  export type ImportJobUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: ImportJobWhereUniqueInput
+    update: XOR<ImportJobUpdateWithoutOwnerInput, ImportJobUncheckedUpdateWithoutOwnerInput>
+    create: XOR<ImportJobCreateWithoutOwnerInput, ImportJobUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type ImportJobUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: ImportJobWhereUniqueInput
+    data: XOR<ImportJobUpdateWithoutOwnerInput, ImportJobUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type ImportJobUpdateManyWithWhereWithoutOwnerInput = {
+    where: ImportJobScalarWhereInput
+    data: XOR<ImportJobUpdateManyMutationInput, ImportJobUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type ImportJobScalarWhereInput = {
+    AND?: ImportJobScalarWhereInput | ImportJobScalarWhereInput[]
+    OR?: ImportJobScalarWhereInput[]
+    NOT?: ImportJobScalarWhereInput | ImportJobScalarWhereInput[]
+    id?: StringFilter<"ImportJob"> | string
+    ownerId?: StringFilter<"ImportJob"> | string
+    templateId?: StringNullableFilter<"ImportJob"> | string | null
+    status?: EnumImportJobStatusFilter<"ImportJob"> | $Enums.ImportJobStatus
+    fileName?: StringNullableFilter<"ImportJob"> | string | null
+    fileMime?: StringNullableFilter<"ImportJob"> | string | null
+    fileBytes?: IntNullableFilter<"ImportJob"> | number | null
+    storageRef?: StringNullableFilter<"ImportJob"> | string | null
+    mappingProfileId?: StringNullableFilter<"ImportJob"> | string | null
+    mapping?: JsonNullableFilter<"ImportJob">
+    validationSummary?: JsonNullableFilter<"ImportJob">
+    commitSummary?: JsonNullableFilter<"ImportJob">
+    createdAt?: DateTimeFilter<"ImportJob"> | Date | string
+    updatedAt?: DateTimeFilter<"ImportJob"> | Date | string
+  }
+
+  export type ImportMappingProfileUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: ImportMappingProfileWhereUniqueInput
+    update: XOR<ImportMappingProfileUpdateWithoutOwnerInput, ImportMappingProfileUncheckedUpdateWithoutOwnerInput>
+    create: XOR<ImportMappingProfileCreateWithoutOwnerInput, ImportMappingProfileUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type ImportMappingProfileUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: ImportMappingProfileWhereUniqueInput
+    data: XOR<ImportMappingProfileUpdateWithoutOwnerInput, ImportMappingProfileUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type ImportMappingProfileUpdateManyWithWhereWithoutOwnerInput = {
+    where: ImportMappingProfileScalarWhereInput
+    data: XOR<ImportMappingProfileUpdateManyMutationInput, ImportMappingProfileUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type ImportMappingProfileScalarWhereInput = {
+    AND?: ImportMappingProfileScalarWhereInput | ImportMappingProfileScalarWhereInput[]
+    OR?: ImportMappingProfileScalarWhereInput[]
+    NOT?: ImportMappingProfileScalarWhereInput | ImportMappingProfileScalarWhereInput[]
+    id?: StringFilter<"ImportMappingProfile"> | string
+    ownerId?: StringFilter<"ImportMappingProfile"> | string
+    templateId?: StringNullableFilter<"ImportMappingProfile"> | string | null
+    name?: StringFilter<"ImportMappingProfile"> | string
+    mapping?: JsonFilter<"ImportMappingProfile">
+    createdAt?: DateTimeFilter<"ImportMappingProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"ImportMappingProfile"> | Date | string
+  }
+
+  export type BulkInviteBatchUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: BulkInviteBatchWhereUniqueInput
+    update: XOR<BulkInviteBatchUpdateWithoutCreatedByInput, BulkInviteBatchUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<BulkInviteBatchCreateWithoutCreatedByInput, BulkInviteBatchUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type BulkInviteBatchUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: BulkInviteBatchWhereUniqueInput
+    data: XOR<BulkInviteBatchUpdateWithoutCreatedByInput, BulkInviteBatchUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type BulkInviteBatchUpdateManyWithWhereWithoutCreatedByInput = {
+    where: BulkInviteBatchScalarWhereInput
+    data: XOR<BulkInviteBatchUpdateManyMutationInput, BulkInviteBatchUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type BulkInviteBatchScalarWhereInput = {
+    AND?: BulkInviteBatchScalarWhereInput | BulkInviteBatchScalarWhereInput[]
+    OR?: BulkInviteBatchScalarWhereInput[]
+    NOT?: BulkInviteBatchScalarWhereInput | BulkInviteBatchScalarWhereInput[]
+    id?: StringFilter<"BulkInviteBatch"> | string
+    createdById?: StringFilter<"BulkInviteBatch"> | string
+    kind?: EnumBulkInviteKindFilter<"BulkInviteBatch"> | $Enums.BulkInviteKind
+    sharedAttrs?: JsonNullableFilter<"BulkInviteBatch">
+    totalEntries?: IntFilter<"BulkInviteBatch"> | number
+    successCount?: IntFilter<"BulkInviteBatch"> | number
+    skippedCount?: IntFilter<"BulkInviteBatch"> | number
+    failedCount?: IntFilter<"BulkInviteBatch"> | number
+    createdAt?: DateTimeFilter<"BulkInviteBatch"> | Date | string
+    updatedAt?: DateTimeFilter<"BulkInviteBatch"> | Date | string
+  }
+
+  export type PwaPromptDismissalUpsertWithWhereUniqueWithoutUserInput = {
+    where: PwaPromptDismissalWhereUniqueInput
+    update: XOR<PwaPromptDismissalUpdateWithoutUserInput, PwaPromptDismissalUncheckedUpdateWithoutUserInput>
+    create: XOR<PwaPromptDismissalCreateWithoutUserInput, PwaPromptDismissalUncheckedCreateWithoutUserInput>
+  }
+
+  export type PwaPromptDismissalUpdateWithWhereUniqueWithoutUserInput = {
+    where: PwaPromptDismissalWhereUniqueInput
+    data: XOR<PwaPromptDismissalUpdateWithoutUserInput, PwaPromptDismissalUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PwaPromptDismissalUpdateManyWithWhereWithoutUserInput = {
+    where: PwaPromptDismissalScalarWhereInput
+    data: XOR<PwaPromptDismissalUpdateManyMutationInput, PwaPromptDismissalUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PwaPromptDismissalScalarWhereInput = {
+    AND?: PwaPromptDismissalScalarWhereInput | PwaPromptDismissalScalarWhereInput[]
+    OR?: PwaPromptDismissalScalarWhereInput[]
+    NOT?: PwaPromptDismissalScalarWhereInput | PwaPromptDismissalScalarWhereInput[]
+    id?: StringFilter<"PwaPromptDismissal"> | string
+    userId?: StringFilter<"PwaPromptDismissal"> | string
+    kind?: EnumPwaPromptKindFilter<"PwaPromptDismissal"> | $Enums.PwaPromptKind
+    platform?: EnumPwaPromptPlatformFilter<"PwaPromptDismissal"> | $Enums.PwaPromptPlatform
+    mode?: EnumPwaDismissalModeFilter<"PwaPromptDismissal"> | $Enums.PwaDismissalMode
+    nextEligibleAt?: DateTimeNullableFilter<"PwaPromptDismissal"> | Date | string | null
+    createdAt?: DateTimeFilter<"PwaPromptDismissal"> | Date | string
+    updatedAt?: DateTimeFilter<"PwaPromptDismissal"> | Date | string
+  }
+
+  export type UserActivationTokenUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserActivationTokenWhereUniqueInput
+    update: XOR<UserActivationTokenUpdateWithoutUserInput, UserActivationTokenUncheckedUpdateWithoutUserInput>
+    create: XOR<UserActivationTokenCreateWithoutUserInput, UserActivationTokenUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserActivationTokenUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserActivationTokenWhereUniqueInput
+    data: XOR<UserActivationTokenUpdateWithoutUserInput, UserActivationTokenUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserActivationTokenUpdateManyWithWhereWithoutUserInput = {
+    where: UserActivationTokenScalarWhereInput
+    data: XOR<UserActivationTokenUpdateManyMutationInput, UserActivationTokenUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserActivationTokenScalarWhereInput = {
+    AND?: UserActivationTokenScalarWhereInput | UserActivationTokenScalarWhereInput[]
+    OR?: UserActivationTokenScalarWhereInput[]
+    NOT?: UserActivationTokenScalarWhereInput | UserActivationTokenScalarWhereInput[]
+    id?: StringFilter<"UserActivationToken"> | string
+    userId?: StringFilter<"UserActivationToken"> | string
+    tokenHash?: StringFilter<"UserActivationToken"> | string
+    expiresAt?: DateTimeFilter<"UserActivationToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"UserActivationToken"> | Date | string | null
+    createdAt?: DateTimeFilter<"UserActivationToken"> | Date | string
+  }
+
   export type CampusUpsertWithoutUsersInput = {
     update: XOR<CampusUpdateWithoutUsersInput, CampusUncheckedUpdateWithoutUsersInput>
     create: XOR<CampusCreateWithoutUsersInput, CampusUncheckedCreateWithoutUsersInput>
@@ -48661,6 +62547,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -48713,6 +62607,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLedOrgGroupsInput = {
@@ -48743,6 +62645,7 @@ export namespace Prisma {
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
@@ -48782,6 +62685,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutOrgGroupInput = {
@@ -48841,6 +62745,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
   }
 
@@ -48892,6 +62804,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrgGroupInput = {
@@ -48993,6 +62913,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -49045,6 +62973,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReportUpsertWithWhereUniqueWithoutOrgGroupInput = {
@@ -49152,6 +63088,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -49204,6 +63148,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAdminedCampusesInput = {
@@ -49351,6 +63303,7 @@ export namespace Prisma {
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
     dataEntryBy?: UserCreateNestedOneWithoutDataEntryReportsInput
@@ -49390,6 +63343,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutCampusInput = {
@@ -49449,6 +63403,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
 
@@ -49500,6 +63462,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCampusInput = {
@@ -49569,6 +63539,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -49621,6 +63599,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrgGroupUpsertWithoutCampusesInput = {
@@ -49891,6 +63877,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -49943,6 +63937,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedTemplatesInput = {
@@ -49973,6 +63975,7 @@ export namespace Prisma {
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
@@ -50012,6 +64015,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutTemplateInput = {
@@ -50141,6 +64145,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -50193,6 +64205,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReportUpsertWithWhereUniqueWithoutTemplateInput = {
@@ -50658,6 +64678,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -50710,6 +64738,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedTemplateVersionsInput = {
@@ -50819,6 +64855,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -50871,6 +64915,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReportTemplateUpsertWithoutVersionsInput = {
@@ -51076,6 +65128,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FormAssignmentCreateWithoutReportInput = {
+    id?: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignee: UserCreateNestedOneWithoutFormAssignmentsReceivedInput
+    assignedBy: UserCreateNestedOneWithoutFormAssignmentsCreatedInput
+  }
+
+  export type FormAssignmentUncheckedCreateWithoutReportInput = {
+    id?: string
+    assigneeId: string
+    assignedById: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentCreateOrConnectWithoutReportInput = {
+    where: FormAssignmentWhereUniqueInput
+    create: XOR<FormAssignmentCreateWithoutReportInput, FormAssignmentUncheckedCreateWithoutReportInput>
+  }
+
+  export type FormAssignmentCreateManyReportInputEnvelope = {
+    data: FormAssignmentCreateManyReportInput | FormAssignmentCreateManyReportInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserCreateWithoutApprovedReportsInput = {
     id?: string
     organisationId?: string | null
@@ -51122,6 +65210,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -51174,6 +65270,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutApprovedReportsInput = {
@@ -51272,6 +65376,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -51324,6 +65436,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedReportsInput = {
@@ -51377,6 +65497,14 @@ export namespace Prisma {
     createdReports?: ReportCreateNestedManyWithoutCreatedByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -51429,6 +65557,14 @@ export namespace Prisma {
     createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDataEntryReportsInput = {
@@ -51515,6 +65651,14 @@ export namespace Prisma {
     createdReports?: ReportCreateNestedManyWithoutCreatedByInput
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -51567,6 +65711,14 @@ export namespace Prisma {
     createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewedReportsInput = {
@@ -51620,6 +65772,14 @@ export namespace Prisma {
     createdReports?: ReportCreateNestedManyWithoutCreatedByInput
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -51672,6 +65832,14 @@ export namespace Prisma {
     createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubmittedReportsInput = {
@@ -51814,6 +65982,22 @@ export namespace Prisma {
     data: XOR<ReportVersionUpdateManyMutationInput, ReportVersionUncheckedUpdateManyWithoutReportInput>
   }
 
+  export type FormAssignmentUpsertWithWhereUniqueWithoutReportInput = {
+    where: FormAssignmentWhereUniqueInput
+    update: XOR<FormAssignmentUpdateWithoutReportInput, FormAssignmentUncheckedUpdateWithoutReportInput>
+    create: XOR<FormAssignmentCreateWithoutReportInput, FormAssignmentUncheckedCreateWithoutReportInput>
+  }
+
+  export type FormAssignmentUpdateWithWhereUniqueWithoutReportInput = {
+    where: FormAssignmentWhereUniqueInput
+    data: XOR<FormAssignmentUpdateWithoutReportInput, FormAssignmentUncheckedUpdateWithoutReportInput>
+  }
+
+  export type FormAssignmentUpdateManyWithWhereWithoutReportInput = {
+    where: FormAssignmentScalarWhereInput
+    data: XOR<FormAssignmentUpdateManyMutationInput, FormAssignmentUncheckedUpdateManyWithoutReportInput>
+  }
+
   export type UserUpsertWithoutApprovedReportsInput = {
     update: XOR<UserUpdateWithoutApprovedReportsInput, UserUncheckedUpdateWithoutApprovedReportsInput>
     create: XOR<UserCreateWithoutApprovedReportsInput, UserUncheckedCreateWithoutApprovedReportsInput>
@@ -51871,6 +66055,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -51923,6 +66115,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CampusUpsertWithoutReportsInput = {
@@ -52033,6 +66233,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -52085,6 +66293,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutDataEntryReportsInput = {
@@ -52144,6 +66360,14 @@ export namespace Prisma {
     createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -52196,6 +66420,14 @@ export namespace Prisma {
     createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrgGroupUpsertWithoutReportsInput = {
@@ -52294,6 +66526,14 @@ export namespace Prisma {
     createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -52346,6 +66586,14 @@ export namespace Prisma {
     createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutSubmittedReportsInput = {
@@ -52405,6 +66653,14 @@ export namespace Prisma {
     createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -52457,6 +66713,14 @@ export namespace Prisma {
     createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReportTemplateUpsertWithoutReportsInput = {
@@ -52572,6 +66836,7 @@ export namespace Prisma {
     events?: ReportEventCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
@@ -52612,6 +66877,7 @@ export namespace Prisma {
     events?: ReportEventUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutSectionsInput = {
@@ -52668,6 +66934,7 @@ export namespace Prisma {
     events?: ReportEventUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
@@ -52708,6 +66975,7 @@ export namespace Prisma {
     events?: ReportEventUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type UserCreateWithoutLockedMetricsInput = {
@@ -52756,6 +67024,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -52808,6 +67084,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLockedMetricsInput = {
@@ -52932,6 +67216,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -52984,6 +67276,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReportSectionUpsertWithoutMetricsInput = {
@@ -53080,6 +67380,7 @@ export namespace Prisma {
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
@@ -53120,6 +67421,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutEditsInput = {
@@ -53173,6 +67475,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -53225,6 +67535,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewedEditsInput = {
@@ -53278,6 +67596,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -53330,6 +67656,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReportEditsInput = {
@@ -53370,6 +67704,7 @@ export namespace Prisma {
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
@@ -53410,6 +67745,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type UserUpsertWithoutReviewedEditsInput = {
@@ -53469,6 +67805,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -53521,6 +67865,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutReportEditsInput = {
@@ -53580,6 +67932,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -53632,6 +67992,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReportCreateWithoutUpdateRequestsInput = {
@@ -53656,6 +68024,7 @@ export namespace Prisma {
     events?: ReportEventCreateNestedManyWithoutReportInput
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
@@ -53696,6 +68065,7 @@ export namespace Prisma {
     events?: ReportEventUncheckedCreateNestedManyWithoutReportInput
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutUpdateRequestsInput = {
@@ -53749,6 +68119,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -53801,6 +68179,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReportUpdateRequestsInput = {
@@ -53854,6 +68240,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -53906,6 +68300,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewedUpdatesInput = {
@@ -53946,6 +68348,7 @@ export namespace Prisma {
     events?: ReportEventUpdateManyWithoutReportNestedInput
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
@@ -53986,6 +68389,7 @@ export namespace Prisma {
     events?: ReportEventUncheckedUpdateManyWithoutReportNestedInput
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type UserUpsertWithoutReportUpdateRequestsInput = {
@@ -54045,6 +68449,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -54097,6 +68509,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutReviewedUpdatesInput = {
@@ -54156,6 +68576,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -54208,6 +68636,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutReportEventsInput = {
@@ -54256,6 +68692,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -54308,6 +68752,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReportEventsInput = {
@@ -54337,6 +68789,7 @@ export namespace Prisma {
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
     versions?: ReportVersionCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
@@ -54377,6 +68830,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
     versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutEventsInput = {
@@ -54441,6 +68895,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -54493,6 +68955,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReportUpsertWithoutEventsInput = {
@@ -54528,6 +68998,7 @@ export namespace Prisma {
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
@@ -54568,6 +69039,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type UserCreateWithoutReportVersionsInput = {
@@ -54616,6 +69088,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -54668,6 +69148,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReportVersionsInput = {
@@ -54697,6 +69185,7 @@ export namespace Prisma {
     events?: ReportEventCreateNestedManyWithoutReportInput
     sections?: ReportSectionCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentCreateNestedManyWithoutReportInput
     approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
     campus: CampusCreateNestedOneWithoutReportsInput
     createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
@@ -54737,6 +69226,7 @@ export namespace Prisma {
     events?: ReportEventUncheckedCreateNestedManyWithoutReportInput
     sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
     updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
+    formAssignments?: FormAssignmentUncheckedCreateNestedManyWithoutReportInput
   }
 
   export type ReportCreateOrConnectWithoutVersionsInput = {
@@ -54801,6 +69291,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -54853,6 +69351,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReportUpsertWithoutVersionsInput = {
@@ -54888,6 +69394,7 @@ export namespace Prisma {
     events?: ReportEventUpdateManyWithoutReportNestedInput
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
@@ -54928,6 +69435,7 @@ export namespace Prisma {
     events?: ReportEventUncheckedUpdateManyWithoutReportNestedInput
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type GoalEditRequestCreateWithoutGoalInput = {
@@ -55055,6 +69563,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -55107,6 +69623,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGoalsInput = {
@@ -55160,6 +69684,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -55212,6 +69744,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLockedGoalsInput = {
@@ -55462,6 +70002,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -55514,6 +70062,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutLockedGoalsInput = {
@@ -55573,6 +70129,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -55625,6 +70189,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrgGroupUpsertWithoutGoalsInput = {
@@ -55853,6 +70425,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -55905,6 +70485,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGoalEditRequestsInput = {
@@ -55958,6 +70546,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -56010,6 +70606,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewedGoalEditsInput = {
@@ -56123,6 +70727,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -56175,6 +70787,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutReviewedGoalEditsInput = {
@@ -56234,6 +70854,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -56286,6 +70914,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CampusCreateWithoutMetricEntriesInput = {
@@ -56518,6 +71154,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -56570,6 +71214,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -56634,6 +71286,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -56686,6 +71346,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutEmailActionTokensInput = {
@@ -56734,6 +71402,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -56786,6 +71462,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEmailActionTokensInput = {
@@ -56850,6 +71534,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -56902,6 +71594,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutCreatedInviteLinksInput = {
@@ -56950,6 +71650,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -57002,11 +71710,50 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedInviteLinksInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutCreatedInviteLinksInput, UserUncheckedCreateWithoutCreatedInviteLinksInput>
+  }
+
+  export type BulkInviteBatchCreateWithoutInvitesInput = {
+    id?: string
+    kind: $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: number
+    successCount?: number
+    skippedCount?: number
+    failedCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy: UserCreateNestedOneWithoutBulkInviteBatchesInput
+  }
+
+  export type BulkInviteBatchUncheckedCreateWithoutInvitesInput = {
+    id?: string
+    createdById: string
+    kind: $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: number
+    successCount?: number
+    skippedCount?: number
+    failedCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BulkInviteBatchCreateOrConnectWithoutInvitesInput = {
+    where: BulkInviteBatchWhereUniqueInput
+    create: XOR<BulkInviteBatchCreateWithoutInvitesInput, BulkInviteBatchUncheckedCreateWithoutInvitesInput>
   }
 
   export type UserUpsertWithoutCreatedInviteLinksInput = {
@@ -57066,6 +71813,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -57118,6 +71873,51 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type BulkInviteBatchUpsertWithoutInvitesInput = {
+    update: XOR<BulkInviteBatchUpdateWithoutInvitesInput, BulkInviteBatchUncheckedUpdateWithoutInvitesInput>
+    create: XOR<BulkInviteBatchCreateWithoutInvitesInput, BulkInviteBatchUncheckedCreateWithoutInvitesInput>
+    where?: BulkInviteBatchWhereInput
+  }
+
+  export type BulkInviteBatchUpdateToOneWithWhereWithoutInvitesInput = {
+    where?: BulkInviteBatchWhereInput
+    data: XOR<BulkInviteBatchUpdateWithoutInvitesInput, BulkInviteBatchUncheckedUpdateWithoutInvitesInput>
+  }
+
+  export type BulkInviteBatchUpdateWithoutInvitesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumBulkInviteKindFieldUpdateOperationsInput | $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    skippedCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneRequiredWithoutBulkInviteBatchesNestedInput
+  }
+
+  export type BulkInviteBatchUncheckedUpdateWithoutInvitesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    kind?: EnumBulkInviteKindFieldUpdateOperationsInput | $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    skippedCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateWithoutBugReportsInput = {
@@ -57166,6 +71966,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -57218,6 +72026,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBugReportsInput = {
@@ -57341,6 +72157,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -57393,6 +72217,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MediaAssetUpsertWithoutBugReportsAsScreenshotInput = {
@@ -57506,6 +72338,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -57558,6 +72398,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMediaAssetsInput = {
@@ -57730,6 +72578,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -57782,6 +72638,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BugReportUpsertWithWhereUniqueWithoutScreenshotAssetInput = {
@@ -57878,6 +72742,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -57930,6 +72802,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAssetUploadSessionsInput = {
@@ -58083,6 +72963,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -58135,6 +73023,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MediaAssetUpsertWithoutUploadSessionsInput = {
@@ -58360,6 +73256,14 @@ export namespace Prisma {
     dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
     campus?: CampusCreateNestedOneWithoutUsersInput
     orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
   }
@@ -58412,6 +73316,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
     reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAssetLifecycleEventsInput = {
@@ -58584,6 +73496,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
@@ -58636,6 +73556,2466 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutAdminConfigEntriesInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutAdminConfigEntriesInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAdminConfigEntriesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAdminConfigEntriesInput, UserUncheckedCreateWithoutAdminConfigEntriesInput>
+  }
+
+  export type UserUpsertWithoutAdminConfigEntriesInput = {
+    update: XOR<UserUpdateWithoutAdminConfigEntriesInput, UserUncheckedUpdateWithoutAdminConfigEntriesInput>
+    create: XOR<UserCreateWithoutAdminConfigEntriesInput, UserUncheckedCreateWithoutAdminConfigEntriesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAdminConfigEntriesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAdminConfigEntriesInput, UserUncheckedUpdateWithoutAdminConfigEntriesInput>
+  }
+
+  export type UserUpdateWithoutAdminConfigEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAdminConfigEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ReportCreateWithoutFormAssignmentsInput = {
+    id?: string
+    organisationId?: string | null
+    title?: string | null
+    templateVersionId?: string | null
+    period?: string | null
+    periodType: $Enums.ReportPeriodType
+    periodYear: number
+    periodMonth?: number | null
+    periodWeek?: number | null
+    status?: $Enums.ReportStatus
+    deadline?: Date | string | null
+    lockedAt?: Date | string | null
+    isDataEntry?: boolean
+    dataEntryDate?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    edits?: ReportEditCreateNestedManyWithoutReportInput
+    events?: ReportEventCreateNestedManyWithoutReportInput
+    sections?: ReportSectionCreateNestedManyWithoutReportInput
+    updateRequests?: ReportUpdateRequestCreateNestedManyWithoutReportInput
+    versions?: ReportVersionCreateNestedManyWithoutReportInput
+    approvedBy?: UserCreateNestedOneWithoutApprovedReportsInput
+    campus: CampusCreateNestedOneWithoutReportsInput
+    createdBy?: UserCreateNestedOneWithoutCreatedReportsInput
+    dataEntryBy?: UserCreateNestedOneWithoutDataEntryReportsInput
+    orgGroup: OrgGroupCreateNestedOneWithoutReportsInput
+    reviewedBy?: UserCreateNestedOneWithoutReviewedReportsInput
+    submittedBy?: UserCreateNestedOneWithoutSubmittedReportsInput
+    template: ReportTemplateCreateNestedOneWithoutReportsInput
+  }
+
+  export type ReportUncheckedCreateWithoutFormAssignmentsInput = {
+    id?: string
+    organisationId?: string | null
+    title?: string | null
+    templateId: string
+    templateVersionId?: string | null
+    campusId: string
+    orgGroupId: string
+    period?: string | null
+    periodType: $Enums.ReportPeriodType
+    periodYear: number
+    periodMonth?: number | null
+    periodWeek?: number | null
+    status?: $Enums.ReportStatus
+    createdById?: string | null
+    submittedById?: string | null
+    reviewedById?: string | null
+    approvedById?: string | null
+    deadline?: Date | string | null
+    lockedAt?: Date | string | null
+    isDataEntry?: boolean
+    dataEntryById?: string | null
+    dataEntryDate?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
+    events?: ReportEventUncheckedCreateNestedManyWithoutReportInput
+    sections?: ReportSectionUncheckedCreateNestedManyWithoutReportInput
+    updateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReportInput
+    versions?: ReportVersionUncheckedCreateNestedManyWithoutReportInput
+  }
+
+  export type ReportCreateOrConnectWithoutFormAssignmentsInput = {
+    where: ReportWhereUniqueInput
+    create: XOR<ReportCreateWithoutFormAssignmentsInput, ReportUncheckedCreateWithoutFormAssignmentsInput>
+  }
+
+  export type UserCreateWithoutFormAssignmentsReceivedInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutFormAssignmentsReceivedInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFormAssignmentsReceivedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFormAssignmentsReceivedInput, UserUncheckedCreateWithoutFormAssignmentsReceivedInput>
+  }
+
+  export type UserCreateWithoutFormAssignmentsCreatedInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutFormAssignmentsCreatedInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFormAssignmentsCreatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFormAssignmentsCreatedInput, UserUncheckedCreateWithoutFormAssignmentsCreatedInput>
+  }
+
+  export type ReportUpsertWithoutFormAssignmentsInput = {
+    update: XOR<ReportUpdateWithoutFormAssignmentsInput, ReportUncheckedUpdateWithoutFormAssignmentsInput>
+    create: XOR<ReportCreateWithoutFormAssignmentsInput, ReportUncheckedCreateWithoutFormAssignmentsInput>
+    where?: ReportWhereInput
+  }
+
+  export type ReportUpdateToOneWithWhereWithoutFormAssignmentsInput = {
+    where?: ReportWhereInput
+    data: XOR<ReportUpdateWithoutFormAssignmentsInput, ReportUncheckedUpdateWithoutFormAssignmentsInput>
+  }
+
+  export type ReportUpdateWithoutFormAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    templateVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    period?: NullableStringFieldUpdateOperationsInput | string | null
+    periodType?: EnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodMonth?: NullableIntFieldUpdateOperationsInput | number | null
+    periodWeek?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDataEntry?: BoolFieldUpdateOperationsInput | boolean
+    dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    edits?: ReportEditUpdateManyWithoutReportNestedInput
+    events?: ReportEventUpdateManyWithoutReportNestedInput
+    sections?: ReportSectionUpdateManyWithoutReportNestedInput
+    updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
+    versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
+    campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
+    createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
+    dataEntryBy?: UserUpdateOneWithoutDataEntryReportsNestedInput
+    orgGroup?: OrgGroupUpdateOneRequiredWithoutReportsNestedInput
+    reviewedBy?: UserUpdateOneWithoutReviewedReportsNestedInput
+    submittedBy?: UserUpdateOneWithoutSubmittedReportsNestedInput
+    template?: ReportTemplateUpdateOneRequiredWithoutReportsNestedInput
+  }
+
+  export type ReportUncheckedUpdateWithoutFormAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    templateId?: StringFieldUpdateOperationsInput | string
+    templateVersionId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusId?: StringFieldUpdateOperationsInput | string
+    orgGroupId?: StringFieldUpdateOperationsInput | string
+    period?: NullableStringFieldUpdateOperationsInput | string | null
+    periodType?: EnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType
+    periodYear?: IntFieldUpdateOperationsInput | number
+    periodMonth?: NullableIntFieldUpdateOperationsInput | number | null
+    periodWeek?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumReportStatusFieldUpdateOperationsInput | $Enums.ReportStatus
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    submittedById?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedById?: NullableStringFieldUpdateOperationsInput | string | null
+    deadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDataEntry?: BoolFieldUpdateOperationsInput | boolean
+    dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
+    dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
+    events?: ReportEventUncheckedUpdateManyWithoutReportNestedInput
+    sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
+    updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
+    versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+  }
+
+  export type UserUpsertWithoutFormAssignmentsReceivedInput = {
+    update: XOR<UserUpdateWithoutFormAssignmentsReceivedInput, UserUncheckedUpdateWithoutFormAssignmentsReceivedInput>
+    create: XOR<UserCreateWithoutFormAssignmentsReceivedInput, UserUncheckedCreateWithoutFormAssignmentsReceivedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFormAssignmentsReceivedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFormAssignmentsReceivedInput, UserUncheckedUpdateWithoutFormAssignmentsReceivedInput>
+  }
+
+  export type UserUpdateWithoutFormAssignmentsReceivedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFormAssignmentsReceivedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithoutFormAssignmentsCreatedInput = {
+    update: XOR<UserUpdateWithoutFormAssignmentsCreatedInput, UserUncheckedUpdateWithoutFormAssignmentsCreatedInput>
+    create: XOR<UserCreateWithoutFormAssignmentsCreatedInput, UserUncheckedCreateWithoutFormAssignmentsCreatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFormAssignmentsCreatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFormAssignmentsCreatedInput, UserUncheckedUpdateWithoutFormAssignmentsCreatedInput>
+  }
+
+  export type UserUpdateWithoutFormAssignmentsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFormAssignmentsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutImportJobsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutImportJobsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutImportJobsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutImportJobsInput, UserUncheckedCreateWithoutImportJobsInput>
+  }
+
+  export type ImportMappingProfileCreateWithoutJobsInput = {
+    id?: string
+    templateId?: string | null
+    name: string
+    mapping: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutImportMappingProfilesInput
+  }
+
+  export type ImportMappingProfileUncheckedCreateWithoutJobsInput = {
+    id?: string
+    ownerId: string
+    templateId?: string | null
+    name: string
+    mapping: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ImportMappingProfileCreateOrConnectWithoutJobsInput = {
+    where: ImportMappingProfileWhereUniqueInput
+    create: XOR<ImportMappingProfileCreateWithoutJobsInput, ImportMappingProfileUncheckedCreateWithoutJobsInput>
+  }
+
+  export type ImportJobItemCreateWithoutJobInput = {
+    id?: string
+    rowIndex: number
+    rawValues: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: $Enums.ImportRowOutcome
+    errors?: ImportJobItemCreateerrorsInput | string[]
+    createdAt?: Date | string
+  }
+
+  export type ImportJobItemUncheckedCreateWithoutJobInput = {
+    id?: string
+    rowIndex: number
+    rawValues: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: $Enums.ImportRowOutcome
+    errors?: ImportJobItemCreateerrorsInput | string[]
+    createdAt?: Date | string
+  }
+
+  export type ImportJobItemCreateOrConnectWithoutJobInput = {
+    where: ImportJobItemWhereUniqueInput
+    create: XOR<ImportJobItemCreateWithoutJobInput, ImportJobItemUncheckedCreateWithoutJobInput>
+  }
+
+  export type ImportJobItemCreateManyJobInputEnvelope = {
+    data: ImportJobItemCreateManyJobInput | ImportJobItemCreateManyJobInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutImportJobsInput = {
+    update: XOR<UserUpdateWithoutImportJobsInput, UserUncheckedUpdateWithoutImportJobsInput>
+    create: XOR<UserCreateWithoutImportJobsInput, UserUncheckedCreateWithoutImportJobsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutImportJobsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutImportJobsInput, UserUncheckedUpdateWithoutImportJobsInput>
+  }
+
+  export type UserUpdateWithoutImportJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutImportJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ImportMappingProfileUpsertWithoutJobsInput = {
+    update: XOR<ImportMappingProfileUpdateWithoutJobsInput, ImportMappingProfileUncheckedUpdateWithoutJobsInput>
+    create: XOR<ImportMappingProfileCreateWithoutJobsInput, ImportMappingProfileUncheckedCreateWithoutJobsInput>
+    where?: ImportMappingProfileWhereInput
+  }
+
+  export type ImportMappingProfileUpdateToOneWithWhereWithoutJobsInput = {
+    where?: ImportMappingProfileWhereInput
+    data: XOR<ImportMappingProfileUpdateWithoutJobsInput, ImportMappingProfileUncheckedUpdateWithoutJobsInput>
+  }
+
+  export type ImportMappingProfileUpdateWithoutJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    mapping?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutImportMappingProfilesNestedInput
+  }
+
+  export type ImportMappingProfileUncheckedUpdateWithoutJobsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    mapping?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportJobItemUpsertWithWhereUniqueWithoutJobInput = {
+    where: ImportJobItemWhereUniqueInput
+    update: XOR<ImportJobItemUpdateWithoutJobInput, ImportJobItemUncheckedUpdateWithoutJobInput>
+    create: XOR<ImportJobItemCreateWithoutJobInput, ImportJobItemUncheckedCreateWithoutJobInput>
+  }
+
+  export type ImportJobItemUpdateWithWhereUniqueWithoutJobInput = {
+    where: ImportJobItemWhereUniqueInput
+    data: XOR<ImportJobItemUpdateWithoutJobInput, ImportJobItemUncheckedUpdateWithoutJobInput>
+  }
+
+  export type ImportJobItemUpdateManyWithWhereWithoutJobInput = {
+    where: ImportJobItemScalarWhereInput
+    data: XOR<ImportJobItemUpdateManyMutationInput, ImportJobItemUncheckedUpdateManyWithoutJobInput>
+  }
+
+  export type ImportJobItemScalarWhereInput = {
+    AND?: ImportJobItemScalarWhereInput | ImportJobItemScalarWhereInput[]
+    OR?: ImportJobItemScalarWhereInput[]
+    NOT?: ImportJobItemScalarWhereInput | ImportJobItemScalarWhereInput[]
+    id?: StringFilter<"ImportJobItem"> | string
+    jobId?: StringFilter<"ImportJobItem"> | string
+    rowIndex?: IntFilter<"ImportJobItem"> | number
+    rawValues?: JsonFilter<"ImportJobItem">
+    normalizedValues?: JsonNullableFilter<"ImportJobItem">
+    outcome?: EnumImportRowOutcomeFilter<"ImportJobItem"> | $Enums.ImportRowOutcome
+    errors?: StringNullableListFilter<"ImportJobItem">
+    createdAt?: DateTimeFilter<"ImportJobItem"> | Date | string
+  }
+
+  export type ImportJobCreateWithoutItemsInput = {
+    id?: string
+    templateId?: string | null
+    status?: $Enums.ImportJobStatus
+    fileName?: string | null
+    fileMime?: string | null
+    fileBytes?: number | null
+    storageRef?: string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutImportJobsInput
+    mappingProfile?: ImportMappingProfileCreateNestedOneWithoutJobsInput
+  }
+
+  export type ImportJobUncheckedCreateWithoutItemsInput = {
+    id?: string
+    ownerId: string
+    templateId?: string | null
+    status?: $Enums.ImportJobStatus
+    fileName?: string | null
+    fileMime?: string | null
+    fileBytes?: number | null
+    storageRef?: string | null
+    mappingProfileId?: string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ImportJobCreateOrConnectWithoutItemsInput = {
+    where: ImportJobWhereUniqueInput
+    create: XOR<ImportJobCreateWithoutItemsInput, ImportJobUncheckedCreateWithoutItemsInput>
+  }
+
+  export type ImportJobUpsertWithoutItemsInput = {
+    update: XOR<ImportJobUpdateWithoutItemsInput, ImportJobUncheckedUpdateWithoutItemsInput>
+    create: XOR<ImportJobCreateWithoutItemsInput, ImportJobUncheckedCreateWithoutItemsInput>
+    where?: ImportJobWhereInput
+  }
+
+  export type ImportJobUpdateToOneWithWhereWithoutItemsInput = {
+    where?: ImportJobWhereInput
+    data: XOR<ImportJobUpdateWithoutItemsInput, ImportJobUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type ImportJobUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutImportJobsNestedInput
+    mappingProfile?: ImportMappingProfileUpdateOneWithoutJobsNestedInput
+  }
+
+  export type ImportJobUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mappingProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutImportMappingProfilesInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutImportMappingProfilesInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutImportMappingProfilesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutImportMappingProfilesInput, UserUncheckedCreateWithoutImportMappingProfilesInput>
+  }
+
+  export type ImportJobCreateWithoutMappingProfileInput = {
+    id?: string
+    templateId?: string | null
+    status?: $Enums.ImportJobStatus
+    fileName?: string | null
+    fileMime?: string | null
+    fileBytes?: number | null
+    storageRef?: string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutImportJobsInput
+    items?: ImportJobItemCreateNestedManyWithoutJobInput
+  }
+
+  export type ImportJobUncheckedCreateWithoutMappingProfileInput = {
+    id?: string
+    ownerId: string
+    templateId?: string | null
+    status?: $Enums.ImportJobStatus
+    fileName?: string | null
+    fileMime?: string | null
+    fileBytes?: number | null
+    storageRef?: string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: ImportJobItemUncheckedCreateNestedManyWithoutJobInput
+  }
+
+  export type ImportJobCreateOrConnectWithoutMappingProfileInput = {
+    where: ImportJobWhereUniqueInput
+    create: XOR<ImportJobCreateWithoutMappingProfileInput, ImportJobUncheckedCreateWithoutMappingProfileInput>
+  }
+
+  export type ImportJobCreateManyMappingProfileInputEnvelope = {
+    data: ImportJobCreateManyMappingProfileInput | ImportJobCreateManyMappingProfileInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutImportMappingProfilesInput = {
+    update: XOR<UserUpdateWithoutImportMappingProfilesInput, UserUncheckedUpdateWithoutImportMappingProfilesInput>
+    create: XOR<UserCreateWithoutImportMappingProfilesInput, UserUncheckedCreateWithoutImportMappingProfilesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutImportMappingProfilesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutImportMappingProfilesInput, UserUncheckedUpdateWithoutImportMappingProfilesInput>
+  }
+
+  export type UserUpdateWithoutImportMappingProfilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutImportMappingProfilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ImportJobUpsertWithWhereUniqueWithoutMappingProfileInput = {
+    where: ImportJobWhereUniqueInput
+    update: XOR<ImportJobUpdateWithoutMappingProfileInput, ImportJobUncheckedUpdateWithoutMappingProfileInput>
+    create: XOR<ImportJobCreateWithoutMappingProfileInput, ImportJobUncheckedCreateWithoutMappingProfileInput>
+  }
+
+  export type ImportJobUpdateWithWhereUniqueWithoutMappingProfileInput = {
+    where: ImportJobWhereUniqueInput
+    data: XOR<ImportJobUpdateWithoutMappingProfileInput, ImportJobUncheckedUpdateWithoutMappingProfileInput>
+  }
+
+  export type ImportJobUpdateManyWithWhereWithoutMappingProfileInput = {
+    where: ImportJobScalarWhereInput
+    data: XOR<ImportJobUpdateManyMutationInput, ImportJobUncheckedUpdateManyWithoutMappingProfileInput>
+  }
+
+  export type UserCreateWithoutBulkInviteBatchesInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutBulkInviteBatchesInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutBulkInviteBatchesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBulkInviteBatchesInput, UserUncheckedCreateWithoutBulkInviteBatchesInput>
+  }
+
+  export type InviteLinkCreateWithoutBatchInput = {
+    id?: string
+    token: string
+    type: $Enums.InviteLinkType
+    targetId?: string | null
+    targetRole?: $Enums.UserRole | null
+    campusId?: string | null
+    groupId?: string | null
+    note?: string | null
+    usedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    isActive?: boolean
+    recipientEmail?: string | null
+    createdAt?: Date | string
+    createdBy: UserCreateNestedOneWithoutCreatedInviteLinksInput
+  }
+
+  export type InviteLinkUncheckedCreateWithoutBatchInput = {
+    id?: string
+    token: string
+    type: $Enums.InviteLinkType
+    targetId?: string | null
+    targetRole?: $Enums.UserRole | null
+    campusId?: string | null
+    groupId?: string | null
+    note?: string | null
+    createdById: string
+    usedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    isActive?: boolean
+    recipientEmail?: string | null
+    createdAt?: Date | string
+  }
+
+  export type InviteLinkCreateOrConnectWithoutBatchInput = {
+    where: InviteLinkWhereUniqueInput
+    create: XOR<InviteLinkCreateWithoutBatchInput, InviteLinkUncheckedCreateWithoutBatchInput>
+  }
+
+  export type InviteLinkCreateManyBatchInputEnvelope = {
+    data: InviteLinkCreateManyBatchInput | InviteLinkCreateManyBatchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutBulkInviteBatchesInput = {
+    update: XOR<UserUpdateWithoutBulkInviteBatchesInput, UserUncheckedUpdateWithoutBulkInviteBatchesInput>
+    create: XOR<UserCreateWithoutBulkInviteBatchesInput, UserUncheckedCreateWithoutBulkInviteBatchesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBulkInviteBatchesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBulkInviteBatchesInput, UserUncheckedUpdateWithoutBulkInviteBatchesInput>
+  }
+
+  export type UserUpdateWithoutBulkInviteBatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBulkInviteBatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type InviteLinkUpsertWithWhereUniqueWithoutBatchInput = {
+    where: InviteLinkWhereUniqueInput
+    update: XOR<InviteLinkUpdateWithoutBatchInput, InviteLinkUncheckedUpdateWithoutBatchInput>
+    create: XOR<InviteLinkCreateWithoutBatchInput, InviteLinkUncheckedCreateWithoutBatchInput>
+  }
+
+  export type InviteLinkUpdateWithWhereUniqueWithoutBatchInput = {
+    where: InviteLinkWhereUniqueInput
+    data: XOR<InviteLinkUpdateWithoutBatchInput, InviteLinkUncheckedUpdateWithoutBatchInput>
+  }
+
+  export type InviteLinkUpdateManyWithWhereWithoutBatchInput = {
+    where: InviteLinkScalarWhereInput
+    data: XOR<InviteLinkUpdateManyMutationInput, InviteLinkUncheckedUpdateManyWithoutBatchInput>
+  }
+
+  export type UserCreateWithoutPwaPromptDismissalsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutPwaPromptDismissalsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPwaPromptDismissalsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPwaPromptDismissalsInput, UserUncheckedCreateWithoutPwaPromptDismissalsInput>
+  }
+
+  export type UserUpsertWithoutPwaPromptDismissalsInput = {
+    update: XOR<UserUpdateWithoutPwaPromptDismissalsInput, UserUncheckedUpdateWithoutPwaPromptDismissalsInput>
+    create: XOR<UserCreateWithoutPwaPromptDismissalsInput, UserUncheckedCreateWithoutPwaPromptDismissalsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPwaPromptDismissalsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPwaPromptDismissalsInput, UserUncheckedUpdateWithoutPwaPromptDismissalsInput>
+  }
+
+  export type UserUpdateWithoutPwaPromptDismissalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPwaPromptDismissalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutActivationTokensInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutActivationTokensInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutActivationTokensInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutActivationTokensInput, UserUncheckedCreateWithoutActivationTokensInput>
+  }
+
+  export type UserUpsertWithoutActivationTokensInput = {
+    update: XOR<UserUpdateWithoutActivationTokensInput, UserUncheckedUpdateWithoutActivationTokensInput>
+    create: XOR<UserCreateWithoutActivationTokensInput, UserUncheckedCreateWithoutActivationTokensInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutActivationTokensInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutActivationTokensInput, UserUncheckedUpdateWithoutActivationTokensInput>
+  }
+
+  export type UserUpdateWithoutActivationTokensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutActivationTokensInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BugReportCreateManyCreatedByInput = {
@@ -58739,6 +76119,8 @@ export namespace Prisma {
     usedAt?: Date | string | null
     expiresAt?: Date | string | null
     isActive?: boolean
+    recipientEmail?: string | null
+    batchId?: string | null
     createdAt?: Date | string
   }
 
@@ -59067,6 +76449,97 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type AdminConfigEntryCreateManyActorInput = {
+    id?: string
+    namespace: string
+    version?: number
+    payload: JsonNullValueInput | InputJsonValue
+    isFallback?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type FormAssignmentCreateManyAssigneeInput = {
+    id?: string
+    reportId: string
+    assignedById: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentCreateManyAssignedByInput = {
+    id?: string
+    reportId: string
+    assigneeId: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ImportJobCreateManyOwnerInput = {
+    id?: string
+    templateId?: string | null
+    status?: $Enums.ImportJobStatus
+    fileName?: string | null
+    fileMime?: string | null
+    fileBytes?: number | null
+    storageRef?: string | null
+    mappingProfileId?: string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ImportMappingProfileCreateManyOwnerInput = {
+    id?: string
+    templateId?: string | null
+    name: string
+    mapping: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BulkInviteBatchCreateManyCreatedByInput = {
+    id?: string
+    kind: $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: number
+    successCount?: number
+    skippedCount?: number
+    failedCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PwaPromptDismissalCreateManyUserInput = {
+    id?: string
+    kind: $Enums.PwaPromptKind
+    platform: $Enums.PwaPromptPlatform
+    mode?: $Enums.PwaDismissalMode
+    nextEligibleAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserActivationTokenCreateManyUserInput = {
+    id?: string
+    tokenHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
   export type BugReportUpdateWithoutCreatedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     category?: EnumBugReportCategoryFieldUpdateOperationsInput | $Enums.BugReportCategory
@@ -59358,7 +76831,9 @@ export namespace Prisma {
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    batch?: BulkInviteBatchUpdateOneWithoutInvitesNestedInput
   }
 
   export type InviteLinkUncheckedUpdateWithoutCreatedByInput = {
@@ -59373,6 +76848,8 @@ export namespace Prisma {
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -59388,6 +76865,8 @@ export namespace Prisma {
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -60008,6 +77487,7 @@ export namespace Prisma {
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
     dataEntryBy?: UserUpdateOneWithoutDataEntryReportsNestedInput
@@ -60047,6 +77527,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateManyWithoutApprovedByInput = {
@@ -60099,6 +77580,7 @@ export namespace Prisma {
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     dataEntryBy?: UserUpdateOneWithoutDataEntryReportsNestedInput
@@ -60138,6 +77620,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateManyWithoutCreatedByInput = {
@@ -60190,6 +77673,7 @@ export namespace Prisma {
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
@@ -60229,6 +77713,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateManyWithoutDataEntryByInput = {
@@ -60281,6 +77766,7 @@ export namespace Prisma {
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
@@ -60320,6 +77806,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateManyWithoutReviewedByInput = {
@@ -60372,6 +77859,7 @@ export namespace Prisma {
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
@@ -60411,6 +77899,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateManyWithoutSubmittedByInput = {
@@ -60438,6 +77927,285 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminConfigEntryUpdateWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    namespace?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    payload?: JsonNullValueInput | InputJsonValue
+    isFallback?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminConfigEntryUncheckedUpdateWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    namespace?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    payload?: JsonNullValueInput | InputJsonValue
+    isFallback?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminConfigEntryUncheckedUpdateManyWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    namespace?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    payload?: JsonNullValueInput | InputJsonValue
+    isFallback?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentUpdateWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    report?: ReportUpdateOneRequiredWithoutFormAssignmentsNestedInput
+    assignedBy?: UserUpdateOneRequiredWithoutFormAssignmentsCreatedNestedInput
+  }
+
+  export type FormAssignmentUncheckedUpdateWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentUncheckedUpdateManyWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentUpdateWithoutAssignedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    report?: ReportUpdateOneRequiredWithoutFormAssignmentsNestedInput
+    assignee?: UserUpdateOneRequiredWithoutFormAssignmentsReceivedNestedInput
+  }
+
+  export type FormAssignmentUncheckedUpdateWithoutAssignedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    assigneeId?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentUncheckedUpdateManyWithoutAssignedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    assigneeId?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportJobUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    mappingProfile?: ImportMappingProfileUpdateOneWithoutJobsNestedInput
+    items?: ImportJobItemUpdateManyWithoutJobNestedInput
+  }
+
+  export type ImportJobUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mappingProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ImportJobItemUncheckedUpdateManyWithoutJobNestedInput
+  }
+
+  export type ImportJobUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mappingProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportMappingProfileUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    mapping?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    jobs?: ImportJobUpdateManyWithoutMappingProfileNestedInput
+  }
+
+  export type ImportMappingProfileUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    mapping?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    jobs?: ImportJobUncheckedUpdateManyWithoutMappingProfileNestedInput
+  }
+
+  export type ImportMappingProfileUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    mapping?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BulkInviteBatchUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumBulkInviteKindFieldUpdateOperationsInput | $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    skippedCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invites?: InviteLinkUpdateManyWithoutBatchNestedInput
+  }
+
+  export type BulkInviteBatchUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumBulkInviteKindFieldUpdateOperationsInput | $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    skippedCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    invites?: InviteLinkUncheckedUpdateManyWithoutBatchNestedInput
+  }
+
+  export type BulkInviteBatchUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumBulkInviteKindFieldUpdateOperationsInput | $Enums.BulkInviteKind
+    sharedAttrs?: NullableJsonNullValueInput | InputJsonValue
+    totalEntries?: IntFieldUpdateOperationsInput | number
+    successCount?: IntFieldUpdateOperationsInput | number
+    skippedCount?: IntFieldUpdateOperationsInput | number
+    failedCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PwaPromptDismissalUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumPwaPromptKindFieldUpdateOperationsInput | $Enums.PwaPromptKind
+    platform?: EnumPwaPromptPlatformFieldUpdateOperationsInput | $Enums.PwaPromptPlatform
+    mode?: EnumPwaDismissalModeFieldUpdateOperationsInput | $Enums.PwaDismissalMode
+    nextEligibleAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PwaPromptDismissalUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumPwaPromptKindFieldUpdateOperationsInput | $Enums.PwaPromptKind
+    platform?: EnumPwaPromptPlatformFieldUpdateOperationsInput | $Enums.PwaPromptPlatform
+    mode?: EnumPwaDismissalModeFieldUpdateOperationsInput | $Enums.PwaDismissalMode
+    nextEligibleAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PwaPromptDismissalUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    kind?: EnumPwaPromptKindFieldUpdateOperationsInput | $Enums.PwaPromptKind
+    platform?: EnumPwaPromptPlatformFieldUpdateOperationsInput | $Enums.PwaPromptPlatform
+    mode?: EnumPwaDismissalModeFieldUpdateOperationsInput | $Enums.PwaDismissalMode
+    nextEligibleAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivationTokenUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivationTokenUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserActivationTokenUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CampusCreateManyOrgGroupInput = {
@@ -60659,6 +78427,7 @@ export namespace Prisma {
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
@@ -60698,6 +78467,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateManyWithoutOrgGroupInput = {
@@ -60774,6 +78544,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     campus?: CampusUpdateOneWithoutUsersNestedInput
   }
 
@@ -60825,6 +78603,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutOrgGroupInput = {
@@ -61049,6 +78835,7 @@ export namespace Prisma {
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
     dataEntryBy?: UserUpdateOneWithoutDataEntryReportsNestedInput
@@ -61088,6 +78875,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateManyWithoutCampusInput = {
@@ -61164,6 +78952,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
     orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
   }
 
@@ -61215,6 +79011,14 @@ export namespace Prisma {
     dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
     reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutCampusInput = {
@@ -61430,6 +79234,7 @@ export namespace Prisma {
     sections?: ReportSectionUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUpdateManyWithoutReportNestedInput
     approvedBy?: UserUpdateOneWithoutApprovedReportsNestedInput
     campus?: CampusUpdateOneRequiredWithoutReportsNestedInput
     createdBy?: UserUpdateOneWithoutCreatedReportsNestedInput
@@ -61469,6 +79274,7 @@ export namespace Prisma {
     sections?: ReportSectionUncheckedUpdateManyWithoutReportNestedInput
     updateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutReportNestedInput
     versions?: ReportVersionUncheckedUpdateManyWithoutReportNestedInput
+    formAssignments?: FormAssignmentUncheckedUpdateManyWithoutReportNestedInput
   }
 
   export type ReportUncheckedUpdateManyWithoutTemplateInput = {
@@ -61800,6 +79606,19 @@ export namespace Prisma {
     reason?: string | null
   }
 
+  export type FormAssignmentCreateManyReportInput = {
+    id?: string
+    assigneeId: string
+    assignedById: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ReportEditUpdateWithoutReportInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumReportEditStatusFieldUpdateOperationsInput | $Enums.ReportEditStatus
@@ -61950,6 +79769,45 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdById?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FormAssignmentUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignee?: UserUpdateOneRequiredWithoutFormAssignmentsReceivedNestedInput
+    assignedBy?: UserUpdateOneRequiredWithoutFormAssignmentsCreatedNestedInput
+  }
+
+  export type FormAssignmentUncheckedUpdateWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    assigneeId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentUncheckedUpdateManyWithoutReportInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    assigneeId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReportMetricCreateManySectionInput = {
@@ -62251,6 +80109,180 @@ export namespace Prisma {
     eventType?: EnumAssetLifecycleEventTypeFieldUpdateOperationsInput | $Enums.AssetLifecycleEventType
     details?: NullableJsonNullValueInput | InputJsonValue
     requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportJobItemCreateManyJobInput = {
+    id?: string
+    rowIndex: number
+    rawValues: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: $Enums.ImportRowOutcome
+    errors?: ImportJobItemCreateerrorsInput | string[]
+    createdAt?: Date | string
+  }
+
+  export type ImportJobItemUpdateWithoutJobInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rowIndex?: IntFieldUpdateOperationsInput | number
+    rawValues?: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: EnumImportRowOutcomeFieldUpdateOperationsInput | $Enums.ImportRowOutcome
+    errors?: ImportJobItemUpdateerrorsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportJobItemUncheckedUpdateWithoutJobInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rowIndex?: IntFieldUpdateOperationsInput | number
+    rawValues?: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: EnumImportRowOutcomeFieldUpdateOperationsInput | $Enums.ImportRowOutcome
+    errors?: ImportJobItemUpdateerrorsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportJobItemUncheckedUpdateManyWithoutJobInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rowIndex?: IntFieldUpdateOperationsInput | number
+    rawValues?: JsonNullValueInput | InputJsonValue
+    normalizedValues?: NullableJsonNullValueInput | InputJsonValue
+    outcome?: EnumImportRowOutcomeFieldUpdateOperationsInput | $Enums.ImportRowOutcome
+    errors?: ImportJobItemUpdateerrorsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImportJobCreateManyMappingProfileInput = {
+    id?: string
+    ownerId: string
+    templateId?: string | null
+    status?: $Enums.ImportJobStatus
+    fileName?: string | null
+    fileMime?: string | null
+    fileBytes?: number | null
+    storageRef?: string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ImportJobUpdateWithoutMappingProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutImportJobsNestedInput
+    items?: ImportJobItemUpdateManyWithoutJobNestedInput
+  }
+
+  export type ImportJobUncheckedUpdateWithoutMappingProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ImportJobItemUncheckedUpdateManyWithoutJobNestedInput
+  }
+
+  export type ImportJobUncheckedUpdateManyWithoutMappingProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumImportJobStatusFieldUpdateOperationsInput | $Enums.ImportJobStatus
+    fileName?: NullableStringFieldUpdateOperationsInput | string | null
+    fileMime?: NullableStringFieldUpdateOperationsInput | string | null
+    fileBytes?: NullableIntFieldUpdateOperationsInput | number | null
+    storageRef?: NullableStringFieldUpdateOperationsInput | string | null
+    mapping?: NullableJsonNullValueInput | InputJsonValue
+    validationSummary?: NullableJsonNullValueInput | InputJsonValue
+    commitSummary?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InviteLinkCreateManyBatchInput = {
+    id?: string
+    token: string
+    type: $Enums.InviteLinkType
+    targetId?: string | null
+    targetRole?: $Enums.UserRole | null
+    campusId?: string | null
+    groupId?: string | null
+    note?: string | null
+    createdById: string
+    usedAt?: Date | string | null
+    expiresAt?: Date | string | null
+    isActive?: boolean
+    recipientEmail?: string | null
+    createdAt?: Date | string
+  }
+
+  export type InviteLinkUpdateWithoutBatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    type?: EnumInviteLinkTypeFieldUpdateOperationsInput | $Enums.InviteLinkType
+    targetId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetRole?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneRequiredWithoutCreatedInviteLinksNestedInput
+  }
+
+  export type InviteLinkUncheckedUpdateWithoutBatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    type?: EnumInviteLinkTypeFieldUpdateOperationsInput | $Enums.InviteLinkType
+    targetId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetRole?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: StringFieldUpdateOperationsInput | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InviteLinkUncheckedUpdateManyWithoutBatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    type?: EnumInviteLinkTypeFieldUpdateOperationsInput | $Enums.InviteLinkType
+    targetId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetRole?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    groupId?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: StringFieldUpdateOperationsInput | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

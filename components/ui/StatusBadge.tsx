@@ -72,6 +72,7 @@ const ROLE_COLOR: Record<UserRole, string> = {
   CAMPUS_PASTOR: "blue",
   CAMPUS_ADMIN: "cyan",
   DATA_ENTRY: "magenta",
+  USHER: "lime",
   MEMBER: "green",
 };
 
