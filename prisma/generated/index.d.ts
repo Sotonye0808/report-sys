@@ -144,6 +144,11 @@ export type AdminConfigEntry = $Result.DefaultSelection<Prisma.$AdminConfigEntry
  */
 export type FormAssignment = $Result.DefaultSelection<Prisma.$FormAssignmentPayload>
 /**
+ * Model FormAssignmentRule
+ * 
+ */
+export type FormAssignmentRule = $Result.DefaultSelection<Prisma.$FormAssignmentRulePayload>
+/**
  * Model ImportJob
  * 
  */
@@ -173,6 +178,16 @@ export type PwaPromptDismissal = $Result.DefaultSelection<Prisma.$PwaPromptDismi
  * 
  */
 export type UserActivationToken = $Result.DefaultSelection<Prisma.$UserActivationTokenPayload>
+/**
+ * Model ImpersonationSession
+ * 
+ */
+export type ImpersonationSession = $Result.DefaultSelection<Prisma.$ImpersonationSessionPayload>
+/**
+ * Model ImpersonationEvent
+ * 
+ */
+export type ImpersonationEvent = $Result.DefaultSelection<Prisma.$ImpersonationEventPayload>
 
 /**
  * Enums
@@ -498,6 +513,37 @@ export const PwaDismissalMode: {
 
 export type PwaDismissalMode = (typeof PwaDismissalMode)[keyof typeof PwaDismissalMode]
 
+
+export const ImpersonationMode: {
+  READ_ONLY: 'READ_ONLY',
+  MUTATE: 'MUTATE'
+};
+
+export type ImpersonationMode = (typeof ImpersonationMode)[keyof typeof ImpersonationMode]
+
+
+export const ImpersonationEndReason: {
+  USER: 'USER',
+  EXPIRED: 'EXPIRED',
+  TOKEN_INVALIDATED: 'TOKEN_INVALIDATED'
+};
+
+export type ImpersonationEndReason = (typeof ImpersonationEndReason)[keyof typeof ImpersonationEndReason]
+
+
+export const ImpersonationEventType: {
+  STARTED: 'STARTED',
+  STOPPED: 'STOPPED',
+  MODE_CHANGED: 'MODE_CHANGED',
+  MUTATION_BLOCKED: 'MUTATION_BLOCKED',
+  MUTATION_APPLIED: 'MUTATION_APPLIED',
+  PAGE_VISITED: 'PAGE_VISITED',
+  AUTH_REJECTED: 'AUTH_REJECTED',
+  EVENT_LIMIT_REACHED: 'EVENT_LIMIT_REACHED'
+};
+
+export type ImpersonationEventType = (typeof ImpersonationEventType)[keyof typeof ImpersonationEventType]
+
 }
 
 export type UserRole = $Enums.UserRole
@@ -615,6 +661,18 @@ export const PwaPromptPlatform: typeof $Enums.PwaPromptPlatform
 export type PwaDismissalMode = $Enums.PwaDismissalMode
 
 export const PwaDismissalMode: typeof $Enums.PwaDismissalMode
+
+export type ImpersonationMode = $Enums.ImpersonationMode
+
+export const ImpersonationMode: typeof $Enums.ImpersonationMode
+
+export type ImpersonationEndReason = $Enums.ImpersonationEndReason
+
+export const ImpersonationEndReason: typeof $Enums.ImpersonationEndReason
+
+export type ImpersonationEventType = $Enums.ImpersonationEventType
+
+export const ImpersonationEventType: typeof $Enums.ImpersonationEventType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -998,6 +1056,16 @@ export class PrismaClient<
   get formAssignment(): Prisma.FormAssignmentDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.formAssignmentRule`: Exposes CRUD operations for the **FormAssignmentRule** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FormAssignmentRules
+    * const formAssignmentRules = await prisma.formAssignmentRule.findMany()
+    * ```
+    */
+  get formAssignmentRule(): Prisma.FormAssignmentRuleDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.importJob`: Exposes CRUD operations for the **ImportJob** model.
     * Example usage:
     * ```ts
@@ -1056,6 +1124,26 @@ export class PrismaClient<
     * ```
     */
   get userActivationToken(): Prisma.UserActivationTokenDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.impersonationSession`: Exposes CRUD operations for the **ImpersonationSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ImpersonationSessions
+    * const impersonationSessions = await prisma.impersonationSession.findMany()
+    * ```
+    */
+  get impersonationSession(): Prisma.ImpersonationSessionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.impersonationEvent`: Exposes CRUD operations for the **ImpersonationEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ImpersonationEvents
+    * const impersonationEvents = await prisma.impersonationEvent.findMany()
+    * ```
+    */
+  get impersonationEvent(): Prisma.ImpersonationEventDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1516,12 +1604,15 @@ export namespace Prisma {
     AssetLifecycleEvent: 'AssetLifecycleEvent',
     AdminConfigEntry: 'AdminConfigEntry',
     FormAssignment: 'FormAssignment',
+    FormAssignmentRule: 'FormAssignmentRule',
     ImportJob: 'ImportJob',
     ImportJobItem: 'ImportJobItem',
     ImportMappingProfile: 'ImportMappingProfile',
     BulkInviteBatch: 'BulkInviteBatch',
     PwaPromptDismissal: 'PwaPromptDismissal',
-    UserActivationToken: 'UserActivationToken'
+    UserActivationToken: 'UserActivationToken',
+    ImpersonationSession: 'ImpersonationSession',
+    ImpersonationEvent: 'ImpersonationEvent'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1537,7 +1628,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "orgGroup" | "campus" | "reportTemplate" | "reportTemplateSection" | "reportTemplateMetric" | "reportTemplateVersion" | "report" | "reportSection" | "reportMetric" | "reportEdit" | "reportUpdateRequest" | "reportEvent" | "reportVersion" | "goal" | "goalEditRequest" | "metricEntry" | "notification" | "emailActionToken" | "inviteLink" | "bugReport" | "mediaAsset" | "assetUploadSession" | "assetLifecycleEvent" | "adminConfigEntry" | "formAssignment" | "importJob" | "importJobItem" | "importMappingProfile" | "bulkInviteBatch" | "pwaPromptDismissal" | "userActivationToken"
+      modelProps: "user" | "orgGroup" | "campus" | "reportTemplate" | "reportTemplateSection" | "reportTemplateMetric" | "reportTemplateVersion" | "report" | "reportSection" | "reportMetric" | "reportEdit" | "reportUpdateRequest" | "reportEvent" | "reportVersion" | "goal" | "goalEditRequest" | "metricEntry" | "notification" | "emailActionToken" | "inviteLink" | "bugReport" | "mediaAsset" | "assetUploadSession" | "assetLifecycleEvent" | "adminConfigEntry" | "formAssignment" | "formAssignmentRule" | "importJob" | "importJobItem" | "importMappingProfile" | "bulkInviteBatch" | "pwaPromptDismissal" | "userActivationToken" | "impersonationSession" | "impersonationEvent"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3465,6 +3556,80 @@ export namespace Prisma {
           }
         }
       }
+      FormAssignmentRule: {
+        payload: Prisma.$FormAssignmentRulePayload<ExtArgs>
+        fields: Prisma.FormAssignmentRuleFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FormAssignmentRuleFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentRulePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FormAssignmentRuleFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentRulePayload>
+          }
+          findFirst: {
+            args: Prisma.FormAssignmentRuleFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentRulePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FormAssignmentRuleFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentRulePayload>
+          }
+          findMany: {
+            args: Prisma.FormAssignmentRuleFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentRulePayload>[]
+          }
+          create: {
+            args: Prisma.FormAssignmentRuleCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentRulePayload>
+          }
+          createMany: {
+            args: Prisma.FormAssignmentRuleCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FormAssignmentRuleCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentRulePayload>[]
+          }
+          delete: {
+            args: Prisma.FormAssignmentRuleDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentRulePayload>
+          }
+          update: {
+            args: Prisma.FormAssignmentRuleUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentRulePayload>
+          }
+          deleteMany: {
+            args: Prisma.FormAssignmentRuleDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FormAssignmentRuleUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FormAssignmentRuleUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentRulePayload>[]
+          }
+          upsert: {
+            args: Prisma.FormAssignmentRuleUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FormAssignmentRulePayload>
+          }
+          aggregate: {
+            args: Prisma.FormAssignmentRuleAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFormAssignmentRule>
+          }
+          groupBy: {
+            args: Prisma.FormAssignmentRuleGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FormAssignmentRuleGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FormAssignmentRuleCountArgs<ExtArgs>
+            result: $Utils.Optional<FormAssignmentRuleCountAggregateOutputType> | number
+          }
+        }
+      }
       ImportJob: {
         payload: Prisma.$ImportJobPayload<ExtArgs>
         fields: Prisma.ImportJobFieldRefs
@@ -3909,6 +4074,154 @@ export namespace Prisma {
           }
         }
       }
+      ImpersonationSession: {
+        payload: Prisma.$ImpersonationSessionPayload<ExtArgs>
+        fields: Prisma.ImpersonationSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ImpersonationSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ImpersonationSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.ImpersonationSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ImpersonationSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationSessionPayload>
+          }
+          findMany: {
+            args: Prisma.ImpersonationSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationSessionPayload>[]
+          }
+          create: {
+            args: Prisma.ImpersonationSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationSessionPayload>
+          }
+          createMany: {
+            args: Prisma.ImpersonationSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ImpersonationSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.ImpersonationSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationSessionPayload>
+          }
+          update: {
+            args: Prisma.ImpersonationSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ImpersonationSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ImpersonationSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ImpersonationSessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationSessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ImpersonationSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.ImpersonationSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateImpersonationSession>
+          }
+          groupBy: {
+            args: Prisma.ImpersonationSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ImpersonationSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ImpersonationSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<ImpersonationSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      ImpersonationEvent: {
+        payload: Prisma.$ImpersonationEventPayload<ExtArgs>
+        fields: Prisma.ImpersonationEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ImpersonationEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ImpersonationEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationEventPayload>
+          }
+          findFirst: {
+            args: Prisma.ImpersonationEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ImpersonationEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationEventPayload>
+          }
+          findMany: {
+            args: Prisma.ImpersonationEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationEventPayload>[]
+          }
+          create: {
+            args: Prisma.ImpersonationEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationEventPayload>
+          }
+          createMany: {
+            args: Prisma.ImpersonationEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ImpersonationEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationEventPayload>[]
+          }
+          delete: {
+            args: Prisma.ImpersonationEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationEventPayload>
+          }
+          update: {
+            args: Prisma.ImpersonationEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.ImpersonationEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ImpersonationEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ImpersonationEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.ImpersonationEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ImpersonationEventPayload>
+          }
+          aggregate: {
+            args: Prisma.ImpersonationEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateImpersonationEvent>
+          }
+          groupBy: {
+            args: Prisma.ImpersonationEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ImpersonationEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ImpersonationEventCountArgs<ExtArgs>
+            result: $Utils.Optional<ImpersonationEventCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4043,12 +4356,15 @@ export namespace Prisma {
     assetLifecycleEvent?: AssetLifecycleEventOmit
     adminConfigEntry?: AdminConfigEntryOmit
     formAssignment?: FormAssignmentOmit
+    formAssignmentRule?: FormAssignmentRuleOmit
     importJob?: ImportJobOmit
     importJobItem?: ImportJobItemOmit
     importMappingProfile?: ImportMappingProfileOmit
     bulkInviteBatch?: BulkInviteBatchOmit
     pwaPromptDismissal?: PwaPromptDismissalOmit
     userActivationToken?: UserActivationTokenOmit
+    impersonationSession?: ImpersonationSessionOmit
+    impersonationEvent?: ImpersonationEventOmit
   }
 
   /* Types for Logging */
@@ -4159,6 +4475,10 @@ export namespace Prisma {
     adminConfigEntries: number
     formAssignmentsReceived: number
     formAssignmentsCreated: number
+    formAssignmentRulesOwned: number
+    formAssignmentRulesAssigned: number
+    impersonationSessions: number
+    impersonationTargetedBy: number
     importJobs: number
     importMappingProfiles: number
     bulkInviteBatches: number
@@ -4197,6 +4517,10 @@ export namespace Prisma {
     adminConfigEntries?: boolean | UserCountOutputTypeCountAdminConfigEntriesArgs
     formAssignmentsReceived?: boolean | UserCountOutputTypeCountFormAssignmentsReceivedArgs
     formAssignmentsCreated?: boolean | UserCountOutputTypeCountFormAssignmentsCreatedArgs
+    formAssignmentRulesOwned?: boolean | UserCountOutputTypeCountFormAssignmentRulesOwnedArgs
+    formAssignmentRulesAssigned?: boolean | UserCountOutputTypeCountFormAssignmentRulesAssignedArgs
+    impersonationSessions?: boolean | UserCountOutputTypeCountImpersonationSessionsArgs
+    impersonationTargetedBy?: boolean | UserCountOutputTypeCountImpersonationTargetedByArgs
     importJobs?: boolean | UserCountOutputTypeCountImportJobsArgs
     importMappingProfiles?: boolean | UserCountOutputTypeCountImportMappingProfilesArgs
     bulkInviteBatches?: boolean | UserCountOutputTypeCountBulkInviteBatchesArgs
@@ -4428,6 +4752,34 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountFormAssignmentRulesOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormAssignmentRuleWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFormAssignmentRulesAssignedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormAssignmentRuleWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountImpersonationSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImpersonationSessionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountImpersonationTargetedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImpersonationSessionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountImportJobsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ImportJobWhereInput
   }
@@ -4586,6 +4938,7 @@ export namespace Prisma {
     sections: number
     versions: number
     reports: number
+    formAssignmentRules: number
   }
 
   export type ReportTemplateCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4593,6 +4946,7 @@ export namespace Prisma {
     sections?: boolean | ReportTemplateCountOutputTypeCountSectionsArgs
     versions?: boolean | ReportTemplateCountOutputTypeCountVersionsArgs
     reports?: boolean | ReportTemplateCountOutputTypeCountReportsArgs
+    formAssignmentRules?: boolean | ReportTemplateCountOutputTypeCountFormAssignmentRulesArgs
   }
 
   // Custom InputTypes
@@ -4632,6 +4986,13 @@ export namespace Prisma {
    */
   export type ReportTemplateCountOutputTypeCountReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReportWhereInput
+  }
+
+  /**
+   * ReportTemplateCountOutputType without action
+   */
+  export type ReportTemplateCountOutputTypeCountFormAssignmentRulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormAssignmentRuleWhereInput
   }
 
 
@@ -4934,6 +5295,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type FormAssignmentRuleCountOutputType
+   */
+
+  export type FormAssignmentRuleCountOutputType = {
+    assignments: number
+  }
+
+  export type FormAssignmentRuleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignments?: boolean | FormAssignmentRuleCountOutputTypeCountAssignmentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FormAssignmentRuleCountOutputType without action
+   */
+  export type FormAssignmentRuleCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRuleCountOutputType
+     */
+    select?: FormAssignmentRuleCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FormAssignmentRuleCountOutputType without action
+   */
+  export type FormAssignmentRuleCountOutputTypeCountAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormAssignmentWhereInput
+  }
+
+
+  /**
    * Count Type ImportJobCountOutputType
    */
 
@@ -5023,6 +5415,37 @@ export namespace Prisma {
    */
   export type BulkInviteBatchCountOutputTypeCountInvitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InviteLinkWhereInput
+  }
+
+
+  /**
+   * Count Type ImpersonationSessionCountOutputType
+   */
+
+  export type ImpersonationSessionCountOutputType = {
+    events: number
+  }
+
+  export type ImpersonationSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    events?: boolean | ImpersonationSessionCountOutputTypeCountEventsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ImpersonationSessionCountOutputType without action
+   */
+  export type ImpersonationSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSessionCountOutputType
+     */
+    select?: ImpersonationSessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ImpersonationSessionCountOutputType without action
+   */
+  export type ImpersonationSessionCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImpersonationEventWhereInput
   }
 
 
@@ -5352,6 +5775,10 @@ export namespace Prisma {
     adminConfigEntries?: boolean | User$adminConfigEntriesArgs<ExtArgs>
     formAssignmentsReceived?: boolean | User$formAssignmentsReceivedArgs<ExtArgs>
     formAssignmentsCreated?: boolean | User$formAssignmentsCreatedArgs<ExtArgs>
+    formAssignmentRulesOwned?: boolean | User$formAssignmentRulesOwnedArgs<ExtArgs>
+    formAssignmentRulesAssigned?: boolean | User$formAssignmentRulesAssignedArgs<ExtArgs>
+    impersonationSessions?: boolean | User$impersonationSessionsArgs<ExtArgs>
+    impersonationTargetedBy?: boolean | User$impersonationTargetedByArgs<ExtArgs>
     importJobs?: boolean | User$importJobsArgs<ExtArgs>
     importMappingProfiles?: boolean | User$importMappingProfilesArgs<ExtArgs>
     bulkInviteBatches?: boolean | User$bulkInviteBatchesArgs<ExtArgs>
@@ -5470,6 +5897,10 @@ export namespace Prisma {
     adminConfigEntries?: boolean | User$adminConfigEntriesArgs<ExtArgs>
     formAssignmentsReceived?: boolean | User$formAssignmentsReceivedArgs<ExtArgs>
     formAssignmentsCreated?: boolean | User$formAssignmentsCreatedArgs<ExtArgs>
+    formAssignmentRulesOwned?: boolean | User$formAssignmentRulesOwnedArgs<ExtArgs>
+    formAssignmentRulesAssigned?: boolean | User$formAssignmentRulesAssignedArgs<ExtArgs>
+    impersonationSessions?: boolean | User$impersonationSessionsArgs<ExtArgs>
+    impersonationTargetedBy?: boolean | User$impersonationTargetedByArgs<ExtArgs>
     importJobs?: boolean | User$importJobsArgs<ExtArgs>
     importMappingProfiles?: boolean | User$importMappingProfilesArgs<ExtArgs>
     bulkInviteBatches?: boolean | User$bulkInviteBatchesArgs<ExtArgs>
@@ -5521,6 +5952,10 @@ export namespace Prisma {
       adminConfigEntries: Prisma.$AdminConfigEntryPayload<ExtArgs>[]
       formAssignmentsReceived: Prisma.$FormAssignmentPayload<ExtArgs>[]
       formAssignmentsCreated: Prisma.$FormAssignmentPayload<ExtArgs>[]
+      formAssignmentRulesOwned: Prisma.$FormAssignmentRulePayload<ExtArgs>[]
+      formAssignmentRulesAssigned: Prisma.$FormAssignmentRulePayload<ExtArgs>[]
+      impersonationSessions: Prisma.$ImpersonationSessionPayload<ExtArgs>[]
+      impersonationTargetedBy: Prisma.$ImpersonationSessionPayload<ExtArgs>[]
       importJobs: Prisma.$ImportJobPayload<ExtArgs>[]
       importMappingProfiles: Prisma.$ImportMappingProfilePayload<ExtArgs>[]
       bulkInviteBatches: Prisma.$BulkInviteBatchPayload<ExtArgs>[]
@@ -5975,6 +6410,10 @@ export namespace Prisma {
     adminConfigEntries<T extends User$adminConfigEntriesArgs<ExtArgs> = {}>(args?: Subset<T, User$adminConfigEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminConfigEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     formAssignmentsReceived<T extends User$formAssignmentsReceivedArgs<ExtArgs> = {}>(args?: Subset<T, User$formAssignmentsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     formAssignmentsCreated<T extends User$formAssignmentsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$formAssignmentsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    formAssignmentRulesOwned<T extends User$formAssignmentRulesOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$formAssignmentRulesOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    formAssignmentRulesAssigned<T extends User$formAssignmentRulesAssignedArgs<ExtArgs> = {}>(args?: Subset<T, User$formAssignmentRulesAssignedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    impersonationSessions<T extends User$impersonationSessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$impersonationSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    impersonationTargetedBy<T extends User$impersonationTargetedByArgs<ExtArgs> = {}>(args?: Subset<T, User$impersonationTargetedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     importJobs<T extends User$importJobsArgs<ExtArgs> = {}>(args?: Subset<T, User$importJobsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     importMappingProfiles<T extends User$importMappingProfilesArgs<ExtArgs> = {}>(args?: Subset<T, User$importMappingProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImportMappingProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bulkInviteBatches<T extends User$bulkInviteBatchesArgs<ExtArgs> = {}>(args?: Subset<T, User$bulkInviteBatchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BulkInviteBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7145,6 +7584,102 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FormAssignmentScalarFieldEnum | FormAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * User.formAssignmentRulesOwned
+   */
+  export type User$formAssignmentRulesOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    where?: FormAssignmentRuleWhereInput
+    orderBy?: FormAssignmentRuleOrderByWithRelationInput | FormAssignmentRuleOrderByWithRelationInput[]
+    cursor?: FormAssignmentRuleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormAssignmentRuleScalarFieldEnum | FormAssignmentRuleScalarFieldEnum[]
+  }
+
+  /**
+   * User.formAssignmentRulesAssigned
+   */
+  export type User$formAssignmentRulesAssignedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    where?: FormAssignmentRuleWhereInput
+    orderBy?: FormAssignmentRuleOrderByWithRelationInput | FormAssignmentRuleOrderByWithRelationInput[]
+    cursor?: FormAssignmentRuleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormAssignmentRuleScalarFieldEnum | FormAssignmentRuleScalarFieldEnum[]
+  }
+
+  /**
+   * User.impersonationSessions
+   */
+  export type User$impersonationSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+    where?: ImpersonationSessionWhereInput
+    orderBy?: ImpersonationSessionOrderByWithRelationInput | ImpersonationSessionOrderByWithRelationInput[]
+    cursor?: ImpersonationSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ImpersonationSessionScalarFieldEnum | ImpersonationSessionScalarFieldEnum[]
+  }
+
+  /**
+   * User.impersonationTargetedBy
+   */
+  export type User$impersonationTargetedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+    where?: ImpersonationSessionWhereInput
+    orderBy?: ImpersonationSessionOrderByWithRelationInput | ImpersonationSessionOrderByWithRelationInput[]
+    cursor?: ImpersonationSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ImpersonationSessionScalarFieldEnum | ImpersonationSessionScalarFieldEnum[]
   }
 
   /**
@@ -9919,11 +10454,13 @@ export namespace Prisma {
   export type ReportTemplateAvgAggregateOutputType = {
     version: number | null
     deadlineOffsetHours: number | null
+    recurrenceDays: number | null
   }
 
   export type ReportTemplateSumAggregateOutputType = {
     version: number | null
     deadlineOffsetHours: number | null
+    recurrenceDays: number[]
   }
 
   export type ReportTemplateMinAggregateOutputType = {
@@ -9941,6 +10478,8 @@ export namespace Prisma {
     updatedAt: Date | null
     deadlineOffsetHours: number | null
     deadlinePolicy: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency: $Enums.ReportPeriodType | null
+    autoFillTitleTemplate: string | null
   }
 
   export type ReportTemplateMaxAggregateOutputType = {
@@ -9958,6 +10497,8 @@ export namespace Prisma {
     updatedAt: Date | null
     deadlineOffsetHours: number | null
     deadlinePolicy: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency: $Enums.ReportPeriodType | null
+    autoFillTitleTemplate: string | null
   }
 
   export type ReportTemplateCountAggregateOutputType = {
@@ -9975,6 +10516,9 @@ export namespace Prisma {
     updatedAt: number
     deadlineOffsetHours: number
     deadlinePolicy: number
+    recurrenceFrequency: number
+    recurrenceDays: number
+    autoFillTitleTemplate: number
     _all: number
   }
 
@@ -9982,11 +10526,13 @@ export namespace Prisma {
   export type ReportTemplateAvgAggregateInputType = {
     version?: true
     deadlineOffsetHours?: true
+    recurrenceDays?: true
   }
 
   export type ReportTemplateSumAggregateInputType = {
     version?: true
     deadlineOffsetHours?: true
+    recurrenceDays?: true
   }
 
   export type ReportTemplateMinAggregateInputType = {
@@ -10004,6 +10550,8 @@ export namespace Prisma {
     updatedAt?: true
     deadlineOffsetHours?: true
     deadlinePolicy?: true
+    recurrenceFrequency?: true
+    autoFillTitleTemplate?: true
   }
 
   export type ReportTemplateMaxAggregateInputType = {
@@ -10021,6 +10569,8 @@ export namespace Prisma {
     updatedAt?: true
     deadlineOffsetHours?: true
     deadlinePolicy?: true
+    recurrenceFrequency?: true
+    autoFillTitleTemplate?: true
   }
 
   export type ReportTemplateCountAggregateInputType = {
@@ -10038,6 +10588,9 @@ export namespace Prisma {
     updatedAt?: true
     deadlineOffsetHours?: true
     deadlinePolicy?: true
+    recurrenceFrequency?: true
+    recurrenceDays?: true
+    autoFillTitleTemplate?: true
     _all?: true
   }
 
@@ -10142,6 +10695,9 @@ export namespace Prisma {
     updatedAt: Date
     deadlineOffsetHours: number | null
     deadlinePolicy: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency: $Enums.ReportPeriodType | null
+    recurrenceDays: number[]
+    autoFillTitleTemplate: string | null
     _count: ReportTemplateCountAggregateOutputType | null
     _avg: ReportTemplateAvgAggregateOutputType | null
     _sum: ReportTemplateSumAggregateOutputType | null
@@ -10178,11 +10734,15 @@ export namespace Prisma {
     updatedAt?: boolean
     deadlineOffsetHours?: boolean
     deadlinePolicy?: boolean
+    recurrenceFrequency?: boolean
+    recurrenceDays?: boolean
+    autoFillTitleTemplate?: boolean
     goals?: boolean | ReportTemplate$goalsArgs<ExtArgs>
     sections?: boolean | ReportTemplate$sectionsArgs<ExtArgs>
     versions?: boolean | ReportTemplate$versionsArgs<ExtArgs>
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
     reports?: boolean | ReportTemplate$reportsArgs<ExtArgs>
+    formAssignmentRules?: boolean | ReportTemplate$formAssignmentRulesArgs<ExtArgs>
     _count?: boolean | ReportTemplateCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reportTemplate"]>
 
@@ -10201,6 +10761,9 @@ export namespace Prisma {
     updatedAt?: boolean
     deadlineOffsetHours?: boolean
     deadlinePolicy?: boolean
+    recurrenceFrequency?: boolean
+    recurrenceDays?: boolean
+    autoFillTitleTemplate?: boolean
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reportTemplate"]>
 
@@ -10219,6 +10782,9 @@ export namespace Prisma {
     updatedAt?: boolean
     deadlineOffsetHours?: boolean
     deadlinePolicy?: boolean
+    recurrenceFrequency?: boolean
+    recurrenceDays?: boolean
+    autoFillTitleTemplate?: boolean
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reportTemplate"]>
 
@@ -10237,15 +10803,19 @@ export namespace Prisma {
     updatedAt?: boolean
     deadlineOffsetHours?: boolean
     deadlinePolicy?: boolean
+    recurrenceFrequency?: boolean
+    recurrenceDays?: boolean
+    autoFillTitleTemplate?: boolean
   }
 
-  export type ReportTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organisationId" | "name" | "description" | "version" | "isActive" | "isDefault" | "createdById" | "campusId" | "orgGroupId" | "createdAt" | "updatedAt" | "deadlineOffsetHours" | "deadlinePolicy", ExtArgs["result"]["reportTemplate"]>
+  export type ReportTemplateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organisationId" | "name" | "description" | "version" | "isActive" | "isDefault" | "createdById" | "campusId" | "orgGroupId" | "createdAt" | "updatedAt" | "deadlineOffsetHours" | "deadlinePolicy" | "recurrenceFrequency" | "recurrenceDays" | "autoFillTitleTemplate", ExtArgs["result"]["reportTemplate"]>
   export type ReportTemplateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     goals?: boolean | ReportTemplate$goalsArgs<ExtArgs>
     sections?: boolean | ReportTemplate$sectionsArgs<ExtArgs>
     versions?: boolean | ReportTemplate$versionsArgs<ExtArgs>
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
     reports?: boolean | ReportTemplate$reportsArgs<ExtArgs>
+    formAssignmentRules?: boolean | ReportTemplate$formAssignmentRulesArgs<ExtArgs>
     _count?: boolean | ReportTemplateCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ReportTemplateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10263,6 +10833,7 @@ export namespace Prisma {
       versions: Prisma.$ReportTemplateVersionPayload<ExtArgs>[]
       createdBy: Prisma.$UserPayload<ExtArgs>
       reports: Prisma.$ReportPayload<ExtArgs>[]
+      formAssignmentRules: Prisma.$FormAssignmentRulePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10279,6 +10850,9 @@ export namespace Prisma {
       updatedAt: Date
       deadlineOffsetHours: number | null
       deadlinePolicy: $Enums.ReportDeadlinePolicy | null
+      recurrenceFrequency: $Enums.ReportPeriodType | null
+      recurrenceDays: number[]
+      autoFillTitleTemplate: string | null
     }, ExtArgs["result"]["reportTemplate"]>
     composites: {}
   }
@@ -10678,6 +11252,7 @@ export namespace Prisma {
     versions<T extends ReportTemplate$versionsArgs<ExtArgs> = {}>(args?: Subset<T, ReportTemplate$versionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportTemplateVersionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     reports<T extends ReportTemplate$reportsArgs<ExtArgs> = {}>(args?: Subset<T, ReportTemplate$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    formAssignmentRules<T extends ReportTemplate$formAssignmentRulesArgs<ExtArgs> = {}>(args?: Subset<T, ReportTemplate$formAssignmentRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10721,6 +11296,9 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"ReportTemplate", 'DateTime'>
     readonly deadlineOffsetHours: FieldRef<"ReportTemplate", 'Int'>
     readonly deadlinePolicy: FieldRef<"ReportTemplate", 'ReportDeadlinePolicy'>
+    readonly recurrenceFrequency: FieldRef<"ReportTemplate", 'ReportPeriodType'>
+    readonly recurrenceDays: FieldRef<"ReportTemplate", 'Int[]'>
+    readonly autoFillTitleTemplate: FieldRef<"ReportTemplate", 'String'>
   }
     
 
@@ -11213,6 +11791,30 @@ export namespace Prisma {
   }
 
   /**
+   * ReportTemplate.formAssignmentRules
+   */
+  export type ReportTemplate$formAssignmentRulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    where?: FormAssignmentRuleWhereInput
+    orderBy?: FormAssignmentRuleOrderByWithRelationInput | FormAssignmentRuleOrderByWithRelationInput[]
+    cursor?: FormAssignmentRuleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormAssignmentRuleScalarFieldEnum | FormAssignmentRuleScalarFieldEnum[]
+  }
+
+  /**
    * ReportTemplate without action
    */
   export type ReportTemplateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11258,6 +11860,7 @@ export namespace Prisma {
     description: string | null
     order: number | null
     isRequired: boolean | null
+    correlationGroup: string | null
   }
 
   export type ReportTemplateSectionMaxAggregateOutputType = {
@@ -11267,6 +11870,7 @@ export namespace Prisma {
     description: string | null
     order: number | null
     isRequired: boolean | null
+    correlationGroup: string | null
   }
 
   export type ReportTemplateSectionCountAggregateOutputType = {
@@ -11276,6 +11880,7 @@ export namespace Prisma {
     description: number
     order: number
     isRequired: number
+    correlationGroup: number
     _all: number
   }
 
@@ -11295,6 +11900,7 @@ export namespace Prisma {
     description?: true
     order?: true
     isRequired?: true
+    correlationGroup?: true
   }
 
   export type ReportTemplateSectionMaxAggregateInputType = {
@@ -11304,6 +11910,7 @@ export namespace Prisma {
     description?: true
     order?: true
     isRequired?: true
+    correlationGroup?: true
   }
 
   export type ReportTemplateSectionCountAggregateInputType = {
@@ -11313,6 +11920,7 @@ export namespace Prisma {
     description?: true
     order?: true
     isRequired?: true
+    correlationGroup?: true
     _all?: true
   }
 
@@ -11409,6 +12017,7 @@ export namespace Prisma {
     description: string | null
     order: number
     isRequired: boolean
+    correlationGroup: string | null
     _count: ReportTemplateSectionCountAggregateOutputType | null
     _avg: ReportTemplateSectionAvgAggregateOutputType | null
     _sum: ReportTemplateSectionSumAggregateOutputType | null
@@ -11437,6 +12046,7 @@ export namespace Prisma {
     description?: boolean
     order?: boolean
     isRequired?: boolean
+    correlationGroup?: boolean
     metrics?: boolean | ReportTemplateSection$metricsArgs<ExtArgs>
     template?: boolean | ReportTemplateDefaultArgs<ExtArgs>
     _count?: boolean | ReportTemplateSectionCountOutputTypeDefaultArgs<ExtArgs>
@@ -11449,6 +12059,7 @@ export namespace Prisma {
     description?: boolean
     order?: boolean
     isRequired?: boolean
+    correlationGroup?: boolean
     template?: boolean | ReportTemplateDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reportTemplateSection"]>
 
@@ -11459,6 +12070,7 @@ export namespace Prisma {
     description?: boolean
     order?: boolean
     isRequired?: boolean
+    correlationGroup?: boolean
     template?: boolean | ReportTemplateDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reportTemplateSection"]>
 
@@ -11469,9 +12081,10 @@ export namespace Prisma {
     description?: boolean
     order?: boolean
     isRequired?: boolean
+    correlationGroup?: boolean
   }
 
-  export type ReportTemplateSectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "templateId" | "name" | "description" | "order" | "isRequired", ExtArgs["result"]["reportTemplateSection"]>
+  export type ReportTemplateSectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "templateId" | "name" | "description" | "order" | "isRequired" | "correlationGroup", ExtArgs["result"]["reportTemplateSection"]>
   export type ReportTemplateSectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     metrics?: boolean | ReportTemplateSection$metricsArgs<ExtArgs>
     template?: boolean | ReportTemplateDefaultArgs<ExtArgs>
@@ -11497,6 +12110,7 @@ export namespace Prisma {
       description: string | null
       order: number
       isRequired: boolean
+      correlationGroup: string | null
     }, ExtArgs["result"]["reportTemplateSection"]>
     composites: {}
   }
@@ -11928,6 +12542,7 @@ export namespace Prisma {
     readonly description: FieldRef<"ReportTemplateSection", 'String'>
     readonly order: FieldRef<"ReportTemplateSection", 'Int'>
     readonly isRequired: FieldRef<"ReportTemplateSection", 'Boolean'>
+    readonly correlationGroup: FieldRef<"ReportTemplateSection", 'String'>
   }
     
 
@@ -12404,6 +13019,7 @@ export namespace Prisma {
     capturesGoal: boolean | null
     capturesAchieved: boolean | null
     capturesYoY: boolean | null
+    correlationGroup: string | null
   }
 
   export type ReportTemplateMetricMaxAggregateOutputType = {
@@ -12420,6 +13036,7 @@ export namespace Prisma {
     capturesGoal: boolean | null
     capturesAchieved: boolean | null
     capturesYoY: boolean | null
+    correlationGroup: string | null
   }
 
   export type ReportTemplateMetricCountAggregateOutputType = {
@@ -12436,6 +13053,7 @@ export namespace Prisma {
     capturesGoal: number
     capturesAchieved: number
     capturesYoY: number
+    correlationGroup: number
     _all: number
   }
 
@@ -12466,6 +13084,7 @@ export namespace Prisma {
     capturesGoal?: true
     capturesAchieved?: true
     capturesYoY?: true
+    correlationGroup?: true
   }
 
   export type ReportTemplateMetricMaxAggregateInputType = {
@@ -12482,6 +13101,7 @@ export namespace Prisma {
     capturesGoal?: true
     capturesAchieved?: true
     capturesYoY?: true
+    correlationGroup?: true
   }
 
   export type ReportTemplateMetricCountAggregateInputType = {
@@ -12498,6 +13118,7 @@ export namespace Prisma {
     capturesGoal?: true
     capturesAchieved?: true
     capturesYoY?: true
+    correlationGroup?: true
     _all?: true
   }
 
@@ -12601,6 +13222,7 @@ export namespace Prisma {
     capturesGoal: boolean
     capturesAchieved: boolean
     capturesYoY: boolean
+    correlationGroup: string | null
     _count: ReportTemplateMetricCountAggregateOutputType | null
     _avg: ReportTemplateMetricAvgAggregateOutputType | null
     _sum: ReportTemplateMetricSumAggregateOutputType | null
@@ -12636,6 +13258,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: boolean
     goals?: boolean | ReportTemplateMetric$goalsArgs<ExtArgs>
     metricEntries?: boolean | ReportTemplateMetric$metricEntriesArgs<ExtArgs>
     reportMetrics?: boolean | ReportTemplateMetric$reportMetricsArgs<ExtArgs>
@@ -12657,6 +13280,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: boolean
     section?: boolean | ReportTemplateSectionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reportTemplateMetric"]>
 
@@ -12674,6 +13298,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: boolean
     section?: boolean | ReportTemplateSectionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reportTemplateMetric"]>
 
@@ -12691,9 +13316,10 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: boolean
   }
 
-  export type ReportTemplateMetricOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sectionId" | "name" | "description" | "fieldType" | "calculationType" | "isRequired" | "minValue" | "maxValue" | "order" | "capturesGoal" | "capturesAchieved" | "capturesYoY", ExtArgs["result"]["reportTemplateMetric"]>
+  export type ReportTemplateMetricOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sectionId" | "name" | "description" | "fieldType" | "calculationType" | "isRequired" | "minValue" | "maxValue" | "order" | "capturesGoal" | "capturesAchieved" | "capturesYoY" | "correlationGroup", ExtArgs["result"]["reportTemplateMetric"]>
   export type ReportTemplateMetricInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     goals?: boolean | ReportTemplateMetric$goalsArgs<ExtArgs>
     metricEntries?: boolean | ReportTemplateMetric$metricEntriesArgs<ExtArgs>
@@ -12730,6 +13356,7 @@ export namespace Prisma {
       capturesGoal: boolean
       capturesAchieved: boolean
       capturesYoY: boolean
+      correlationGroup: string | null
     }, ExtArgs["result"]["reportTemplateMetric"]>
     composites: {}
   }
@@ -13170,6 +13797,7 @@ export namespace Prisma {
     readonly capturesGoal: FieldRef<"ReportTemplateMetric", 'Boolean'>
     readonly capturesAchieved: FieldRef<"ReportTemplateMetric", 'Boolean'>
     readonly capturesYoY: FieldRef<"ReportTemplateMetric", 'Boolean'>
+    readonly correlationGroup: FieldRef<"ReportTemplateMetric", 'String'>
   }
     
 
@@ -14813,6 +15441,7 @@ export namespace Prisma {
     dataEntryById: string | null
     dataEntryDate: Date | null
     notes: string | null
+    autoCreated: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -14841,6 +15470,7 @@ export namespace Prisma {
     dataEntryById: string | null
     dataEntryDate: Date | null
     notes: string | null
+    autoCreated: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -14869,6 +15499,7 @@ export namespace Prisma {
     dataEntryById: number
     dataEntryDate: number
     notes: number
+    autoCreated: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -14911,6 +15542,7 @@ export namespace Prisma {
     dataEntryById?: true
     dataEntryDate?: true
     notes?: true
+    autoCreated?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -14939,6 +15571,7 @@ export namespace Prisma {
     dataEntryById?: true
     dataEntryDate?: true
     notes?: true
+    autoCreated?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -14967,6 +15600,7 @@ export namespace Prisma {
     dataEntryById?: true
     dataEntryDate?: true
     notes?: true
+    autoCreated?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -15082,6 +15716,7 @@ export namespace Prisma {
     dataEntryById: string | null
     dataEntryDate: Date | null
     notes: string | null
+    autoCreated: boolean
     createdAt: Date
     updatedAt: Date
     _count: ReportCountAggregateOutputType | null
@@ -15129,6 +15764,7 @@ export namespace Prisma {
     dataEntryById?: boolean
     dataEntryDate?: boolean
     notes?: boolean
+    autoCreated?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     edits?: boolean | Report$editsArgs<ExtArgs>
@@ -15172,6 +15808,7 @@ export namespace Prisma {
     dataEntryById?: boolean
     dataEntryDate?: boolean
     notes?: boolean
+    autoCreated?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     approvedBy?: boolean | Report$approvedByArgs<ExtArgs>
@@ -15208,6 +15845,7 @@ export namespace Prisma {
     dataEntryById?: boolean
     dataEntryDate?: boolean
     notes?: boolean
+    autoCreated?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     approvedBy?: boolean | Report$approvedByArgs<ExtArgs>
@@ -15244,11 +15882,12 @@ export namespace Prisma {
     dataEntryById?: boolean
     dataEntryDate?: boolean
     notes?: boolean
+    autoCreated?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organisationId" | "title" | "templateId" | "templateVersionId" | "campusId" | "orgGroupId" | "period" | "periodType" | "periodYear" | "periodMonth" | "periodWeek" | "status" | "createdById" | "submittedById" | "reviewedById" | "approvedById" | "deadline" | "lockedAt" | "isDataEntry" | "dataEntryById" | "dataEntryDate" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["report"]>
+  export type ReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organisationId" | "title" | "templateId" | "templateVersionId" | "campusId" | "orgGroupId" | "period" | "periodType" | "periodYear" | "periodMonth" | "periodWeek" | "status" | "createdById" | "submittedById" | "reviewedById" | "approvedById" | "deadline" | "lockedAt" | "isDataEntry" | "dataEntryById" | "dataEntryDate" | "notes" | "autoCreated" | "createdAt" | "updatedAt", ExtArgs["result"]["report"]>
   export type ReportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     edits?: boolean | Report$editsArgs<ExtArgs>
     events?: boolean | Report$eventsArgs<ExtArgs>
@@ -15329,6 +15968,7 @@ export namespace Prisma {
       dataEntryById: string | null
       dataEntryDate: Date | null
       notes: string | null
+      autoCreated: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["report"]>
@@ -15791,6 +16431,7 @@ export namespace Prisma {
     readonly dataEntryById: FieldRef<"Report", 'String'>
     readonly dataEntryDate: FieldRef<"Report", 'DateTime'>
     readonly notes: FieldRef<"Report", 'String'>
+    readonly autoCreated: FieldRef<"Report", 'Boolean'>
     readonly createdAt: FieldRef<"Report", 'DateTime'>
     readonly updatedAt: FieldRef<"Report", 'DateTime'>
   }
@@ -36645,6 +37286,8 @@ export namespace Prisma {
     completedAt: Date | null
     cancelledAt: Date | null
     notes: string | null
+    ruleId: string | null
+    periodKey: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -36658,6 +37301,8 @@ export namespace Prisma {
     completedAt: Date | null
     cancelledAt: Date | null
     notes: string | null
+    ruleId: string | null
+    periodKey: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -36672,6 +37317,8 @@ export namespace Prisma {
     completedAt: number
     cancelledAt: number
     notes: number
+    ruleId: number
+    periodKey: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -36687,6 +37334,8 @@ export namespace Prisma {
     completedAt?: true
     cancelledAt?: true
     notes?: true
+    ruleId?: true
+    periodKey?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -36700,6 +37349,8 @@ export namespace Prisma {
     completedAt?: true
     cancelledAt?: true
     notes?: true
+    ruleId?: true
+    periodKey?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -36714,6 +37365,8 @@ export namespace Prisma {
     completedAt?: true
     cancelledAt?: true
     notes?: true
+    ruleId?: true
+    periodKey?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -36801,6 +37454,8 @@ export namespace Prisma {
     completedAt: Date | null
     cancelledAt: Date | null
     notes: string | null
+    ruleId: string | null
+    periodKey: string | null
     createdAt: Date
     updatedAt: Date
     _count: FormAssignmentCountAggregateOutputType | null
@@ -36832,11 +37487,14 @@ export namespace Prisma {
     completedAt?: boolean
     cancelledAt?: boolean
     notes?: boolean
+    ruleId?: boolean
+    periodKey?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     report?: boolean | ReportDefaultArgs<ExtArgs>
     assignee?: boolean | UserDefaultArgs<ExtArgs>
     assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+    rule?: boolean | FormAssignment$ruleArgs<ExtArgs>
   }, ExtArgs["result"]["formAssignment"]>
 
   export type FormAssignmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -36849,11 +37507,14 @@ export namespace Prisma {
     completedAt?: boolean
     cancelledAt?: boolean
     notes?: boolean
+    ruleId?: boolean
+    periodKey?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     report?: boolean | ReportDefaultArgs<ExtArgs>
     assignee?: boolean | UserDefaultArgs<ExtArgs>
     assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+    rule?: boolean | FormAssignment$ruleArgs<ExtArgs>
   }, ExtArgs["result"]["formAssignment"]>
 
   export type FormAssignmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -36866,11 +37527,14 @@ export namespace Prisma {
     completedAt?: boolean
     cancelledAt?: boolean
     notes?: boolean
+    ruleId?: boolean
+    periodKey?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     report?: boolean | ReportDefaultArgs<ExtArgs>
     assignee?: boolean | UserDefaultArgs<ExtArgs>
     assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+    rule?: boolean | FormAssignment$ruleArgs<ExtArgs>
   }, ExtArgs["result"]["formAssignment"]>
 
   export type FormAssignmentSelectScalar = {
@@ -36883,25 +37547,30 @@ export namespace Prisma {
     completedAt?: boolean
     cancelledAt?: boolean
     notes?: boolean
+    ruleId?: boolean
+    periodKey?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type FormAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reportId" | "assigneeId" | "assignedById" | "metricIds" | "dueAt" | "completedAt" | "cancelledAt" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["formAssignment"]>
+  export type FormAssignmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reportId" | "assigneeId" | "assignedById" | "metricIds" | "dueAt" | "completedAt" | "cancelledAt" | "notes" | "ruleId" | "periodKey" | "createdAt" | "updatedAt", ExtArgs["result"]["formAssignment"]>
   export type FormAssignmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     report?: boolean | ReportDefaultArgs<ExtArgs>
     assignee?: boolean | UserDefaultArgs<ExtArgs>
     assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+    rule?: boolean | FormAssignment$ruleArgs<ExtArgs>
   }
   export type FormAssignmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     report?: boolean | ReportDefaultArgs<ExtArgs>
     assignee?: boolean | UserDefaultArgs<ExtArgs>
     assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+    rule?: boolean | FormAssignment$ruleArgs<ExtArgs>
   }
   export type FormAssignmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     report?: boolean | ReportDefaultArgs<ExtArgs>
     assignee?: boolean | UserDefaultArgs<ExtArgs>
     assignedBy?: boolean | UserDefaultArgs<ExtArgs>
+    rule?: boolean | FormAssignment$ruleArgs<ExtArgs>
   }
 
   export type $FormAssignmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -36910,6 +37579,7 @@ export namespace Prisma {
       report: Prisma.$ReportPayload<ExtArgs>
       assignee: Prisma.$UserPayload<ExtArgs>
       assignedBy: Prisma.$UserPayload<ExtArgs>
+      rule: Prisma.$FormAssignmentRulePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -36921,6 +37591,8 @@ export namespace Prisma {
       completedAt: Date | null
       cancelledAt: Date | null
       notes: string | null
+      ruleId: string | null
+      periodKey: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["formAssignment"]>
@@ -37320,6 +37992,7 @@ export namespace Prisma {
     report<T extends ReportDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReportDefaultArgs<ExtArgs>>): Prisma__ReportClient<$Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     assignee<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     assignedBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    rule<T extends FormAssignment$ruleArgs<ExtArgs> = {}>(args?: Subset<T, FormAssignment$ruleArgs<ExtArgs>>): Prisma__FormAssignmentRuleClient<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -37358,6 +38031,8 @@ export namespace Prisma {
     readonly completedAt: FieldRef<"FormAssignment", 'DateTime'>
     readonly cancelledAt: FieldRef<"FormAssignment", 'DateTime'>
     readonly notes: FieldRef<"FormAssignment", 'String'>
+    readonly ruleId: FieldRef<"FormAssignment", 'String'>
+    readonly periodKey: FieldRef<"FormAssignment", 'String'>
     readonly createdAt: FieldRef<"FormAssignment", 'DateTime'>
     readonly updatedAt: FieldRef<"FormAssignment", 'DateTime'>
   }
@@ -37756,6 +38431,25 @@ export namespace Prisma {
   }
 
   /**
+   * FormAssignment.rule
+   */
+  export type FormAssignment$ruleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    where?: FormAssignmentRuleWhereInput
+  }
+
+  /**
    * FormAssignment without action
    */
   export type FormAssignmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -37771,6 +38465,1225 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: FormAssignmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FormAssignmentRule
+   */
+
+  export type AggregateFormAssignmentRule = {
+    _count: FormAssignmentRuleCountAggregateOutputType | null
+    _min: FormAssignmentRuleMinAggregateOutputType | null
+    _max: FormAssignmentRuleMaxAggregateOutputType | null
+  }
+
+  export type FormAssignmentRuleMinAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    templateId: string | null
+    role: $Enums.UserRole | null
+    assigneeId: string | null
+    campusId: string | null
+    orgGroupId: string | null
+    isActive: boolean | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FormAssignmentRuleMaxAggregateOutputType = {
+    id: string | null
+    ownerId: string | null
+    templateId: string | null
+    role: $Enums.UserRole | null
+    assigneeId: string | null
+    campusId: string | null
+    orgGroupId: string | null
+    isActive: boolean | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FormAssignmentRuleCountAggregateOutputType = {
+    id: number
+    ownerId: number
+    templateId: number
+    role: number
+    assigneeId: number
+    campusId: number
+    orgGroupId: number
+    metricIds: number
+    cadenceOverride: number
+    isActive: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FormAssignmentRuleMinAggregateInputType = {
+    id?: true
+    ownerId?: true
+    templateId?: true
+    role?: true
+    assigneeId?: true
+    campusId?: true
+    orgGroupId?: true
+    isActive?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FormAssignmentRuleMaxAggregateInputType = {
+    id?: true
+    ownerId?: true
+    templateId?: true
+    role?: true
+    assigneeId?: true
+    campusId?: true
+    orgGroupId?: true
+    isActive?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FormAssignmentRuleCountAggregateInputType = {
+    id?: true
+    ownerId?: true
+    templateId?: true
+    role?: true
+    assigneeId?: true
+    campusId?: true
+    orgGroupId?: true
+    metricIds?: true
+    cadenceOverride?: true
+    isActive?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FormAssignmentRuleAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FormAssignmentRule to aggregate.
+     */
+    where?: FormAssignmentRuleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormAssignmentRules to fetch.
+     */
+    orderBy?: FormAssignmentRuleOrderByWithRelationInput | FormAssignmentRuleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FormAssignmentRuleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormAssignmentRules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormAssignmentRules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FormAssignmentRules
+    **/
+    _count?: true | FormAssignmentRuleCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FormAssignmentRuleMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FormAssignmentRuleMaxAggregateInputType
+  }
+
+  export type GetFormAssignmentRuleAggregateType<T extends FormAssignmentRuleAggregateArgs> = {
+        [P in keyof T & keyof AggregateFormAssignmentRule]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFormAssignmentRule[P]>
+      : GetScalarType<T[P], AggregateFormAssignmentRule[P]>
+  }
+
+
+
+
+  export type FormAssignmentRuleGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormAssignmentRuleWhereInput
+    orderBy?: FormAssignmentRuleOrderByWithAggregationInput | FormAssignmentRuleOrderByWithAggregationInput[]
+    by: FormAssignmentRuleScalarFieldEnum[] | FormAssignmentRuleScalarFieldEnum
+    having?: FormAssignmentRuleScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FormAssignmentRuleCountAggregateInputType | true
+    _min?: FormAssignmentRuleMinAggregateInputType
+    _max?: FormAssignmentRuleMaxAggregateInputType
+  }
+
+  export type FormAssignmentRuleGroupByOutputType = {
+    id: string
+    ownerId: string
+    templateId: string
+    role: $Enums.UserRole | null
+    assigneeId: string | null
+    campusId: string | null
+    orgGroupId: string | null
+    metricIds: string[]
+    cadenceOverride: JsonValue | null
+    isActive: boolean
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: FormAssignmentRuleCountAggregateOutputType | null
+    _min: FormAssignmentRuleMinAggregateOutputType | null
+    _max: FormAssignmentRuleMaxAggregateOutputType | null
+  }
+
+  type GetFormAssignmentRuleGroupByPayload<T extends FormAssignmentRuleGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FormAssignmentRuleGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FormAssignmentRuleGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FormAssignmentRuleGroupByOutputType[P]>
+            : GetScalarType<T[P], FormAssignmentRuleGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FormAssignmentRuleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    role?: boolean
+    assigneeId?: boolean
+    campusId?: boolean
+    orgGroupId?: boolean
+    metricIds?: boolean
+    cadenceOverride?: boolean
+    isActive?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    template?: boolean | ReportTemplateDefaultArgs<ExtArgs>
+    assignee?: boolean | FormAssignmentRule$assigneeArgs<ExtArgs>
+    assignments?: boolean | FormAssignmentRule$assignmentsArgs<ExtArgs>
+    _count?: boolean | FormAssignmentRuleCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["formAssignmentRule"]>
+
+  export type FormAssignmentRuleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    role?: boolean
+    assigneeId?: boolean
+    campusId?: boolean
+    orgGroupId?: boolean
+    metricIds?: boolean
+    cadenceOverride?: boolean
+    isActive?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    template?: boolean | ReportTemplateDefaultArgs<ExtArgs>
+    assignee?: boolean | FormAssignmentRule$assigneeArgs<ExtArgs>
+  }, ExtArgs["result"]["formAssignmentRule"]>
+
+  export type FormAssignmentRuleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    role?: boolean
+    assigneeId?: boolean
+    campusId?: boolean
+    orgGroupId?: boolean
+    metricIds?: boolean
+    cadenceOverride?: boolean
+    isActive?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    template?: boolean | ReportTemplateDefaultArgs<ExtArgs>
+    assignee?: boolean | FormAssignmentRule$assigneeArgs<ExtArgs>
+  }, ExtArgs["result"]["formAssignmentRule"]>
+
+  export type FormAssignmentRuleSelectScalar = {
+    id?: boolean
+    ownerId?: boolean
+    templateId?: boolean
+    role?: boolean
+    assigneeId?: boolean
+    campusId?: boolean
+    orgGroupId?: boolean
+    metricIds?: boolean
+    cadenceOverride?: boolean
+    isActive?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FormAssignmentRuleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ownerId" | "templateId" | "role" | "assigneeId" | "campusId" | "orgGroupId" | "metricIds" | "cadenceOverride" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["formAssignmentRule"]>
+  export type FormAssignmentRuleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    template?: boolean | ReportTemplateDefaultArgs<ExtArgs>
+    assignee?: boolean | FormAssignmentRule$assigneeArgs<ExtArgs>
+    assignments?: boolean | FormAssignmentRule$assignmentsArgs<ExtArgs>
+    _count?: boolean | FormAssignmentRuleCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type FormAssignmentRuleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    template?: boolean | ReportTemplateDefaultArgs<ExtArgs>
+    assignee?: boolean | FormAssignmentRule$assigneeArgs<ExtArgs>
+  }
+  export type FormAssignmentRuleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    template?: boolean | ReportTemplateDefaultArgs<ExtArgs>
+    assignee?: boolean | FormAssignmentRule$assigneeArgs<ExtArgs>
+  }
+
+  export type $FormAssignmentRulePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FormAssignmentRule"
+    objects: {
+      owner: Prisma.$UserPayload<ExtArgs>
+      template: Prisma.$ReportTemplatePayload<ExtArgs>
+      assignee: Prisma.$UserPayload<ExtArgs> | null
+      assignments: Prisma.$FormAssignmentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ownerId: string
+      templateId: string
+      role: $Enums.UserRole | null
+      assigneeId: string | null
+      campusId: string | null
+      orgGroupId: string | null
+      metricIds: string[]
+      cadenceOverride: Prisma.JsonValue | null
+      isActive: boolean
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["formAssignmentRule"]>
+    composites: {}
+  }
+
+  type FormAssignmentRuleGetPayload<S extends boolean | null | undefined | FormAssignmentRuleDefaultArgs> = $Result.GetResult<Prisma.$FormAssignmentRulePayload, S>
+
+  type FormAssignmentRuleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FormAssignmentRuleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FormAssignmentRuleCountAggregateInputType | true
+    }
+
+  export interface FormAssignmentRuleDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FormAssignmentRule'], meta: { name: 'FormAssignmentRule' } }
+    /**
+     * Find zero or one FormAssignmentRule that matches the filter.
+     * @param {FormAssignmentRuleFindUniqueArgs} args - Arguments to find a FormAssignmentRule
+     * @example
+     * // Get one FormAssignmentRule
+     * const formAssignmentRule = await prisma.formAssignmentRule.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FormAssignmentRuleFindUniqueArgs>(args: SelectSubset<T, FormAssignmentRuleFindUniqueArgs<ExtArgs>>): Prisma__FormAssignmentRuleClient<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FormAssignmentRule that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FormAssignmentRuleFindUniqueOrThrowArgs} args - Arguments to find a FormAssignmentRule
+     * @example
+     * // Get one FormAssignmentRule
+     * const formAssignmentRule = await prisma.formAssignmentRule.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FormAssignmentRuleFindUniqueOrThrowArgs>(args: SelectSubset<T, FormAssignmentRuleFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FormAssignmentRuleClient<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FormAssignmentRule that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentRuleFindFirstArgs} args - Arguments to find a FormAssignmentRule
+     * @example
+     * // Get one FormAssignmentRule
+     * const formAssignmentRule = await prisma.formAssignmentRule.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FormAssignmentRuleFindFirstArgs>(args?: SelectSubset<T, FormAssignmentRuleFindFirstArgs<ExtArgs>>): Prisma__FormAssignmentRuleClient<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FormAssignmentRule that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentRuleFindFirstOrThrowArgs} args - Arguments to find a FormAssignmentRule
+     * @example
+     * // Get one FormAssignmentRule
+     * const formAssignmentRule = await prisma.formAssignmentRule.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FormAssignmentRuleFindFirstOrThrowArgs>(args?: SelectSubset<T, FormAssignmentRuleFindFirstOrThrowArgs<ExtArgs>>): Prisma__FormAssignmentRuleClient<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FormAssignmentRules that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentRuleFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FormAssignmentRules
+     * const formAssignmentRules = await prisma.formAssignmentRule.findMany()
+     * 
+     * // Get first 10 FormAssignmentRules
+     * const formAssignmentRules = await prisma.formAssignmentRule.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const formAssignmentRuleWithIdOnly = await prisma.formAssignmentRule.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FormAssignmentRuleFindManyArgs>(args?: SelectSubset<T, FormAssignmentRuleFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FormAssignmentRule.
+     * @param {FormAssignmentRuleCreateArgs} args - Arguments to create a FormAssignmentRule.
+     * @example
+     * // Create one FormAssignmentRule
+     * const FormAssignmentRule = await prisma.formAssignmentRule.create({
+     *   data: {
+     *     // ... data to create a FormAssignmentRule
+     *   }
+     * })
+     * 
+     */
+    create<T extends FormAssignmentRuleCreateArgs>(args: SelectSubset<T, FormAssignmentRuleCreateArgs<ExtArgs>>): Prisma__FormAssignmentRuleClient<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FormAssignmentRules.
+     * @param {FormAssignmentRuleCreateManyArgs} args - Arguments to create many FormAssignmentRules.
+     * @example
+     * // Create many FormAssignmentRules
+     * const formAssignmentRule = await prisma.formAssignmentRule.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FormAssignmentRuleCreateManyArgs>(args?: SelectSubset<T, FormAssignmentRuleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FormAssignmentRules and returns the data saved in the database.
+     * @param {FormAssignmentRuleCreateManyAndReturnArgs} args - Arguments to create many FormAssignmentRules.
+     * @example
+     * // Create many FormAssignmentRules
+     * const formAssignmentRule = await prisma.formAssignmentRule.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FormAssignmentRules and only return the `id`
+     * const formAssignmentRuleWithIdOnly = await prisma.formAssignmentRule.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FormAssignmentRuleCreateManyAndReturnArgs>(args?: SelectSubset<T, FormAssignmentRuleCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FormAssignmentRule.
+     * @param {FormAssignmentRuleDeleteArgs} args - Arguments to delete one FormAssignmentRule.
+     * @example
+     * // Delete one FormAssignmentRule
+     * const FormAssignmentRule = await prisma.formAssignmentRule.delete({
+     *   where: {
+     *     // ... filter to delete one FormAssignmentRule
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FormAssignmentRuleDeleteArgs>(args: SelectSubset<T, FormAssignmentRuleDeleteArgs<ExtArgs>>): Prisma__FormAssignmentRuleClient<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FormAssignmentRule.
+     * @param {FormAssignmentRuleUpdateArgs} args - Arguments to update one FormAssignmentRule.
+     * @example
+     * // Update one FormAssignmentRule
+     * const formAssignmentRule = await prisma.formAssignmentRule.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FormAssignmentRuleUpdateArgs>(args: SelectSubset<T, FormAssignmentRuleUpdateArgs<ExtArgs>>): Prisma__FormAssignmentRuleClient<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FormAssignmentRules.
+     * @param {FormAssignmentRuleDeleteManyArgs} args - Arguments to filter FormAssignmentRules to delete.
+     * @example
+     * // Delete a few FormAssignmentRules
+     * const { count } = await prisma.formAssignmentRule.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FormAssignmentRuleDeleteManyArgs>(args?: SelectSubset<T, FormAssignmentRuleDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FormAssignmentRules.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentRuleUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FormAssignmentRules
+     * const formAssignmentRule = await prisma.formAssignmentRule.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FormAssignmentRuleUpdateManyArgs>(args: SelectSubset<T, FormAssignmentRuleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FormAssignmentRules and returns the data updated in the database.
+     * @param {FormAssignmentRuleUpdateManyAndReturnArgs} args - Arguments to update many FormAssignmentRules.
+     * @example
+     * // Update many FormAssignmentRules
+     * const formAssignmentRule = await prisma.formAssignmentRule.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FormAssignmentRules and only return the `id`
+     * const formAssignmentRuleWithIdOnly = await prisma.formAssignmentRule.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FormAssignmentRuleUpdateManyAndReturnArgs>(args: SelectSubset<T, FormAssignmentRuleUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FormAssignmentRule.
+     * @param {FormAssignmentRuleUpsertArgs} args - Arguments to update or create a FormAssignmentRule.
+     * @example
+     * // Update or create a FormAssignmentRule
+     * const formAssignmentRule = await prisma.formAssignmentRule.upsert({
+     *   create: {
+     *     // ... data to create a FormAssignmentRule
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FormAssignmentRule we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FormAssignmentRuleUpsertArgs>(args: SelectSubset<T, FormAssignmentRuleUpsertArgs<ExtArgs>>): Prisma__FormAssignmentRuleClient<$Result.GetResult<Prisma.$FormAssignmentRulePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FormAssignmentRules.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentRuleCountArgs} args - Arguments to filter FormAssignmentRules to count.
+     * @example
+     * // Count the number of FormAssignmentRules
+     * const count = await prisma.formAssignmentRule.count({
+     *   where: {
+     *     // ... the filter for the FormAssignmentRules we want to count
+     *   }
+     * })
+    **/
+    count<T extends FormAssignmentRuleCountArgs>(
+      args?: Subset<T, FormAssignmentRuleCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FormAssignmentRuleCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FormAssignmentRule.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentRuleAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FormAssignmentRuleAggregateArgs>(args: Subset<T, FormAssignmentRuleAggregateArgs>): Prisma.PrismaPromise<GetFormAssignmentRuleAggregateType<T>>
+
+    /**
+     * Group by FormAssignmentRule.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FormAssignmentRuleGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FormAssignmentRuleGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FormAssignmentRuleGroupByArgs['orderBy'] }
+        : { orderBy?: FormAssignmentRuleGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FormAssignmentRuleGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFormAssignmentRuleGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FormAssignmentRule model
+   */
+  readonly fields: FormAssignmentRuleFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FormAssignmentRule.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FormAssignmentRuleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    template<T extends ReportTemplateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReportTemplateDefaultArgs<ExtArgs>>): Prisma__ReportTemplateClient<$Result.GetResult<Prisma.$ReportTemplatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    assignee<T extends FormAssignmentRule$assigneeArgs<ExtArgs> = {}>(args?: Subset<T, FormAssignmentRule$assigneeArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    assignments<T extends FormAssignmentRule$assignmentsArgs<ExtArgs> = {}>(args?: Subset<T, FormAssignmentRule$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FormAssignmentRule model
+   */
+  interface FormAssignmentRuleFieldRefs {
+    readonly id: FieldRef<"FormAssignmentRule", 'String'>
+    readonly ownerId: FieldRef<"FormAssignmentRule", 'String'>
+    readonly templateId: FieldRef<"FormAssignmentRule", 'String'>
+    readonly role: FieldRef<"FormAssignmentRule", 'UserRole'>
+    readonly assigneeId: FieldRef<"FormAssignmentRule", 'String'>
+    readonly campusId: FieldRef<"FormAssignmentRule", 'String'>
+    readonly orgGroupId: FieldRef<"FormAssignmentRule", 'String'>
+    readonly metricIds: FieldRef<"FormAssignmentRule", 'String[]'>
+    readonly cadenceOverride: FieldRef<"FormAssignmentRule", 'Json'>
+    readonly isActive: FieldRef<"FormAssignmentRule", 'Boolean'>
+    readonly notes: FieldRef<"FormAssignmentRule", 'String'>
+    readonly createdAt: FieldRef<"FormAssignmentRule", 'DateTime'>
+    readonly updatedAt: FieldRef<"FormAssignmentRule", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FormAssignmentRule findUnique
+   */
+  export type FormAssignmentRuleFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    /**
+     * Filter, which FormAssignmentRule to fetch.
+     */
+    where: FormAssignmentRuleWhereUniqueInput
+  }
+
+  /**
+   * FormAssignmentRule findUniqueOrThrow
+   */
+  export type FormAssignmentRuleFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    /**
+     * Filter, which FormAssignmentRule to fetch.
+     */
+    where: FormAssignmentRuleWhereUniqueInput
+  }
+
+  /**
+   * FormAssignmentRule findFirst
+   */
+  export type FormAssignmentRuleFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    /**
+     * Filter, which FormAssignmentRule to fetch.
+     */
+    where?: FormAssignmentRuleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormAssignmentRules to fetch.
+     */
+    orderBy?: FormAssignmentRuleOrderByWithRelationInput | FormAssignmentRuleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FormAssignmentRules.
+     */
+    cursor?: FormAssignmentRuleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormAssignmentRules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormAssignmentRules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FormAssignmentRules.
+     */
+    distinct?: FormAssignmentRuleScalarFieldEnum | FormAssignmentRuleScalarFieldEnum[]
+  }
+
+  /**
+   * FormAssignmentRule findFirstOrThrow
+   */
+  export type FormAssignmentRuleFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    /**
+     * Filter, which FormAssignmentRule to fetch.
+     */
+    where?: FormAssignmentRuleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormAssignmentRules to fetch.
+     */
+    orderBy?: FormAssignmentRuleOrderByWithRelationInput | FormAssignmentRuleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FormAssignmentRules.
+     */
+    cursor?: FormAssignmentRuleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormAssignmentRules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormAssignmentRules.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FormAssignmentRules.
+     */
+    distinct?: FormAssignmentRuleScalarFieldEnum | FormAssignmentRuleScalarFieldEnum[]
+  }
+
+  /**
+   * FormAssignmentRule findMany
+   */
+  export type FormAssignmentRuleFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    /**
+     * Filter, which FormAssignmentRules to fetch.
+     */
+    where?: FormAssignmentRuleWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FormAssignmentRules to fetch.
+     */
+    orderBy?: FormAssignmentRuleOrderByWithRelationInput | FormAssignmentRuleOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FormAssignmentRules.
+     */
+    cursor?: FormAssignmentRuleWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FormAssignmentRules from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FormAssignmentRules.
+     */
+    skip?: number
+    distinct?: FormAssignmentRuleScalarFieldEnum | FormAssignmentRuleScalarFieldEnum[]
+  }
+
+  /**
+   * FormAssignmentRule create
+   */
+  export type FormAssignmentRuleCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FormAssignmentRule.
+     */
+    data: XOR<FormAssignmentRuleCreateInput, FormAssignmentRuleUncheckedCreateInput>
+  }
+
+  /**
+   * FormAssignmentRule createMany
+   */
+  export type FormAssignmentRuleCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FormAssignmentRules.
+     */
+    data: FormAssignmentRuleCreateManyInput | FormAssignmentRuleCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FormAssignmentRule createManyAndReturn
+   */
+  export type FormAssignmentRuleCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * The data used to create many FormAssignmentRules.
+     */
+    data: FormAssignmentRuleCreateManyInput | FormAssignmentRuleCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FormAssignmentRule update
+   */
+  export type FormAssignmentRuleUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FormAssignmentRule.
+     */
+    data: XOR<FormAssignmentRuleUpdateInput, FormAssignmentRuleUncheckedUpdateInput>
+    /**
+     * Choose, which FormAssignmentRule to update.
+     */
+    where: FormAssignmentRuleWhereUniqueInput
+  }
+
+  /**
+   * FormAssignmentRule updateMany
+   */
+  export type FormAssignmentRuleUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FormAssignmentRules.
+     */
+    data: XOR<FormAssignmentRuleUpdateManyMutationInput, FormAssignmentRuleUncheckedUpdateManyInput>
+    /**
+     * Filter which FormAssignmentRules to update
+     */
+    where?: FormAssignmentRuleWhereInput
+    /**
+     * Limit how many FormAssignmentRules to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FormAssignmentRule updateManyAndReturn
+   */
+  export type FormAssignmentRuleUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * The data used to update FormAssignmentRules.
+     */
+    data: XOR<FormAssignmentRuleUpdateManyMutationInput, FormAssignmentRuleUncheckedUpdateManyInput>
+    /**
+     * Filter which FormAssignmentRules to update
+     */
+    where?: FormAssignmentRuleWhereInput
+    /**
+     * Limit how many FormAssignmentRules to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FormAssignmentRule upsert
+   */
+  export type FormAssignmentRuleUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FormAssignmentRule to update in case it exists.
+     */
+    where: FormAssignmentRuleWhereUniqueInput
+    /**
+     * In case the FormAssignmentRule found by the `where` argument doesn't exist, create a new FormAssignmentRule with this data.
+     */
+    create: XOR<FormAssignmentRuleCreateInput, FormAssignmentRuleUncheckedCreateInput>
+    /**
+     * In case the FormAssignmentRule was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FormAssignmentRuleUpdateInput, FormAssignmentRuleUncheckedUpdateInput>
+  }
+
+  /**
+   * FormAssignmentRule delete
+   */
+  export type FormAssignmentRuleDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
+    /**
+     * Filter which FormAssignmentRule to delete.
+     */
+    where: FormAssignmentRuleWhereUniqueInput
+  }
+
+  /**
+   * FormAssignmentRule deleteMany
+   */
+  export type FormAssignmentRuleDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FormAssignmentRules to delete
+     */
+    where?: FormAssignmentRuleWhereInput
+    /**
+     * Limit how many FormAssignmentRules to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FormAssignmentRule.assignee
+   */
+  export type FormAssignmentRule$assigneeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * FormAssignmentRule.assignments
+   */
+  export type FormAssignmentRule$assignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignment
+     */
+    select?: FormAssignmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignment
+     */
+    omit?: FormAssignmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentInclude<ExtArgs> | null
+    where?: FormAssignmentWhereInput
+    orderBy?: FormAssignmentOrderByWithRelationInput | FormAssignmentOrderByWithRelationInput[]
+    cursor?: FormAssignmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FormAssignmentScalarFieldEnum | FormAssignmentScalarFieldEnum[]
+  }
+
+  /**
+   * FormAssignmentRule without action
+   */
+  export type FormAssignmentRuleDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FormAssignmentRule
+     */
+    select?: FormAssignmentRuleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FormAssignmentRule
+     */
+    omit?: FormAssignmentRuleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FormAssignmentRuleInclude<ExtArgs> | null
   }
 
 
@@ -44621,6 +46534,2364 @@ export namespace Prisma {
 
 
   /**
+   * Model ImpersonationSession
+   */
+
+  export type AggregateImpersonationSession = {
+    _count: ImpersonationSessionCountAggregateOutputType | null
+    _avg: ImpersonationSessionAvgAggregateOutputType | null
+    _sum: ImpersonationSessionSumAggregateOutputType | null
+    _min: ImpersonationSessionMinAggregateOutputType | null
+    _max: ImpersonationSessionMaxAggregateOutputType | null
+  }
+
+  export type ImpersonationSessionAvgAggregateOutputType = {
+    eventCount: number | null
+  }
+
+  export type ImpersonationSessionSumAggregateOutputType = {
+    eventCount: number | null
+  }
+
+  export type ImpersonationSessionMinAggregateOutputType = {
+    id: string | null
+    superadminId: string | null
+    impersonatedRole: $Enums.UserRole | null
+    impersonatedUserId: string | null
+    mode: $Enums.ImpersonationMode | null
+    startedAt: Date | null
+    expiresAt: Date | null
+    endedAt: Date | null
+    endedReason: $Enums.ImpersonationEndReason | null
+    eventCount: number | null
+  }
+
+  export type ImpersonationSessionMaxAggregateOutputType = {
+    id: string | null
+    superadminId: string | null
+    impersonatedRole: $Enums.UserRole | null
+    impersonatedUserId: string | null
+    mode: $Enums.ImpersonationMode | null
+    startedAt: Date | null
+    expiresAt: Date | null
+    endedAt: Date | null
+    endedReason: $Enums.ImpersonationEndReason | null
+    eventCount: number | null
+  }
+
+  export type ImpersonationSessionCountAggregateOutputType = {
+    id: number
+    superadminId: number
+    impersonatedRole: number
+    impersonatedUserId: number
+    mode: number
+    startedAt: number
+    expiresAt: number
+    endedAt: number
+    endedReason: number
+    eventCount: number
+    _all: number
+  }
+
+
+  export type ImpersonationSessionAvgAggregateInputType = {
+    eventCount?: true
+  }
+
+  export type ImpersonationSessionSumAggregateInputType = {
+    eventCount?: true
+  }
+
+  export type ImpersonationSessionMinAggregateInputType = {
+    id?: true
+    superadminId?: true
+    impersonatedRole?: true
+    impersonatedUserId?: true
+    mode?: true
+    startedAt?: true
+    expiresAt?: true
+    endedAt?: true
+    endedReason?: true
+    eventCount?: true
+  }
+
+  export type ImpersonationSessionMaxAggregateInputType = {
+    id?: true
+    superadminId?: true
+    impersonatedRole?: true
+    impersonatedUserId?: true
+    mode?: true
+    startedAt?: true
+    expiresAt?: true
+    endedAt?: true
+    endedReason?: true
+    eventCount?: true
+  }
+
+  export type ImpersonationSessionCountAggregateInputType = {
+    id?: true
+    superadminId?: true
+    impersonatedRole?: true
+    impersonatedUserId?: true
+    mode?: true
+    startedAt?: true
+    expiresAt?: true
+    endedAt?: true
+    endedReason?: true
+    eventCount?: true
+    _all?: true
+  }
+
+  export type ImpersonationSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ImpersonationSession to aggregate.
+     */
+    where?: ImpersonationSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImpersonationSessions to fetch.
+     */
+    orderBy?: ImpersonationSessionOrderByWithRelationInput | ImpersonationSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ImpersonationSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImpersonationSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImpersonationSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ImpersonationSessions
+    **/
+    _count?: true | ImpersonationSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ImpersonationSessionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ImpersonationSessionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ImpersonationSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ImpersonationSessionMaxAggregateInputType
+  }
+
+  export type GetImpersonationSessionAggregateType<T extends ImpersonationSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateImpersonationSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateImpersonationSession[P]>
+      : GetScalarType<T[P], AggregateImpersonationSession[P]>
+  }
+
+
+
+
+  export type ImpersonationSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImpersonationSessionWhereInput
+    orderBy?: ImpersonationSessionOrderByWithAggregationInput | ImpersonationSessionOrderByWithAggregationInput[]
+    by: ImpersonationSessionScalarFieldEnum[] | ImpersonationSessionScalarFieldEnum
+    having?: ImpersonationSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ImpersonationSessionCountAggregateInputType | true
+    _avg?: ImpersonationSessionAvgAggregateInputType
+    _sum?: ImpersonationSessionSumAggregateInputType
+    _min?: ImpersonationSessionMinAggregateInputType
+    _max?: ImpersonationSessionMaxAggregateInputType
+  }
+
+  export type ImpersonationSessionGroupByOutputType = {
+    id: string
+    superadminId: string
+    impersonatedRole: $Enums.UserRole
+    impersonatedUserId: string | null
+    mode: $Enums.ImpersonationMode
+    startedAt: Date
+    expiresAt: Date
+    endedAt: Date | null
+    endedReason: $Enums.ImpersonationEndReason | null
+    eventCount: number
+    _count: ImpersonationSessionCountAggregateOutputType | null
+    _avg: ImpersonationSessionAvgAggregateOutputType | null
+    _sum: ImpersonationSessionSumAggregateOutputType | null
+    _min: ImpersonationSessionMinAggregateOutputType | null
+    _max: ImpersonationSessionMaxAggregateOutputType | null
+  }
+
+  type GetImpersonationSessionGroupByPayload<T extends ImpersonationSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ImpersonationSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ImpersonationSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ImpersonationSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], ImpersonationSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ImpersonationSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    superadminId?: boolean
+    impersonatedRole?: boolean
+    impersonatedUserId?: boolean
+    mode?: boolean
+    startedAt?: boolean
+    expiresAt?: boolean
+    endedAt?: boolean
+    endedReason?: boolean
+    eventCount?: boolean
+    superadmin?: boolean | UserDefaultArgs<ExtArgs>
+    impersonatedUser?: boolean | ImpersonationSession$impersonatedUserArgs<ExtArgs>
+    events?: boolean | ImpersonationSession$eventsArgs<ExtArgs>
+    _count?: boolean | ImpersonationSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["impersonationSession"]>
+
+  export type ImpersonationSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    superadminId?: boolean
+    impersonatedRole?: boolean
+    impersonatedUserId?: boolean
+    mode?: boolean
+    startedAt?: boolean
+    expiresAt?: boolean
+    endedAt?: boolean
+    endedReason?: boolean
+    eventCount?: boolean
+    superadmin?: boolean | UserDefaultArgs<ExtArgs>
+    impersonatedUser?: boolean | ImpersonationSession$impersonatedUserArgs<ExtArgs>
+  }, ExtArgs["result"]["impersonationSession"]>
+
+  export type ImpersonationSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    superadminId?: boolean
+    impersonatedRole?: boolean
+    impersonatedUserId?: boolean
+    mode?: boolean
+    startedAt?: boolean
+    expiresAt?: boolean
+    endedAt?: boolean
+    endedReason?: boolean
+    eventCount?: boolean
+    superadmin?: boolean | UserDefaultArgs<ExtArgs>
+    impersonatedUser?: boolean | ImpersonationSession$impersonatedUserArgs<ExtArgs>
+  }, ExtArgs["result"]["impersonationSession"]>
+
+  export type ImpersonationSessionSelectScalar = {
+    id?: boolean
+    superadminId?: boolean
+    impersonatedRole?: boolean
+    impersonatedUserId?: boolean
+    mode?: boolean
+    startedAt?: boolean
+    expiresAt?: boolean
+    endedAt?: boolean
+    endedReason?: boolean
+    eventCount?: boolean
+  }
+
+  export type ImpersonationSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "superadminId" | "impersonatedRole" | "impersonatedUserId" | "mode" | "startedAt" | "expiresAt" | "endedAt" | "endedReason" | "eventCount", ExtArgs["result"]["impersonationSession"]>
+  export type ImpersonationSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    superadmin?: boolean | UserDefaultArgs<ExtArgs>
+    impersonatedUser?: boolean | ImpersonationSession$impersonatedUserArgs<ExtArgs>
+    events?: boolean | ImpersonationSession$eventsArgs<ExtArgs>
+    _count?: boolean | ImpersonationSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ImpersonationSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    superadmin?: boolean | UserDefaultArgs<ExtArgs>
+    impersonatedUser?: boolean | ImpersonationSession$impersonatedUserArgs<ExtArgs>
+  }
+  export type ImpersonationSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    superadmin?: boolean | UserDefaultArgs<ExtArgs>
+    impersonatedUser?: boolean | ImpersonationSession$impersonatedUserArgs<ExtArgs>
+  }
+
+  export type $ImpersonationSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ImpersonationSession"
+    objects: {
+      superadmin: Prisma.$UserPayload<ExtArgs>
+      impersonatedUser: Prisma.$UserPayload<ExtArgs> | null
+      events: Prisma.$ImpersonationEventPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      superadminId: string
+      impersonatedRole: $Enums.UserRole
+      impersonatedUserId: string | null
+      mode: $Enums.ImpersonationMode
+      startedAt: Date
+      expiresAt: Date
+      endedAt: Date | null
+      endedReason: $Enums.ImpersonationEndReason | null
+      eventCount: number
+    }, ExtArgs["result"]["impersonationSession"]>
+    composites: {}
+  }
+
+  type ImpersonationSessionGetPayload<S extends boolean | null | undefined | ImpersonationSessionDefaultArgs> = $Result.GetResult<Prisma.$ImpersonationSessionPayload, S>
+
+  type ImpersonationSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ImpersonationSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ImpersonationSessionCountAggregateInputType | true
+    }
+
+  export interface ImpersonationSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ImpersonationSession'], meta: { name: 'ImpersonationSession' } }
+    /**
+     * Find zero or one ImpersonationSession that matches the filter.
+     * @param {ImpersonationSessionFindUniqueArgs} args - Arguments to find a ImpersonationSession
+     * @example
+     * // Get one ImpersonationSession
+     * const impersonationSession = await prisma.impersonationSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ImpersonationSessionFindUniqueArgs>(args: SelectSubset<T, ImpersonationSessionFindUniqueArgs<ExtArgs>>): Prisma__ImpersonationSessionClient<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ImpersonationSession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ImpersonationSessionFindUniqueOrThrowArgs} args - Arguments to find a ImpersonationSession
+     * @example
+     * // Get one ImpersonationSession
+     * const impersonationSession = await prisma.impersonationSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ImpersonationSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, ImpersonationSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ImpersonationSessionClient<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ImpersonationSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationSessionFindFirstArgs} args - Arguments to find a ImpersonationSession
+     * @example
+     * // Get one ImpersonationSession
+     * const impersonationSession = await prisma.impersonationSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ImpersonationSessionFindFirstArgs>(args?: SelectSubset<T, ImpersonationSessionFindFirstArgs<ExtArgs>>): Prisma__ImpersonationSessionClient<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ImpersonationSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationSessionFindFirstOrThrowArgs} args - Arguments to find a ImpersonationSession
+     * @example
+     * // Get one ImpersonationSession
+     * const impersonationSession = await prisma.impersonationSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ImpersonationSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, ImpersonationSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ImpersonationSessionClient<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ImpersonationSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ImpersonationSessions
+     * const impersonationSessions = await prisma.impersonationSession.findMany()
+     * 
+     * // Get first 10 ImpersonationSessions
+     * const impersonationSessions = await prisma.impersonationSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const impersonationSessionWithIdOnly = await prisma.impersonationSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ImpersonationSessionFindManyArgs>(args?: SelectSubset<T, ImpersonationSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ImpersonationSession.
+     * @param {ImpersonationSessionCreateArgs} args - Arguments to create a ImpersonationSession.
+     * @example
+     * // Create one ImpersonationSession
+     * const ImpersonationSession = await prisma.impersonationSession.create({
+     *   data: {
+     *     // ... data to create a ImpersonationSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends ImpersonationSessionCreateArgs>(args: SelectSubset<T, ImpersonationSessionCreateArgs<ExtArgs>>): Prisma__ImpersonationSessionClient<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ImpersonationSessions.
+     * @param {ImpersonationSessionCreateManyArgs} args - Arguments to create many ImpersonationSessions.
+     * @example
+     * // Create many ImpersonationSessions
+     * const impersonationSession = await prisma.impersonationSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ImpersonationSessionCreateManyArgs>(args?: SelectSubset<T, ImpersonationSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ImpersonationSessions and returns the data saved in the database.
+     * @param {ImpersonationSessionCreateManyAndReturnArgs} args - Arguments to create many ImpersonationSessions.
+     * @example
+     * // Create many ImpersonationSessions
+     * const impersonationSession = await prisma.impersonationSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ImpersonationSessions and only return the `id`
+     * const impersonationSessionWithIdOnly = await prisma.impersonationSession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ImpersonationSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, ImpersonationSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ImpersonationSession.
+     * @param {ImpersonationSessionDeleteArgs} args - Arguments to delete one ImpersonationSession.
+     * @example
+     * // Delete one ImpersonationSession
+     * const ImpersonationSession = await prisma.impersonationSession.delete({
+     *   where: {
+     *     // ... filter to delete one ImpersonationSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ImpersonationSessionDeleteArgs>(args: SelectSubset<T, ImpersonationSessionDeleteArgs<ExtArgs>>): Prisma__ImpersonationSessionClient<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ImpersonationSession.
+     * @param {ImpersonationSessionUpdateArgs} args - Arguments to update one ImpersonationSession.
+     * @example
+     * // Update one ImpersonationSession
+     * const impersonationSession = await prisma.impersonationSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ImpersonationSessionUpdateArgs>(args: SelectSubset<T, ImpersonationSessionUpdateArgs<ExtArgs>>): Prisma__ImpersonationSessionClient<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ImpersonationSessions.
+     * @param {ImpersonationSessionDeleteManyArgs} args - Arguments to filter ImpersonationSessions to delete.
+     * @example
+     * // Delete a few ImpersonationSessions
+     * const { count } = await prisma.impersonationSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ImpersonationSessionDeleteManyArgs>(args?: SelectSubset<T, ImpersonationSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ImpersonationSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ImpersonationSessions
+     * const impersonationSession = await prisma.impersonationSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ImpersonationSessionUpdateManyArgs>(args: SelectSubset<T, ImpersonationSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ImpersonationSessions and returns the data updated in the database.
+     * @param {ImpersonationSessionUpdateManyAndReturnArgs} args - Arguments to update many ImpersonationSessions.
+     * @example
+     * // Update many ImpersonationSessions
+     * const impersonationSession = await prisma.impersonationSession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ImpersonationSessions and only return the `id`
+     * const impersonationSessionWithIdOnly = await prisma.impersonationSession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ImpersonationSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, ImpersonationSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ImpersonationSession.
+     * @param {ImpersonationSessionUpsertArgs} args - Arguments to update or create a ImpersonationSession.
+     * @example
+     * // Update or create a ImpersonationSession
+     * const impersonationSession = await prisma.impersonationSession.upsert({
+     *   create: {
+     *     // ... data to create a ImpersonationSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ImpersonationSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ImpersonationSessionUpsertArgs>(args: SelectSubset<T, ImpersonationSessionUpsertArgs<ExtArgs>>): Prisma__ImpersonationSessionClient<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ImpersonationSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationSessionCountArgs} args - Arguments to filter ImpersonationSessions to count.
+     * @example
+     * // Count the number of ImpersonationSessions
+     * const count = await prisma.impersonationSession.count({
+     *   where: {
+     *     // ... the filter for the ImpersonationSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends ImpersonationSessionCountArgs>(
+      args?: Subset<T, ImpersonationSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ImpersonationSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ImpersonationSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ImpersonationSessionAggregateArgs>(args: Subset<T, ImpersonationSessionAggregateArgs>): Prisma.PrismaPromise<GetImpersonationSessionAggregateType<T>>
+
+    /**
+     * Group by ImpersonationSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ImpersonationSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ImpersonationSessionGroupByArgs['orderBy'] }
+        : { orderBy?: ImpersonationSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ImpersonationSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetImpersonationSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ImpersonationSession model
+   */
+  readonly fields: ImpersonationSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ImpersonationSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ImpersonationSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    superadmin<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    impersonatedUser<T extends ImpersonationSession$impersonatedUserArgs<ExtArgs> = {}>(args?: Subset<T, ImpersonationSession$impersonatedUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    events<T extends ImpersonationSession$eventsArgs<ExtArgs> = {}>(args?: Subset<T, ImpersonationSession$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ImpersonationSession model
+   */
+  interface ImpersonationSessionFieldRefs {
+    readonly id: FieldRef<"ImpersonationSession", 'String'>
+    readonly superadminId: FieldRef<"ImpersonationSession", 'String'>
+    readonly impersonatedRole: FieldRef<"ImpersonationSession", 'UserRole'>
+    readonly impersonatedUserId: FieldRef<"ImpersonationSession", 'String'>
+    readonly mode: FieldRef<"ImpersonationSession", 'ImpersonationMode'>
+    readonly startedAt: FieldRef<"ImpersonationSession", 'DateTime'>
+    readonly expiresAt: FieldRef<"ImpersonationSession", 'DateTime'>
+    readonly endedAt: FieldRef<"ImpersonationSession", 'DateTime'>
+    readonly endedReason: FieldRef<"ImpersonationSession", 'ImpersonationEndReason'>
+    readonly eventCount: FieldRef<"ImpersonationSession", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ImpersonationSession findUnique
+   */
+  export type ImpersonationSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ImpersonationSession to fetch.
+     */
+    where: ImpersonationSessionWhereUniqueInput
+  }
+
+  /**
+   * ImpersonationSession findUniqueOrThrow
+   */
+  export type ImpersonationSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ImpersonationSession to fetch.
+     */
+    where: ImpersonationSessionWhereUniqueInput
+  }
+
+  /**
+   * ImpersonationSession findFirst
+   */
+  export type ImpersonationSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ImpersonationSession to fetch.
+     */
+    where?: ImpersonationSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImpersonationSessions to fetch.
+     */
+    orderBy?: ImpersonationSessionOrderByWithRelationInput | ImpersonationSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ImpersonationSessions.
+     */
+    cursor?: ImpersonationSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImpersonationSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImpersonationSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ImpersonationSessions.
+     */
+    distinct?: ImpersonationSessionScalarFieldEnum | ImpersonationSessionScalarFieldEnum[]
+  }
+
+  /**
+   * ImpersonationSession findFirstOrThrow
+   */
+  export type ImpersonationSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ImpersonationSession to fetch.
+     */
+    where?: ImpersonationSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImpersonationSessions to fetch.
+     */
+    orderBy?: ImpersonationSessionOrderByWithRelationInput | ImpersonationSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ImpersonationSessions.
+     */
+    cursor?: ImpersonationSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImpersonationSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImpersonationSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ImpersonationSessions.
+     */
+    distinct?: ImpersonationSessionScalarFieldEnum | ImpersonationSessionScalarFieldEnum[]
+  }
+
+  /**
+   * ImpersonationSession findMany
+   */
+  export type ImpersonationSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ImpersonationSessions to fetch.
+     */
+    where?: ImpersonationSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImpersonationSessions to fetch.
+     */
+    orderBy?: ImpersonationSessionOrderByWithRelationInput | ImpersonationSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ImpersonationSessions.
+     */
+    cursor?: ImpersonationSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImpersonationSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImpersonationSessions.
+     */
+    skip?: number
+    distinct?: ImpersonationSessionScalarFieldEnum | ImpersonationSessionScalarFieldEnum[]
+  }
+
+  /**
+   * ImpersonationSession create
+   */
+  export type ImpersonationSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ImpersonationSession.
+     */
+    data: XOR<ImpersonationSessionCreateInput, ImpersonationSessionUncheckedCreateInput>
+  }
+
+  /**
+   * ImpersonationSession createMany
+   */
+  export type ImpersonationSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ImpersonationSessions.
+     */
+    data: ImpersonationSessionCreateManyInput | ImpersonationSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ImpersonationSession createManyAndReturn
+   */
+  export type ImpersonationSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many ImpersonationSessions.
+     */
+    data: ImpersonationSessionCreateManyInput | ImpersonationSessionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ImpersonationSession update
+   */
+  export type ImpersonationSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ImpersonationSession.
+     */
+    data: XOR<ImpersonationSessionUpdateInput, ImpersonationSessionUncheckedUpdateInput>
+    /**
+     * Choose, which ImpersonationSession to update.
+     */
+    where: ImpersonationSessionWhereUniqueInput
+  }
+
+  /**
+   * ImpersonationSession updateMany
+   */
+  export type ImpersonationSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ImpersonationSessions.
+     */
+    data: XOR<ImpersonationSessionUpdateManyMutationInput, ImpersonationSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which ImpersonationSessions to update
+     */
+    where?: ImpersonationSessionWhereInput
+    /**
+     * Limit how many ImpersonationSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ImpersonationSession updateManyAndReturn
+   */
+  export type ImpersonationSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * The data used to update ImpersonationSessions.
+     */
+    data: XOR<ImpersonationSessionUpdateManyMutationInput, ImpersonationSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which ImpersonationSessions to update
+     */
+    where?: ImpersonationSessionWhereInput
+    /**
+     * Limit how many ImpersonationSessions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ImpersonationSession upsert
+   */
+  export type ImpersonationSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ImpersonationSession to update in case it exists.
+     */
+    where: ImpersonationSessionWhereUniqueInput
+    /**
+     * In case the ImpersonationSession found by the `where` argument doesn't exist, create a new ImpersonationSession with this data.
+     */
+    create: XOR<ImpersonationSessionCreateInput, ImpersonationSessionUncheckedCreateInput>
+    /**
+     * In case the ImpersonationSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ImpersonationSessionUpdateInput, ImpersonationSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * ImpersonationSession delete
+   */
+  export type ImpersonationSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+    /**
+     * Filter which ImpersonationSession to delete.
+     */
+    where: ImpersonationSessionWhereUniqueInput
+  }
+
+  /**
+   * ImpersonationSession deleteMany
+   */
+  export type ImpersonationSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ImpersonationSessions to delete
+     */
+    where?: ImpersonationSessionWhereInput
+    /**
+     * Limit how many ImpersonationSessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ImpersonationSession.impersonatedUser
+   */
+  export type ImpersonationSession$impersonatedUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * ImpersonationSession.events
+   */
+  export type ImpersonationSession$eventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventInclude<ExtArgs> | null
+    where?: ImpersonationEventWhereInput
+    orderBy?: ImpersonationEventOrderByWithRelationInput | ImpersonationEventOrderByWithRelationInput[]
+    cursor?: ImpersonationEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ImpersonationEventScalarFieldEnum | ImpersonationEventScalarFieldEnum[]
+  }
+
+  /**
+   * ImpersonationSession without action
+   */
+  export type ImpersonationSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationSession
+     */
+    select?: ImpersonationSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationSession
+     */
+    omit?: ImpersonationSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ImpersonationEvent
+   */
+
+  export type AggregateImpersonationEvent = {
+    _count: ImpersonationEventCountAggregateOutputType | null
+    _avg: ImpersonationEventAvgAggregateOutputType | null
+    _sum: ImpersonationEventSumAggregateOutputType | null
+    _min: ImpersonationEventMinAggregateOutputType | null
+    _max: ImpersonationEventMaxAggregateOutputType | null
+  }
+
+  export type ImpersonationEventAvgAggregateOutputType = {
+    status: number | null
+  }
+
+  export type ImpersonationEventSumAggregateOutputType = {
+    status: number | null
+  }
+
+  export type ImpersonationEventMinAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    type: $Enums.ImpersonationEventType | null
+    path: string | null
+    method: string | null
+    status: number | null
+    requestId: string | null
+    payloadDigest: string | null
+    createdAt: Date | null
+  }
+
+  export type ImpersonationEventMaxAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    type: $Enums.ImpersonationEventType | null
+    path: string | null
+    method: string | null
+    status: number | null
+    requestId: string | null
+    payloadDigest: string | null
+    createdAt: Date | null
+  }
+
+  export type ImpersonationEventCountAggregateOutputType = {
+    id: number
+    sessionId: number
+    type: number
+    path: number
+    method: number
+    status: number
+    requestId: number
+    payloadDigest: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ImpersonationEventAvgAggregateInputType = {
+    status?: true
+  }
+
+  export type ImpersonationEventSumAggregateInputType = {
+    status?: true
+  }
+
+  export type ImpersonationEventMinAggregateInputType = {
+    id?: true
+    sessionId?: true
+    type?: true
+    path?: true
+    method?: true
+    status?: true
+    requestId?: true
+    payloadDigest?: true
+    createdAt?: true
+  }
+
+  export type ImpersonationEventMaxAggregateInputType = {
+    id?: true
+    sessionId?: true
+    type?: true
+    path?: true
+    method?: true
+    status?: true
+    requestId?: true
+    payloadDigest?: true
+    createdAt?: true
+  }
+
+  export type ImpersonationEventCountAggregateInputType = {
+    id?: true
+    sessionId?: true
+    type?: true
+    path?: true
+    method?: true
+    status?: true
+    requestId?: true
+    payloadDigest?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ImpersonationEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ImpersonationEvent to aggregate.
+     */
+    where?: ImpersonationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImpersonationEvents to fetch.
+     */
+    orderBy?: ImpersonationEventOrderByWithRelationInput | ImpersonationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ImpersonationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImpersonationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImpersonationEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ImpersonationEvents
+    **/
+    _count?: true | ImpersonationEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ImpersonationEventAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ImpersonationEventSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ImpersonationEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ImpersonationEventMaxAggregateInputType
+  }
+
+  export type GetImpersonationEventAggregateType<T extends ImpersonationEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateImpersonationEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateImpersonationEvent[P]>
+      : GetScalarType<T[P], AggregateImpersonationEvent[P]>
+  }
+
+
+
+
+  export type ImpersonationEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImpersonationEventWhereInput
+    orderBy?: ImpersonationEventOrderByWithAggregationInput | ImpersonationEventOrderByWithAggregationInput[]
+    by: ImpersonationEventScalarFieldEnum[] | ImpersonationEventScalarFieldEnum
+    having?: ImpersonationEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ImpersonationEventCountAggregateInputType | true
+    _avg?: ImpersonationEventAvgAggregateInputType
+    _sum?: ImpersonationEventSumAggregateInputType
+    _min?: ImpersonationEventMinAggregateInputType
+    _max?: ImpersonationEventMaxAggregateInputType
+  }
+
+  export type ImpersonationEventGroupByOutputType = {
+    id: string
+    sessionId: string
+    type: $Enums.ImpersonationEventType
+    path: string | null
+    method: string | null
+    status: number | null
+    requestId: string | null
+    payloadDigest: string | null
+    createdAt: Date
+    _count: ImpersonationEventCountAggregateOutputType | null
+    _avg: ImpersonationEventAvgAggregateOutputType | null
+    _sum: ImpersonationEventSumAggregateOutputType | null
+    _min: ImpersonationEventMinAggregateOutputType | null
+    _max: ImpersonationEventMaxAggregateOutputType | null
+  }
+
+  type GetImpersonationEventGroupByPayload<T extends ImpersonationEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ImpersonationEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ImpersonationEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ImpersonationEventGroupByOutputType[P]>
+            : GetScalarType<T[P], ImpersonationEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ImpersonationEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    type?: boolean
+    path?: boolean
+    method?: boolean
+    status?: boolean
+    requestId?: boolean
+    payloadDigest?: boolean
+    createdAt?: boolean
+    session?: boolean | ImpersonationSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["impersonationEvent"]>
+
+  export type ImpersonationEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    type?: boolean
+    path?: boolean
+    method?: boolean
+    status?: boolean
+    requestId?: boolean
+    payloadDigest?: boolean
+    createdAt?: boolean
+    session?: boolean | ImpersonationSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["impersonationEvent"]>
+
+  export type ImpersonationEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    type?: boolean
+    path?: boolean
+    method?: boolean
+    status?: boolean
+    requestId?: boolean
+    payloadDigest?: boolean
+    createdAt?: boolean
+    session?: boolean | ImpersonationSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["impersonationEvent"]>
+
+  export type ImpersonationEventSelectScalar = {
+    id?: boolean
+    sessionId?: boolean
+    type?: boolean
+    path?: boolean
+    method?: boolean
+    status?: boolean
+    requestId?: boolean
+    payloadDigest?: boolean
+    createdAt?: boolean
+  }
+
+  export type ImpersonationEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sessionId" | "type" | "path" | "method" | "status" | "requestId" | "payloadDigest" | "createdAt", ExtArgs["result"]["impersonationEvent"]>
+  export type ImpersonationEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | ImpersonationSessionDefaultArgs<ExtArgs>
+  }
+  export type ImpersonationEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | ImpersonationSessionDefaultArgs<ExtArgs>
+  }
+  export type ImpersonationEventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | ImpersonationSessionDefaultArgs<ExtArgs>
+  }
+
+  export type $ImpersonationEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ImpersonationEvent"
+    objects: {
+      session: Prisma.$ImpersonationSessionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sessionId: string
+      type: $Enums.ImpersonationEventType
+      path: string | null
+      method: string | null
+      status: number | null
+      requestId: string | null
+      payloadDigest: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["impersonationEvent"]>
+    composites: {}
+  }
+
+  type ImpersonationEventGetPayload<S extends boolean | null | undefined | ImpersonationEventDefaultArgs> = $Result.GetResult<Prisma.$ImpersonationEventPayload, S>
+
+  type ImpersonationEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ImpersonationEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ImpersonationEventCountAggregateInputType | true
+    }
+
+  export interface ImpersonationEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ImpersonationEvent'], meta: { name: 'ImpersonationEvent' } }
+    /**
+     * Find zero or one ImpersonationEvent that matches the filter.
+     * @param {ImpersonationEventFindUniqueArgs} args - Arguments to find a ImpersonationEvent
+     * @example
+     * // Get one ImpersonationEvent
+     * const impersonationEvent = await prisma.impersonationEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ImpersonationEventFindUniqueArgs>(args: SelectSubset<T, ImpersonationEventFindUniqueArgs<ExtArgs>>): Prisma__ImpersonationEventClient<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ImpersonationEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ImpersonationEventFindUniqueOrThrowArgs} args - Arguments to find a ImpersonationEvent
+     * @example
+     * // Get one ImpersonationEvent
+     * const impersonationEvent = await prisma.impersonationEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ImpersonationEventFindUniqueOrThrowArgs>(args: SelectSubset<T, ImpersonationEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ImpersonationEventClient<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ImpersonationEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationEventFindFirstArgs} args - Arguments to find a ImpersonationEvent
+     * @example
+     * // Get one ImpersonationEvent
+     * const impersonationEvent = await prisma.impersonationEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ImpersonationEventFindFirstArgs>(args?: SelectSubset<T, ImpersonationEventFindFirstArgs<ExtArgs>>): Prisma__ImpersonationEventClient<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ImpersonationEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationEventFindFirstOrThrowArgs} args - Arguments to find a ImpersonationEvent
+     * @example
+     * // Get one ImpersonationEvent
+     * const impersonationEvent = await prisma.impersonationEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ImpersonationEventFindFirstOrThrowArgs>(args?: SelectSubset<T, ImpersonationEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__ImpersonationEventClient<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ImpersonationEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ImpersonationEvents
+     * const impersonationEvents = await prisma.impersonationEvent.findMany()
+     * 
+     * // Get first 10 ImpersonationEvents
+     * const impersonationEvents = await prisma.impersonationEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const impersonationEventWithIdOnly = await prisma.impersonationEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ImpersonationEventFindManyArgs>(args?: SelectSubset<T, ImpersonationEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ImpersonationEvent.
+     * @param {ImpersonationEventCreateArgs} args - Arguments to create a ImpersonationEvent.
+     * @example
+     * // Create one ImpersonationEvent
+     * const ImpersonationEvent = await prisma.impersonationEvent.create({
+     *   data: {
+     *     // ... data to create a ImpersonationEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends ImpersonationEventCreateArgs>(args: SelectSubset<T, ImpersonationEventCreateArgs<ExtArgs>>): Prisma__ImpersonationEventClient<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ImpersonationEvents.
+     * @param {ImpersonationEventCreateManyArgs} args - Arguments to create many ImpersonationEvents.
+     * @example
+     * // Create many ImpersonationEvents
+     * const impersonationEvent = await prisma.impersonationEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ImpersonationEventCreateManyArgs>(args?: SelectSubset<T, ImpersonationEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ImpersonationEvents and returns the data saved in the database.
+     * @param {ImpersonationEventCreateManyAndReturnArgs} args - Arguments to create many ImpersonationEvents.
+     * @example
+     * // Create many ImpersonationEvents
+     * const impersonationEvent = await prisma.impersonationEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ImpersonationEvents and only return the `id`
+     * const impersonationEventWithIdOnly = await prisma.impersonationEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ImpersonationEventCreateManyAndReturnArgs>(args?: SelectSubset<T, ImpersonationEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ImpersonationEvent.
+     * @param {ImpersonationEventDeleteArgs} args - Arguments to delete one ImpersonationEvent.
+     * @example
+     * // Delete one ImpersonationEvent
+     * const ImpersonationEvent = await prisma.impersonationEvent.delete({
+     *   where: {
+     *     // ... filter to delete one ImpersonationEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ImpersonationEventDeleteArgs>(args: SelectSubset<T, ImpersonationEventDeleteArgs<ExtArgs>>): Prisma__ImpersonationEventClient<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ImpersonationEvent.
+     * @param {ImpersonationEventUpdateArgs} args - Arguments to update one ImpersonationEvent.
+     * @example
+     * // Update one ImpersonationEvent
+     * const impersonationEvent = await prisma.impersonationEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ImpersonationEventUpdateArgs>(args: SelectSubset<T, ImpersonationEventUpdateArgs<ExtArgs>>): Prisma__ImpersonationEventClient<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ImpersonationEvents.
+     * @param {ImpersonationEventDeleteManyArgs} args - Arguments to filter ImpersonationEvents to delete.
+     * @example
+     * // Delete a few ImpersonationEvents
+     * const { count } = await prisma.impersonationEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ImpersonationEventDeleteManyArgs>(args?: SelectSubset<T, ImpersonationEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ImpersonationEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ImpersonationEvents
+     * const impersonationEvent = await prisma.impersonationEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ImpersonationEventUpdateManyArgs>(args: SelectSubset<T, ImpersonationEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ImpersonationEvents and returns the data updated in the database.
+     * @param {ImpersonationEventUpdateManyAndReturnArgs} args - Arguments to update many ImpersonationEvents.
+     * @example
+     * // Update many ImpersonationEvents
+     * const impersonationEvent = await prisma.impersonationEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ImpersonationEvents and only return the `id`
+     * const impersonationEventWithIdOnly = await prisma.impersonationEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ImpersonationEventUpdateManyAndReturnArgs>(args: SelectSubset<T, ImpersonationEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ImpersonationEvent.
+     * @param {ImpersonationEventUpsertArgs} args - Arguments to update or create a ImpersonationEvent.
+     * @example
+     * // Update or create a ImpersonationEvent
+     * const impersonationEvent = await prisma.impersonationEvent.upsert({
+     *   create: {
+     *     // ... data to create a ImpersonationEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ImpersonationEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ImpersonationEventUpsertArgs>(args: SelectSubset<T, ImpersonationEventUpsertArgs<ExtArgs>>): Prisma__ImpersonationEventClient<$Result.GetResult<Prisma.$ImpersonationEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ImpersonationEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationEventCountArgs} args - Arguments to filter ImpersonationEvents to count.
+     * @example
+     * // Count the number of ImpersonationEvents
+     * const count = await prisma.impersonationEvent.count({
+     *   where: {
+     *     // ... the filter for the ImpersonationEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends ImpersonationEventCountArgs>(
+      args?: Subset<T, ImpersonationEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ImpersonationEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ImpersonationEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ImpersonationEventAggregateArgs>(args: Subset<T, ImpersonationEventAggregateArgs>): Prisma.PrismaPromise<GetImpersonationEventAggregateType<T>>
+
+    /**
+     * Group by ImpersonationEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ImpersonationEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ImpersonationEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ImpersonationEventGroupByArgs['orderBy'] }
+        : { orderBy?: ImpersonationEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ImpersonationEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetImpersonationEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ImpersonationEvent model
+   */
+  readonly fields: ImpersonationEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ImpersonationEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ImpersonationEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    session<T extends ImpersonationSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ImpersonationSessionDefaultArgs<ExtArgs>>): Prisma__ImpersonationSessionClient<$Result.GetResult<Prisma.$ImpersonationSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ImpersonationEvent model
+   */
+  interface ImpersonationEventFieldRefs {
+    readonly id: FieldRef<"ImpersonationEvent", 'String'>
+    readonly sessionId: FieldRef<"ImpersonationEvent", 'String'>
+    readonly type: FieldRef<"ImpersonationEvent", 'ImpersonationEventType'>
+    readonly path: FieldRef<"ImpersonationEvent", 'String'>
+    readonly method: FieldRef<"ImpersonationEvent", 'String'>
+    readonly status: FieldRef<"ImpersonationEvent", 'Int'>
+    readonly requestId: FieldRef<"ImpersonationEvent", 'String'>
+    readonly payloadDigest: FieldRef<"ImpersonationEvent", 'String'>
+    readonly createdAt: FieldRef<"ImpersonationEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ImpersonationEvent findUnique
+   */
+  export type ImpersonationEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ImpersonationEvent to fetch.
+     */
+    where: ImpersonationEventWhereUniqueInput
+  }
+
+  /**
+   * ImpersonationEvent findUniqueOrThrow
+   */
+  export type ImpersonationEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ImpersonationEvent to fetch.
+     */
+    where: ImpersonationEventWhereUniqueInput
+  }
+
+  /**
+   * ImpersonationEvent findFirst
+   */
+  export type ImpersonationEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ImpersonationEvent to fetch.
+     */
+    where?: ImpersonationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImpersonationEvents to fetch.
+     */
+    orderBy?: ImpersonationEventOrderByWithRelationInput | ImpersonationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ImpersonationEvents.
+     */
+    cursor?: ImpersonationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImpersonationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImpersonationEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ImpersonationEvents.
+     */
+    distinct?: ImpersonationEventScalarFieldEnum | ImpersonationEventScalarFieldEnum[]
+  }
+
+  /**
+   * ImpersonationEvent findFirstOrThrow
+   */
+  export type ImpersonationEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ImpersonationEvent to fetch.
+     */
+    where?: ImpersonationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImpersonationEvents to fetch.
+     */
+    orderBy?: ImpersonationEventOrderByWithRelationInput | ImpersonationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ImpersonationEvents.
+     */
+    cursor?: ImpersonationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImpersonationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImpersonationEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ImpersonationEvents.
+     */
+    distinct?: ImpersonationEventScalarFieldEnum | ImpersonationEventScalarFieldEnum[]
+  }
+
+  /**
+   * ImpersonationEvent findMany
+   */
+  export type ImpersonationEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventInclude<ExtArgs> | null
+    /**
+     * Filter, which ImpersonationEvents to fetch.
+     */
+    where?: ImpersonationEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ImpersonationEvents to fetch.
+     */
+    orderBy?: ImpersonationEventOrderByWithRelationInput | ImpersonationEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ImpersonationEvents.
+     */
+    cursor?: ImpersonationEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ImpersonationEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ImpersonationEvents.
+     */
+    skip?: number
+    distinct?: ImpersonationEventScalarFieldEnum | ImpersonationEventScalarFieldEnum[]
+  }
+
+  /**
+   * ImpersonationEvent create
+   */
+  export type ImpersonationEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ImpersonationEvent.
+     */
+    data: XOR<ImpersonationEventCreateInput, ImpersonationEventUncheckedCreateInput>
+  }
+
+  /**
+   * ImpersonationEvent createMany
+   */
+  export type ImpersonationEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ImpersonationEvents.
+     */
+    data: ImpersonationEventCreateManyInput | ImpersonationEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ImpersonationEvent createManyAndReturn
+   */
+  export type ImpersonationEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many ImpersonationEvents.
+     */
+    data: ImpersonationEventCreateManyInput | ImpersonationEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ImpersonationEvent update
+   */
+  export type ImpersonationEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ImpersonationEvent.
+     */
+    data: XOR<ImpersonationEventUpdateInput, ImpersonationEventUncheckedUpdateInput>
+    /**
+     * Choose, which ImpersonationEvent to update.
+     */
+    where: ImpersonationEventWhereUniqueInput
+  }
+
+  /**
+   * ImpersonationEvent updateMany
+   */
+  export type ImpersonationEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ImpersonationEvents.
+     */
+    data: XOR<ImpersonationEventUpdateManyMutationInput, ImpersonationEventUncheckedUpdateManyInput>
+    /**
+     * Filter which ImpersonationEvents to update
+     */
+    where?: ImpersonationEventWhereInput
+    /**
+     * Limit how many ImpersonationEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ImpersonationEvent updateManyAndReturn
+   */
+  export type ImpersonationEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * The data used to update ImpersonationEvents.
+     */
+    data: XOR<ImpersonationEventUpdateManyMutationInput, ImpersonationEventUncheckedUpdateManyInput>
+    /**
+     * Filter which ImpersonationEvents to update
+     */
+    where?: ImpersonationEventWhereInput
+    /**
+     * Limit how many ImpersonationEvents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ImpersonationEvent upsert
+   */
+  export type ImpersonationEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ImpersonationEvent to update in case it exists.
+     */
+    where: ImpersonationEventWhereUniqueInput
+    /**
+     * In case the ImpersonationEvent found by the `where` argument doesn't exist, create a new ImpersonationEvent with this data.
+     */
+    create: XOR<ImpersonationEventCreateInput, ImpersonationEventUncheckedCreateInput>
+    /**
+     * In case the ImpersonationEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ImpersonationEventUpdateInput, ImpersonationEventUncheckedUpdateInput>
+  }
+
+  /**
+   * ImpersonationEvent delete
+   */
+  export type ImpersonationEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventInclude<ExtArgs> | null
+    /**
+     * Filter which ImpersonationEvent to delete.
+     */
+    where: ImpersonationEventWhereUniqueInput
+  }
+
+  /**
+   * ImpersonationEvent deleteMany
+   */
+  export type ImpersonationEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ImpersonationEvents to delete
+     */
+    where?: ImpersonationEventWhereInput
+    /**
+     * Limit how many ImpersonationEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ImpersonationEvent without action
+   */
+  export type ImpersonationEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ImpersonationEvent
+     */
+    select?: ImpersonationEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ImpersonationEvent
+     */
+    omit?: ImpersonationEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ImpersonationEventInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -44709,7 +48980,10 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     deadlineOffsetHours: 'deadlineOffsetHours',
-    deadlinePolicy: 'deadlinePolicy'
+    deadlinePolicy: 'deadlinePolicy',
+    recurrenceFrequency: 'recurrenceFrequency',
+    recurrenceDays: 'recurrenceDays',
+    autoFillTitleTemplate: 'autoFillTitleTemplate'
   };
 
   export type ReportTemplateScalarFieldEnum = (typeof ReportTemplateScalarFieldEnum)[keyof typeof ReportTemplateScalarFieldEnum]
@@ -44721,7 +48995,8 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     order: 'order',
-    isRequired: 'isRequired'
+    isRequired: 'isRequired',
+    correlationGroup: 'correlationGroup'
   };
 
   export type ReportTemplateSectionScalarFieldEnum = (typeof ReportTemplateSectionScalarFieldEnum)[keyof typeof ReportTemplateSectionScalarFieldEnum]
@@ -44740,7 +49015,8 @@ export namespace Prisma {
     order: 'order',
     capturesGoal: 'capturesGoal',
     capturesAchieved: 'capturesAchieved',
-    capturesYoY: 'capturesYoY'
+    capturesYoY: 'capturesYoY',
+    correlationGroup: 'correlationGroup'
   };
 
   export type ReportTemplateMetricScalarFieldEnum = (typeof ReportTemplateMetricScalarFieldEnum)[keyof typeof ReportTemplateMetricScalarFieldEnum]
@@ -44782,6 +49058,7 @@ export namespace Prisma {
     dataEntryById: 'dataEntryById',
     dataEntryDate: 'dataEntryDate',
     notes: 'notes',
+    autoCreated: 'autoCreated',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -45088,11 +49365,32 @@ export namespace Prisma {
     completedAt: 'completedAt',
     cancelledAt: 'cancelledAt',
     notes: 'notes',
+    ruleId: 'ruleId',
+    periodKey: 'periodKey',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type FormAssignmentScalarFieldEnum = (typeof FormAssignmentScalarFieldEnum)[keyof typeof FormAssignmentScalarFieldEnum]
+
+
+  export const FormAssignmentRuleScalarFieldEnum: {
+    id: 'id',
+    ownerId: 'ownerId',
+    templateId: 'templateId',
+    role: 'role',
+    assigneeId: 'assigneeId',
+    campusId: 'campusId',
+    orgGroupId: 'orgGroupId',
+    metricIds: 'metricIds',
+    cadenceOverride: 'cadenceOverride',
+    isActive: 'isActive',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FormAssignmentRuleScalarFieldEnum = (typeof FormAssignmentRuleScalarFieldEnum)[keyof typeof FormAssignmentRuleScalarFieldEnum]
 
 
   export const ImportJobScalarFieldEnum: {
@@ -45182,6 +49480,37 @@ export namespace Prisma {
   };
 
   export type UserActivationTokenScalarFieldEnum = (typeof UserActivationTokenScalarFieldEnum)[keyof typeof UserActivationTokenScalarFieldEnum]
+
+
+  export const ImpersonationSessionScalarFieldEnum: {
+    id: 'id',
+    superadminId: 'superadminId',
+    impersonatedRole: 'impersonatedRole',
+    impersonatedUserId: 'impersonatedUserId',
+    mode: 'mode',
+    startedAt: 'startedAt',
+    expiresAt: 'expiresAt',
+    endedAt: 'endedAt',
+    endedReason: 'endedReason',
+    eventCount: 'eventCount'
+  };
+
+  export type ImpersonationSessionScalarFieldEnum = (typeof ImpersonationSessionScalarFieldEnum)[keyof typeof ImpersonationSessionScalarFieldEnum]
+
+
+  export const ImpersonationEventScalarFieldEnum: {
+    id: 'id',
+    sessionId: 'sessionId',
+    type: 'type',
+    path: 'path',
+    method: 'method',
+    status: 'status',
+    requestId: 'requestId',
+    payloadDigest: 'payloadDigest',
+    createdAt: 'createdAt'
+  };
+
+  export type ImpersonationEventScalarFieldEnum = (typeof ImpersonationEventScalarFieldEnum)[keyof typeof ImpersonationEventScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -45329,6 +49658,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ReportPeriodType'
+   */
+  export type EnumReportPeriodTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportPeriodType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ReportPeriodType[]'
+   */
+  export type ListEnumReportPeriodTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportPeriodType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'MetricFieldType'
    */
   export type EnumMetricFieldTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MetricFieldType'>
@@ -45381,20 +49724,6 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
-   * Reference to a field of type 'ReportPeriodType'
-   */
-  export type EnumReportPeriodTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportPeriodType'>
-    
-
-
-  /**
-   * Reference to a field of type 'ReportPeriodType[]'
-   */
-  export type ListEnumReportPeriodTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReportPeriodType[]'>
     
 
 
@@ -45718,6 +50047,48 @@ export namespace Prisma {
    */
   export type ListEnumPwaDismissalModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PwaDismissalMode[]'>
     
+
+
+  /**
+   * Reference to a field of type 'ImpersonationMode'
+   */
+  export type EnumImpersonationModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImpersonationMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'ImpersonationMode[]'
+   */
+  export type ListEnumImpersonationModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImpersonationMode[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ImpersonationEndReason'
+   */
+  export type EnumImpersonationEndReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImpersonationEndReason'>
+    
+
+
+  /**
+   * Reference to a field of type 'ImpersonationEndReason[]'
+   */
+  export type ListEnumImpersonationEndReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImpersonationEndReason[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ImpersonationEventType'
+   */
+  export type EnumImpersonationEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImpersonationEventType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ImpersonationEventType[]'
+   */
+  export type ListEnumImpersonationEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImpersonationEventType[]'>
+    
   /**
    * Deep Input Types
    */
@@ -45778,6 +50149,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryListRelationFilter
     formAssignmentsReceived?: FormAssignmentListRelationFilter
     formAssignmentsCreated?: FormAssignmentListRelationFilter
+    formAssignmentRulesOwned?: FormAssignmentRuleListRelationFilter
+    formAssignmentRulesAssigned?: FormAssignmentRuleListRelationFilter
+    impersonationSessions?: ImpersonationSessionListRelationFilter
+    impersonationTargetedBy?: ImpersonationSessionListRelationFilter
     importJobs?: ImportJobListRelationFilter
     importMappingProfiles?: ImportMappingProfileListRelationFilter
     bulkInviteBatches?: BulkInviteBatchListRelationFilter
@@ -45839,6 +50214,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryOrderByRelationAggregateInput
     formAssignmentsReceived?: FormAssignmentOrderByRelationAggregateInput
     formAssignmentsCreated?: FormAssignmentOrderByRelationAggregateInput
+    formAssignmentRulesOwned?: FormAssignmentRuleOrderByRelationAggregateInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleOrderByRelationAggregateInput
+    impersonationSessions?: ImpersonationSessionOrderByRelationAggregateInput
+    impersonationTargetedBy?: ImpersonationSessionOrderByRelationAggregateInput
     importJobs?: ImportJobOrderByRelationAggregateInput
     importMappingProfiles?: ImportMappingProfileOrderByRelationAggregateInput
     bulkInviteBatches?: BulkInviteBatchOrderByRelationAggregateInput
@@ -45903,6 +50282,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryListRelationFilter
     formAssignmentsReceived?: FormAssignmentListRelationFilter
     formAssignmentsCreated?: FormAssignmentListRelationFilter
+    formAssignmentRulesOwned?: FormAssignmentRuleListRelationFilter
+    formAssignmentRulesAssigned?: FormAssignmentRuleListRelationFilter
+    impersonationSessions?: ImpersonationSessionListRelationFilter
+    impersonationTargetedBy?: ImpersonationSessionListRelationFilter
     importJobs?: ImportJobListRelationFilter
     importMappingProfiles?: ImportMappingProfileListRelationFilter
     bulkInviteBatches?: BulkInviteBatchListRelationFilter
@@ -46183,11 +50566,15 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ReportTemplate"> | Date | string
     deadlineOffsetHours?: IntNullableFilter<"ReportTemplate"> | number | null
     deadlinePolicy?: EnumReportDeadlinePolicyNullableFilter<"ReportTemplate"> | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: EnumReportPeriodTypeNullableFilter<"ReportTemplate"> | $Enums.ReportPeriodType | null
+    recurrenceDays?: IntNullableListFilter<"ReportTemplate">
+    autoFillTitleTemplate?: StringNullableFilter<"ReportTemplate"> | string | null
     goals?: GoalListRelationFilter
     sections?: ReportTemplateSectionListRelationFilter
     versions?: ReportTemplateVersionListRelationFilter
     createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
     reports?: ReportListRelationFilter
+    formAssignmentRules?: FormAssignmentRuleListRelationFilter
   }
 
   export type ReportTemplateOrderByWithRelationInput = {
@@ -46205,11 +50592,15 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deadlineOffsetHours?: SortOrderInput | SortOrder
     deadlinePolicy?: SortOrderInput | SortOrder
+    recurrenceFrequency?: SortOrderInput | SortOrder
+    recurrenceDays?: SortOrder
+    autoFillTitleTemplate?: SortOrderInput | SortOrder
     goals?: GoalOrderByRelationAggregateInput
     sections?: ReportTemplateSectionOrderByRelationAggregateInput
     versions?: ReportTemplateVersionOrderByRelationAggregateInput
     createdBy?: UserOrderByWithRelationInput
     reports?: ReportOrderByRelationAggregateInput
+    formAssignmentRules?: FormAssignmentRuleOrderByRelationAggregateInput
   }
 
   export type ReportTemplateWhereUniqueInput = Prisma.AtLeast<{
@@ -46230,11 +50621,15 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ReportTemplate"> | Date | string
     deadlineOffsetHours?: IntNullableFilter<"ReportTemplate"> | number | null
     deadlinePolicy?: EnumReportDeadlinePolicyNullableFilter<"ReportTemplate"> | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: EnumReportPeriodTypeNullableFilter<"ReportTemplate"> | $Enums.ReportPeriodType | null
+    recurrenceDays?: IntNullableListFilter<"ReportTemplate">
+    autoFillTitleTemplate?: StringNullableFilter<"ReportTemplate"> | string | null
     goals?: GoalListRelationFilter
     sections?: ReportTemplateSectionListRelationFilter
     versions?: ReportTemplateVersionListRelationFilter
     createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
     reports?: ReportListRelationFilter
+    formAssignmentRules?: FormAssignmentRuleListRelationFilter
   }, "id">
 
   export type ReportTemplateOrderByWithAggregationInput = {
@@ -46252,6 +50647,9 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deadlineOffsetHours?: SortOrderInput | SortOrder
     deadlinePolicy?: SortOrderInput | SortOrder
+    recurrenceFrequency?: SortOrderInput | SortOrder
+    recurrenceDays?: SortOrder
+    autoFillTitleTemplate?: SortOrderInput | SortOrder
     _count?: ReportTemplateCountOrderByAggregateInput
     _avg?: ReportTemplateAvgOrderByAggregateInput
     _max?: ReportTemplateMaxOrderByAggregateInput
@@ -46277,6 +50675,9 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"ReportTemplate"> | Date | string
     deadlineOffsetHours?: IntNullableWithAggregatesFilter<"ReportTemplate"> | number | null
     deadlinePolicy?: EnumReportDeadlinePolicyNullableWithAggregatesFilter<"ReportTemplate"> | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: EnumReportPeriodTypeNullableWithAggregatesFilter<"ReportTemplate"> | $Enums.ReportPeriodType | null
+    recurrenceDays?: IntNullableListFilter<"ReportTemplate">
+    autoFillTitleTemplate?: StringNullableWithAggregatesFilter<"ReportTemplate"> | string | null
   }
 
   export type ReportTemplateSectionWhereInput = {
@@ -46289,6 +50690,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"ReportTemplateSection"> | string | null
     order?: IntFilter<"ReportTemplateSection"> | number
     isRequired?: BoolFilter<"ReportTemplateSection"> | boolean
+    correlationGroup?: StringNullableFilter<"ReportTemplateSection"> | string | null
     metrics?: ReportTemplateMetricListRelationFilter
     template?: XOR<ReportTemplateScalarRelationFilter, ReportTemplateWhereInput>
   }
@@ -46300,6 +50702,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     order?: SortOrder
     isRequired?: SortOrder
+    correlationGroup?: SortOrderInput | SortOrder
     metrics?: ReportTemplateMetricOrderByRelationAggregateInput
     template?: ReportTemplateOrderByWithRelationInput
   }
@@ -46314,6 +50717,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"ReportTemplateSection"> | string | null
     order?: IntFilter<"ReportTemplateSection"> | number
     isRequired?: BoolFilter<"ReportTemplateSection"> | boolean
+    correlationGroup?: StringNullableFilter<"ReportTemplateSection"> | string | null
     metrics?: ReportTemplateMetricListRelationFilter
     template?: XOR<ReportTemplateScalarRelationFilter, ReportTemplateWhereInput>
   }, "id">
@@ -46325,6 +50729,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     order?: SortOrder
     isRequired?: SortOrder
+    correlationGroup?: SortOrderInput | SortOrder
     _count?: ReportTemplateSectionCountOrderByAggregateInput
     _avg?: ReportTemplateSectionAvgOrderByAggregateInput
     _max?: ReportTemplateSectionMaxOrderByAggregateInput
@@ -46342,6 +50747,7 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"ReportTemplateSection"> | string | null
     order?: IntWithAggregatesFilter<"ReportTemplateSection"> | number
     isRequired?: BoolWithAggregatesFilter<"ReportTemplateSection"> | boolean
+    correlationGroup?: StringNullableWithAggregatesFilter<"ReportTemplateSection"> | string | null
   }
 
   export type ReportTemplateMetricWhereInput = {
@@ -46361,6 +50767,7 @@ export namespace Prisma {
     capturesGoal?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesAchieved?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesYoY?: BoolFilter<"ReportTemplateMetric"> | boolean
+    correlationGroup?: StringNullableFilter<"ReportTemplateMetric"> | string | null
     goals?: GoalListRelationFilter
     metricEntries?: MetricEntryListRelationFilter
     reportMetrics?: ReportMetricListRelationFilter
@@ -46381,6 +50788,7 @@ export namespace Prisma {
     capturesGoal?: SortOrder
     capturesAchieved?: SortOrder
     capturesYoY?: SortOrder
+    correlationGroup?: SortOrderInput | SortOrder
     goals?: GoalOrderByRelationAggregateInput
     metricEntries?: MetricEntryOrderByRelationAggregateInput
     reportMetrics?: ReportMetricOrderByRelationAggregateInput
@@ -46404,6 +50812,7 @@ export namespace Prisma {
     capturesGoal?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesAchieved?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesYoY?: BoolFilter<"ReportTemplateMetric"> | boolean
+    correlationGroup?: StringNullableFilter<"ReportTemplateMetric"> | string | null
     goals?: GoalListRelationFilter
     metricEntries?: MetricEntryListRelationFilter
     reportMetrics?: ReportMetricListRelationFilter
@@ -46424,6 +50833,7 @@ export namespace Prisma {
     capturesGoal?: SortOrder
     capturesAchieved?: SortOrder
     capturesYoY?: SortOrder
+    correlationGroup?: SortOrderInput | SortOrder
     _count?: ReportTemplateMetricCountOrderByAggregateInput
     _avg?: ReportTemplateMetricAvgOrderByAggregateInput
     _max?: ReportTemplateMetricMaxOrderByAggregateInput
@@ -46448,6 +50858,7 @@ export namespace Prisma {
     capturesGoal?: BoolWithAggregatesFilter<"ReportTemplateMetric"> | boolean
     capturesAchieved?: BoolWithAggregatesFilter<"ReportTemplateMetric"> | boolean
     capturesYoY?: BoolWithAggregatesFilter<"ReportTemplateMetric"> | boolean
+    correlationGroup?: StringNullableWithAggregatesFilter<"ReportTemplateMetric"> | string | null
   }
 
   export type ReportTemplateVersionWhereInput = {
@@ -46542,6 +50953,7 @@ export namespace Prisma {
     dataEntryById?: StringNullableFilter<"Report"> | string | null
     dataEntryDate?: DateTimeNullableFilter<"Report"> | Date | string | null
     notes?: StringNullableFilter<"Report"> | string | null
+    autoCreated?: BoolFilter<"Report"> | boolean
     createdAt?: DateTimeFilter<"Report"> | Date | string
     updatedAt?: DateTimeFilter<"Report"> | Date | string
     edits?: ReportEditListRelationFilter
@@ -46584,6 +50996,7 @@ export namespace Prisma {
     dataEntryById?: SortOrderInput | SortOrder
     dataEntryDate?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    autoCreated?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     edits?: ReportEditOrderByRelationAggregateInput
@@ -46629,6 +51042,7 @@ export namespace Prisma {
     dataEntryById?: StringNullableFilter<"Report"> | string | null
     dataEntryDate?: DateTimeNullableFilter<"Report"> | Date | string | null
     notes?: StringNullableFilter<"Report"> | string | null
+    autoCreated?: BoolFilter<"Report"> | boolean
     createdAt?: DateTimeFilter<"Report"> | Date | string
     updatedAt?: DateTimeFilter<"Report"> | Date | string
     edits?: ReportEditListRelationFilter
@@ -46671,6 +51085,7 @@ export namespace Prisma {
     dataEntryById?: SortOrderInput | SortOrder
     dataEntryDate?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    autoCreated?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ReportCountOrderByAggregateInput
@@ -46707,6 +51122,7 @@ export namespace Prisma {
     dataEntryById?: StringNullableWithAggregatesFilter<"Report"> | string | null
     dataEntryDate?: DateTimeNullableWithAggregatesFilter<"Report"> | Date | string | null
     notes?: StringNullableWithAggregatesFilter<"Report"> | string | null
+    autoCreated?: BoolWithAggregatesFilter<"Report"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Report"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Report"> | Date | string
   }
@@ -48266,11 +52682,14 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
     cancelledAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
     notes?: StringNullableFilter<"FormAssignment"> | string | null
+    ruleId?: StringNullableFilter<"FormAssignment"> | string | null
+    periodKey?: StringNullableFilter<"FormAssignment"> | string | null
     createdAt?: DateTimeFilter<"FormAssignment"> | Date | string
     updatedAt?: DateTimeFilter<"FormAssignment"> | Date | string
     report?: XOR<ReportScalarRelationFilter, ReportWhereInput>
     assignee?: XOR<UserScalarRelationFilter, UserWhereInput>
     assignedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    rule?: XOR<FormAssignmentRuleNullableScalarRelationFilter, FormAssignmentRuleWhereInput> | null
   }
 
   export type FormAssignmentOrderByWithRelationInput = {
@@ -48283,11 +52702,14 @@ export namespace Prisma {
     completedAt?: SortOrderInput | SortOrder
     cancelledAt?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    ruleId?: SortOrderInput | SortOrder
+    periodKey?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     report?: ReportOrderByWithRelationInput
     assignee?: UserOrderByWithRelationInput
     assignedBy?: UserOrderByWithRelationInput
+    rule?: FormAssignmentRuleOrderByWithRelationInput
   }
 
   export type FormAssignmentWhereUniqueInput = Prisma.AtLeast<{
@@ -48303,11 +52725,14 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
     cancelledAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
     notes?: StringNullableFilter<"FormAssignment"> | string | null
+    ruleId?: StringNullableFilter<"FormAssignment"> | string | null
+    periodKey?: StringNullableFilter<"FormAssignment"> | string | null
     createdAt?: DateTimeFilter<"FormAssignment"> | Date | string
     updatedAt?: DateTimeFilter<"FormAssignment"> | Date | string
     report?: XOR<ReportScalarRelationFilter, ReportWhereInput>
     assignee?: XOR<UserScalarRelationFilter, UserWhereInput>
     assignedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
+    rule?: XOR<FormAssignmentRuleNullableScalarRelationFilter, FormAssignmentRuleWhereInput> | null
   }, "id">
 
   export type FormAssignmentOrderByWithAggregationInput = {
@@ -48320,6 +52745,8 @@ export namespace Prisma {
     completedAt?: SortOrderInput | SortOrder
     cancelledAt?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
+    ruleId?: SortOrderInput | SortOrder
+    periodKey?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: FormAssignmentCountOrderByAggregateInput
@@ -48340,8 +52767,114 @@ export namespace Prisma {
     completedAt?: DateTimeNullableWithAggregatesFilter<"FormAssignment"> | Date | string | null
     cancelledAt?: DateTimeNullableWithAggregatesFilter<"FormAssignment"> | Date | string | null
     notes?: StringNullableWithAggregatesFilter<"FormAssignment"> | string | null
+    ruleId?: StringNullableWithAggregatesFilter<"FormAssignment"> | string | null
+    periodKey?: StringNullableWithAggregatesFilter<"FormAssignment"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"FormAssignment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"FormAssignment"> | Date | string
+  }
+
+  export type FormAssignmentRuleWhereInput = {
+    AND?: FormAssignmentRuleWhereInput | FormAssignmentRuleWhereInput[]
+    OR?: FormAssignmentRuleWhereInput[]
+    NOT?: FormAssignmentRuleWhereInput | FormAssignmentRuleWhereInput[]
+    id?: StringFilter<"FormAssignmentRule"> | string
+    ownerId?: StringFilter<"FormAssignmentRule"> | string
+    templateId?: StringFilter<"FormAssignmentRule"> | string
+    role?: EnumUserRoleNullableFilter<"FormAssignmentRule"> | $Enums.UserRole | null
+    assigneeId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    campusId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    orgGroupId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    metricIds?: StringNullableListFilter<"FormAssignmentRule">
+    cadenceOverride?: JsonNullableFilter<"FormAssignmentRule">
+    isActive?: BoolFilter<"FormAssignmentRule"> | boolean
+    notes?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    createdAt?: DateTimeFilter<"FormAssignmentRule"> | Date | string
+    updatedAt?: DateTimeFilter<"FormAssignmentRule"> | Date | string
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    template?: XOR<ReportTemplateScalarRelationFilter, ReportTemplateWhereInput>
+    assignee?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    assignments?: FormAssignmentListRelationFilter
+  }
+
+  export type FormAssignmentRuleOrderByWithRelationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrder
+    role?: SortOrderInput | SortOrder
+    assigneeId?: SortOrderInput | SortOrder
+    campusId?: SortOrderInput | SortOrder
+    orgGroupId?: SortOrderInput | SortOrder
+    metricIds?: SortOrder
+    cadenceOverride?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    owner?: UserOrderByWithRelationInput
+    template?: ReportTemplateOrderByWithRelationInput
+    assignee?: UserOrderByWithRelationInput
+    assignments?: FormAssignmentOrderByRelationAggregateInput
+  }
+
+  export type FormAssignmentRuleWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FormAssignmentRuleWhereInput | FormAssignmentRuleWhereInput[]
+    OR?: FormAssignmentRuleWhereInput[]
+    NOT?: FormAssignmentRuleWhereInput | FormAssignmentRuleWhereInput[]
+    ownerId?: StringFilter<"FormAssignmentRule"> | string
+    templateId?: StringFilter<"FormAssignmentRule"> | string
+    role?: EnumUserRoleNullableFilter<"FormAssignmentRule"> | $Enums.UserRole | null
+    assigneeId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    campusId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    orgGroupId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    metricIds?: StringNullableListFilter<"FormAssignmentRule">
+    cadenceOverride?: JsonNullableFilter<"FormAssignmentRule">
+    isActive?: BoolFilter<"FormAssignmentRule"> | boolean
+    notes?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    createdAt?: DateTimeFilter<"FormAssignmentRule"> | Date | string
+    updatedAt?: DateTimeFilter<"FormAssignmentRule"> | Date | string
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
+    template?: XOR<ReportTemplateScalarRelationFilter, ReportTemplateWhereInput>
+    assignee?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    assignments?: FormAssignmentListRelationFilter
+  }, "id">
+
+  export type FormAssignmentRuleOrderByWithAggregationInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrder
+    role?: SortOrderInput | SortOrder
+    assigneeId?: SortOrderInput | SortOrder
+    campusId?: SortOrderInput | SortOrder
+    orgGroupId?: SortOrderInput | SortOrder
+    metricIds?: SortOrder
+    cadenceOverride?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FormAssignmentRuleCountOrderByAggregateInput
+    _max?: FormAssignmentRuleMaxOrderByAggregateInput
+    _min?: FormAssignmentRuleMinOrderByAggregateInput
+  }
+
+  export type FormAssignmentRuleScalarWhereWithAggregatesInput = {
+    AND?: FormAssignmentRuleScalarWhereWithAggregatesInput | FormAssignmentRuleScalarWhereWithAggregatesInput[]
+    OR?: FormAssignmentRuleScalarWhereWithAggregatesInput[]
+    NOT?: FormAssignmentRuleScalarWhereWithAggregatesInput | FormAssignmentRuleScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FormAssignmentRule"> | string
+    ownerId?: StringWithAggregatesFilter<"FormAssignmentRule"> | string
+    templateId?: StringWithAggregatesFilter<"FormAssignmentRule"> | string
+    role?: EnumUserRoleNullableWithAggregatesFilter<"FormAssignmentRule"> | $Enums.UserRole | null
+    assigneeId?: StringNullableWithAggregatesFilter<"FormAssignmentRule"> | string | null
+    campusId?: StringNullableWithAggregatesFilter<"FormAssignmentRule"> | string | null
+    orgGroupId?: StringNullableWithAggregatesFilter<"FormAssignmentRule"> | string | null
+    metricIds?: StringNullableListFilter<"FormAssignmentRule">
+    cadenceOverride?: JsonNullableWithAggregatesFilter<"FormAssignmentRule">
+    isActive?: BoolWithAggregatesFilter<"FormAssignmentRule"> | boolean
+    notes?: StringNullableWithAggregatesFilter<"FormAssignmentRule"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"FormAssignmentRule"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FormAssignmentRule"> | Date | string
   }
 
   export type ImportJobWhereInput = {
@@ -48808,6 +53341,171 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"UserActivationToken"> | Date | string
   }
 
+  export type ImpersonationSessionWhereInput = {
+    AND?: ImpersonationSessionWhereInput | ImpersonationSessionWhereInput[]
+    OR?: ImpersonationSessionWhereInput[]
+    NOT?: ImpersonationSessionWhereInput | ImpersonationSessionWhereInput[]
+    id?: StringFilter<"ImpersonationSession"> | string
+    superadminId?: StringFilter<"ImpersonationSession"> | string
+    impersonatedRole?: EnumUserRoleFilter<"ImpersonationSession"> | $Enums.UserRole
+    impersonatedUserId?: StringNullableFilter<"ImpersonationSession"> | string | null
+    mode?: EnumImpersonationModeFilter<"ImpersonationSession"> | $Enums.ImpersonationMode
+    startedAt?: DateTimeFilter<"ImpersonationSession"> | Date | string
+    expiresAt?: DateTimeFilter<"ImpersonationSession"> | Date | string
+    endedAt?: DateTimeNullableFilter<"ImpersonationSession"> | Date | string | null
+    endedReason?: EnumImpersonationEndReasonNullableFilter<"ImpersonationSession"> | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFilter<"ImpersonationSession"> | number
+    superadmin?: XOR<UserScalarRelationFilter, UserWhereInput>
+    impersonatedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    events?: ImpersonationEventListRelationFilter
+  }
+
+  export type ImpersonationSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    superadminId?: SortOrder
+    impersonatedRole?: SortOrder
+    impersonatedUserId?: SortOrderInput | SortOrder
+    mode?: SortOrder
+    startedAt?: SortOrder
+    expiresAt?: SortOrder
+    endedAt?: SortOrderInput | SortOrder
+    endedReason?: SortOrderInput | SortOrder
+    eventCount?: SortOrder
+    superadmin?: UserOrderByWithRelationInput
+    impersonatedUser?: UserOrderByWithRelationInput
+    events?: ImpersonationEventOrderByRelationAggregateInput
+  }
+
+  export type ImpersonationSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ImpersonationSessionWhereInput | ImpersonationSessionWhereInput[]
+    OR?: ImpersonationSessionWhereInput[]
+    NOT?: ImpersonationSessionWhereInput | ImpersonationSessionWhereInput[]
+    superadminId?: StringFilter<"ImpersonationSession"> | string
+    impersonatedRole?: EnumUserRoleFilter<"ImpersonationSession"> | $Enums.UserRole
+    impersonatedUserId?: StringNullableFilter<"ImpersonationSession"> | string | null
+    mode?: EnumImpersonationModeFilter<"ImpersonationSession"> | $Enums.ImpersonationMode
+    startedAt?: DateTimeFilter<"ImpersonationSession"> | Date | string
+    expiresAt?: DateTimeFilter<"ImpersonationSession"> | Date | string
+    endedAt?: DateTimeNullableFilter<"ImpersonationSession"> | Date | string | null
+    endedReason?: EnumImpersonationEndReasonNullableFilter<"ImpersonationSession"> | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFilter<"ImpersonationSession"> | number
+    superadmin?: XOR<UserScalarRelationFilter, UserWhereInput>
+    impersonatedUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    events?: ImpersonationEventListRelationFilter
+  }, "id">
+
+  export type ImpersonationSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    superadminId?: SortOrder
+    impersonatedRole?: SortOrder
+    impersonatedUserId?: SortOrderInput | SortOrder
+    mode?: SortOrder
+    startedAt?: SortOrder
+    expiresAt?: SortOrder
+    endedAt?: SortOrderInput | SortOrder
+    endedReason?: SortOrderInput | SortOrder
+    eventCount?: SortOrder
+    _count?: ImpersonationSessionCountOrderByAggregateInput
+    _avg?: ImpersonationSessionAvgOrderByAggregateInput
+    _max?: ImpersonationSessionMaxOrderByAggregateInput
+    _min?: ImpersonationSessionMinOrderByAggregateInput
+    _sum?: ImpersonationSessionSumOrderByAggregateInput
+  }
+
+  export type ImpersonationSessionScalarWhereWithAggregatesInput = {
+    AND?: ImpersonationSessionScalarWhereWithAggregatesInput | ImpersonationSessionScalarWhereWithAggregatesInput[]
+    OR?: ImpersonationSessionScalarWhereWithAggregatesInput[]
+    NOT?: ImpersonationSessionScalarWhereWithAggregatesInput | ImpersonationSessionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ImpersonationSession"> | string
+    superadminId?: StringWithAggregatesFilter<"ImpersonationSession"> | string
+    impersonatedRole?: EnumUserRoleWithAggregatesFilter<"ImpersonationSession"> | $Enums.UserRole
+    impersonatedUserId?: StringNullableWithAggregatesFilter<"ImpersonationSession"> | string | null
+    mode?: EnumImpersonationModeWithAggregatesFilter<"ImpersonationSession"> | $Enums.ImpersonationMode
+    startedAt?: DateTimeWithAggregatesFilter<"ImpersonationSession"> | Date | string
+    expiresAt?: DateTimeWithAggregatesFilter<"ImpersonationSession"> | Date | string
+    endedAt?: DateTimeNullableWithAggregatesFilter<"ImpersonationSession"> | Date | string | null
+    endedReason?: EnumImpersonationEndReasonNullableWithAggregatesFilter<"ImpersonationSession"> | $Enums.ImpersonationEndReason | null
+    eventCount?: IntWithAggregatesFilter<"ImpersonationSession"> | number
+  }
+
+  export type ImpersonationEventWhereInput = {
+    AND?: ImpersonationEventWhereInput | ImpersonationEventWhereInput[]
+    OR?: ImpersonationEventWhereInput[]
+    NOT?: ImpersonationEventWhereInput | ImpersonationEventWhereInput[]
+    id?: StringFilter<"ImpersonationEvent"> | string
+    sessionId?: StringFilter<"ImpersonationEvent"> | string
+    type?: EnumImpersonationEventTypeFilter<"ImpersonationEvent"> | $Enums.ImpersonationEventType
+    path?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    method?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    status?: IntNullableFilter<"ImpersonationEvent"> | number | null
+    requestId?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    payloadDigest?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    createdAt?: DateTimeFilter<"ImpersonationEvent"> | Date | string
+    session?: XOR<ImpersonationSessionScalarRelationFilter, ImpersonationSessionWhereInput>
+  }
+
+  export type ImpersonationEventOrderByWithRelationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    path?: SortOrderInput | SortOrder
+    method?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    requestId?: SortOrderInput | SortOrder
+    payloadDigest?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    session?: ImpersonationSessionOrderByWithRelationInput
+  }
+
+  export type ImpersonationEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ImpersonationEventWhereInput | ImpersonationEventWhereInput[]
+    OR?: ImpersonationEventWhereInput[]
+    NOT?: ImpersonationEventWhereInput | ImpersonationEventWhereInput[]
+    sessionId?: StringFilter<"ImpersonationEvent"> | string
+    type?: EnumImpersonationEventTypeFilter<"ImpersonationEvent"> | $Enums.ImpersonationEventType
+    path?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    method?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    status?: IntNullableFilter<"ImpersonationEvent"> | number | null
+    requestId?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    payloadDigest?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    createdAt?: DateTimeFilter<"ImpersonationEvent"> | Date | string
+    session?: XOR<ImpersonationSessionScalarRelationFilter, ImpersonationSessionWhereInput>
+  }, "id">
+
+  export type ImpersonationEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    path?: SortOrderInput | SortOrder
+    method?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    requestId?: SortOrderInput | SortOrder
+    payloadDigest?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ImpersonationEventCountOrderByAggregateInput
+    _avg?: ImpersonationEventAvgOrderByAggregateInput
+    _max?: ImpersonationEventMaxOrderByAggregateInput
+    _min?: ImpersonationEventMinOrderByAggregateInput
+    _sum?: ImpersonationEventSumOrderByAggregateInput
+  }
+
+  export type ImpersonationEventScalarWhereWithAggregatesInput = {
+    AND?: ImpersonationEventScalarWhereWithAggregatesInput | ImpersonationEventScalarWhereWithAggregatesInput[]
+    OR?: ImpersonationEventScalarWhereWithAggregatesInput[]
+    NOT?: ImpersonationEventScalarWhereWithAggregatesInput | ImpersonationEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ImpersonationEvent"> | string
+    sessionId?: StringWithAggregatesFilter<"ImpersonationEvent"> | string
+    type?: EnumImpersonationEventTypeWithAggregatesFilter<"ImpersonationEvent"> | $Enums.ImpersonationEventType
+    path?: StringNullableWithAggregatesFilter<"ImpersonationEvent"> | string | null
+    method?: StringNullableWithAggregatesFilter<"ImpersonationEvent"> | string | null
+    status?: IntNullableWithAggregatesFilter<"ImpersonationEvent"> | number | null
+    requestId?: StringNullableWithAggregatesFilter<"ImpersonationEvent"> | string | null
+    payloadDigest?: StringNullableWithAggregatesFilter<"ImpersonationEvent"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ImpersonationEvent"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     organisationId?: string | null
@@ -48858,6 +53556,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -48919,6 +53621,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -48976,6 +53682,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -49037,6 +53747,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -49353,11 +54067,15 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateInput
     sections?: ReportTemplateSectionCreateNestedManyWithoutTemplateInput
     versions?: ReportTemplateVersionCreateNestedManyWithoutTemplateInput
     createdBy: UserCreateNestedOneWithoutCreatedTemplatesInput
     reports?: ReportCreateNestedManyWithoutTemplateInput
+    formAssignmentRules?: FormAssignmentRuleCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateUncheckedCreateInput = {
@@ -49375,10 +54093,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateInput
     sections?: ReportTemplateSectionUncheckedCreateNestedManyWithoutTemplateInput
     versions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutTemplateInput
     reports?: ReportUncheckedCreateNestedManyWithoutTemplateInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateUpdateInput = {
@@ -49395,11 +54117,15 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateNestedInput
     sections?: ReportTemplateSectionUpdateManyWithoutTemplateNestedInput
     versions?: ReportTemplateVersionUpdateManyWithoutTemplateNestedInput
     createdBy?: UserUpdateOneRequiredWithoutCreatedTemplatesNestedInput
     reports?: ReportUpdateManyWithoutTemplateNestedInput
+    formAssignmentRules?: FormAssignmentRuleUpdateManyWithoutTemplateNestedInput
   }
 
   export type ReportTemplateUncheckedUpdateInput = {
@@ -49417,10 +54143,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateNestedInput
     sections?: ReportTemplateSectionUncheckedUpdateManyWithoutTemplateNestedInput
     versions?: ReportTemplateVersionUncheckedUpdateManyWithoutTemplateNestedInput
     reports?: ReportUncheckedUpdateManyWithoutTemplateNestedInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type ReportTemplateCreateManyInput = {
@@ -49438,6 +54168,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
   }
 
   export type ReportTemplateUpdateManyMutationInput = {
@@ -49454,6 +54187,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportTemplateUncheckedUpdateManyInput = {
@@ -49471,6 +54207,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportTemplateSectionCreateInput = {
@@ -49479,6 +54218,7 @@ export namespace Prisma {
     description?: string | null
     order: number
     isRequired?: boolean
+    correlationGroup?: string | null
     metrics?: ReportTemplateMetricCreateNestedManyWithoutSectionInput
     template: ReportTemplateCreateNestedOneWithoutSectionsInput
   }
@@ -49490,6 +54230,7 @@ export namespace Prisma {
     description?: string | null
     order: number
     isRequired?: boolean
+    correlationGroup?: string | null
     metrics?: ReportTemplateMetricUncheckedCreateNestedManyWithoutSectionInput
   }
 
@@ -49499,6 +54240,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     isRequired?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     metrics?: ReportTemplateMetricUpdateManyWithoutSectionNestedInput
     template?: ReportTemplateUpdateOneRequiredWithoutSectionsNestedInput
   }
@@ -49510,6 +54252,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     isRequired?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     metrics?: ReportTemplateMetricUncheckedUpdateManyWithoutSectionNestedInput
   }
 
@@ -49520,6 +54263,7 @@ export namespace Prisma {
     description?: string | null
     order: number
     isRequired?: boolean
+    correlationGroup?: string | null
   }
 
   export type ReportTemplateSectionUpdateManyMutationInput = {
@@ -49528,6 +54272,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     isRequired?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportTemplateSectionUncheckedUpdateManyInput = {
@@ -49537,6 +54282,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     isRequired?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportTemplateMetricCreateInput = {
@@ -49552,6 +54298,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricCreateNestedManyWithoutTemplateMetricInput
@@ -49572,6 +54319,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryUncheckedCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricUncheckedCreateNestedManyWithoutTemplateMetricInput
@@ -49590,6 +54338,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUpdateManyWithoutTemplateMetricNestedInput
@@ -49610,6 +54359,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUncheckedUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUncheckedUpdateManyWithoutTemplateMetricNestedInput
@@ -49629,6 +54379,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
   }
 
   export type ReportTemplateMetricUpdateManyMutationInput = {
@@ -49644,6 +54395,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportTemplateMetricUncheckedUpdateManyInput = {
@@ -49660,6 +54412,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportTemplateVersionCreateInput = {
@@ -49739,6 +54492,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -49781,6 +54535,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -49807,6 +54562,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -49849,6 +54605,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -49883,6 +54640,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -49903,6 +54661,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -49931,6 +54690,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -51594,11 +56354,13 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     report: ReportCreateNestedOneWithoutFormAssignmentsInput
     assignee: UserCreateNestedOneWithoutFormAssignmentsReceivedInput
     assignedBy: UserCreateNestedOneWithoutFormAssignmentsCreatedInput
+    rule?: FormAssignmentRuleCreateNestedOneWithoutAssignmentsInput
   }
 
   export type FormAssignmentUncheckedCreateInput = {
@@ -51611,6 +56373,8 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    ruleId?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -51622,11 +56386,13 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     report?: ReportUpdateOneRequiredWithoutFormAssignmentsNestedInput
     assignee?: UserUpdateOneRequiredWithoutFormAssignmentsReceivedNestedInput
     assignedBy?: UserUpdateOneRequiredWithoutFormAssignmentsCreatedNestedInput
+    rule?: FormAssignmentRuleUpdateOneWithoutAssignmentsNestedInput
   }
 
   export type FormAssignmentUncheckedUpdateInput = {
@@ -51639,6 +56405,8 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ruleId?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -51653,6 +56421,8 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    ruleId?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -51664,6 +56434,7 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -51677,6 +56448,121 @@ export namespace Prisma {
     dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ruleId?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentRuleCreateInput = {
+    id?: string
+    role?: $Enums.UserRole | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutFormAssignmentRulesOwnedInput
+    template: ReportTemplateCreateNestedOneWithoutFormAssignmentRulesInput
+    assignee?: UserCreateNestedOneWithoutFormAssignmentRulesAssignedInput
+    assignments?: FormAssignmentCreateNestedManyWithoutRuleInput
+  }
+
+  export type FormAssignmentRuleUncheckedCreateInput = {
+    id?: string
+    ownerId: string
+    templateId: string
+    role?: $Enums.UserRole | null
+    assigneeId?: string | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignments?: FormAssignmentUncheckedCreateNestedManyWithoutRuleInput
+  }
+
+  export type FormAssignmentRuleUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutFormAssignmentRulesOwnedNestedInput
+    template?: ReportTemplateUpdateOneRequiredWithoutFormAssignmentRulesNestedInput
+    assignee?: UserUpdateOneWithoutFormAssignmentRulesAssignedNestedInput
+    assignments?: FormAssignmentUpdateManyWithoutRuleNestedInput
+  }
+
+  export type FormAssignmentRuleUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: FormAssignmentUncheckedUpdateManyWithoutRuleNestedInput
+  }
+
+  export type FormAssignmentRuleCreateManyInput = {
+    id?: string
+    ownerId: string
+    templateId: string
+    role?: $Enums.UserRole | null
+    assigneeId?: string | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentRuleUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentRuleUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -52184,6 +57070,182 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ImpersonationSessionCreateInput = {
+    id?: string
+    impersonatedRole: $Enums.UserRole
+    mode?: $Enums.ImpersonationMode
+    startedAt?: Date | string
+    expiresAt: Date | string
+    endedAt?: Date | string | null
+    endedReason?: $Enums.ImpersonationEndReason | null
+    eventCount?: number
+    superadmin: UserCreateNestedOneWithoutImpersonationSessionsInput
+    impersonatedUser?: UserCreateNestedOneWithoutImpersonationTargetedByInput
+    events?: ImpersonationEventCreateNestedManyWithoutSessionInput
+  }
+
+  export type ImpersonationSessionUncheckedCreateInput = {
+    id?: string
+    superadminId: string
+    impersonatedRole: $Enums.UserRole
+    impersonatedUserId?: string | null
+    mode?: $Enums.ImpersonationMode
+    startedAt?: Date | string
+    expiresAt: Date | string
+    endedAt?: Date | string | null
+    endedReason?: $Enums.ImpersonationEndReason | null
+    eventCount?: number
+    events?: ImpersonationEventUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type ImpersonationSessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
+    superadmin?: UserUpdateOneRequiredWithoutImpersonationSessionsNestedInput
+    impersonatedUser?: UserUpdateOneWithoutImpersonationTargetedByNestedInput
+    events?: ImpersonationEventUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ImpersonationSessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    superadminId?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    impersonatedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
+    events?: ImpersonationEventUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ImpersonationSessionCreateManyInput = {
+    id?: string
+    superadminId: string
+    impersonatedRole: $Enums.UserRole
+    impersonatedUserId?: string | null
+    mode?: $Enums.ImpersonationMode
+    startedAt?: Date | string
+    expiresAt: Date | string
+    endedAt?: Date | string | null
+    endedReason?: $Enums.ImpersonationEndReason | null
+    eventCount?: number
+  }
+
+  export type ImpersonationSessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ImpersonationSessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    superadminId?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    impersonatedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ImpersonationEventCreateInput = {
+    id?: string
+    type: $Enums.ImpersonationEventType
+    path?: string | null
+    method?: string | null
+    status?: number | null
+    requestId?: string | null
+    payloadDigest?: string | null
+    createdAt?: Date | string
+    session: ImpersonationSessionCreateNestedOneWithoutEventsInput
+  }
+
+  export type ImpersonationEventUncheckedCreateInput = {
+    id?: string
+    sessionId: string
+    type: $Enums.ImpersonationEventType
+    path?: string | null
+    method?: string | null
+    status?: number | null
+    requestId?: string | null
+    payloadDigest?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ImpersonationEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumImpersonationEventTypeFieldUpdateOperationsInput | $Enums.ImpersonationEventType
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    method?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableIntFieldUpdateOperationsInput | number | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    payloadDigest?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: ImpersonationSessionUpdateOneRequiredWithoutEventsNestedInput
+  }
+
+  export type ImpersonationEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumImpersonationEventTypeFieldUpdateOperationsInput | $Enums.ImpersonationEventType
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    method?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableIntFieldUpdateOperationsInput | number | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    payloadDigest?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImpersonationEventCreateManyInput = {
+    id?: string
+    sessionId: string
+    type: $Enums.ImpersonationEventType
+    path?: string | null
+    method?: string | null
+    status?: number | null
+    requestId?: string | null
+    payloadDigest?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ImpersonationEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumImpersonationEventTypeFieldUpdateOperationsInput | $Enums.ImpersonationEventType
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    method?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableIntFieldUpdateOperationsInput | number | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    payloadDigest?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImpersonationEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    type?: EnumImpersonationEventTypeFieldUpdateOperationsInput | $Enums.ImpersonationEventType
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    method?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableIntFieldUpdateOperationsInput | number | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    payloadDigest?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -52381,6 +57443,18 @@ export namespace Prisma {
     none?: FormAssignmentWhereInput
   }
 
+  export type FormAssignmentRuleListRelationFilter = {
+    every?: FormAssignmentRuleWhereInput
+    some?: FormAssignmentRuleWhereInput
+    none?: FormAssignmentRuleWhereInput
+  }
+
+  export type ImpersonationSessionListRelationFilter = {
+    every?: ImpersonationSessionWhereInput
+    some?: ImpersonationSessionWhereInput
+    none?: ImpersonationSessionWhereInput
+  }
+
   export type ImportJobListRelationFilter = {
     every?: ImportJobWhereInput
     some?: ImportJobWhereInput
@@ -52507,6 +57581,14 @@ export namespace Prisma {
   }
 
   export type FormAssignmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FormAssignmentRuleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ImpersonationSessionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -52861,6 +57943,21 @@ export namespace Prisma {
     not?: NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel> | $Enums.ReportDeadlinePolicy | null
   }
 
+  export type EnumReportPeriodTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReportPeriodType | EnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReportPeriodType[] | ListEnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReportPeriodType[] | ListEnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReportPeriodTypeNullableFilter<$PrismaModel> | $Enums.ReportPeriodType | null
+  }
+
+  export type IntNullableListFilter<$PrismaModel = never> = {
+    equals?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    has?: number | IntFieldRefInput<$PrismaModel> | null
+    hasEvery?: number[] | ListIntFieldRefInput<$PrismaModel>
+    hasSome?: number[] | ListIntFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type ReportTemplateSectionListRelationFilter = {
     every?: ReportTemplateSectionWhereInput
     some?: ReportTemplateSectionWhereInput
@@ -52891,11 +57988,15 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deadlineOffsetHours?: SortOrder
     deadlinePolicy?: SortOrder
+    recurrenceFrequency?: SortOrder
+    recurrenceDays?: SortOrder
+    autoFillTitleTemplate?: SortOrder
   }
 
   export type ReportTemplateAvgOrderByAggregateInput = {
     version?: SortOrder
     deadlineOffsetHours?: SortOrder
+    recurrenceDays?: SortOrder
   }
 
   export type ReportTemplateMaxOrderByAggregateInput = {
@@ -52913,6 +58014,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deadlineOffsetHours?: SortOrder
     deadlinePolicy?: SortOrder
+    recurrenceFrequency?: SortOrder
+    autoFillTitleTemplate?: SortOrder
   }
 
   export type ReportTemplateMinOrderByAggregateInput = {
@@ -52930,11 +58033,14 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deadlineOffsetHours?: SortOrder
     deadlinePolicy?: SortOrder
+    recurrenceFrequency?: SortOrder
+    autoFillTitleTemplate?: SortOrder
   }
 
   export type ReportTemplateSumOrderByAggregateInput = {
     version?: SortOrder
     deadlineOffsetHours?: SortOrder
+    recurrenceDays?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -52963,6 +58069,16 @@ export namespace Prisma {
     _max?: NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel>
   }
 
+  export type EnumReportPeriodTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReportPeriodType | EnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReportPeriodType[] | ListEnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReportPeriodType[] | ListEnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReportPeriodTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.ReportPeriodType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumReportPeriodTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumReportPeriodTypeNullableFilter<$PrismaModel>
+  }
+
   export type ReportTemplateMetricListRelationFilter = {
     every?: ReportTemplateMetricWhereInput
     some?: ReportTemplateMetricWhereInput
@@ -52985,6 +58101,7 @@ export namespace Prisma {
     description?: SortOrder
     order?: SortOrder
     isRequired?: SortOrder
+    correlationGroup?: SortOrder
   }
 
   export type ReportTemplateSectionAvgOrderByAggregateInput = {
@@ -52998,6 +58115,7 @@ export namespace Prisma {
     description?: SortOrder
     order?: SortOrder
     isRequired?: SortOrder
+    correlationGroup?: SortOrder
   }
 
   export type ReportTemplateSectionMinOrderByAggregateInput = {
@@ -53007,6 +58125,7 @@ export namespace Prisma {
     description?: SortOrder
     order?: SortOrder
     isRequired?: SortOrder
+    correlationGroup?: SortOrder
   }
 
   export type ReportTemplateSectionSumOrderByAggregateInput = {
@@ -53057,6 +58176,7 @@ export namespace Prisma {
     capturesGoal?: SortOrder
     capturesAchieved?: SortOrder
     capturesYoY?: SortOrder
+    correlationGroup?: SortOrder
   }
 
   export type ReportTemplateMetricAvgOrderByAggregateInput = {
@@ -53079,6 +58199,7 @@ export namespace Prisma {
     capturesGoal?: SortOrder
     capturesAchieved?: SortOrder
     capturesYoY?: SortOrder
+    correlationGroup?: SortOrder
   }
 
   export type ReportTemplateMetricMinOrderByAggregateInput = {
@@ -53095,6 +58216,7 @@ export namespace Prisma {
     capturesGoal?: SortOrder
     capturesAchieved?: SortOrder
     capturesYoY?: SortOrder
+    correlationGroup?: SortOrder
   }
 
   export type ReportTemplateMetricSumOrderByAggregateInput = {
@@ -53274,6 +58396,7 @@ export namespace Prisma {
     dataEntryById?: SortOrder
     dataEntryDate?: SortOrder
     notes?: SortOrder
+    autoCreated?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -53308,6 +58431,7 @@ export namespace Prisma {
     dataEntryById?: SortOrder
     dataEntryDate?: SortOrder
     notes?: SortOrder
+    autoCreated?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -53336,6 +58460,7 @@ export namespace Prisma {
     dataEntryById?: SortOrder
     dataEntryDate?: SortOrder
     notes?: SortOrder
+    autoCreated?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -54589,6 +59714,11 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
+  export type FormAssignmentRuleNullableScalarRelationFilter = {
+    is?: FormAssignmentRuleWhereInput | null
+    isNot?: FormAssignmentRuleWhereInput | null
+  }
+
   export type FormAssignmentCountOrderByAggregateInput = {
     id?: SortOrder
     reportId?: SortOrder
@@ -54599,6 +59729,8 @@ export namespace Prisma {
     completedAt?: SortOrder
     cancelledAt?: SortOrder
     notes?: SortOrder
+    ruleId?: SortOrder
+    periodKey?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -54612,6 +59744,8 @@ export namespace Prisma {
     completedAt?: SortOrder
     cancelledAt?: SortOrder
     notes?: SortOrder
+    ruleId?: SortOrder
+    periodKey?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -54624,6 +59758,52 @@ export namespace Prisma {
     dueAt?: SortOrder
     completedAt?: SortOrder
     cancelledAt?: SortOrder
+    notes?: SortOrder
+    ruleId?: SortOrder
+    periodKey?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FormAssignmentRuleCountOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrder
+    role?: SortOrder
+    assigneeId?: SortOrder
+    campusId?: SortOrder
+    orgGroupId?: SortOrder
+    metricIds?: SortOrder
+    cadenceOverride?: SortOrder
+    isActive?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FormAssignmentRuleMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrder
+    role?: SortOrder
+    assigneeId?: SortOrder
+    campusId?: SortOrder
+    orgGroupId?: SortOrder
+    isActive?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FormAssignmentRuleMinOrderByAggregateInput = {
+    id?: SortOrder
+    ownerId?: SortOrder
+    templateId?: SortOrder
+    role?: SortOrder
+    assigneeId?: SortOrder
+    campusId?: SortOrder
+    orgGroupId?: SortOrder
+    isActive?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -54984,6 +60164,163 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type EnumImpersonationModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationMode | EnumImpersonationModeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImpersonationMode[] | ListEnumImpersonationModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImpersonationMode[] | ListEnumImpersonationModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImpersonationModeFilter<$PrismaModel> | $Enums.ImpersonationMode
+  }
+
+  export type EnumImpersonationEndReasonNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationEndReason | EnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ImpersonationEndReason[] | ListEnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ImpersonationEndReason[] | ListEnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumImpersonationEndReasonNullableFilter<$PrismaModel> | $Enums.ImpersonationEndReason | null
+  }
+
+  export type ImpersonationEventListRelationFilter = {
+    every?: ImpersonationEventWhereInput
+    some?: ImpersonationEventWhereInput
+    none?: ImpersonationEventWhereInput
+  }
+
+  export type ImpersonationEventOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ImpersonationSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    superadminId?: SortOrder
+    impersonatedRole?: SortOrder
+    impersonatedUserId?: SortOrder
+    mode?: SortOrder
+    startedAt?: SortOrder
+    expiresAt?: SortOrder
+    endedAt?: SortOrder
+    endedReason?: SortOrder
+    eventCount?: SortOrder
+  }
+
+  export type ImpersonationSessionAvgOrderByAggregateInput = {
+    eventCount?: SortOrder
+  }
+
+  export type ImpersonationSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    superadminId?: SortOrder
+    impersonatedRole?: SortOrder
+    impersonatedUserId?: SortOrder
+    mode?: SortOrder
+    startedAt?: SortOrder
+    expiresAt?: SortOrder
+    endedAt?: SortOrder
+    endedReason?: SortOrder
+    eventCount?: SortOrder
+  }
+
+  export type ImpersonationSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    superadminId?: SortOrder
+    impersonatedRole?: SortOrder
+    impersonatedUserId?: SortOrder
+    mode?: SortOrder
+    startedAt?: SortOrder
+    expiresAt?: SortOrder
+    endedAt?: SortOrder
+    endedReason?: SortOrder
+    eventCount?: SortOrder
+  }
+
+  export type ImpersonationSessionSumOrderByAggregateInput = {
+    eventCount?: SortOrder
+  }
+
+  export type EnumImpersonationModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationMode | EnumImpersonationModeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImpersonationMode[] | ListEnumImpersonationModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImpersonationMode[] | ListEnumImpersonationModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImpersonationModeWithAggregatesFilter<$PrismaModel> | $Enums.ImpersonationMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumImpersonationModeFilter<$PrismaModel>
+    _max?: NestedEnumImpersonationModeFilter<$PrismaModel>
+  }
+
+  export type EnumImpersonationEndReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationEndReason | EnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ImpersonationEndReason[] | ListEnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ImpersonationEndReason[] | ListEnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumImpersonationEndReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.ImpersonationEndReason | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumImpersonationEndReasonNullableFilter<$PrismaModel>
+    _max?: NestedEnumImpersonationEndReasonNullableFilter<$PrismaModel>
+  }
+
+  export type EnumImpersonationEventTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationEventType | EnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImpersonationEventType[] | ListEnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImpersonationEventType[] | ListEnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImpersonationEventTypeFilter<$PrismaModel> | $Enums.ImpersonationEventType
+  }
+
+  export type ImpersonationSessionScalarRelationFilter = {
+    is?: ImpersonationSessionWhereInput
+    isNot?: ImpersonationSessionWhereInput
+  }
+
+  export type ImpersonationEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    path?: SortOrder
+    method?: SortOrder
+    status?: SortOrder
+    requestId?: SortOrder
+    payloadDigest?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ImpersonationEventAvgOrderByAggregateInput = {
+    status?: SortOrder
+  }
+
+  export type ImpersonationEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    path?: SortOrder
+    method?: SortOrder
+    status?: SortOrder
+    requestId?: SortOrder
+    payloadDigest?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ImpersonationEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    type?: SortOrder
+    path?: SortOrder
+    method?: SortOrder
+    status?: SortOrder
+    requestId?: SortOrder
+    payloadDigest?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ImpersonationEventSumOrderByAggregateInput = {
+    status?: SortOrder
+  }
+
+  export type EnumImpersonationEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationEventType | EnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImpersonationEventType[] | ListEnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImpersonationEventType[] | ListEnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImpersonationEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.ImpersonationEventType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumImpersonationEventTypeFilter<$PrismaModel>
+    _max?: NestedEnumImpersonationEventTypeFilter<$PrismaModel>
+  }
+
   export type BugReportCreateNestedManyWithoutCreatedByInput = {
     create?: XOR<BugReportCreateWithoutCreatedByInput, BugReportUncheckedCreateWithoutCreatedByInput> | BugReportCreateWithoutCreatedByInput[] | BugReportUncheckedCreateWithoutCreatedByInput[]
     connectOrCreate?: BugReportCreateOrConnectWithoutCreatedByInput | BugReportCreateOrConnectWithoutCreatedByInput[]
@@ -55192,6 +60529,34 @@ export namespace Prisma {
     connectOrCreate?: FormAssignmentCreateOrConnectWithoutAssignedByInput | FormAssignmentCreateOrConnectWithoutAssignedByInput[]
     createMany?: FormAssignmentCreateManyAssignedByInputEnvelope
     connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+  }
+
+  export type FormAssignmentRuleCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutOwnerInput, FormAssignmentRuleUncheckedCreateWithoutOwnerInput> | FormAssignmentRuleCreateWithoutOwnerInput[] | FormAssignmentRuleUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutOwnerInput | FormAssignmentRuleCreateOrConnectWithoutOwnerInput[]
+    createMany?: FormAssignmentRuleCreateManyOwnerInputEnvelope
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+  }
+
+  export type FormAssignmentRuleCreateNestedManyWithoutAssigneeInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutAssigneeInput, FormAssignmentRuleUncheckedCreateWithoutAssigneeInput> | FormAssignmentRuleCreateWithoutAssigneeInput[] | FormAssignmentRuleUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutAssigneeInput | FormAssignmentRuleCreateOrConnectWithoutAssigneeInput[]
+    createMany?: FormAssignmentRuleCreateManyAssigneeInputEnvelope
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+  }
+
+  export type ImpersonationSessionCreateNestedManyWithoutSuperadminInput = {
+    create?: XOR<ImpersonationSessionCreateWithoutSuperadminInput, ImpersonationSessionUncheckedCreateWithoutSuperadminInput> | ImpersonationSessionCreateWithoutSuperadminInput[] | ImpersonationSessionUncheckedCreateWithoutSuperadminInput[]
+    connectOrCreate?: ImpersonationSessionCreateOrConnectWithoutSuperadminInput | ImpersonationSessionCreateOrConnectWithoutSuperadminInput[]
+    createMany?: ImpersonationSessionCreateManySuperadminInputEnvelope
+    connect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+  }
+
+  export type ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput = {
+    create?: XOR<ImpersonationSessionCreateWithoutImpersonatedUserInput, ImpersonationSessionUncheckedCreateWithoutImpersonatedUserInput> | ImpersonationSessionCreateWithoutImpersonatedUserInput[] | ImpersonationSessionUncheckedCreateWithoutImpersonatedUserInput[]
+    connectOrCreate?: ImpersonationSessionCreateOrConnectWithoutImpersonatedUserInput | ImpersonationSessionCreateOrConnectWithoutImpersonatedUserInput[]
+    createMany?: ImpersonationSessionCreateManyImpersonatedUserInputEnvelope
+    connect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
   }
 
   export type ImportJobCreateNestedManyWithoutOwnerInput = {
@@ -55449,6 +60814,34 @@ export namespace Prisma {
     connectOrCreate?: FormAssignmentCreateOrConnectWithoutAssignedByInput | FormAssignmentCreateOrConnectWithoutAssignedByInput[]
     createMany?: FormAssignmentCreateManyAssignedByInputEnvelope
     connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+  }
+
+  export type FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutOwnerInput, FormAssignmentRuleUncheckedCreateWithoutOwnerInput> | FormAssignmentRuleCreateWithoutOwnerInput[] | FormAssignmentRuleUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutOwnerInput | FormAssignmentRuleCreateOrConnectWithoutOwnerInput[]
+    createMany?: FormAssignmentRuleCreateManyOwnerInputEnvelope
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+  }
+
+  export type FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutAssigneeInput, FormAssignmentRuleUncheckedCreateWithoutAssigneeInput> | FormAssignmentRuleCreateWithoutAssigneeInput[] | FormAssignmentRuleUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutAssigneeInput | FormAssignmentRuleCreateOrConnectWithoutAssigneeInput[]
+    createMany?: FormAssignmentRuleCreateManyAssigneeInputEnvelope
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+  }
+
+  export type ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput = {
+    create?: XOR<ImpersonationSessionCreateWithoutSuperadminInput, ImpersonationSessionUncheckedCreateWithoutSuperadminInput> | ImpersonationSessionCreateWithoutSuperadminInput[] | ImpersonationSessionUncheckedCreateWithoutSuperadminInput[]
+    connectOrCreate?: ImpersonationSessionCreateOrConnectWithoutSuperadminInput | ImpersonationSessionCreateOrConnectWithoutSuperadminInput[]
+    createMany?: ImpersonationSessionCreateManySuperadminInputEnvelope
+    connect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+  }
+
+  export type ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput = {
+    create?: XOR<ImpersonationSessionCreateWithoutImpersonatedUserInput, ImpersonationSessionUncheckedCreateWithoutImpersonatedUserInput> | ImpersonationSessionCreateWithoutImpersonatedUserInput[] | ImpersonationSessionUncheckedCreateWithoutImpersonatedUserInput[]
+    connectOrCreate?: ImpersonationSessionCreateOrConnectWithoutImpersonatedUserInput | ImpersonationSessionCreateOrConnectWithoutImpersonatedUserInput[]
+    createMany?: ImpersonationSessionCreateManyImpersonatedUserInputEnvelope
+    connect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
   }
 
   export type ImportJobUncheckedCreateNestedManyWithoutOwnerInput = {
@@ -55932,6 +61325,62 @@ export namespace Prisma {
     update?: FormAssignmentUpdateWithWhereUniqueWithoutAssignedByInput | FormAssignmentUpdateWithWhereUniqueWithoutAssignedByInput[]
     updateMany?: FormAssignmentUpdateManyWithWhereWithoutAssignedByInput | FormAssignmentUpdateManyWithWhereWithoutAssignedByInput[]
     deleteMany?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
+  }
+
+  export type FormAssignmentRuleUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutOwnerInput, FormAssignmentRuleUncheckedCreateWithoutOwnerInput> | FormAssignmentRuleCreateWithoutOwnerInput[] | FormAssignmentRuleUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutOwnerInput | FormAssignmentRuleCreateOrConnectWithoutOwnerInput[]
+    upsert?: FormAssignmentRuleUpsertWithWhereUniqueWithoutOwnerInput | FormAssignmentRuleUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: FormAssignmentRuleCreateManyOwnerInputEnvelope
+    set?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    disconnect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    delete?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    update?: FormAssignmentRuleUpdateWithWhereUniqueWithoutOwnerInput | FormAssignmentRuleUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: FormAssignmentRuleUpdateManyWithWhereWithoutOwnerInput | FormAssignmentRuleUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: FormAssignmentRuleScalarWhereInput | FormAssignmentRuleScalarWhereInput[]
+  }
+
+  export type FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutAssigneeInput, FormAssignmentRuleUncheckedCreateWithoutAssigneeInput> | FormAssignmentRuleCreateWithoutAssigneeInput[] | FormAssignmentRuleUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutAssigneeInput | FormAssignmentRuleCreateOrConnectWithoutAssigneeInput[]
+    upsert?: FormAssignmentRuleUpsertWithWhereUniqueWithoutAssigneeInput | FormAssignmentRuleUpsertWithWhereUniqueWithoutAssigneeInput[]
+    createMany?: FormAssignmentRuleCreateManyAssigneeInputEnvelope
+    set?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    disconnect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    delete?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    update?: FormAssignmentRuleUpdateWithWhereUniqueWithoutAssigneeInput | FormAssignmentRuleUpdateWithWhereUniqueWithoutAssigneeInput[]
+    updateMany?: FormAssignmentRuleUpdateManyWithWhereWithoutAssigneeInput | FormAssignmentRuleUpdateManyWithWhereWithoutAssigneeInput[]
+    deleteMany?: FormAssignmentRuleScalarWhereInput | FormAssignmentRuleScalarWhereInput[]
+  }
+
+  export type ImpersonationSessionUpdateManyWithoutSuperadminNestedInput = {
+    create?: XOR<ImpersonationSessionCreateWithoutSuperadminInput, ImpersonationSessionUncheckedCreateWithoutSuperadminInput> | ImpersonationSessionCreateWithoutSuperadminInput[] | ImpersonationSessionUncheckedCreateWithoutSuperadminInput[]
+    connectOrCreate?: ImpersonationSessionCreateOrConnectWithoutSuperadminInput | ImpersonationSessionCreateOrConnectWithoutSuperadminInput[]
+    upsert?: ImpersonationSessionUpsertWithWhereUniqueWithoutSuperadminInput | ImpersonationSessionUpsertWithWhereUniqueWithoutSuperadminInput[]
+    createMany?: ImpersonationSessionCreateManySuperadminInputEnvelope
+    set?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    disconnect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    delete?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    connect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    update?: ImpersonationSessionUpdateWithWhereUniqueWithoutSuperadminInput | ImpersonationSessionUpdateWithWhereUniqueWithoutSuperadminInput[]
+    updateMany?: ImpersonationSessionUpdateManyWithWhereWithoutSuperadminInput | ImpersonationSessionUpdateManyWithWhereWithoutSuperadminInput[]
+    deleteMany?: ImpersonationSessionScalarWhereInput | ImpersonationSessionScalarWhereInput[]
+  }
+
+  export type ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput = {
+    create?: XOR<ImpersonationSessionCreateWithoutImpersonatedUserInput, ImpersonationSessionUncheckedCreateWithoutImpersonatedUserInput> | ImpersonationSessionCreateWithoutImpersonatedUserInput[] | ImpersonationSessionUncheckedCreateWithoutImpersonatedUserInput[]
+    connectOrCreate?: ImpersonationSessionCreateOrConnectWithoutImpersonatedUserInput | ImpersonationSessionCreateOrConnectWithoutImpersonatedUserInput[]
+    upsert?: ImpersonationSessionUpsertWithWhereUniqueWithoutImpersonatedUserInput | ImpersonationSessionUpsertWithWhereUniqueWithoutImpersonatedUserInput[]
+    createMany?: ImpersonationSessionCreateManyImpersonatedUserInputEnvelope
+    set?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    disconnect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    delete?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    connect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    update?: ImpersonationSessionUpdateWithWhereUniqueWithoutImpersonatedUserInput | ImpersonationSessionUpdateWithWhereUniqueWithoutImpersonatedUserInput[]
+    updateMany?: ImpersonationSessionUpdateManyWithWhereWithoutImpersonatedUserInput | ImpersonationSessionUpdateManyWithWhereWithoutImpersonatedUserInput[]
+    deleteMany?: ImpersonationSessionScalarWhereInput | ImpersonationSessionScalarWhereInput[]
   }
 
   export type ImportJobUpdateManyWithoutOwnerNestedInput = {
@@ -56444,6 +61893,62 @@ export namespace Prisma {
     deleteMany?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
   }
 
+  export type FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutOwnerInput, FormAssignmentRuleUncheckedCreateWithoutOwnerInput> | FormAssignmentRuleCreateWithoutOwnerInput[] | FormAssignmentRuleUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutOwnerInput | FormAssignmentRuleCreateOrConnectWithoutOwnerInput[]
+    upsert?: FormAssignmentRuleUpsertWithWhereUniqueWithoutOwnerInput | FormAssignmentRuleUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: FormAssignmentRuleCreateManyOwnerInputEnvelope
+    set?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    disconnect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    delete?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    update?: FormAssignmentRuleUpdateWithWhereUniqueWithoutOwnerInput | FormAssignmentRuleUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: FormAssignmentRuleUpdateManyWithWhereWithoutOwnerInput | FormAssignmentRuleUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: FormAssignmentRuleScalarWhereInput | FormAssignmentRuleScalarWhereInput[]
+  }
+
+  export type FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutAssigneeInput, FormAssignmentRuleUncheckedCreateWithoutAssigneeInput> | FormAssignmentRuleCreateWithoutAssigneeInput[] | FormAssignmentRuleUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutAssigneeInput | FormAssignmentRuleCreateOrConnectWithoutAssigneeInput[]
+    upsert?: FormAssignmentRuleUpsertWithWhereUniqueWithoutAssigneeInput | FormAssignmentRuleUpsertWithWhereUniqueWithoutAssigneeInput[]
+    createMany?: FormAssignmentRuleCreateManyAssigneeInputEnvelope
+    set?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    disconnect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    delete?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    update?: FormAssignmentRuleUpdateWithWhereUniqueWithoutAssigneeInput | FormAssignmentRuleUpdateWithWhereUniqueWithoutAssigneeInput[]
+    updateMany?: FormAssignmentRuleUpdateManyWithWhereWithoutAssigneeInput | FormAssignmentRuleUpdateManyWithWhereWithoutAssigneeInput[]
+    deleteMany?: FormAssignmentRuleScalarWhereInput | FormAssignmentRuleScalarWhereInput[]
+  }
+
+  export type ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput = {
+    create?: XOR<ImpersonationSessionCreateWithoutSuperadminInput, ImpersonationSessionUncheckedCreateWithoutSuperadminInput> | ImpersonationSessionCreateWithoutSuperadminInput[] | ImpersonationSessionUncheckedCreateWithoutSuperadminInput[]
+    connectOrCreate?: ImpersonationSessionCreateOrConnectWithoutSuperadminInput | ImpersonationSessionCreateOrConnectWithoutSuperadminInput[]
+    upsert?: ImpersonationSessionUpsertWithWhereUniqueWithoutSuperadminInput | ImpersonationSessionUpsertWithWhereUniqueWithoutSuperadminInput[]
+    createMany?: ImpersonationSessionCreateManySuperadminInputEnvelope
+    set?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    disconnect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    delete?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    connect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    update?: ImpersonationSessionUpdateWithWhereUniqueWithoutSuperadminInput | ImpersonationSessionUpdateWithWhereUniqueWithoutSuperadminInput[]
+    updateMany?: ImpersonationSessionUpdateManyWithWhereWithoutSuperadminInput | ImpersonationSessionUpdateManyWithWhereWithoutSuperadminInput[]
+    deleteMany?: ImpersonationSessionScalarWhereInput | ImpersonationSessionScalarWhereInput[]
+  }
+
+  export type ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput = {
+    create?: XOR<ImpersonationSessionCreateWithoutImpersonatedUserInput, ImpersonationSessionUncheckedCreateWithoutImpersonatedUserInput> | ImpersonationSessionCreateWithoutImpersonatedUserInput[] | ImpersonationSessionUncheckedCreateWithoutImpersonatedUserInput[]
+    connectOrCreate?: ImpersonationSessionCreateOrConnectWithoutImpersonatedUserInput | ImpersonationSessionCreateOrConnectWithoutImpersonatedUserInput[]
+    upsert?: ImpersonationSessionUpsertWithWhereUniqueWithoutImpersonatedUserInput | ImpersonationSessionUpsertWithWhereUniqueWithoutImpersonatedUserInput[]
+    createMany?: ImpersonationSessionCreateManyImpersonatedUserInputEnvelope
+    set?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    disconnect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    delete?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    connect?: ImpersonationSessionWhereUniqueInput | ImpersonationSessionWhereUniqueInput[]
+    update?: ImpersonationSessionUpdateWithWhereUniqueWithoutImpersonatedUserInput | ImpersonationSessionUpdateWithWhereUniqueWithoutImpersonatedUserInput[]
+    updateMany?: ImpersonationSessionUpdateManyWithWhereWithoutImpersonatedUserInput | ImpersonationSessionUpdateManyWithWhereWithoutImpersonatedUserInput[]
+    deleteMany?: ImpersonationSessionScalarWhereInput | ImpersonationSessionScalarWhereInput[]
+  }
+
   export type ImportJobUncheckedUpdateManyWithoutOwnerNestedInput = {
     create?: XOR<ImportJobCreateWithoutOwnerInput, ImportJobUncheckedCreateWithoutOwnerInput> | ImportJobCreateWithoutOwnerInput[] | ImportJobUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: ImportJobCreateOrConnectWithoutOwnerInput | ImportJobCreateOrConnectWithoutOwnerInput[]
@@ -56904,6 +62409,10 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type ReportTemplateCreaterecurrenceDaysInput = {
+    set: number[]
+  }
+
   export type GoalCreateNestedManyWithoutTemplateInput = {
     create?: XOR<GoalCreateWithoutTemplateInput, GoalUncheckedCreateWithoutTemplateInput> | GoalCreateWithoutTemplateInput[] | GoalUncheckedCreateWithoutTemplateInput[]
     connectOrCreate?: GoalCreateOrConnectWithoutTemplateInput | GoalCreateOrConnectWithoutTemplateInput[]
@@ -56938,6 +62447,13 @@ export namespace Prisma {
     connect?: ReportWhereUniqueInput | ReportWhereUniqueInput[]
   }
 
+  export type FormAssignmentRuleCreateNestedManyWithoutTemplateInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutTemplateInput, FormAssignmentRuleUncheckedCreateWithoutTemplateInput> | FormAssignmentRuleCreateWithoutTemplateInput[] | FormAssignmentRuleUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutTemplateInput | FormAssignmentRuleCreateOrConnectWithoutTemplateInput[]
+    createMany?: FormAssignmentRuleCreateManyTemplateInputEnvelope
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+  }
+
   export type GoalUncheckedCreateNestedManyWithoutTemplateInput = {
     create?: XOR<GoalCreateWithoutTemplateInput, GoalUncheckedCreateWithoutTemplateInput> | GoalCreateWithoutTemplateInput[] | GoalUncheckedCreateWithoutTemplateInput[]
     connectOrCreate?: GoalCreateOrConnectWithoutTemplateInput | GoalCreateOrConnectWithoutTemplateInput[]
@@ -56966,6 +62482,13 @@ export namespace Prisma {
     connect?: ReportWhereUniqueInput | ReportWhereUniqueInput[]
   }
 
+  export type FormAssignmentRuleUncheckedCreateNestedManyWithoutTemplateInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutTemplateInput, FormAssignmentRuleUncheckedCreateWithoutTemplateInput> | FormAssignmentRuleCreateWithoutTemplateInput[] | FormAssignmentRuleUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutTemplateInput | FormAssignmentRuleCreateOrConnectWithoutTemplateInput[]
+    createMany?: FormAssignmentRuleCreateManyTemplateInputEnvelope
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -56976,6 +62499,15 @@ export namespace Prisma {
 
   export type NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput = {
     set?: $Enums.ReportDeadlinePolicy | null
+  }
+
+  export type NullableEnumReportPeriodTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ReportPeriodType | null
+  }
+
+  export type ReportTemplateUpdaterecurrenceDaysInput = {
+    set?: number[]
+    push?: number | number[]
   }
 
   export type GoalUpdateManyWithoutTemplateNestedInput = {
@@ -57042,6 +62574,20 @@ export namespace Prisma {
     deleteMany?: ReportScalarWhereInput | ReportScalarWhereInput[]
   }
 
+  export type FormAssignmentRuleUpdateManyWithoutTemplateNestedInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutTemplateInput, FormAssignmentRuleUncheckedCreateWithoutTemplateInput> | FormAssignmentRuleCreateWithoutTemplateInput[] | FormAssignmentRuleUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutTemplateInput | FormAssignmentRuleCreateOrConnectWithoutTemplateInput[]
+    upsert?: FormAssignmentRuleUpsertWithWhereUniqueWithoutTemplateInput | FormAssignmentRuleUpsertWithWhereUniqueWithoutTemplateInput[]
+    createMany?: FormAssignmentRuleCreateManyTemplateInputEnvelope
+    set?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    disconnect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    delete?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    update?: FormAssignmentRuleUpdateWithWhereUniqueWithoutTemplateInput | FormAssignmentRuleUpdateWithWhereUniqueWithoutTemplateInput[]
+    updateMany?: FormAssignmentRuleUpdateManyWithWhereWithoutTemplateInput | FormAssignmentRuleUpdateManyWithWhereWithoutTemplateInput[]
+    deleteMany?: FormAssignmentRuleScalarWhereInput | FormAssignmentRuleScalarWhereInput[]
+  }
+
   export type GoalUncheckedUpdateManyWithoutTemplateNestedInput = {
     create?: XOR<GoalCreateWithoutTemplateInput, GoalUncheckedCreateWithoutTemplateInput> | GoalCreateWithoutTemplateInput[] | GoalUncheckedCreateWithoutTemplateInput[]
     connectOrCreate?: GoalCreateOrConnectWithoutTemplateInput | GoalCreateOrConnectWithoutTemplateInput[]
@@ -57096,6 +62642,20 @@ export namespace Prisma {
     update?: ReportUpdateWithWhereUniqueWithoutTemplateInput | ReportUpdateWithWhereUniqueWithoutTemplateInput[]
     updateMany?: ReportUpdateManyWithWhereWithoutTemplateInput | ReportUpdateManyWithWhereWithoutTemplateInput[]
     deleteMany?: ReportScalarWhereInput | ReportScalarWhereInput[]
+  }
+
+  export type FormAssignmentRuleUncheckedUpdateManyWithoutTemplateNestedInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutTemplateInput, FormAssignmentRuleUncheckedCreateWithoutTemplateInput> | FormAssignmentRuleCreateWithoutTemplateInput[] | FormAssignmentRuleUncheckedCreateWithoutTemplateInput[]
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutTemplateInput | FormAssignmentRuleCreateOrConnectWithoutTemplateInput[]
+    upsert?: FormAssignmentRuleUpsertWithWhereUniqueWithoutTemplateInput | FormAssignmentRuleUpsertWithWhereUniqueWithoutTemplateInput[]
+    createMany?: FormAssignmentRuleCreateManyTemplateInputEnvelope
+    set?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    disconnect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    delete?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    connect?: FormAssignmentRuleWhereUniqueInput | FormAssignmentRuleWhereUniqueInput[]
+    update?: FormAssignmentRuleUpdateWithWhereUniqueWithoutTemplateInput | FormAssignmentRuleUpdateWithWhereUniqueWithoutTemplateInput[]
+    updateMany?: FormAssignmentRuleUpdateManyWithWhereWithoutTemplateInput | FormAssignmentRuleUpdateManyWithWhereWithoutTemplateInput[]
+    deleteMany?: FormAssignmentRuleScalarWhereInput | FormAssignmentRuleScalarWhereInput[]
   }
 
   export type ReportTemplateMetricCreateNestedManyWithoutSectionInput = {
@@ -58634,6 +64194,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type FormAssignmentRuleCreateNestedOneWithoutAssignmentsInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutAssignmentsInput, FormAssignmentRuleUncheckedCreateWithoutAssignmentsInput>
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutAssignmentsInput
+    connect?: FormAssignmentRuleWhereUniqueInput
+  }
+
   export type FormAssignmentUpdatemetricIdsInput = {
     set?: string[]
     push?: string | string[]
@@ -58661,6 +64227,111 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutFormAssignmentsCreatedInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFormAssignmentsCreatedInput, UserUpdateWithoutFormAssignmentsCreatedInput>, UserUncheckedUpdateWithoutFormAssignmentsCreatedInput>
+  }
+
+  export type FormAssignmentRuleUpdateOneWithoutAssignmentsNestedInput = {
+    create?: XOR<FormAssignmentRuleCreateWithoutAssignmentsInput, FormAssignmentRuleUncheckedCreateWithoutAssignmentsInput>
+    connectOrCreate?: FormAssignmentRuleCreateOrConnectWithoutAssignmentsInput
+    upsert?: FormAssignmentRuleUpsertWithoutAssignmentsInput
+    disconnect?: FormAssignmentRuleWhereInput | boolean
+    delete?: FormAssignmentRuleWhereInput | boolean
+    connect?: FormAssignmentRuleWhereUniqueInput
+    update?: XOR<XOR<FormAssignmentRuleUpdateToOneWithWhereWithoutAssignmentsInput, FormAssignmentRuleUpdateWithoutAssignmentsInput>, FormAssignmentRuleUncheckedUpdateWithoutAssignmentsInput>
+  }
+
+  export type FormAssignmentRuleCreatemetricIdsInput = {
+    set: string[]
+  }
+
+  export type UserCreateNestedOneWithoutFormAssignmentRulesOwnedInput = {
+    create?: XOR<UserCreateWithoutFormAssignmentRulesOwnedInput, UserUncheckedCreateWithoutFormAssignmentRulesOwnedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFormAssignmentRulesOwnedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ReportTemplateCreateNestedOneWithoutFormAssignmentRulesInput = {
+    create?: XOR<ReportTemplateCreateWithoutFormAssignmentRulesInput, ReportTemplateUncheckedCreateWithoutFormAssignmentRulesInput>
+    connectOrCreate?: ReportTemplateCreateOrConnectWithoutFormAssignmentRulesInput
+    connect?: ReportTemplateWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutFormAssignmentRulesAssignedInput = {
+    create?: XOR<UserCreateWithoutFormAssignmentRulesAssignedInput, UserUncheckedCreateWithoutFormAssignmentRulesAssignedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFormAssignmentRulesAssignedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type FormAssignmentCreateNestedManyWithoutRuleInput = {
+    create?: XOR<FormAssignmentCreateWithoutRuleInput, FormAssignmentUncheckedCreateWithoutRuleInput> | FormAssignmentCreateWithoutRuleInput[] | FormAssignmentUncheckedCreateWithoutRuleInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutRuleInput | FormAssignmentCreateOrConnectWithoutRuleInput[]
+    createMany?: FormAssignmentCreateManyRuleInputEnvelope
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+  }
+
+  export type FormAssignmentUncheckedCreateNestedManyWithoutRuleInput = {
+    create?: XOR<FormAssignmentCreateWithoutRuleInput, FormAssignmentUncheckedCreateWithoutRuleInput> | FormAssignmentCreateWithoutRuleInput[] | FormAssignmentUncheckedCreateWithoutRuleInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutRuleInput | FormAssignmentCreateOrConnectWithoutRuleInput[]
+    createMany?: FormAssignmentCreateManyRuleInputEnvelope
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+  }
+
+  export type FormAssignmentRuleUpdatemetricIdsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type UserUpdateOneRequiredWithoutFormAssignmentRulesOwnedNestedInput = {
+    create?: XOR<UserCreateWithoutFormAssignmentRulesOwnedInput, UserUncheckedCreateWithoutFormAssignmentRulesOwnedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFormAssignmentRulesOwnedInput
+    upsert?: UserUpsertWithoutFormAssignmentRulesOwnedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFormAssignmentRulesOwnedInput, UserUpdateWithoutFormAssignmentRulesOwnedInput>, UserUncheckedUpdateWithoutFormAssignmentRulesOwnedInput>
+  }
+
+  export type ReportTemplateUpdateOneRequiredWithoutFormAssignmentRulesNestedInput = {
+    create?: XOR<ReportTemplateCreateWithoutFormAssignmentRulesInput, ReportTemplateUncheckedCreateWithoutFormAssignmentRulesInput>
+    connectOrCreate?: ReportTemplateCreateOrConnectWithoutFormAssignmentRulesInput
+    upsert?: ReportTemplateUpsertWithoutFormAssignmentRulesInput
+    connect?: ReportTemplateWhereUniqueInput
+    update?: XOR<XOR<ReportTemplateUpdateToOneWithWhereWithoutFormAssignmentRulesInput, ReportTemplateUpdateWithoutFormAssignmentRulesInput>, ReportTemplateUncheckedUpdateWithoutFormAssignmentRulesInput>
+  }
+
+  export type UserUpdateOneWithoutFormAssignmentRulesAssignedNestedInput = {
+    create?: XOR<UserCreateWithoutFormAssignmentRulesAssignedInput, UserUncheckedCreateWithoutFormAssignmentRulesAssignedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFormAssignmentRulesAssignedInput
+    upsert?: UserUpsertWithoutFormAssignmentRulesAssignedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFormAssignmentRulesAssignedInput, UserUpdateWithoutFormAssignmentRulesAssignedInput>, UserUncheckedUpdateWithoutFormAssignmentRulesAssignedInput>
+  }
+
+  export type FormAssignmentUpdateManyWithoutRuleNestedInput = {
+    create?: XOR<FormAssignmentCreateWithoutRuleInput, FormAssignmentUncheckedCreateWithoutRuleInput> | FormAssignmentCreateWithoutRuleInput[] | FormAssignmentUncheckedCreateWithoutRuleInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutRuleInput | FormAssignmentCreateOrConnectWithoutRuleInput[]
+    upsert?: FormAssignmentUpsertWithWhereUniqueWithoutRuleInput | FormAssignmentUpsertWithWhereUniqueWithoutRuleInput[]
+    createMany?: FormAssignmentCreateManyRuleInputEnvelope
+    set?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    disconnect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    delete?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    update?: FormAssignmentUpdateWithWhereUniqueWithoutRuleInput | FormAssignmentUpdateWithWhereUniqueWithoutRuleInput[]
+    updateMany?: FormAssignmentUpdateManyWithWhereWithoutRuleInput | FormAssignmentUpdateManyWithWhereWithoutRuleInput[]
+    deleteMany?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
+  }
+
+  export type FormAssignmentUncheckedUpdateManyWithoutRuleNestedInput = {
+    create?: XOR<FormAssignmentCreateWithoutRuleInput, FormAssignmentUncheckedCreateWithoutRuleInput> | FormAssignmentCreateWithoutRuleInput[] | FormAssignmentUncheckedCreateWithoutRuleInput[]
+    connectOrCreate?: FormAssignmentCreateOrConnectWithoutRuleInput | FormAssignmentCreateOrConnectWithoutRuleInput[]
+    upsert?: FormAssignmentUpsertWithWhereUniqueWithoutRuleInput | FormAssignmentUpsertWithWhereUniqueWithoutRuleInput[]
+    createMany?: FormAssignmentCreateManyRuleInputEnvelope
+    set?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    disconnect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    delete?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+    update?: FormAssignmentUpdateWithWhereUniqueWithoutRuleInput | FormAssignmentUpdateWithWhereUniqueWithoutRuleInput[]
+    updateMany?: FormAssignmentUpdateManyWithWhereWithoutRuleInput | FormAssignmentUpdateManyWithWhereWithoutRuleInput[]
+    deleteMany?: FormAssignmentScalarWhereInput | FormAssignmentScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutImportJobsInput = {
@@ -58922,6 +64593,104 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActivationTokensInput, UserUpdateWithoutActivationTokensInput>, UserUncheckedUpdateWithoutActivationTokensInput>
   }
 
+  export type UserCreateNestedOneWithoutImpersonationSessionsInput = {
+    create?: XOR<UserCreateWithoutImpersonationSessionsInput, UserUncheckedCreateWithoutImpersonationSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutImpersonationSessionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutImpersonationTargetedByInput = {
+    create?: XOR<UserCreateWithoutImpersonationTargetedByInput, UserUncheckedCreateWithoutImpersonationTargetedByInput>
+    connectOrCreate?: UserCreateOrConnectWithoutImpersonationTargetedByInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ImpersonationEventCreateNestedManyWithoutSessionInput = {
+    create?: XOR<ImpersonationEventCreateWithoutSessionInput, ImpersonationEventUncheckedCreateWithoutSessionInput> | ImpersonationEventCreateWithoutSessionInput[] | ImpersonationEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ImpersonationEventCreateOrConnectWithoutSessionInput | ImpersonationEventCreateOrConnectWithoutSessionInput[]
+    createMany?: ImpersonationEventCreateManySessionInputEnvelope
+    connect?: ImpersonationEventWhereUniqueInput | ImpersonationEventWhereUniqueInput[]
+  }
+
+  export type ImpersonationEventUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<ImpersonationEventCreateWithoutSessionInput, ImpersonationEventUncheckedCreateWithoutSessionInput> | ImpersonationEventCreateWithoutSessionInput[] | ImpersonationEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ImpersonationEventCreateOrConnectWithoutSessionInput | ImpersonationEventCreateOrConnectWithoutSessionInput[]
+    createMany?: ImpersonationEventCreateManySessionInputEnvelope
+    connect?: ImpersonationEventWhereUniqueInput | ImpersonationEventWhereUniqueInput[]
+  }
+
+  export type EnumImpersonationModeFieldUpdateOperationsInput = {
+    set?: $Enums.ImpersonationMode
+  }
+
+  export type NullableEnumImpersonationEndReasonFieldUpdateOperationsInput = {
+    set?: $Enums.ImpersonationEndReason | null
+  }
+
+  export type UserUpdateOneRequiredWithoutImpersonationSessionsNestedInput = {
+    create?: XOR<UserCreateWithoutImpersonationSessionsInput, UserUncheckedCreateWithoutImpersonationSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutImpersonationSessionsInput
+    upsert?: UserUpsertWithoutImpersonationSessionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutImpersonationSessionsInput, UserUpdateWithoutImpersonationSessionsInput>, UserUncheckedUpdateWithoutImpersonationSessionsInput>
+  }
+
+  export type UserUpdateOneWithoutImpersonationTargetedByNestedInput = {
+    create?: XOR<UserCreateWithoutImpersonationTargetedByInput, UserUncheckedCreateWithoutImpersonationTargetedByInput>
+    connectOrCreate?: UserCreateOrConnectWithoutImpersonationTargetedByInput
+    upsert?: UserUpsertWithoutImpersonationTargetedByInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutImpersonationTargetedByInput, UserUpdateWithoutImpersonationTargetedByInput>, UserUncheckedUpdateWithoutImpersonationTargetedByInput>
+  }
+
+  export type ImpersonationEventUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<ImpersonationEventCreateWithoutSessionInput, ImpersonationEventUncheckedCreateWithoutSessionInput> | ImpersonationEventCreateWithoutSessionInput[] | ImpersonationEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ImpersonationEventCreateOrConnectWithoutSessionInput | ImpersonationEventCreateOrConnectWithoutSessionInput[]
+    upsert?: ImpersonationEventUpsertWithWhereUniqueWithoutSessionInput | ImpersonationEventUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: ImpersonationEventCreateManySessionInputEnvelope
+    set?: ImpersonationEventWhereUniqueInput | ImpersonationEventWhereUniqueInput[]
+    disconnect?: ImpersonationEventWhereUniqueInput | ImpersonationEventWhereUniqueInput[]
+    delete?: ImpersonationEventWhereUniqueInput | ImpersonationEventWhereUniqueInput[]
+    connect?: ImpersonationEventWhereUniqueInput | ImpersonationEventWhereUniqueInput[]
+    update?: ImpersonationEventUpdateWithWhereUniqueWithoutSessionInput | ImpersonationEventUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: ImpersonationEventUpdateManyWithWhereWithoutSessionInput | ImpersonationEventUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: ImpersonationEventScalarWhereInput | ImpersonationEventScalarWhereInput[]
+  }
+
+  export type ImpersonationEventUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<ImpersonationEventCreateWithoutSessionInput, ImpersonationEventUncheckedCreateWithoutSessionInput> | ImpersonationEventCreateWithoutSessionInput[] | ImpersonationEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ImpersonationEventCreateOrConnectWithoutSessionInput | ImpersonationEventCreateOrConnectWithoutSessionInput[]
+    upsert?: ImpersonationEventUpsertWithWhereUniqueWithoutSessionInput | ImpersonationEventUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: ImpersonationEventCreateManySessionInputEnvelope
+    set?: ImpersonationEventWhereUniqueInput | ImpersonationEventWhereUniqueInput[]
+    disconnect?: ImpersonationEventWhereUniqueInput | ImpersonationEventWhereUniqueInput[]
+    delete?: ImpersonationEventWhereUniqueInput | ImpersonationEventWhereUniqueInput[]
+    connect?: ImpersonationEventWhereUniqueInput | ImpersonationEventWhereUniqueInput[]
+    update?: ImpersonationEventUpdateWithWhereUniqueWithoutSessionInput | ImpersonationEventUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: ImpersonationEventUpdateManyWithWhereWithoutSessionInput | ImpersonationEventUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: ImpersonationEventScalarWhereInput | ImpersonationEventScalarWhereInput[]
+  }
+
+  export type ImpersonationSessionCreateNestedOneWithoutEventsInput = {
+    create?: XOR<ImpersonationSessionCreateWithoutEventsInput, ImpersonationSessionUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: ImpersonationSessionCreateOrConnectWithoutEventsInput
+    connect?: ImpersonationSessionWhereUniqueInput
+  }
+
+  export type EnumImpersonationEventTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ImpersonationEventType
+  }
+
+  export type ImpersonationSessionUpdateOneRequiredWithoutEventsNestedInput = {
+    create?: XOR<ImpersonationSessionCreateWithoutEventsInput, ImpersonationSessionUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: ImpersonationSessionCreateOrConnectWithoutEventsInput
+    upsert?: ImpersonationSessionUpsertWithoutEventsInput
+    connect?: ImpersonationSessionWhereUniqueInput
+    update?: XOR<XOR<ImpersonationSessionUpdateToOneWithWhereWithoutEventsInput, ImpersonationSessionUpdateWithoutEventsInput>, ImpersonationSessionUncheckedUpdateWithoutEventsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -59137,6 +64906,13 @@ export namespace Prisma {
     not?: NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel> | $Enums.ReportDeadlinePolicy | null
   }
 
+  export type NestedEnumReportPeriodTypeNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReportPeriodType | EnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReportPeriodType[] | ListEnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReportPeriodType[] | ListEnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReportPeriodTypeNullableFilter<$PrismaModel> | $Enums.ReportPeriodType | null
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -59172,6 +64948,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel>
     _max?: NestedEnumReportDeadlinePolicyNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumReportPeriodTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ReportPeriodType | EnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ReportPeriodType[] | ListEnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ReportPeriodType[] | ListEnumReportPeriodTypeFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumReportPeriodTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.ReportPeriodType | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumReportPeriodTypeNullableFilter<$PrismaModel>
+    _max?: NestedEnumReportPeriodTypeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumMetricFieldTypeFilter<$PrismaModel = never> = {
@@ -59726,6 +65512,57 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPwaDismissalModeFilter<$PrismaModel>
     _max?: NestedEnumPwaDismissalModeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumImpersonationModeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationMode | EnumImpersonationModeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImpersonationMode[] | ListEnumImpersonationModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImpersonationMode[] | ListEnumImpersonationModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImpersonationModeFilter<$PrismaModel> | $Enums.ImpersonationMode
+  }
+
+  export type NestedEnumImpersonationEndReasonNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationEndReason | EnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ImpersonationEndReason[] | ListEnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ImpersonationEndReason[] | ListEnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumImpersonationEndReasonNullableFilter<$PrismaModel> | $Enums.ImpersonationEndReason | null
+  }
+
+  export type NestedEnumImpersonationModeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationMode | EnumImpersonationModeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImpersonationMode[] | ListEnumImpersonationModeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImpersonationMode[] | ListEnumImpersonationModeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImpersonationModeWithAggregatesFilter<$PrismaModel> | $Enums.ImpersonationMode
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumImpersonationModeFilter<$PrismaModel>
+    _max?: NestedEnumImpersonationModeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumImpersonationEndReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationEndReason | EnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.ImpersonationEndReason[] | ListEnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.ImpersonationEndReason[] | ListEnumImpersonationEndReasonFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumImpersonationEndReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.ImpersonationEndReason | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumImpersonationEndReasonNullableFilter<$PrismaModel>
+    _max?: NestedEnumImpersonationEndReasonNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumImpersonationEventTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationEventType | EnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImpersonationEventType[] | ListEnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImpersonationEventType[] | ListEnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImpersonationEventTypeFilter<$PrismaModel> | $Enums.ImpersonationEventType
+  }
+
+  export type NestedEnumImpersonationEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImpersonationEventType | EnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImpersonationEventType[] | ListEnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImpersonationEventType[] | ListEnumImpersonationEventTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImpersonationEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.ImpersonationEventType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumImpersonationEventTypeFilter<$PrismaModel>
+    _max?: NestedEnumImpersonationEventTypeFilter<$PrismaModel>
   }
 
   export type BugReportCreateWithoutCreatedByInput = {
@@ -60444,10 +66281,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateInput
     sections?: ReportTemplateSectionCreateNestedManyWithoutTemplateInput
     versions?: ReportTemplateVersionCreateNestedManyWithoutTemplateInput
     reports?: ReportCreateNestedManyWithoutTemplateInput
+    formAssignmentRules?: FormAssignmentRuleCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateUncheckedCreateWithoutCreatedByInput = {
@@ -60464,10 +66305,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateInput
     sections?: ReportTemplateSectionUncheckedCreateNestedManyWithoutTemplateInput
     versions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutTemplateInput
     reports?: ReportUncheckedCreateNestedManyWithoutTemplateInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateCreateOrConnectWithoutCreatedByInput = {
@@ -60592,6 +66437,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -60632,6 +66478,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -60668,6 +66515,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -60708,6 +66556,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -60744,6 +66593,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -60784,6 +66634,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -60820,6 +66671,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -60860,6 +66712,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -60896,6 +66749,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -60936,6 +66790,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -60993,10 +66848,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     report: ReportCreateNestedOneWithoutFormAssignmentsInput
     assignedBy: UserCreateNestedOneWithoutFormAssignmentsCreatedInput
+    rule?: FormAssignmentRuleCreateNestedOneWithoutAssignmentsInput
   }
 
   export type FormAssignmentUncheckedCreateWithoutAssigneeInput = {
@@ -61008,6 +66865,8 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    ruleId?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -61029,10 +66888,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     report: ReportCreateNestedOneWithoutFormAssignmentsInput
     assignee: UserCreateNestedOneWithoutFormAssignmentsReceivedInput
+    rule?: FormAssignmentRuleCreateNestedOneWithoutAssignmentsInput
   }
 
   export type FormAssignmentUncheckedCreateWithoutAssignedByInput = {
@@ -61044,6 +66905,8 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    ruleId?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -61055,6 +66918,162 @@ export namespace Prisma {
 
   export type FormAssignmentCreateManyAssignedByInputEnvelope = {
     data: FormAssignmentCreateManyAssignedByInput | FormAssignmentCreateManyAssignedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FormAssignmentRuleCreateWithoutOwnerInput = {
+    id?: string
+    role?: $Enums.UserRole | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    template: ReportTemplateCreateNestedOneWithoutFormAssignmentRulesInput
+    assignee?: UserCreateNestedOneWithoutFormAssignmentRulesAssignedInput
+    assignments?: FormAssignmentCreateNestedManyWithoutRuleInput
+  }
+
+  export type FormAssignmentRuleUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    templateId: string
+    role?: $Enums.UserRole | null
+    assigneeId?: string | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignments?: FormAssignmentUncheckedCreateNestedManyWithoutRuleInput
+  }
+
+  export type FormAssignmentRuleCreateOrConnectWithoutOwnerInput = {
+    where: FormAssignmentRuleWhereUniqueInput
+    create: XOR<FormAssignmentRuleCreateWithoutOwnerInput, FormAssignmentRuleUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type FormAssignmentRuleCreateManyOwnerInputEnvelope = {
+    data: FormAssignmentRuleCreateManyOwnerInput | FormAssignmentRuleCreateManyOwnerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FormAssignmentRuleCreateWithoutAssigneeInput = {
+    id?: string
+    role?: $Enums.UserRole | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutFormAssignmentRulesOwnedInput
+    template: ReportTemplateCreateNestedOneWithoutFormAssignmentRulesInput
+    assignments?: FormAssignmentCreateNestedManyWithoutRuleInput
+  }
+
+  export type FormAssignmentRuleUncheckedCreateWithoutAssigneeInput = {
+    id?: string
+    ownerId: string
+    templateId: string
+    role?: $Enums.UserRole | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignments?: FormAssignmentUncheckedCreateNestedManyWithoutRuleInput
+  }
+
+  export type FormAssignmentRuleCreateOrConnectWithoutAssigneeInput = {
+    where: FormAssignmentRuleWhereUniqueInput
+    create: XOR<FormAssignmentRuleCreateWithoutAssigneeInput, FormAssignmentRuleUncheckedCreateWithoutAssigneeInput>
+  }
+
+  export type FormAssignmentRuleCreateManyAssigneeInputEnvelope = {
+    data: FormAssignmentRuleCreateManyAssigneeInput | FormAssignmentRuleCreateManyAssigneeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ImpersonationSessionCreateWithoutSuperadminInput = {
+    id?: string
+    impersonatedRole: $Enums.UserRole
+    mode?: $Enums.ImpersonationMode
+    startedAt?: Date | string
+    expiresAt: Date | string
+    endedAt?: Date | string | null
+    endedReason?: $Enums.ImpersonationEndReason | null
+    eventCount?: number
+    impersonatedUser?: UserCreateNestedOneWithoutImpersonationTargetedByInput
+    events?: ImpersonationEventCreateNestedManyWithoutSessionInput
+  }
+
+  export type ImpersonationSessionUncheckedCreateWithoutSuperadminInput = {
+    id?: string
+    impersonatedRole: $Enums.UserRole
+    impersonatedUserId?: string | null
+    mode?: $Enums.ImpersonationMode
+    startedAt?: Date | string
+    expiresAt: Date | string
+    endedAt?: Date | string | null
+    endedReason?: $Enums.ImpersonationEndReason | null
+    eventCount?: number
+    events?: ImpersonationEventUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type ImpersonationSessionCreateOrConnectWithoutSuperadminInput = {
+    where: ImpersonationSessionWhereUniqueInput
+    create: XOR<ImpersonationSessionCreateWithoutSuperadminInput, ImpersonationSessionUncheckedCreateWithoutSuperadminInput>
+  }
+
+  export type ImpersonationSessionCreateManySuperadminInputEnvelope = {
+    data: ImpersonationSessionCreateManySuperadminInput | ImpersonationSessionCreateManySuperadminInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ImpersonationSessionCreateWithoutImpersonatedUserInput = {
+    id?: string
+    impersonatedRole: $Enums.UserRole
+    mode?: $Enums.ImpersonationMode
+    startedAt?: Date | string
+    expiresAt: Date | string
+    endedAt?: Date | string | null
+    endedReason?: $Enums.ImpersonationEndReason | null
+    eventCount?: number
+    superadmin: UserCreateNestedOneWithoutImpersonationSessionsInput
+    events?: ImpersonationEventCreateNestedManyWithoutSessionInput
+  }
+
+  export type ImpersonationSessionUncheckedCreateWithoutImpersonatedUserInput = {
+    id?: string
+    superadminId: string
+    impersonatedRole: $Enums.UserRole
+    mode?: $Enums.ImpersonationMode
+    startedAt?: Date | string
+    expiresAt: Date | string
+    endedAt?: Date | string | null
+    endedReason?: $Enums.ImpersonationEndReason | null
+    eventCount?: number
+    events?: ImpersonationEventUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type ImpersonationSessionCreateOrConnectWithoutImpersonatedUserInput = {
+    where: ImpersonationSessionWhereUniqueInput
+    create: XOR<ImpersonationSessionCreateWithoutImpersonatedUserInput, ImpersonationSessionUncheckedCreateWithoutImpersonatedUserInput>
+  }
+
+  export type ImpersonationSessionCreateManyImpersonatedUserInputEnvelope = {
+    data: ImpersonationSessionCreateManyImpersonatedUserInput | ImpersonationSessionCreateManyImpersonatedUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -61889,6 +67908,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ReportTemplate"> | Date | string
     deadlineOffsetHours?: IntNullableFilter<"ReportTemplate"> | number | null
     deadlinePolicy?: EnumReportDeadlinePolicyNullableFilter<"ReportTemplate"> | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: EnumReportPeriodTypeNullableFilter<"ReportTemplate"> | $Enums.ReportPeriodType | null
+    recurrenceDays?: IntNullableListFilter<"ReportTemplate">
+    autoFillTitleTemplate?: StringNullableFilter<"ReportTemplate"> | string | null
   }
 
   export type ReportUpdateRequestUpsertWithWhereUniqueWithoutRequestedByInput = {
@@ -62011,6 +68033,7 @@ export namespace Prisma {
     dataEntryById?: StringNullableFilter<"Report"> | string | null
     dataEntryDate?: DateTimeNullableFilter<"Report"> | Date | string | null
     notes?: StringNullableFilter<"Report"> | string | null
+    autoCreated?: BoolFilter<"Report"> | boolean
     createdAt?: DateTimeFilter<"Report"> | Date | string
     updatedAt?: DateTimeFilter<"Report"> | Date | string
   }
@@ -62138,6 +68161,8 @@ export namespace Prisma {
     completedAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
     cancelledAt?: DateTimeNullableFilter<"FormAssignment"> | Date | string | null
     notes?: StringNullableFilter<"FormAssignment"> | string | null
+    ruleId?: StringNullableFilter<"FormAssignment"> | string | null
+    periodKey?: StringNullableFilter<"FormAssignment"> | string | null
     createdAt?: DateTimeFilter<"FormAssignment"> | Date | string
     updatedAt?: DateTimeFilter<"FormAssignment"> | Date | string
   }
@@ -62156,6 +68181,105 @@ export namespace Prisma {
   export type FormAssignmentUpdateManyWithWhereWithoutAssignedByInput = {
     where: FormAssignmentScalarWhereInput
     data: XOR<FormAssignmentUpdateManyMutationInput, FormAssignmentUncheckedUpdateManyWithoutAssignedByInput>
+  }
+
+  export type FormAssignmentRuleUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: FormAssignmentRuleWhereUniqueInput
+    update: XOR<FormAssignmentRuleUpdateWithoutOwnerInput, FormAssignmentRuleUncheckedUpdateWithoutOwnerInput>
+    create: XOR<FormAssignmentRuleCreateWithoutOwnerInput, FormAssignmentRuleUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type FormAssignmentRuleUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: FormAssignmentRuleWhereUniqueInput
+    data: XOR<FormAssignmentRuleUpdateWithoutOwnerInput, FormAssignmentRuleUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type FormAssignmentRuleUpdateManyWithWhereWithoutOwnerInput = {
+    where: FormAssignmentRuleScalarWhereInput
+    data: XOR<FormAssignmentRuleUpdateManyMutationInput, FormAssignmentRuleUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type FormAssignmentRuleScalarWhereInput = {
+    AND?: FormAssignmentRuleScalarWhereInput | FormAssignmentRuleScalarWhereInput[]
+    OR?: FormAssignmentRuleScalarWhereInput[]
+    NOT?: FormAssignmentRuleScalarWhereInput | FormAssignmentRuleScalarWhereInput[]
+    id?: StringFilter<"FormAssignmentRule"> | string
+    ownerId?: StringFilter<"FormAssignmentRule"> | string
+    templateId?: StringFilter<"FormAssignmentRule"> | string
+    role?: EnumUserRoleNullableFilter<"FormAssignmentRule"> | $Enums.UserRole | null
+    assigneeId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    campusId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    orgGroupId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    metricIds?: StringNullableListFilter<"FormAssignmentRule">
+    cadenceOverride?: JsonNullableFilter<"FormAssignmentRule">
+    isActive?: BoolFilter<"FormAssignmentRule"> | boolean
+    notes?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    createdAt?: DateTimeFilter<"FormAssignmentRule"> | Date | string
+    updatedAt?: DateTimeFilter<"FormAssignmentRule"> | Date | string
+  }
+
+  export type FormAssignmentRuleUpsertWithWhereUniqueWithoutAssigneeInput = {
+    where: FormAssignmentRuleWhereUniqueInput
+    update: XOR<FormAssignmentRuleUpdateWithoutAssigneeInput, FormAssignmentRuleUncheckedUpdateWithoutAssigneeInput>
+    create: XOR<FormAssignmentRuleCreateWithoutAssigneeInput, FormAssignmentRuleUncheckedCreateWithoutAssigneeInput>
+  }
+
+  export type FormAssignmentRuleUpdateWithWhereUniqueWithoutAssigneeInput = {
+    where: FormAssignmentRuleWhereUniqueInput
+    data: XOR<FormAssignmentRuleUpdateWithoutAssigneeInput, FormAssignmentRuleUncheckedUpdateWithoutAssigneeInput>
+  }
+
+  export type FormAssignmentRuleUpdateManyWithWhereWithoutAssigneeInput = {
+    where: FormAssignmentRuleScalarWhereInput
+    data: XOR<FormAssignmentRuleUpdateManyMutationInput, FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeInput>
+  }
+
+  export type ImpersonationSessionUpsertWithWhereUniqueWithoutSuperadminInput = {
+    where: ImpersonationSessionWhereUniqueInput
+    update: XOR<ImpersonationSessionUpdateWithoutSuperadminInput, ImpersonationSessionUncheckedUpdateWithoutSuperadminInput>
+    create: XOR<ImpersonationSessionCreateWithoutSuperadminInput, ImpersonationSessionUncheckedCreateWithoutSuperadminInput>
+  }
+
+  export type ImpersonationSessionUpdateWithWhereUniqueWithoutSuperadminInput = {
+    where: ImpersonationSessionWhereUniqueInput
+    data: XOR<ImpersonationSessionUpdateWithoutSuperadminInput, ImpersonationSessionUncheckedUpdateWithoutSuperadminInput>
+  }
+
+  export type ImpersonationSessionUpdateManyWithWhereWithoutSuperadminInput = {
+    where: ImpersonationSessionScalarWhereInput
+    data: XOR<ImpersonationSessionUpdateManyMutationInput, ImpersonationSessionUncheckedUpdateManyWithoutSuperadminInput>
+  }
+
+  export type ImpersonationSessionScalarWhereInput = {
+    AND?: ImpersonationSessionScalarWhereInput | ImpersonationSessionScalarWhereInput[]
+    OR?: ImpersonationSessionScalarWhereInput[]
+    NOT?: ImpersonationSessionScalarWhereInput | ImpersonationSessionScalarWhereInput[]
+    id?: StringFilter<"ImpersonationSession"> | string
+    superadminId?: StringFilter<"ImpersonationSession"> | string
+    impersonatedRole?: EnumUserRoleFilter<"ImpersonationSession"> | $Enums.UserRole
+    impersonatedUserId?: StringNullableFilter<"ImpersonationSession"> | string | null
+    mode?: EnumImpersonationModeFilter<"ImpersonationSession"> | $Enums.ImpersonationMode
+    startedAt?: DateTimeFilter<"ImpersonationSession"> | Date | string
+    expiresAt?: DateTimeFilter<"ImpersonationSession"> | Date | string
+    endedAt?: DateTimeNullableFilter<"ImpersonationSession"> | Date | string | null
+    endedReason?: EnumImpersonationEndReasonNullableFilter<"ImpersonationSession"> | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFilter<"ImpersonationSession"> | number
+  }
+
+  export type ImpersonationSessionUpsertWithWhereUniqueWithoutImpersonatedUserInput = {
+    where: ImpersonationSessionWhereUniqueInput
+    update: XOR<ImpersonationSessionUpdateWithoutImpersonatedUserInput, ImpersonationSessionUncheckedUpdateWithoutImpersonatedUserInput>
+    create: XOR<ImpersonationSessionCreateWithoutImpersonatedUserInput, ImpersonationSessionUncheckedCreateWithoutImpersonatedUserInput>
+  }
+
+  export type ImpersonationSessionUpdateWithWhereUniqueWithoutImpersonatedUserInput = {
+    where: ImpersonationSessionWhereUniqueInput
+    data: XOR<ImpersonationSessionUpdateWithoutImpersonatedUserInput, ImpersonationSessionUncheckedUpdateWithoutImpersonatedUserInput>
+  }
+
+  export type ImpersonationSessionUpdateManyWithWhereWithoutImpersonatedUserInput = {
+    where: ImpersonationSessionScalarWhereInput
+    data: XOR<ImpersonationSessionUpdateManyMutationInput, ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserInput>
   }
 
   export type ImportJobUpsertWithWhereUniqueWithoutOwnerInput = {
@@ -62550,6 +68674,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -62610,6 +68738,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -62638,6 +68770,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -62678,6 +68811,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -62748,6 +68882,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -62807,6 +68945,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -62916,6 +69058,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -62976,6 +69122,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -63091,6 +69241,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -63151,6 +69305,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63296,6 +69454,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -63336,6 +69495,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -63406,6 +69566,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -63465,6 +69629,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63542,6 +69710,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -63602,6 +69774,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -63783,6 +69959,7 @@ export namespace Prisma {
     description?: string | null
     order: number
     isRequired?: boolean
+    correlationGroup?: string | null
     metrics?: ReportTemplateMetricCreateNestedManyWithoutSectionInput
   }
 
@@ -63792,6 +69969,7 @@ export namespace Prisma {
     description?: string | null
     order: number
     isRequired?: boolean
+    correlationGroup?: string | null
     metrics?: ReportTemplateMetricUncheckedCreateNestedManyWithoutSectionInput
   }
 
@@ -63880,6 +70058,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -63940,6 +70122,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -63968,6 +70154,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -64008,6 +70195,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -64025,6 +70213,48 @@ export namespace Prisma {
 
   export type ReportCreateManyTemplateInputEnvelope = {
     data: ReportCreateManyTemplateInput | ReportCreateManyTemplateInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FormAssignmentRuleCreateWithoutTemplateInput = {
+    id?: string
+    role?: $Enums.UserRole | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutFormAssignmentRulesOwnedInput
+    assignee?: UserCreateNestedOneWithoutFormAssignmentRulesAssignedInput
+    assignments?: FormAssignmentCreateNestedManyWithoutRuleInput
+  }
+
+  export type FormAssignmentRuleUncheckedCreateWithoutTemplateInput = {
+    id?: string
+    ownerId: string
+    role?: $Enums.UserRole | null
+    assigneeId?: string | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignments?: FormAssignmentUncheckedCreateNestedManyWithoutRuleInput
+  }
+
+  export type FormAssignmentRuleCreateOrConnectWithoutTemplateInput = {
+    where: FormAssignmentRuleWhereUniqueInput
+    create: XOR<FormAssignmentRuleCreateWithoutTemplateInput, FormAssignmentRuleUncheckedCreateWithoutTemplateInput>
+  }
+
+  export type FormAssignmentRuleCreateManyTemplateInputEnvelope = {
+    data: FormAssignmentRuleCreateManyTemplateInput | FormAssignmentRuleCreateManyTemplateInput[]
     skipDuplicates?: boolean
   }
 
@@ -64070,6 +70300,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"ReportTemplateSection"> | string | null
     order?: IntFilter<"ReportTemplateSection"> | number
     isRequired?: BoolFilter<"ReportTemplateSection"> | boolean
+    correlationGroup?: StringNullableFilter<"ReportTemplateSection"> | string | null
   }
 
   export type ReportTemplateVersionUpsertWithWhereUniqueWithoutTemplateInput = {
@@ -64148,6 +70379,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -64208,6 +70443,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -64231,6 +70470,22 @@ export namespace Prisma {
     data: XOR<ReportUpdateManyMutationInput, ReportUncheckedUpdateManyWithoutTemplateInput>
   }
 
+  export type FormAssignmentRuleUpsertWithWhereUniqueWithoutTemplateInput = {
+    where: FormAssignmentRuleWhereUniqueInput
+    update: XOR<FormAssignmentRuleUpdateWithoutTemplateInput, FormAssignmentRuleUncheckedUpdateWithoutTemplateInput>
+    create: XOR<FormAssignmentRuleCreateWithoutTemplateInput, FormAssignmentRuleUncheckedCreateWithoutTemplateInput>
+  }
+
+  export type FormAssignmentRuleUpdateWithWhereUniqueWithoutTemplateInput = {
+    where: FormAssignmentRuleWhereUniqueInput
+    data: XOR<FormAssignmentRuleUpdateWithoutTemplateInput, FormAssignmentRuleUncheckedUpdateWithoutTemplateInput>
+  }
+
+  export type FormAssignmentRuleUpdateManyWithWhereWithoutTemplateInput = {
+    where: FormAssignmentRuleScalarWhereInput
+    data: XOR<FormAssignmentRuleUpdateManyMutationInput, FormAssignmentRuleUncheckedUpdateManyWithoutTemplateInput>
+  }
+
   export type ReportTemplateMetricCreateWithoutSectionInput = {
     id?: string
     name: string
@@ -64244,6 +70499,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricCreateNestedManyWithoutTemplateMetricInput
@@ -64262,6 +70518,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryUncheckedCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricUncheckedCreateNestedManyWithoutTemplateMetricInput
@@ -64291,10 +70548,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateInput
     versions?: ReportTemplateVersionCreateNestedManyWithoutTemplateInput
     createdBy: UserCreateNestedOneWithoutCreatedTemplatesInput
     reports?: ReportCreateNestedManyWithoutTemplateInput
+    formAssignmentRules?: FormAssignmentRuleCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateUncheckedCreateWithoutSectionsInput = {
@@ -64312,9 +70573,13 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateInput
     versions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutTemplateInput
     reports?: ReportUncheckedCreateNestedManyWithoutTemplateInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateCreateOrConnectWithoutSectionsInput = {
@@ -64355,6 +70620,7 @@ export namespace Prisma {
     capturesGoal?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesAchieved?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesYoY?: BoolFilter<"ReportTemplateMetric"> | boolean
+    correlationGroup?: StringNullableFilter<"ReportTemplateMetric"> | string | null
   }
 
   export type ReportTemplateUpsertWithoutSectionsInput = {
@@ -64382,10 +70648,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateNestedInput
     versions?: ReportTemplateVersionUpdateManyWithoutTemplateNestedInput
     createdBy?: UserUpdateOneRequiredWithoutCreatedTemplatesNestedInput
     reports?: ReportUpdateManyWithoutTemplateNestedInput
+    formAssignmentRules?: FormAssignmentRuleUpdateManyWithoutTemplateNestedInput
   }
 
   export type ReportTemplateUncheckedUpdateWithoutSectionsInput = {
@@ -64403,9 +70673,13 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateNestedInput
     versions?: ReportTemplateVersionUncheckedUpdateManyWithoutTemplateNestedInput
     reports?: ReportUncheckedUpdateManyWithoutTemplateNestedInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type GoalCreateWithoutTemplateMetricInput = {
@@ -64538,6 +70812,7 @@ export namespace Prisma {
     description?: string | null
     order: number
     isRequired?: boolean
+    correlationGroup?: string | null
     template: ReportTemplateCreateNestedOneWithoutSectionsInput
   }
 
@@ -64548,6 +70823,7 @@ export namespace Prisma {
     description?: string | null
     order: number
     isRequired?: boolean
+    correlationGroup?: string | null
   }
 
   export type ReportTemplateSectionCreateOrConnectWithoutMetricsInput = {
@@ -64620,6 +70896,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     isRequired?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     template?: ReportTemplateUpdateOneRequiredWithoutSectionsNestedInput
   }
 
@@ -64630,6 +70907,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     isRequired?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserCreateWithoutCreatedTemplateVersionsInput = {
@@ -64681,6 +70959,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -64741,6 +71023,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -64767,10 +71053,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateInput
     sections?: ReportTemplateSectionCreateNestedManyWithoutTemplateInput
     createdBy: UserCreateNestedOneWithoutCreatedTemplatesInput
     reports?: ReportCreateNestedManyWithoutTemplateInput
+    formAssignmentRules?: FormAssignmentRuleCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateUncheckedCreateWithoutVersionsInput = {
@@ -64788,9 +71078,13 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateInput
     sections?: ReportTemplateSectionUncheckedCreateNestedManyWithoutTemplateInput
     reports?: ReportUncheckedCreateNestedManyWithoutTemplateInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateCreateOrConnectWithoutVersionsInput = {
@@ -64858,6 +71152,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -64918,6 +71216,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -64950,10 +71252,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateNestedInput
     sections?: ReportTemplateSectionUpdateManyWithoutTemplateNestedInput
     createdBy?: UserUpdateOneRequiredWithoutCreatedTemplatesNestedInput
     reports?: ReportUpdateManyWithoutTemplateNestedInput
+    formAssignmentRules?: FormAssignmentRuleUpdateManyWithoutTemplateNestedInput
   }
 
   export type ReportTemplateUncheckedUpdateWithoutVersionsInput = {
@@ -64971,9 +71277,13 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateNestedInput
     sections?: ReportTemplateSectionUncheckedUpdateManyWithoutTemplateNestedInput
     reports?: ReportUncheckedUpdateManyWithoutTemplateNestedInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type ReportEditCreateWithoutReportInput = {
@@ -65135,10 +71445,12 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     assignee: UserCreateNestedOneWithoutFormAssignmentsReceivedInput
     assignedBy: UserCreateNestedOneWithoutFormAssignmentsCreatedInput
+    rule?: FormAssignmentRuleCreateNestedOneWithoutAssignmentsInput
   }
 
   export type FormAssignmentUncheckedCreateWithoutReportInput = {
@@ -65150,6 +71462,8 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    ruleId?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -65213,6 +71527,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -65273,6 +71591,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65379,6 +71701,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -65439,6 +71765,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65500,6 +71830,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -65560,6 +71894,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65654,6 +71992,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -65714,6 +72056,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65775,6 +72121,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -65835,6 +72185,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -65861,10 +72215,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateInput
     sections?: ReportTemplateSectionCreateNestedManyWithoutTemplateInput
     versions?: ReportTemplateVersionCreateNestedManyWithoutTemplateInput
     createdBy: UserCreateNestedOneWithoutCreatedTemplatesInput
+    formAssignmentRules?: FormAssignmentRuleCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateUncheckedCreateWithoutReportsInput = {
@@ -65882,9 +72240,13 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateInput
     sections?: ReportTemplateSectionUncheckedCreateNestedManyWithoutTemplateInput
     versions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutTemplateInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateCreateOrConnectWithoutReportsInput = {
@@ -66058,6 +72420,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -66118,6 +72484,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66236,6 +72606,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -66296,6 +72670,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66363,6 +72741,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -66423,6 +72805,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66529,6 +72915,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -66589,6 +72979,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66656,6 +73050,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -66716,6 +73114,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -66748,10 +73150,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateNestedInput
     sections?: ReportTemplateSectionUpdateManyWithoutTemplateNestedInput
     versions?: ReportTemplateVersionUpdateManyWithoutTemplateNestedInput
     createdBy?: UserUpdateOneRequiredWithoutCreatedTemplatesNestedInput
+    formAssignmentRules?: FormAssignmentRuleUpdateManyWithoutTemplateNestedInput
   }
 
   export type ReportTemplateUncheckedUpdateWithoutReportsInput = {
@@ -66769,9 +73175,13 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateNestedInput
     sections?: ReportTemplateSectionUncheckedUpdateManyWithoutTemplateNestedInput
     versions?: ReportTemplateVersionUncheckedUpdateManyWithoutTemplateNestedInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type ReportMetricCreateWithoutSectionInput = {
@@ -66830,6 +73240,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -66871,6 +73282,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -66928,6 +73340,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -66969,6 +73382,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -67027,6 +73441,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -67087,6 +73505,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -67131,6 +73553,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryCreateNestedManyWithoutTemplateMetricInput
     section: ReportTemplateSectionCreateNestedOneWithoutMetricsInput
@@ -67150,6 +73573,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryUncheckedCreateNestedManyWithoutTemplateMetricInput
   }
@@ -67219,6 +73643,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -67279,6 +73707,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -67335,6 +73767,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUpdateManyWithoutTemplateMetricNestedInput
     section?: ReportTemplateSectionUpdateOneRequiredWithoutMetricsNestedInput
@@ -67354,6 +73787,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUncheckedUpdateManyWithoutTemplateMetricNestedInput
   }
@@ -67374,6 +73808,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     events?: ReportEventCreateNestedManyWithoutReportInput
@@ -67415,6 +73850,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     events?: ReportEventUncheckedCreateNestedManyWithoutReportInput
@@ -67478,6 +73914,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -67538,6 +73978,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -67599,6 +74043,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -67659,6 +74107,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -67698,6 +74150,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: ReportEventUpdateManyWithoutReportNestedInput
@@ -67739,6 +74192,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: ReportEventUncheckedUpdateManyWithoutReportNestedInput
@@ -67808,6 +74262,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -67868,6 +74326,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -67935,6 +74397,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -67995,6 +74461,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -68018,6 +74488,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -68059,6 +74530,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -68122,6 +74594,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -68182,6 +74658,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -68243,6 +74723,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -68303,6 +74787,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -68342,6 +74830,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -68383,6 +74872,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -68452,6 +74942,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -68512,6 +75006,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -68579,6 +75077,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -68639,6 +75141,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -68695,6 +75201,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -68755,6 +75265,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -68783,6 +75297,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -68824,6 +75339,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -68898,6 +75414,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -68958,6 +75478,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -68992,6 +75516,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -69033,6 +75558,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -69091,6 +75617,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -69151,6 +75681,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -69179,6 +75713,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -69220,6 +75755,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -69294,6 +75830,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -69354,6 +75894,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -69388,6 +75932,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -69429,6 +75974,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -69566,6 +76112,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -69626,6 +76176,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -69687,6 +76241,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -69747,6 +76305,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -69806,10 +76368,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     sections?: ReportTemplateSectionCreateNestedManyWithoutTemplateInput
     versions?: ReportTemplateVersionCreateNestedManyWithoutTemplateInput
     createdBy: UserCreateNestedOneWithoutCreatedTemplatesInput
     reports?: ReportCreateNestedManyWithoutTemplateInput
+    formAssignmentRules?: FormAssignmentRuleCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateUncheckedCreateWithoutGoalsInput = {
@@ -69827,9 +76393,13 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
     sections?: ReportTemplateSectionUncheckedCreateNestedManyWithoutTemplateInput
     versions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutTemplateInput
     reports?: ReportUncheckedCreateNestedManyWithoutTemplateInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedCreateNestedManyWithoutTemplateInput
   }
 
   export type ReportTemplateCreateOrConnectWithoutGoalsInput = {
@@ -69850,6 +76420,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
     metricEntries?: MetricEntryCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricCreateNestedManyWithoutTemplateMetricInput
     section: ReportTemplateSectionCreateNestedOneWithoutMetricsInput
@@ -69869,6 +76440,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
     metricEntries?: MetricEntryUncheckedCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricUncheckedCreateNestedManyWithoutTemplateMetricInput
   }
@@ -70005,6 +76577,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -70065,6 +76641,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -70132,6 +76712,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -70192,6 +76776,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -70263,10 +76851,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     sections?: ReportTemplateSectionUpdateManyWithoutTemplateNestedInput
     versions?: ReportTemplateVersionUpdateManyWithoutTemplateNestedInput
     createdBy?: UserUpdateOneRequiredWithoutCreatedTemplatesNestedInput
     reports?: ReportUpdateManyWithoutTemplateNestedInput
+    formAssignmentRules?: FormAssignmentRuleUpdateManyWithoutTemplateNestedInput
   }
 
   export type ReportTemplateUncheckedUpdateWithoutGoalsInput = {
@@ -70284,9 +76876,13 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     sections?: ReportTemplateSectionUncheckedUpdateManyWithoutTemplateNestedInput
     versions?: ReportTemplateVersionUncheckedUpdateManyWithoutTemplateNestedInput
     reports?: ReportUncheckedUpdateManyWithoutTemplateNestedInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type ReportTemplateMetricUpsertWithoutGoalsInput = {
@@ -70313,6 +76909,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     metricEntries?: MetricEntryUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUpdateManyWithoutTemplateMetricNestedInput
     section?: ReportTemplateSectionUpdateOneRequiredWithoutMetricsNestedInput
@@ -70332,6 +76929,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     metricEntries?: MetricEntryUncheckedUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUncheckedUpdateManyWithoutTemplateMetricNestedInput
   }
@@ -70428,6 +77026,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -70488,6 +77090,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -70549,6 +77155,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -70609,6 +77219,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -70730,6 +77344,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -70790,6 +77408,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -70857,6 +77479,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -70917,6 +77543,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -70982,6 +77612,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricCreateNestedManyWithoutTemplateMetricInput
     section: ReportTemplateSectionCreateNestedOneWithoutMetricsInput
@@ -71001,6 +77632,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricUncheckedCreateNestedManyWithoutTemplateMetricInput
   }
@@ -71085,6 +77717,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUpdateManyWithoutTemplateMetricNestedInput
     section?: ReportTemplateSectionUpdateOneRequiredWithoutMetricsNestedInput
@@ -71104,6 +77737,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUncheckedUpdateManyWithoutTemplateMetricNestedInput
   }
@@ -71157,6 +77791,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -71217,6 +77855,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -71289,6 +77931,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -71349,6 +77995,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -71405,6 +78055,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -71465,6 +78119,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -71537,6 +78195,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -71597,6 +78259,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -71653,6 +78319,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -71713,6 +78383,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -71816,6 +78490,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -71876,6 +78554,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -71969,6 +78651,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -72029,6 +78715,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -72160,6 +78850,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -72220,6 +78914,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -72341,6 +79039,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -72401,6 +79103,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -72581,6 +79287,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -72641,6 +79351,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -72745,6 +79459,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -72805,6 +79523,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -72966,6 +79688,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -73026,6 +79752,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -73259,6 +79989,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -73319,6 +80053,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -73499,6 +80237,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -73559,6 +80301,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -73615,6 +80361,10 @@ export namespace Prisma {
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -73675,6 +80425,10 @@ export namespace Prisma {
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -73747,6 +80501,10 @@ export namespace Prisma {
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -73807,6 +80565,10 @@ export namespace Prisma {
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -73830,6 +80592,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditCreateNestedManyWithoutReportInput
@@ -73871,6 +80634,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     edits?: ReportEditUncheckedCreateNestedManyWithoutReportInput
@@ -73934,6 +80698,10 @@ export namespace Prisma {
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -73994,6 +80762,10 @@ export namespace Prisma {
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -74055,6 +80827,10 @@ export namespace Prisma {
     submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -74115,6 +80891,10 @@ export namespace Prisma {
     submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -74125,6 +80905,43 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutFormAssignmentsCreatedInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutFormAssignmentsCreatedInput, UserUncheckedCreateWithoutFormAssignmentsCreatedInput>
+  }
+
+  export type FormAssignmentRuleCreateWithoutAssignmentsInput = {
+    id?: string
+    role?: $Enums.UserRole | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutFormAssignmentRulesOwnedInput
+    template: ReportTemplateCreateNestedOneWithoutFormAssignmentRulesInput
+    assignee?: UserCreateNestedOneWithoutFormAssignmentRulesAssignedInput
+  }
+
+  export type FormAssignmentRuleUncheckedCreateWithoutAssignmentsInput = {
+    id?: string
+    ownerId: string
+    templateId: string
+    role?: $Enums.UserRole | null
+    assigneeId?: string | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentRuleCreateOrConnectWithoutAssignmentsInput = {
+    where: FormAssignmentRuleWhereUniqueInput
+    create: XOR<FormAssignmentRuleCreateWithoutAssignmentsInput, FormAssignmentRuleUncheckedCreateWithoutAssignmentsInput>
   }
 
   export type ReportUpsertWithoutFormAssignmentsInput = {
@@ -74154,6 +80971,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -74195,6 +81013,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -74264,6 +81083,10 @@ export namespace Prisma {
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -74324,6 +81147,10 @@ export namespace Prisma {
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -74391,6 +81218,10 @@ export namespace Prisma {
     submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -74451,11 +81282,754 @@ export namespace Prisma {
     submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
     pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
     activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type FormAssignmentRuleUpsertWithoutAssignmentsInput = {
+    update: XOR<FormAssignmentRuleUpdateWithoutAssignmentsInput, FormAssignmentRuleUncheckedUpdateWithoutAssignmentsInput>
+    create: XOR<FormAssignmentRuleCreateWithoutAssignmentsInput, FormAssignmentRuleUncheckedCreateWithoutAssignmentsInput>
+    where?: FormAssignmentRuleWhereInput
+  }
+
+  export type FormAssignmentRuleUpdateToOneWithWhereWithoutAssignmentsInput = {
+    where?: FormAssignmentRuleWhereInput
+    data: XOR<FormAssignmentRuleUpdateWithoutAssignmentsInput, FormAssignmentRuleUncheckedUpdateWithoutAssignmentsInput>
+  }
+
+  export type FormAssignmentRuleUpdateWithoutAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutFormAssignmentRulesOwnedNestedInput
+    template?: ReportTemplateUpdateOneRequiredWithoutFormAssignmentRulesNestedInput
+    assignee?: UserUpdateOneWithoutFormAssignmentRulesAssignedNestedInput
+  }
+
+  export type FormAssignmentRuleUncheckedUpdateWithoutAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutFormAssignmentRulesOwnedInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutFormAssignmentRulesOwnedInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFormAssignmentRulesOwnedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFormAssignmentRulesOwnedInput, UserUncheckedCreateWithoutFormAssignmentRulesOwnedInput>
+  }
+
+  export type ReportTemplateCreateWithoutFormAssignmentRulesInput = {
+    id?: string
+    organisationId: string
+    name: string
+    description?: string | null
+    version?: number
+    isActive?: boolean
+    isDefault?: boolean
+    campusId?: string | null
+    orgGroupId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deadlineOffsetHours?: number | null
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
+    goals?: GoalCreateNestedManyWithoutTemplateInput
+    sections?: ReportTemplateSectionCreateNestedManyWithoutTemplateInput
+    versions?: ReportTemplateVersionCreateNestedManyWithoutTemplateInput
+    createdBy: UserCreateNestedOneWithoutCreatedTemplatesInput
+    reports?: ReportCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ReportTemplateUncheckedCreateWithoutFormAssignmentRulesInput = {
+    id?: string
+    organisationId: string
+    name: string
+    description?: string | null
+    version?: number
+    isActive?: boolean
+    isDefault?: boolean
+    createdById: string
+    campusId?: string | null
+    orgGroupId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deadlineOffsetHours?: number | null
+    deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
+    goals?: GoalUncheckedCreateNestedManyWithoutTemplateInput
+    sections?: ReportTemplateSectionUncheckedCreateNestedManyWithoutTemplateInput
+    versions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutTemplateInput
+    reports?: ReportUncheckedCreateNestedManyWithoutTemplateInput
+  }
+
+  export type ReportTemplateCreateOrConnectWithoutFormAssignmentRulesInput = {
+    where: ReportTemplateWhereUniqueInput
+    create: XOR<ReportTemplateCreateWithoutFormAssignmentRulesInput, ReportTemplateUncheckedCreateWithoutFormAssignmentRulesInput>
+  }
+
+  export type UserCreateWithoutFormAssignmentRulesAssignedInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutFormAssignmentRulesAssignedInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFormAssignmentRulesAssignedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFormAssignmentRulesAssignedInput, UserUncheckedCreateWithoutFormAssignmentRulesAssignedInput>
+  }
+
+  export type FormAssignmentCreateWithoutRuleInput = {
+    id?: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    periodKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    report: ReportCreateNestedOneWithoutFormAssignmentsInput
+    assignee: UserCreateNestedOneWithoutFormAssignmentsReceivedInput
+    assignedBy: UserCreateNestedOneWithoutFormAssignmentsCreatedInput
+  }
+
+  export type FormAssignmentUncheckedCreateWithoutRuleInput = {
+    id?: string
+    reportId: string
+    assigneeId: string
+    assignedById: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    periodKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentCreateOrConnectWithoutRuleInput = {
+    where: FormAssignmentWhereUniqueInput
+    create: XOR<FormAssignmentCreateWithoutRuleInput, FormAssignmentUncheckedCreateWithoutRuleInput>
+  }
+
+  export type FormAssignmentCreateManyRuleInputEnvelope = {
+    data: FormAssignmentCreateManyRuleInput | FormAssignmentCreateManyRuleInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutFormAssignmentRulesOwnedInput = {
+    update: XOR<UserUpdateWithoutFormAssignmentRulesOwnedInput, UserUncheckedUpdateWithoutFormAssignmentRulesOwnedInput>
+    create: XOR<UserCreateWithoutFormAssignmentRulesOwnedInput, UserUncheckedCreateWithoutFormAssignmentRulesOwnedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFormAssignmentRulesOwnedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFormAssignmentRulesOwnedInput, UserUncheckedUpdateWithoutFormAssignmentRulesOwnedInput>
+  }
+
+  export type UserUpdateWithoutFormAssignmentRulesOwnedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFormAssignmentRulesOwnedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ReportTemplateUpsertWithoutFormAssignmentRulesInput = {
+    update: XOR<ReportTemplateUpdateWithoutFormAssignmentRulesInput, ReportTemplateUncheckedUpdateWithoutFormAssignmentRulesInput>
+    create: XOR<ReportTemplateCreateWithoutFormAssignmentRulesInput, ReportTemplateUncheckedCreateWithoutFormAssignmentRulesInput>
+    where?: ReportTemplateWhereInput
+  }
+
+  export type ReportTemplateUpdateToOneWithWhereWithoutFormAssignmentRulesInput = {
+    where?: ReportTemplateWhereInput
+    data: XOR<ReportTemplateUpdateWithoutFormAssignmentRulesInput, ReportTemplateUncheckedUpdateWithoutFormAssignmentRulesInput>
+  }
+
+  export type ReportTemplateUpdateWithoutFormAssignmentRulesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: GoalUpdateManyWithoutTemplateNestedInput
+    sections?: ReportTemplateSectionUpdateManyWithoutTemplateNestedInput
+    versions?: ReportTemplateVersionUpdateManyWithoutTemplateNestedInput
+    createdBy?: UserUpdateOneRequiredWithoutCreatedTemplatesNestedInput
+    reports?: ReportUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type ReportTemplateUncheckedUpdateWithoutFormAssignmentRulesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdById?: StringFieldUpdateOperationsInput | string
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
+    deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
+    goals?: GoalUncheckedUpdateManyWithoutTemplateNestedInput
+    sections?: ReportTemplateSectionUncheckedUpdateManyWithoutTemplateNestedInput
+    versions?: ReportTemplateVersionUncheckedUpdateManyWithoutTemplateNestedInput
+    reports?: ReportUncheckedUpdateManyWithoutTemplateNestedInput
+  }
+
+  export type UserUpsertWithoutFormAssignmentRulesAssignedInput = {
+    update: XOR<UserUpdateWithoutFormAssignmentRulesAssignedInput, UserUncheckedUpdateWithoutFormAssignmentRulesAssignedInput>
+    create: XOR<UserCreateWithoutFormAssignmentRulesAssignedInput, UserUncheckedCreateWithoutFormAssignmentRulesAssignedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFormAssignmentRulesAssignedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFormAssignmentRulesAssignedInput, UserUncheckedUpdateWithoutFormAssignmentRulesAssignedInput>
+  }
+
+  export type UserUpdateWithoutFormAssignmentRulesAssignedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFormAssignmentRulesAssignedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type FormAssignmentUpsertWithWhereUniqueWithoutRuleInput = {
+    where: FormAssignmentWhereUniqueInput
+    update: XOR<FormAssignmentUpdateWithoutRuleInput, FormAssignmentUncheckedUpdateWithoutRuleInput>
+    create: XOR<FormAssignmentCreateWithoutRuleInput, FormAssignmentUncheckedCreateWithoutRuleInput>
+  }
+
+  export type FormAssignmentUpdateWithWhereUniqueWithoutRuleInput = {
+    where: FormAssignmentWhereUniqueInput
+    data: XOR<FormAssignmentUpdateWithoutRuleInput, FormAssignmentUncheckedUpdateWithoutRuleInput>
+  }
+
+  export type FormAssignmentUpdateManyWithWhereWithoutRuleInput = {
+    where: FormAssignmentScalarWhereInput
+    data: XOR<FormAssignmentUpdateManyMutationInput, FormAssignmentUncheckedUpdateManyWithoutRuleInput>
   }
 
   export type UserCreateWithoutImportJobsInput = {
@@ -74508,6 +82082,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
     pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
@@ -74568,6 +82146,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
     pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
@@ -74695,6 +82277,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
     pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
@@ -74755,6 +82341,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
     pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
@@ -74956,6 +82546,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
     pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
@@ -75016,6 +82610,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
     pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
@@ -75132,6 +82730,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
     pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
@@ -75192,6 +82794,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
     pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
@@ -75264,6 +82870,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
@@ -75324,6 +82934,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
@@ -75440,6 +83054,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
@@ -75500,6 +83118,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
@@ -75572,6 +83194,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -75632,6 +83258,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -75704,6 +83334,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -75764,6 +83398,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -75820,6 +83458,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
@@ -75880,6 +83522,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
     formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
     formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
     importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
     importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
     bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
@@ -75952,6 +83598,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -76012,10 +83662,673 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
     pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutImpersonationSessionsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationTargetedBy?: ImpersonationSessionCreateNestedManyWithoutImpersonatedUserInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutImpersonationSessionsInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedCreateNestedManyWithoutImpersonatedUserInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutImpersonationSessionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutImpersonationSessionsInput, UserUncheckedCreateWithoutImpersonationSessionsInput>
+  }
+
+  export type UserCreateWithoutImpersonationTargetedByInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestCreateNestedManyWithoutReviewedByInput
+    goals?: GoalCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionCreateNestedManyWithoutSuperadminInput
+    importJobs?: ImportJobCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenCreateNestedManyWithoutUserInput
+    campus?: CampusCreateNestedOneWithoutUsersInput
+    orgGroup?: OrgGroupCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserUncheckedCreateWithoutImpersonationTargetedByInput = {
+    id?: string
+    organisationId?: string | null
+    email: string
+    pendingEmail?: string | null
+    emailVerifiedAt?: Date | string | null
+    emailVerificationSentAt?: Date | string | null
+    pendingEmailRequestedAt?: Date | string | null
+    pendingEmailSentAt?: Date | string | null
+    passwordHash: string
+    firstName: string
+    lastName: string
+    phone?: string | null
+    gender?: $Enums.Gender | null
+    role?: $Enums.UserRole
+    campusId?: string | null
+    orgGroupId?: string | null
+    avatar?: string | null
+    avatarUrl?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bugReports?: BugReportUncheckedCreateNestedManyWithoutCreatedByInput
+    adminedCampuses?: CampusUncheckedCreateNestedManyWithoutAdminInput
+    goalEditRequests?: GoalEditRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    goals?: GoalUncheckedCreateNestedManyWithoutCreatedByInput
+    lockedGoals?: GoalUncheckedCreateNestedManyWithoutLockedByInput
+    createdInviteLinks?: InviteLinkUncheckedCreateNestedManyWithoutCreatedByInput
+    mediaAssets?: MediaAssetUncheckedCreateNestedManyWithoutOwnerInput
+    assetUploadSessions?: AssetUploadSessionUncheckedCreateNestedManyWithoutOwnerInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedCreateNestedManyWithoutActorInput
+    emailActionTokens?: EmailActionTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    ledOrgGroups?: OrgGroupUncheckedCreateNestedManyWithoutLeaderInput
+    reviewedEdits?: ReportEditUncheckedCreateNestedManyWithoutReviewedByInput
+    reportEdits?: ReportEditUncheckedCreateNestedManyWithoutSubmittedByInput
+    reportEvents?: ReportEventUncheckedCreateNestedManyWithoutActorInput
+    lockedMetrics?: ReportMetricUncheckedCreateNestedManyWithoutLockedByInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    createdTemplates?: ReportTemplateUncheckedCreateNestedManyWithoutCreatedByInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    reportVersions?: ReportVersionUncheckedCreateNestedManyWithoutCreatedByInput
+    approvedReports?: ReportUncheckedCreateNestedManyWithoutApprovedByInput
+    createdReports?: ReportUncheckedCreateNestedManyWithoutCreatedByInput
+    dataEntryReports?: ReportUncheckedCreateNestedManyWithoutDataEntryByInput
+    reviewedReports?: ReportUncheckedCreateNestedManyWithoutReviewedByInput
+    submittedReports?: ReportUncheckedCreateNestedManyWithoutSubmittedByInput
+    adminConfigEntries?: AdminConfigEntryUncheckedCreateNestedManyWithoutActorInput
+    formAssignmentsReceived?: FormAssignmentUncheckedCreateNestedManyWithoutAssigneeInput
+    formAssignmentsCreated?: FormAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutOwnerInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedCreateNestedManyWithoutAssigneeInput
+    impersonationSessions?: ImpersonationSessionUncheckedCreateNestedManyWithoutSuperadminInput
+    importJobs?: ImportJobUncheckedCreateNestedManyWithoutOwnerInput
+    importMappingProfiles?: ImportMappingProfileUncheckedCreateNestedManyWithoutOwnerInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedCreateNestedManyWithoutCreatedByInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedCreateNestedManyWithoutUserInput
+    activationTokens?: UserActivationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutImpersonationTargetedByInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutImpersonationTargetedByInput, UserUncheckedCreateWithoutImpersonationTargetedByInput>
+  }
+
+  export type ImpersonationEventCreateWithoutSessionInput = {
+    id?: string
+    type: $Enums.ImpersonationEventType
+    path?: string | null
+    method?: string | null
+    status?: number | null
+    requestId?: string | null
+    payloadDigest?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ImpersonationEventUncheckedCreateWithoutSessionInput = {
+    id?: string
+    type: $Enums.ImpersonationEventType
+    path?: string | null
+    method?: string | null
+    status?: number | null
+    requestId?: string | null
+    payloadDigest?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ImpersonationEventCreateOrConnectWithoutSessionInput = {
+    where: ImpersonationEventWhereUniqueInput
+    create: XOR<ImpersonationEventCreateWithoutSessionInput, ImpersonationEventUncheckedCreateWithoutSessionInput>
+  }
+
+  export type ImpersonationEventCreateManySessionInputEnvelope = {
+    data: ImpersonationEventCreateManySessionInput | ImpersonationEventCreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutImpersonationSessionsInput = {
+    update: XOR<UserUpdateWithoutImpersonationSessionsInput, UserUncheckedUpdateWithoutImpersonationSessionsInput>
+    create: XOR<UserCreateWithoutImpersonationSessionsInput, UserUncheckedCreateWithoutImpersonationSessionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutImpersonationSessionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutImpersonationSessionsInput, UserUncheckedUpdateWithoutImpersonationSessionsInput>
+  }
+
+  export type UserUpdateWithoutImpersonationSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutImpersonationSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithoutImpersonationTargetedByInput = {
+    update: XOR<UserUpdateWithoutImpersonationTargetedByInput, UserUncheckedUpdateWithoutImpersonationTargetedByInput>
+    create: XOR<UserCreateWithoutImpersonationTargetedByInput, UserUncheckedCreateWithoutImpersonationTargetedByInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutImpersonationTargetedByInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutImpersonationTargetedByInput, UserUncheckedUpdateWithoutImpersonationTargetedByInput>
+  }
+
+  export type UserUpdateWithoutImpersonationTargetedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUpdateManyWithoutUserNestedInput
+    campus?: CampusUpdateOneWithoutUsersNestedInput
+    orgGroup?: OrgGroupUpdateOneWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutImpersonationTargetedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organisationId?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    pendingEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerificationSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailRequestedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bugReports?: BugReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    adminedCampuses?: CampusUncheckedUpdateManyWithoutAdminNestedInput
+    goalEditRequests?: GoalEditRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedGoalEdits?: GoalEditRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    goals?: GoalUncheckedUpdateManyWithoutCreatedByNestedInput
+    lockedGoals?: GoalUncheckedUpdateManyWithoutLockedByNestedInput
+    createdInviteLinks?: InviteLinkUncheckedUpdateManyWithoutCreatedByNestedInput
+    mediaAssets?: MediaAssetUncheckedUpdateManyWithoutOwnerNestedInput
+    assetUploadSessions?: AssetUploadSessionUncheckedUpdateManyWithoutOwnerNestedInput
+    assetLifecycleEvents?: AssetLifecycleEventUncheckedUpdateManyWithoutActorNestedInput
+    emailActionTokens?: EmailActionTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    ledOrgGroups?: OrgGroupUncheckedUpdateManyWithoutLeaderNestedInput
+    reviewedEdits?: ReportEditUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportEdits?: ReportEditUncheckedUpdateManyWithoutSubmittedByNestedInput
+    reportEvents?: ReportEventUncheckedUpdateManyWithoutActorNestedInput
+    lockedMetrics?: ReportMetricUncheckedUpdateManyWithoutLockedByNestedInput
+    createdTemplateVersions?: ReportTemplateVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    createdTemplates?: ReportTemplateUncheckedUpdateManyWithoutCreatedByNestedInput
+    reportUpdateRequests?: ReportUpdateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedUpdates?: ReportUpdateRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    reportVersions?: ReportVersionUncheckedUpdateManyWithoutCreatedByNestedInput
+    approvedReports?: ReportUncheckedUpdateManyWithoutApprovedByNestedInput
+    createdReports?: ReportUncheckedUpdateManyWithoutCreatedByNestedInput
+    dataEntryReports?: ReportUncheckedUpdateManyWithoutDataEntryByNestedInput
+    reviewedReports?: ReportUncheckedUpdateManyWithoutReviewedByNestedInput
+    submittedReports?: ReportUncheckedUpdateManyWithoutSubmittedByNestedInput
+    adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
+    formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
+    formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
+    importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
+    bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
+    pwaPromptDismissals?: PwaPromptDismissalUncheckedUpdateManyWithoutUserNestedInput
+    activationTokens?: UserActivationTokenUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ImpersonationEventUpsertWithWhereUniqueWithoutSessionInput = {
+    where: ImpersonationEventWhereUniqueInput
+    update: XOR<ImpersonationEventUpdateWithoutSessionInput, ImpersonationEventUncheckedUpdateWithoutSessionInput>
+    create: XOR<ImpersonationEventCreateWithoutSessionInput, ImpersonationEventUncheckedCreateWithoutSessionInput>
+  }
+
+  export type ImpersonationEventUpdateWithWhereUniqueWithoutSessionInput = {
+    where: ImpersonationEventWhereUniqueInput
+    data: XOR<ImpersonationEventUpdateWithoutSessionInput, ImpersonationEventUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type ImpersonationEventUpdateManyWithWhereWithoutSessionInput = {
+    where: ImpersonationEventScalarWhereInput
+    data: XOR<ImpersonationEventUpdateManyMutationInput, ImpersonationEventUncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type ImpersonationEventScalarWhereInput = {
+    AND?: ImpersonationEventScalarWhereInput | ImpersonationEventScalarWhereInput[]
+    OR?: ImpersonationEventScalarWhereInput[]
+    NOT?: ImpersonationEventScalarWhereInput | ImpersonationEventScalarWhereInput[]
+    id?: StringFilter<"ImpersonationEvent"> | string
+    sessionId?: StringFilter<"ImpersonationEvent"> | string
+    type?: EnumImpersonationEventTypeFilter<"ImpersonationEvent"> | $Enums.ImpersonationEventType
+    path?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    method?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    status?: IntNullableFilter<"ImpersonationEvent"> | number | null
+    requestId?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    payloadDigest?: StringNullableFilter<"ImpersonationEvent"> | string | null
+    createdAt?: DateTimeFilter<"ImpersonationEvent"> | Date | string
+  }
+
+  export type ImpersonationSessionCreateWithoutEventsInput = {
+    id?: string
+    impersonatedRole: $Enums.UserRole
+    mode?: $Enums.ImpersonationMode
+    startedAt?: Date | string
+    expiresAt: Date | string
+    endedAt?: Date | string | null
+    endedReason?: $Enums.ImpersonationEndReason | null
+    eventCount?: number
+    superadmin: UserCreateNestedOneWithoutImpersonationSessionsInput
+    impersonatedUser?: UserCreateNestedOneWithoutImpersonationTargetedByInput
+  }
+
+  export type ImpersonationSessionUncheckedCreateWithoutEventsInput = {
+    id?: string
+    superadminId: string
+    impersonatedRole: $Enums.UserRole
+    impersonatedUserId?: string | null
+    mode?: $Enums.ImpersonationMode
+    startedAt?: Date | string
+    expiresAt: Date | string
+    endedAt?: Date | string | null
+    endedReason?: $Enums.ImpersonationEndReason | null
+    eventCount?: number
+  }
+
+  export type ImpersonationSessionCreateOrConnectWithoutEventsInput = {
+    where: ImpersonationSessionWhereUniqueInput
+    create: XOR<ImpersonationSessionCreateWithoutEventsInput, ImpersonationSessionUncheckedCreateWithoutEventsInput>
+  }
+
+  export type ImpersonationSessionUpsertWithoutEventsInput = {
+    update: XOR<ImpersonationSessionUpdateWithoutEventsInput, ImpersonationSessionUncheckedUpdateWithoutEventsInput>
+    create: XOR<ImpersonationSessionCreateWithoutEventsInput, ImpersonationSessionUncheckedCreateWithoutEventsInput>
+    where?: ImpersonationSessionWhereInput
+  }
+
+  export type ImpersonationSessionUpdateToOneWithWhereWithoutEventsInput = {
+    where?: ImpersonationSessionWhereInput
+    data: XOR<ImpersonationSessionUpdateWithoutEventsInput, ImpersonationSessionUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type ImpersonationSessionUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
+    superadmin?: UserUpdateOneRequiredWithoutImpersonationSessionsNestedInput
+    impersonatedUser?: UserUpdateOneWithoutImpersonationTargetedByNestedInput
+  }
+
+  export type ImpersonationSessionUncheckedUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    superadminId?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    impersonatedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type BugReportCreateManyCreatedByInput = {
@@ -76279,6 +84592,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     deadlineOffsetHours?: number | null
     deadlinePolicy?: $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateCreaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: string | null
   }
 
   export type ReportUpdateRequestCreateManyRequestedByInput = {
@@ -76337,6 +84653,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -76364,6 +84681,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -76391,6 +84709,7 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -76418,6 +84737,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -76445,6 +84765,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -76468,6 +84789,8 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    ruleId?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -76481,8 +84804,64 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    ruleId?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type FormAssignmentRuleCreateManyOwnerInput = {
+    id?: string
+    templateId: string
+    role?: $Enums.UserRole | null
+    assigneeId?: string | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentRuleCreateManyAssigneeInput = {
+    id?: string
+    ownerId: string
+    templateId: string
+    role?: $Enums.UserRole | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ImpersonationSessionCreateManySuperadminInput = {
+    id?: string
+    impersonatedRole: $Enums.UserRole
+    impersonatedUserId?: string | null
+    mode?: $Enums.ImpersonationMode
+    startedAt?: Date | string
+    expiresAt: Date | string
+    endedAt?: Date | string | null
+    endedReason?: $Enums.ImpersonationEndReason | null
+    eventCount?: number
+  }
+
+  export type ImpersonationSessionCreateManyImpersonatedUserInput = {
+    id?: string
+    superadminId: string
+    impersonatedRole: $Enums.UserRole
+    mode?: $Enums.ImpersonationMode
+    startedAt?: Date | string
+    expiresAt: Date | string
+    endedAt?: Date | string | null
+    endedReason?: $Enums.ImpersonationEndReason | null
+    eventCount?: number
   }
 
   export type ImportJobCreateManyOwnerInput = {
@@ -77323,10 +85702,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateNestedInput
     sections?: ReportTemplateSectionUpdateManyWithoutTemplateNestedInput
     versions?: ReportTemplateVersionUpdateManyWithoutTemplateNestedInput
     reports?: ReportUpdateManyWithoutTemplateNestedInput
+    formAssignmentRules?: FormAssignmentRuleUpdateManyWithoutTemplateNestedInput
   }
 
   export type ReportTemplateUncheckedUpdateWithoutCreatedByInput = {
@@ -77343,10 +85726,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateNestedInput
     sections?: ReportTemplateSectionUncheckedUpdateManyWithoutTemplateNestedInput
     versions?: ReportTemplateVersionUncheckedUpdateManyWithoutTemplateNestedInput
     reports?: ReportUncheckedUpdateManyWithoutTemplateNestedInput
+    formAssignmentRules?: FormAssignmentRuleUncheckedUpdateManyWithoutTemplateNestedInput
   }
 
   export type ReportTemplateUncheckedUpdateManyWithoutCreatedByInput = {
@@ -77363,6 +85750,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deadlineOffsetHours?: NullableIntFieldUpdateOperationsInput | number | null
     deadlinePolicy?: NullableEnumReportDeadlinePolicyFieldUpdateOperationsInput | $Enums.ReportDeadlinePolicy | null
+    recurrenceFrequency?: NullableEnumReportPeriodTypeFieldUpdateOperationsInput | $Enums.ReportPeriodType | null
+    recurrenceDays?: ReportTemplateUpdaterecurrenceDaysInput | number[]
+    autoFillTitleTemplate?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportUpdateRequestUpdateWithoutRequestedByInput = {
@@ -77480,6 +85870,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -77520,6 +85911,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -77553,6 +85945,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -77573,6 +85966,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -77613,6 +86007,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -77646,6 +86041,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -77666,6 +86062,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -77706,6 +86103,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -77739,6 +86137,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -77759,6 +86158,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -77799,6 +86199,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -77832,6 +86233,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -77852,6 +86254,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -77892,6 +86295,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -77925,6 +86329,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -77966,10 +86371,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     report?: ReportUpdateOneRequiredWithoutFormAssignmentsNestedInput
     assignedBy?: UserUpdateOneRequiredWithoutFormAssignmentsCreatedNestedInput
+    rule?: FormAssignmentRuleUpdateOneWithoutAssignmentsNestedInput
   }
 
   export type FormAssignmentUncheckedUpdateWithoutAssigneeInput = {
@@ -77981,6 +86388,8 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ruleId?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -77994,6 +86403,8 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ruleId?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -78005,10 +86416,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     report?: ReportUpdateOneRequiredWithoutFormAssignmentsNestedInput
     assignee?: UserUpdateOneRequiredWithoutFormAssignmentsReceivedNestedInput
+    rule?: FormAssignmentRuleUpdateOneWithoutAssignmentsNestedInput
   }
 
   export type FormAssignmentUncheckedUpdateWithoutAssignedByInput = {
@@ -78020,6 +86433,8 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ruleId?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -78033,8 +86448,180 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ruleId?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentRuleUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    template?: ReportTemplateUpdateOneRequiredWithoutFormAssignmentRulesNestedInput
+    assignee?: UserUpdateOneWithoutFormAssignmentRulesAssignedNestedInput
+    assignments?: FormAssignmentUpdateManyWithoutRuleNestedInput
+  }
+
+  export type FormAssignmentRuleUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: FormAssignmentUncheckedUpdateManyWithoutRuleNestedInput
+  }
+
+  export type FormAssignmentRuleUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentRuleUpdateWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutFormAssignmentRulesOwnedNestedInput
+    template?: ReportTemplateUpdateOneRequiredWithoutFormAssignmentRulesNestedInput
+    assignments?: FormAssignmentUpdateManyWithoutRuleNestedInput
+  }
+
+  export type FormAssignmentRuleUncheckedUpdateWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: FormAssignmentUncheckedUpdateManyWithoutRuleNestedInput
+  }
+
+  export type FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    templateId?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImpersonationSessionUpdateWithoutSuperadminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
+    impersonatedUser?: UserUpdateOneWithoutImpersonationTargetedByNestedInput
+    events?: ImpersonationEventUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ImpersonationSessionUncheckedUpdateWithoutSuperadminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    impersonatedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
+    events?: ImpersonationEventUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ImpersonationSessionUncheckedUpdateManyWithoutSuperadminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    impersonatedUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ImpersonationSessionUpdateWithoutImpersonatedUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
+    superadmin?: UserUpdateOneRequiredWithoutImpersonationSessionsNestedInput
+    events?: ImpersonationEventUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ImpersonationSessionUncheckedUpdateWithoutImpersonatedUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    superadminId?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
+    events?: ImpersonationEventUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    superadminId?: StringFieldUpdateOperationsInput | string
+    impersonatedRole?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    mode?: EnumImpersonationModeFieldUpdateOperationsInput | $Enums.ImpersonationMode
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedReason?: NullableEnumImpersonationEndReasonFieldUpdateOperationsInput | $Enums.ImpersonationEndReason | null
+    eventCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type ImportJobUpdateWithoutOwnerInput = {
@@ -78265,6 +86852,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -78420,6 +87008,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -78460,6 +87049,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -78493,6 +87083,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -78547,6 +87138,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -78606,6 +87201,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -78690,6 +87289,7 @@ export namespace Prisma {
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
     notes?: string | null
+    autoCreated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -78828,6 +87428,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -78868,6 +87469,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -78901,6 +87503,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -78955,6 +87558,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUpdateManyWithoutCreatedByNestedInput
@@ -79014,6 +87621,10 @@ export namespace Prisma {
     adminConfigEntries?: AdminConfigEntryUncheckedUpdateManyWithoutActorNestedInput
     formAssignmentsReceived?: FormAssignmentUncheckedUpdateManyWithoutAssigneeNestedInput
     formAssignmentsCreated?: FormAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+    formAssignmentRulesOwned?: FormAssignmentRuleUncheckedUpdateManyWithoutOwnerNestedInput
+    formAssignmentRulesAssigned?: FormAssignmentRuleUncheckedUpdateManyWithoutAssigneeNestedInput
+    impersonationSessions?: ImpersonationSessionUncheckedUpdateManyWithoutSuperadminNestedInput
+    impersonationTargetedBy?: ImpersonationSessionUncheckedUpdateManyWithoutImpersonatedUserNestedInput
     importJobs?: ImportJobUncheckedUpdateManyWithoutOwnerNestedInput
     importMappingProfiles?: ImportMappingProfileUncheckedUpdateManyWithoutOwnerNestedInput
     bulkInviteBatches?: BulkInviteBatchUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -79068,6 +87679,7 @@ export namespace Prisma {
     description?: string | null
     order: number
     isRequired?: boolean
+    correlationGroup?: string | null
   }
 
   export type ReportTemplateVersionCreateManyTemplateInput = {
@@ -79100,6 +87712,22 @@ export namespace Prisma {
     isDataEntry?: boolean
     dataEntryById?: string | null
     dataEntryDate?: Date | string | null
+    notes?: string | null
+    autoCreated?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentRuleCreateManyTemplateInput = {
+    id?: string
+    ownerId: string
+    role?: $Enums.UserRole | null
+    assigneeId?: string | null
+    campusId?: string | null
+    orgGroupId?: string | null
+    metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -79167,6 +87795,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     isRequired?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     metrics?: ReportTemplateMetricUpdateManyWithoutSectionNestedInput
   }
 
@@ -79176,6 +87805,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     isRequired?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     metrics?: ReportTemplateMetricUncheckedUpdateManyWithoutSectionNestedInput
   }
 
@@ -79185,6 +87815,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     order?: IntFieldUpdateOperationsInput | number
     isRequired?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportTemplateVersionUpdateWithoutTemplateInput = {
@@ -79227,6 +87858,7 @@ export namespace Prisma {
     isDataEntry?: BoolFieldUpdateOperationsInput | boolean
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUpdateManyWithoutReportNestedInput
@@ -79267,6 +87899,7 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     edits?: ReportEditUncheckedUpdateManyWithoutReportNestedInput
@@ -79300,6 +87933,54 @@ export namespace Prisma {
     dataEntryById?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    autoCreated?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentRuleUpdateWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutFormAssignmentRulesOwnedNestedInput
+    assignee?: UserUpdateOneWithoutFormAssignmentRulesAssignedNestedInput
+    assignments?: FormAssignmentUpdateManyWithoutRuleNestedInput
+  }
+
+  export type FormAssignmentRuleUncheckedUpdateWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignments?: FormAssignmentUncheckedUpdateManyWithoutRuleNestedInput
+  }
+
+  export type FormAssignmentRuleUncheckedUpdateManyWithoutTemplateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusId?: NullableStringFieldUpdateOperationsInput | string | null
+    orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
+    cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -79317,6 +87998,7 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    correlationGroup?: string | null
   }
 
   export type ReportTemplateMetricUpdateWithoutSectionInput = {
@@ -79332,6 +88014,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUpdateManyWithoutTemplateMetricNestedInput
@@ -79350,6 +88033,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUncheckedUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUncheckedUpdateManyWithoutTemplateMetricNestedInput
@@ -79368,6 +88052,7 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GoalCreateManyTemplateMetricInput = {
@@ -79615,6 +88300,8 @@ export namespace Prisma {
     completedAt?: Date | string | null
     cancelledAt?: Date | string | null
     notes?: string | null
+    ruleId?: string | null
+    periodKey?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -79778,10 +88465,12 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     assignee?: UserUpdateOneRequiredWithoutFormAssignmentsReceivedNestedInput
     assignedBy?: UserUpdateOneRequiredWithoutFormAssignmentsCreatedNestedInput
+    rule?: FormAssignmentRuleUpdateOneWithoutAssignmentsNestedInput
   }
 
   export type FormAssignmentUncheckedUpdateWithoutReportInput = {
@@ -79793,6 +88482,8 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ruleId?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -79806,6 +88497,8 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    ruleId?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -80112,6 +88805,66 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FormAssignmentCreateManyRuleInput = {
+    id?: string
+    reportId: string
+    assigneeId: string
+    assignedById: string
+    metricIds?: FormAssignmentCreatemetricIdsInput | string[]
+    dueAt?: Date | string | null
+    completedAt?: Date | string | null
+    cancelledAt?: Date | string | null
+    notes?: string | null
+    periodKey?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FormAssignmentUpdateWithoutRuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    report?: ReportUpdateOneRequiredWithoutFormAssignmentsNestedInput
+    assignee?: UserUpdateOneRequiredWithoutFormAssignmentsReceivedNestedInput
+    assignedBy?: UserUpdateOneRequiredWithoutFormAssignmentsCreatedNestedInput
+  }
+
+  export type FormAssignmentUncheckedUpdateWithoutRuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    assigneeId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FormAssignmentUncheckedUpdateManyWithoutRuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportId?: StringFieldUpdateOperationsInput | string
+    assigneeId?: StringFieldUpdateOperationsInput | string
+    assignedById?: StringFieldUpdateOperationsInput | string
+    metricIds?: FormAssignmentUpdatemetricIdsInput | string[]
+    dueAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    periodKey?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ImportJobItemCreateManyJobInput = {
     id?: string
     rowIndex: number
@@ -80283,6 +89036,50 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImpersonationEventCreateManySessionInput = {
+    id?: string
+    type: $Enums.ImpersonationEventType
+    path?: string | null
+    method?: string | null
+    status?: number | null
+    requestId?: string | null
+    payloadDigest?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ImpersonationEventUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumImpersonationEventTypeFieldUpdateOperationsInput | $Enums.ImpersonationEventType
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    method?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableIntFieldUpdateOperationsInput | number | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    payloadDigest?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImpersonationEventUncheckedUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumImpersonationEventTypeFieldUpdateOperationsInput | $Enums.ImpersonationEventType
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    method?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableIntFieldUpdateOperationsInput | number | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    payloadDigest?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ImpersonationEventUncheckedUpdateManyWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumImpersonationEventTypeFieldUpdateOperationsInput | $Enums.ImpersonationEventType
+    path?: NullableStringFieldUpdateOperationsInput | string | null
+    method?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableIntFieldUpdateOperationsInput | number | null
+    requestId?: NullableStringFieldUpdateOperationsInput | string | null
+    payloadDigest?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

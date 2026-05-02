@@ -129,6 +129,7 @@ export const API_ROUTES = {
         editsReject: (id: string, editId: string) => `/api/reports/${id}/edits/${editId}/reject`,
         history: (id: string) => `/api/reports/${id}/history`,
         aggregate: "/api/reports/aggregate",
+        quickViews: (id: string) => `/api/reports/${id}/quick-views`,
     },
     reportTemplates: {
         list: "/api/report-templates",
@@ -210,6 +211,7 @@ export const API_ROUTES = {
         detail: (id: string) => `/api/form-assignments/${id}`,
         complete: (id: string) => `/api/form-assignments/${id}/complete`,
         cancel: (id: string) => `/api/form-assignments/${id}/cancel`,
+        materialise: "/api/form-assignments/materialise",
     },
     imports: {
         list: "/api/imports",
@@ -226,4 +228,11 @@ export const API_ROUTES = {
     activate: "/api/auth/activate",
     pwaDismissal: "/api/notifications/pwa-dismissal",
     emailTest: "/api/email/test",
+    impersonation: {
+        start: "/api/impersonation/start",
+        stop: "/api/impersonation/stop",
+        me: "/api/impersonation/me",
+        mode: "/api/impersonation/mode",
+        sessions: "/api/impersonation/sessions",
+    },
 } as const;

@@ -24,6 +24,8 @@ const ALLOWED_NS: AdminConfigNamespaceName[] = [
     "bulkInvites",
     "analytics",
     "emailTemplates",
+    "roleCadence",
+    "correlation",
 ];
 
 export async function POST(

@@ -45,6 +45,7 @@ import Button from "@/components/ui/Button";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
+import { QuickViewAggregateBar } from "./QuickViewAggregateBar";
 import { ReportStatusBadge } from "@/components/ui/StatusBadge";
 import { UserRole, ReportStatus, ReportEventType } from "@/types/global";
 
@@ -467,6 +468,9 @@ export function ReportDetailPage({ params }: ReportDetailPageProps) {
           </p>
         </div>
       )}
+
+      {/* Aggregated quick views — links into the existing aggregation engine */}
+      <QuickViewAggregateBar reportId={report.id} />
 
       {/* Metadata */}
       <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base p-5 mb-6">

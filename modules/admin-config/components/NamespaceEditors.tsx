@@ -630,3 +630,331 @@ export function TemplatesMappingEditor({
         </div>
     );
 }
+
+/* ── Role cadence editor ───────────────────────────────────────────────── */
+
+interface CadenceEntry {
+    frequency: "WEEKLY" | "MONTHLY" | "YEARLY" | "TWICE_WEEKLY" | "ANY";
+    expectedDays: number[];
+    deadlineHours: number;
+    autoFillTitleTemplate?: string;
+}
+
+interface RoleCadencePayload {
+    byRole?: Partial<Record<UserRole, CadenceEntry>>;
+}
+
+const FREQUENCY_OPTIONS = [
+    { value: "WEEKLY", label: "Weekly" },
+    { value: "TWICE_WEEKLY", label: "Twice weekly" },
+    { value: "MONTHLY", label: "Monthly" },
+    { value: "YEARLY", label: "Yearly" },
+    { value: "ANY", label: "Any (back-fill)" },
+];
+
+const WEEKDAYS = [
+    { value: 0, label: "Sun" },
+    { value: 1, label: "Mon" },
+    { value: 2, label: "Tue" },
+    { value: 3, label: "Wed" },
+    { value: 4, label: "Thu" },
+    { value: 5, label: "Fri" },
+    { value: 6, label: "Sat" },
+];
+
+const TITLE_PLACEHOLDERS = ["{campus}", "{group}", "{period}", "{weekNumber}", "{monthName}", "{quarter}", "{year}"];
+
+export function RoleCadenceEditor({
+    snap,
+    onSaved,
+}: {
+    snap: Snapshot<RoleCadencePayload>;
+    onSaved: () => void;
+}) {
+    const fallbackByRole = useMemo(() => {
+        const out: Partial<Record<UserRole, CadenceEntry>> = {};
+        for (const [role, cfg] of Object.entries(ROLE_CONFIG)) {
+            if (cfg.cadence) out[role as UserRole] = cfg.cadence as CadenceEntry;
+        }
+        return out;
+    }, []);
+
+    const initial = useMemo(() => {
+        const merged: Partial<Record<UserRole, CadenceEntry>> = { ...fallbackByRole };
+        const overrides = snap.payload?.byRole ?? {};
+        for (const [role, val] of Object.entries(overrides)) {
+            merged[role as UserRole] = { ...(merged[role as UserRole] ?? {} as CadenceEntry), ...(val as CadenceEntry) };
+        }
+        return merged;
+    }, [snap, fallbackByRole]);
+
+    const [draft, setDraft] = useState<Partial<Record<UserRole, CadenceEntry>>>(initial);
+    const [saving, setSaving] = useState(false);
+
+    useEffect(() => setDraft(initial), [initial]);
+
+    const updateRole = (role: UserRole, patch: Partial<CadenceEntry>) => {
+        setDraft((prev) => ({
+            ...prev,
+            [role]: { ...(prev[role] ?? ({} as CadenceEntry)), ...patch } as CadenceEntry,
+        }));
+    };
+
+    const toggleDay = (role: UserRole, day: number) => {
+        const cur = draft[role]?.expectedDays ?? [];
+        const next = cur.includes(day) ? cur.filter((d) => d !== day) : [...cur, day].sort();
+        updateRole(role, { expectedDays: next });
+    };
+
+    const removeRole = (role: UserRole) => {
+        setDraft((prev) => {
+            const next = { ...prev };
+            delete next[role];
+            return next;
+        });
+    };
+
+    const save = async () => {
+        // Send only entries that differ from the fallback so we don't bloat the row.
+        const overrides: Partial<Record<UserRole, CadenceEntry>> = {};
+        for (const [role, entry] of Object.entries(draft)) {
+            const fb = fallbackByRole[role as UserRole];
+            if (!entry) continue;
+            if (
+                !fb ||
+                JSON.stringify(fb) !== JSON.stringify(entry)
+            ) {
+                overrides[role as UserRole] = entry;
+            }
+        }
+        setSaving(true);
+        const ok = await savePayload({
+            namespace: "roleCadence",
+            version: snap.version,
+            payload: { byRole: overrides } as Record<string, unknown>,
+            onSaved,
+        });
+        if (!ok) setSaving(false);
+    };
+
+    const orderedRoles = (Object.keys(ROLE_CONFIG) as UserRole[]).filter(
+        (r) => ROLE_CONFIG[r].cadence || draft[r],
+    );
+
+    return (
+        <div className="flex flex-col gap-4">
+            <VersionRow snap={snap} />
+            <p className="text-xs text-ds-text-subtle">
+                Cadence drives auto-fill of report period + title and recurring assignment expansion.
+                SUPERADMIN doesn't fill reports and is excluded.
+            </p>
+            {orderedRoles.length === 0 ? (
+                <Empty description="No cadence-bearing roles" />
+            ) : (
+                <div className="grid gap-3">
+                    {orderedRoles.map((role) => {
+                        const entry = draft[role] ?? ({} as CadenceEntry);
+                        return (
+                            <div
+                                key={role}
+                                className="border border-ds-border-base rounded-ds-2xl bg-ds-surface-elevated p-4 flex flex-col gap-3"
+                            >
+                                <div className="flex items-center justify-between gap-2">
+                                    <Tag>{role}</Tag>
+                                    <Button
+                                        size="small"
+                                        danger
+                                        onClick={() => removeRole(role)}
+                                    >
+                                        Reset to fallback
+                                    </Button>
+                                </div>
+                                <div className="grid gap-3 md:grid-cols-2">
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-xs text-ds-text-subtle">Frequency</span>
+                                        <Select
+                                            value={entry.frequency ?? "WEEKLY"}
+                                            options={FREQUENCY_OPTIONS}
+                                            onChange={(v) => updateRole(role, { frequency: v as CadenceEntry["frequency"] })}
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-xs text-ds-text-subtle">Deadline (hours)</span>
+                                        <InputNumber
+                                            min={0}
+                                            max={24 * 30}
+                                            value={entry.deadlineHours ?? 48}
+                                            onChange={(v) =>
+                                                typeof v === "number" && updateRole(role, { deadlineHours: v })
+                                            }
+                                            style={{ width: "100%" }}
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1 md:col-span-2">
+                                        <span className="text-xs text-ds-text-subtle">Expected weekdays</span>
+                                        <div className="flex flex-wrap gap-2">
+                                            {WEEKDAYS.map((d) => {
+                                                const selected = (entry.expectedDays ?? []).includes(d.value);
+                                                return (
+                                                    <button
+                                                        key={d.value}
+                                                        type="button"
+                                                        onClick={() => toggleDay(role, d.value)}
+                                                        className={[
+                                                            "px-3 py-1.5 rounded-ds-md text-xs font-medium border transition-colors cursor-pointer",
+                                                            selected
+                                                                ? "bg-ds-brand-accent/10 border-ds-brand-accent text-ds-brand-accent"
+                                                                : "bg-ds-surface-base border-ds-border-base text-ds-text-secondary hover:bg-ds-surface-sunken",
+                                                        ].join(" ")}
+                                                    >
+                                                        {d.label}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-1 md:col-span-2">
+                                        <span className="text-xs text-ds-text-subtle">Auto-fill title template</span>
+                                        <Input
+                                            value={entry.autoFillTitleTemplate ?? ""}
+                                            onChange={(e) =>
+                                                updateRole(role, { autoFillTitleTemplate: e.target.value })
+                                            }
+                                            placeholder="e.g. Weekly Report — {campus} — {period}"
+                                        />
+                                        <div className="flex flex-wrap gap-1 mt-1">
+                                            {TITLE_PLACEHOLDERS.map((p) => (
+                                                <Tag key={p}>{p}</Tag>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+            <Button type="primary" onClick={save} loading={saving}>
+                {COPY_ACTIONS.save ?? "Save namespace"}
+            </Button>
+        </div>
+    );
+}
+
+/* ── Correlation / insights editor ─────────────────────────────────────── */
+
+interface CorrelationPayload {
+    pearsonMinSamples?: number;
+    topMoverWindow?: number;
+    enableInsights?: boolean;
+    summarySentences?: Record<string, string>;
+}
+
+const SENTENCE_KEYS: Array<{ key: string; label: string }> = [
+    { key: "topMover", label: "Top mover" },
+    { key: "biggestGap", label: "Biggest gap" },
+    { key: "correlationStrong", label: "Strong correlation" },
+    { key: "complianceDelta", label: "Compliance delta" },
+];
+
+export function CorrelationEditor({
+    snap,
+    onSaved,
+}: {
+    snap: Snapshot<CorrelationPayload>;
+    onSaved: () => void;
+}) {
+    const [draft, setDraft] = useState<CorrelationPayload>(snap.payload ?? {});
+    const [saving, setSaving] = useState(false);
+
+    useEffect(() => setDraft(snap.payload ?? {}), [snap]);
+
+    const updateSentence = (key: string, value: string) => {
+        setDraft((prev) => ({
+            ...prev,
+            summarySentences: { ...(prev.summarySentences ?? {}), [key]: value },
+        }));
+    };
+
+    const save = async () => {
+        if ((draft.pearsonMinSamples ?? 5) < 2) {
+            message.error("Pearson min samples must be at least 2");
+            return;
+        }
+        setSaving(true);
+        const ok = await savePayload({
+            namespace: "correlation",
+            version: snap.version,
+            payload: draft as Record<string, unknown>,
+            onSaved,
+        });
+        if (!ok) setSaving(false);
+    };
+
+    return (
+        <div className="flex flex-col gap-4">
+            <VersionRow snap={snap} />
+            <p className="text-xs text-ds-text-subtle">
+                Insight algorithms run on every dashboard + analytics surface. Disable globally with
+                "Enable insights" or trim cost via the Pearson min-samples cap.
+            </p>
+            <div className="border border-ds-border-base rounded-ds-2xl bg-ds-surface-elevated p-4 grid gap-3 md:grid-cols-2">
+                <div className="flex flex-col gap-1">
+                    <span className="text-xs text-ds-text-subtle">Pearson minimum samples</span>
+                    <InputNumber
+                        min={2}
+                        max={100}
+                        value={draft.pearsonMinSamples ?? 5}
+                        onChange={(v) =>
+                            typeof v === "number" && setDraft((p) => ({ ...p, pearsonMinSamples: v }))
+                        }
+                        style={{ width: "100%" }}
+                    />
+                </div>
+                <div className="flex flex-col gap-1">
+                    <span className="text-xs text-ds-text-subtle">Top-mover window (periods)</span>
+                    <InputNumber
+                        min={2}
+                        max={24}
+                        value={draft.topMoverWindow ?? 4}
+                        onChange={(v) =>
+                            typeof v === "number" && setDraft((p) => ({ ...p, topMoverWindow: v }))
+                        }
+                        style={{ width: "100%" }}
+                    />
+                </div>
+                <label className="flex items-center gap-2 text-sm md:col-span-2">
+                    <Switch
+                        checked={Boolean(draft.enableInsights ?? true)}
+                        onChange={(checked) => setDraft((p) => ({ ...p, enableInsights: checked }))}
+                    />
+                    <span>Enable insights</span>
+                </label>
+            </div>
+
+            <div className="border border-ds-border-base rounded-ds-2xl bg-ds-surface-elevated p-4 flex flex-col gap-3">
+                <p className="text-sm font-semibold">Summary sentence templates</p>
+                <p className="text-xs text-ds-text-subtle">
+                    Used by InsightSummaryWidget. Allowed placeholders: {"{campus}"}, {"{metric}"},{" "}
+                    {"{direction}"}, {"{percent}"}, {"{gap}"}, {"{a}"}, {"{b}"}, {"{r}"}, {"{n}"}, {"{delta}"}
+                </p>
+                <div className="grid gap-3 md:grid-cols-2">
+                    {SENTENCE_KEYS.map(({ key, label }) => (
+                        <div key={key} className="flex flex-col gap-1">
+                            <span className="text-xs text-ds-text-subtle">{label}</span>
+                            <Input.TextArea
+                                rows={2}
+                                value={draft.summarySentences?.[key] ?? ""}
+                                onChange={(e) => updateSentence(key, e.target.value)}
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <Button type="primary" onClick={save} loading={saving}>
+                {COPY_ACTIONS.save ?? "Save namespace"}
+            </Button>
+        </div>
+    );
+}

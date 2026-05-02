@@ -11,7 +11,10 @@
       "Bash(DATABASE_URL=postgresql://localhost:5432/test_placeholder npx tsx test/formAssignmentEnforcement.test.ts)",
       "Bash(DATABASE_URL=postgresql://localhost:5432/test_placeholder npx tsx test/importPipeline.test.ts)",
       "Bash(DATABASE_URL=postgresql://localhost:5432/test_placeholder npx tsx test/rolePermissionsImmutable.test.ts)",
-      "Bash(DATABASE_URL=postgresql://localhost:5432/test_placeholder npx tsx test/dashboardWidgetRegistry.test.ts)"
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test_placeholder npx tsx test/dashboardWidgetRegistry.test.ts)",
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test_placeholder npx tsx test/migrationAdditiveSafety.test.ts)",
+      "Bash(npm run *)",
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test_placeholder npx tsx test/emailTemplateRender.test.ts)"
     ]
   }
 }

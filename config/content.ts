@@ -883,6 +883,62 @@ export const CONTENT = {
         generationFailed: "Generation failed",
     },
 
+    /* ── Impersonation (superadmin role preview) ──────────────────────────── */
+    impersonation: {
+        bannerReadOnlyTitle: "Previewing as",
+        bannerReadOnlyHint: "Read-only — actions will not apply.",
+        bannerMutateTitle: "Previewing & MUTATING as",
+        bannerMutateHint: "Mutate mode — changes take real effect.",
+        bannerExpiresIn: "Expires in",
+        bannerForUser: "for",
+        modeReadOnlyLabel: "Read only",
+        modeMutateLabel: "Mutate",
+        switchToMutate: "Switch to mutate",
+        switchToReadOnly: "Switch to read-only",
+        exit: "Exit preview",
+        exiting: "Exiting…",
+        startTitle: "Preview the app as another role",
+        startSubtitle:
+            "Time-limited preview. Your SUPERADMIN identity stays the actor of record; every action is audit-tagged.",
+        startSubmit: "Start preview",
+        startCancel: "Cancel",
+        roleLabel: "Role",
+        userLabel: "Specific user (optional)",
+        modeLabel: "Mode",
+        readOnlyDescription:
+            "Walk flows safely. Mutating endpoints will return 403 and be logged as blocked.",
+        mutateDescription:
+            "Actions take real effect on production data. Audit rows are tagged with your impersonation context.",
+        toasts: {
+            started: "Preview started.",
+            stopped: "Preview ended.",
+            modeSwitched: "Mode switched.",
+            mutationBlocked:
+                "Read-only preview — switch to mutate mode to apply changes, or exit preview.",
+            startFailed: "Could not start preview.",
+        },
+        rowActionLabel: "Preview as this user",
+        managePageTitle: "Impersonation log",
+        managePageSubtitle: "Past sessions and per-event timeline.",
+        eventTypeLabels: {
+            STARTED: "Started",
+            STOPPED: "Stopped",
+            MODE_CHANGED: "Mode changed",
+            MUTATION_BLOCKED: "Mutation blocked",
+            MUTATION_APPLIED: "Mutation applied",
+            PAGE_VISITED: "Page visited",
+            AUTH_REJECTED: "Auth rejected",
+            EVENT_LIMIT_REACHED: "Event limit reached",
+        },
+    },
+
+    /* ── Report quick views (aggregated rollup CTAs) ──────────────────────── */
+    reportsQuickViews: {
+        heading: "Aggregated views",
+        regionLabel: "Aggregated report quick views",
+        noDataTooltip: "No source data yet for this rollup",
+    },
+
     /* ── Users list ──────────────────────────────────────────────────────────── */
     usersList: {
         statusLabels: {
@@ -916,6 +972,9 @@ export const CONTENT = {
             bulkInvites: "Invite Defaults",
             analytics: "Analytics Defaults",
             emailTemplates: "Email Templates",
+            roleCadence: "Role Cadence",
+            correlation: "Insights & Correlation",
+            impersonationLog: "Impersonation log",
         },
         actions: {
             save: "Save namespace",

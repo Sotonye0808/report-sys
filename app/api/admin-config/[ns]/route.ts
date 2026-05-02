@@ -35,6 +35,8 @@ const ALLOWED_NS: AdminConfigNamespaceName[] = [
     "bulkInvites",
     "analytics",
     "emailTemplates",
+    "roleCadence",
+    "correlation",
 ];
 
 function resolveNs(raw: string): AdminConfigNamespaceName | null {

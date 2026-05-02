@@ -8,7 +8,7 @@
  * and direct navigation to the fill page.
  */
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Tag, Empty } from "antd";
 import { CONTENT } from "@/config/content";
@@ -40,12 +40,33 @@ function statusOf(row: AssignmentRow): string {
 
 export function QuickFormLandingPage() {
     const router = useRouter();
+    const [materialised, setMaterialised] = useState(false);
+
+    // Idempotently expand recurring assignment rules into per-period rows
+    // before listing assignments. Failure here is non-blocking — if the
+    // backend is offline the existing list still renders.
+    useEffect(() => {
+        let cancelled = false;
+        void (async () => {
+            try {
+                await fetch(API_ROUTES.formAssignments.materialise, { method: "POST" });
+            } catch {
+                // ignore — list query below still runs
+            } finally {
+                if (!cancelled) setMaterialised(true);
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
     const { data, loading } = useApiData<AssignmentRow[]>(
-        `${API_ROUTES.formAssignments.list}?scope=me`,
+        materialised ? `${API_ROUTES.formAssignments.list}?scope=me` : null,
     );
     const rows = useMemo(() => data ?? [], [data]);
 
-    if (loading) {
+    if (loading || !materialised) {
         return (
             <PageLayout>
                 <PageHeader title={String(COPY.pageTitle ?? "My Assignments")} subtitle={String(COPY.subtitle ?? "")} />

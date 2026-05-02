@@ -138,7 +138,62 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await checkAuth();
   };
 
-  const value: AuthContextValue = { user, isLoading, login, logout, refreshToken };
+  /* ── Impersonation actions (SUPERADMIN-only enforced server-side) ────── */
+
+  const startImpersonation = async (input: {
+    impersonatedRole: UserRole;
+    impersonatedUserId?: string;
+    mode?: "READ_ONLY" | "MUTATE";
+  }) => {
+    const res = await fetch("/api/impersonation/start", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    });
+    const json = (await res.json()) as { success: boolean; error?: string };
+    if (!res.ok || !json.success) {
+      throw new Error(json.error ?? "Could not start preview");
+    }
+    await checkAuth();
+  };
+
+  const stopImpersonation = async () => {
+    const res = await fetch("/api/impersonation/stop", {
+      method: "POST",
+      credentials: "include",
+    });
+    const json = (await res.json()) as { success: boolean; error?: string };
+    if (!res.ok || !json.success) {
+      throw new Error(json.error ?? "Could not stop preview");
+    }
+    await checkAuth();
+  };
+
+  const switchImpersonationMode = async (mode: "READ_ONLY" | "MUTATE") => {
+    const res = await fetch("/api/impersonation/mode", {
+      method: "PATCH",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode }),
+    });
+    const json = (await res.json()) as { success: boolean; error?: string };
+    if (!res.ok || !json.success) {
+      throw new Error(json.error ?? "Could not switch mode");
+    }
+    await checkAuth();
+  };
+
+  const value: AuthContextValue = {
+    user,
+    isLoading,
+    login,
+    logout,
+    refreshToken,
+    startImpersonation,
+    stopImpersonation,
+    switchImpersonationMode,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

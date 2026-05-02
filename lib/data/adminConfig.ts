@@ -29,7 +29,9 @@ export type AdminConfigNamespaceName =
     | "pwaInstall"
     | "bulkInvites"
     | "analytics"
-    | "emailTemplates";
+    | "emailTemplates"
+    | "roleCadence"
+    | "correlation";
 
 export interface AdminConfigSnapshot<T = Record<string, unknown>> {
     namespace: AdminConfigNamespaceName;
@@ -77,6 +79,25 @@ const FALLBACKS: Record<AdminConfigNamespaceName, () => Record<string, unknown>>
         correlation: {
             maxMetrics: Number(process.env.ANALYTICS_CORRELATION_MAX_METRICS ?? 12),
             defaultEnabled: true,
+        },
+    }),
+    roleCadence: () => {
+        // Snapshot every role's cadence from ROLE_CONFIG (where defined).
+        const byRole: Record<string, unknown> = {};
+        for (const [role, cfg] of Object.entries(ROLE_CONFIG)) {
+            if (cfg.cadence) byRole[role] = cfg.cadence;
+        }
+        return { byRole };
+    },
+    correlation: () => ({
+        pearsonMinSamples: Number(process.env.INSIGHTS_PEARSON_MIN_SAMPLES ?? 5),
+        topMoverWindow: Number(process.env.INSIGHTS_TOP_MOVER_WINDOW_PERIODS ?? 4),
+        enableInsights: (process.env.INSIGHTS_ENABLED ?? "true").toLowerCase() !== "false",
+        summarySentences: {
+            topMover: "Biggest mover: {campus} ({metric}, {direction} {percent}%).",
+            biggestGap: "Biggest gap: {metric} short by {gap} this period.",
+            correlationStrong: "Strong {direction} correlation between {a} and {b} (r={r}, n={n}).",
+            complianceDelta: "Compliance {direction} {delta}% vs last period.",
         },
     }),
     emailTemplates: () => {

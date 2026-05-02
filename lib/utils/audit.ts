@@ -22,6 +22,30 @@ export interface AuditEventParams {
 }
 
 /**
+ * Best-effort: mirror a domain audit event into the impersonation event log
+ * when the calling request is happening under an active impersonation
+ * session. Lets superadmin "preview log" surface every concrete mutation
+ * carried out while impersonating without per-handler instrumentation.
+ *
+ * Failures here never break the surrounding flow.
+ */
+async function tagImpersonationIfActive(args: { eventType: string; details?: string }): Promise<void> {
+    try {
+        const { getImpersonationContext } = await import("@/lib/auth/impersonationContext");
+        const ctx = await getImpersonationContext();
+        if (!ctx) return;
+        const { recordEvent } = await import("@/lib/auth/impersonation");
+        await recordEvent(ctx.sessionId, "MUTATION_APPLIED", {
+            path: args.details ?? args.eventType,
+            method: "AUDIT",
+            status: 200,
+        });
+    } catch {
+        // ignore — audit must never break flow
+    }
+}
+
+/**
  * Create a report event in DB (#report_event table) in transaction context.
  */
 export async function createReportEvent(
@@ -40,6 +64,11 @@ export async function createReportEvent(
             previousStatus: params.previousStatus,
             newStatus: params.newStatus,
         },
+    });
+
+    void tagImpersonationIfActive({
+        eventType: params.eventType,
+        details: `report:${params.reportId}`,
     });
 
     return event;

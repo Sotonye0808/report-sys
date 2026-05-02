@@ -90,6 +90,34 @@ export async function hasCapability(
     return Boolean(cfg[capability]);
 }
 
+/* ── Role cadence (with admin overrides) ──────────────────────────────── */
+
+export interface ResolvedCadence {
+    frequency: "WEEKLY" | "MONTHLY" | "YEARLY" | "TWICE_WEEKLY" | "ANY";
+    expectedDays: number[];
+    deadlineHours: number;
+    autoFillTitleTemplate?: string;
+}
+
+const DEFAULT_CADENCE: ResolvedCadence = {
+    frequency: "WEEKLY",
+    expectedDays: [],
+    deadlineHours: 48,
+};
+
+export async function resolveRoleCadence(role: UserRole): Promise<ResolvedCadence> {
+    const snap = await loadAdminConfig<{ byRole?: Record<string, Partial<ResolvedCadence>> }>(
+        "roleCadence",
+    );
+    const override = snap.payload?.byRole?.[role];
+    const fallback = ROLE_CONFIG[role]?.cadence as Partial<ResolvedCadence> | undefined;
+    return {
+        ...DEFAULT_CADENCE,
+        ...(fallback ?? {}),
+        ...(override ?? {}),
+    };
+}
+
 /* ── Hierarchy levels (with admin overrides) ───────────────────────────── */
 
 export async function resolveHierarchyLevels(): Promise<ResolvedHierarchyLevel[]> {
@@ -115,6 +143,72 @@ export async function resolveHierarchyLevels(): Promise<ResolvedHierarchyLevel[]
         adminRole: level.adminRole,
         depth: idx,
     }));
+}
+
+/* ── Impersonation read-only gate ───────────────────────────────────────── */
+
+const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
+
+/**
+ * Routes that are safe to invoke under READ_ONLY impersonation: they don't
+ * mutate domain state in a way that affects other users (e.g. marking a
+ * notification as read keeps preview fidelity high without leaking changes).
+ *
+ * Match is by exact pathname or by predicate.
+ */
+const READ_ONLY_ALLOWLIST: Array<RegExp> = [
+    /^\/api\/notifications\/[^/]+\/read$/,
+    /^\/api\/notifications\/read-all$/,
+    /^\/api\/impersonation\/(stop|me)$/,
+    /^\/api\/auth\/(me|refresh|logout)$/,
+];
+
+export interface ReadOnlyAssertion {
+    ok: boolean;
+    code?: "impersonation_readonly";
+    message?: string;
+}
+
+/**
+ * Returns `{ ok: false }` when the calling user is in a READ_ONLY
+ * impersonation session and the request is mutating + not on the allowlist.
+ *
+ * Handlers should call this immediately after `verifyAuth` and short-circuit
+ * with HTTP 403 + body `{ success: false, error, code: "impersonation_readonly" }`
+ * when `ok === false`. The rejection is also recorded as a
+ * MUTATION_BLOCKED impersonation event by the helper.
+ */
+export async function assertNotReadOnly(
+    auth: { user: AuthUser },
+    req: { method?: string; nextUrl?: URL; url?: string },
+): Promise<ReadOnlyAssertion> {
+    const session = auth.user.impersonation;
+    if (!session || session.mode !== "READ_ONLY") return { ok: true };
+    const method = (req.method ?? "GET").toUpperCase();
+    if (!MUTATING_METHODS.has(method)) return { ok: true };
+
+    const pathname =
+        req.nextUrl?.pathname ?? (req.url ? new URL(req.url, "http://localhost").pathname : "/");
+    if (READ_ONLY_ALLOWLIST.some((re) => re.test(pathname))) return { ok: true };
+
+    // Best-effort audit emission — never throws.
+    try {
+        const { recordEvent } = await import("@/lib/auth/impersonation");
+        await recordEvent(session.sessionId, "MUTATION_BLOCKED", {
+            path: pathname,
+            method,
+            status: 403,
+        });
+    } catch {
+        // ignore
+    }
+
+    return {
+        ok: false,
+        code: "impersonation_readonly",
+        message:
+            "This change can't be applied — you're previewing in read-only mode. Switch to mutate mode or exit preview to make changes.",
+    };
 }
 
 /* ── Self-demote guard ──────────────────────────────────────────────────── */

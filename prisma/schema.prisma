@@ -59,6 +59,10 @@ model User {
   adminConfigEntries      AdminConfigEntry[]      @relation("AdminConfigActor")
   formAssignmentsReceived FormAssignment[]        @relation("FormAssignmentAssignee")
   formAssignmentsCreated  FormAssignment[]        @relation("FormAssignmentAssigner")
+  formAssignmentRulesOwned FormAssignmentRule[]   @relation("FormAssignmentRuleOwner")
+  formAssignmentRulesAssigned FormAssignmentRule[] @relation("FormAssignmentRuleAssignee")
+  impersonationSessions   ImpersonationSession[] @relation("ImpersonationActor")
+  impersonationTargetedBy ImpersonationSession[] @relation("ImpersonationTarget")
   importJobs              ImportJob[]             @relation("ImportJobOwner")
   importMappingProfiles   ImportMappingProfile[]  @relation("ImportMappingOwner")
   bulkInviteBatches       BulkInviteBatch[]       @relation("BulkInviteCreator")
@@ -119,38 +123,43 @@ model Campus {
 }
 
 model ReportTemplate {
-  id                  String                  @id @default(uuid())
-  organisationId      String
-  name                String
-  description         String?
-  version             Int                     @default(1)
-  isActive            Boolean                 @default(true)
-  isDefault           Boolean                 @default(false)
-  createdById         String
-  campusId            String?
-  orgGroupId          String?
-  createdAt           DateTime                @default(now())
-  updatedAt           DateTime                @updatedAt
-  deadlineOffsetHours Int?                    @default(48)
-  deadlinePolicy      ReportDeadlinePolicy?   @default(PERIOD_END)
-  goals               Goal[]                  @relation("GoalTemplateMetric")
-  sections            ReportTemplateSection[]
-  versions            ReportTemplateVersion[]
-  createdBy           User                    @relation("TemplateCreator", fields: [createdById], references: [id])
-  reports             Report[]                @relation("ReportTemplate")
+  id                      String                  @id @default(uuid())
+  organisationId          String
+  name                    String
+  description             String?
+  version                 Int                     @default(1)
+  isActive                Boolean                 @default(true)
+  isDefault               Boolean                 @default(false)
+  createdById             String
+  campusId                String?
+  orgGroupId              String?
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  deadlineOffsetHours     Int?                    @default(48)
+  deadlinePolicy          ReportDeadlinePolicy?   @default(PERIOD_END)
+  recurrenceFrequency     ReportPeriodType?
+  recurrenceDays          Int[]                   @default([])
+  autoFillTitleTemplate   String?
+  goals                   Goal[]                  @relation("GoalTemplateMetric")
+  sections                ReportTemplateSection[]
+  versions                ReportTemplateVersion[]
+  createdBy               User                    @relation("TemplateCreator", fields: [createdById], references: [id])
+  reports                 Report[]                @relation("ReportTemplate")
+  formAssignmentRules     FormAssignmentRule[]    @relation("FormAssignmentRuleTemplate")
 
   @@map("report_templates")
 }
 
 model ReportTemplateSection {
-  id          String                 @id @default(uuid())
-  templateId  String
-  name        String
-  description String?
-  order       Int
-  isRequired  Boolean                @default(true)
-  metrics     ReportTemplateMetric[]
-  template    ReportTemplate         @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  id               String                 @id @default(uuid())
+  templateId       String
+  name             String
+  description      String?
+  order            Int
+  isRequired       Boolean                @default(true)
+  correlationGroup String?
+  metrics          ReportTemplateMetric[]
+  template         ReportTemplate         @relation(fields: [templateId], references: [id], onDelete: Cascade)
 
   @@index([templateId])
   @@map("report_template_sections")
@@ -170,6 +179,7 @@ model ReportTemplateMetric {
   capturesGoal     Boolean               @default(false)
   capturesAchieved Boolean               @default(false)
   capturesYoY      Boolean               @default(false)
+  correlationGroup String?
   goals            Goal[]                @relation("GoalMetric")
   metricEntries    MetricEntry[]
   reportMetrics    ReportMetric[]
@@ -217,6 +227,7 @@ model Report {
   dataEntryById     String?
   dataEntryDate     DateTime?
   notes             String?
+  autoCreated       Boolean               @default(false)
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @updatedAt
   edits             ReportEdit[]
@@ -603,16 +614,46 @@ model FormAssignment {
   completedAt  DateTime?
   cancelledAt  DateTime?
   notes        String?
+  ruleId       String?
+  periodKey    String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  report     Report @relation("FormAssignmentReport", fields: [reportId], references: [id], onDelete: Cascade)
-  assignee   User   @relation("FormAssignmentAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
-  assignedBy User   @relation("FormAssignmentAssigner", fields: [assignedById], references: [id], onDelete: Cascade)
+  report     Report              @relation("FormAssignmentReport", fields: [reportId], references: [id], onDelete: Cascade)
+  assignee   User                @relation("FormAssignmentAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
+  assignedBy User                @relation("FormAssignmentAssigner", fields: [assignedById], references: [id], onDelete: Cascade)
+  rule       FormAssignmentRule? @relation("FormAssignmentRuleAssignments", fields: [ruleId], references: [id], onDelete: SetNull)
 
   @@index([assigneeId, completedAt])
   @@index([reportId])
+  @@index([ruleId, periodKey])
   @@map("form_assignments")
+}
+
+model FormAssignmentRule {
+  id              String           @id @default(uuid())
+  ownerId         String
+  templateId      String
+  role            UserRole?
+  assigneeId      String?
+  campusId        String?
+  orgGroupId      String?
+  metricIds       String[]
+  cadenceOverride Json?
+  isActive        Boolean          @default(true)
+  notes           String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  owner       User             @relation("FormAssignmentRuleOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  template    ReportTemplate   @relation("FormAssignmentRuleTemplate", fields: [templateId], references: [id], onDelete: Cascade)
+  assignee    User?            @relation("FormAssignmentRuleAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  assignments FormAssignment[] @relation("FormAssignmentRuleAssignments")
+
+  @@index([templateId, isActive])
+  @@index([role, isActive])
+  @@index([assigneeId, isActive])
+  @@map("form_assignment_rules")
 }
 
 model ImportJob {
@@ -718,6 +759,47 @@ model UserActivationToken {
 
   @@index([userId, expiresAt])
   @@map("user_activation_tokens")
+}
+
+/* ── Superadmin role-impersonation / preview ───────────────────────────── */
+
+model ImpersonationSession {
+  id                  String                @id @default(uuid())
+  superadminId        String
+  impersonatedRole    UserRole
+  impersonatedUserId  String?
+  mode                ImpersonationMode     @default(READ_ONLY)
+  startedAt           DateTime              @default(now())
+  expiresAt           DateTime
+  endedAt             DateTime?
+  endedReason         ImpersonationEndReason?
+  eventCount          Int                   @default(0)
+
+  superadmin       User                   @relation("ImpersonationActor", fields: [superadminId], references: [id], onDelete: Cascade)
+  impersonatedUser User?                  @relation("ImpersonationTarget", fields: [impersonatedUserId], references: [id], onDelete: SetNull)
+  events           ImpersonationEvent[]   @relation("ImpersonationSessionEvents")
+
+  @@index([superadminId, endedAt])
+  @@index([startedAt])
+  @@map("impersonation_sessions")
+}
+
+model ImpersonationEvent {
+  id            String                  @id @default(uuid())
+  sessionId     String
+  type          ImpersonationEventType
+  path          String?
+  method        String?
+  status        Int?
+  requestId     String?
+  payloadDigest String?
+  createdAt     DateTime                @default(now())
+
+  session ImpersonationSession @relation("ImpersonationSessionEvents", fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+  @@index([type, createdAt])
+  @@map("impersonation_events")
 }
 
 enum UserRole {
@@ -952,4 +1034,26 @@ enum PwaPromptPlatform {
 enum PwaDismissalMode {
   snooze
   never
+}
+
+enum ImpersonationMode {
+  READ_ONLY
+  MUTATE
+}
+
+enum ImpersonationEndReason {
+  USER
+  EXPIRED
+  TOKEN_INVALIDATED
+}
+
+enum ImpersonationEventType {
+  STARTED
+  STOPPED
+  MODE_CHANGED
+  MUTATION_BLOCKED
+  MUTATION_APPLIED
+  PAGE_VISITED
+  AUTH_REJECTED
+  EVENT_LIMIT_REACHED
 }

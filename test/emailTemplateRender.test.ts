@@ -6,7 +6,7 @@ process.env.DATABASE_URL ??= "postgresql://localhost:5432/test_placeholder";
 import {
     renderTemplatePreview,
     sanitiseEmailTemplatesPayload,
-} from "../lib/email/templates/render";
+} from "../lib/email/templates/preview";
 import { EMAIL_TEMPLATE_DEFINITIONS } from "../lib/email/templates/definitions";
 
 describe("renderTemplatePreview", () => {

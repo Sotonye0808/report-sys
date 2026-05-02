@@ -186,7 +186,10 @@ exports.Prisma.ReportTemplateScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deadlineOffsetHours: 'deadlineOffsetHours',
-  deadlinePolicy: 'deadlinePolicy'
+  deadlinePolicy: 'deadlinePolicy',
+  recurrenceFrequency: 'recurrenceFrequency',
+  recurrenceDays: 'recurrenceDays',
+  autoFillTitleTemplate: 'autoFillTitleTemplate'
 };
 
 exports.Prisma.ReportTemplateSectionScalarFieldEnum = {
@@ -195,7 +198,8 @@ exports.Prisma.ReportTemplateSectionScalarFieldEnum = {
   name: 'name',
   description: 'description',
   order: 'order',
-  isRequired: 'isRequired'
+  isRequired: 'isRequired',
+  correlationGroup: 'correlationGroup'
 };
 
 exports.Prisma.ReportTemplateMetricScalarFieldEnum = {
@@ -211,7 +215,8 @@ exports.Prisma.ReportTemplateMetricScalarFieldEnum = {
   order: 'order',
   capturesGoal: 'capturesGoal',
   capturesAchieved: 'capturesAchieved',
-  capturesYoY: 'capturesYoY'
+  capturesYoY: 'capturesYoY',
+  correlationGroup: 'correlationGroup'
 };
 
 exports.Prisma.ReportTemplateVersionScalarFieldEnum = {
@@ -247,6 +252,7 @@ exports.Prisma.ReportScalarFieldEnum = {
   dataEntryById: 'dataEntryById',
   dataEntryDate: 'dataEntryDate',
   notes: 'notes',
+  autoCreated: 'autoCreated',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -499,6 +505,24 @@ exports.Prisma.FormAssignmentScalarFieldEnum = {
   completedAt: 'completedAt',
   cancelledAt: 'cancelledAt',
   notes: 'notes',
+  ruleId: 'ruleId',
+  periodKey: 'periodKey',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FormAssignmentRuleScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  templateId: 'templateId',
+  role: 'role',
+  assigneeId: 'assigneeId',
+  campusId: 'campusId',
+  orgGroupId: 'orgGroupId',
+  metricIds: 'metricIds',
+  cadenceOverride: 'cadenceOverride',
+  isActive: 'isActive',
+  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -574,6 +598,31 @@ exports.Prisma.UserActivationTokenScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ImpersonationSessionScalarFieldEnum = {
+  id: 'id',
+  superadminId: 'superadminId',
+  impersonatedRole: 'impersonatedRole',
+  impersonatedUserId: 'impersonatedUserId',
+  mode: 'mode',
+  startedAt: 'startedAt',
+  expiresAt: 'expiresAt',
+  endedAt: 'endedAt',
+  endedReason: 'endedReason',
+  eventCount: 'eventCount'
+};
+
+exports.Prisma.ImpersonationEventScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  type: 'type',
+  path: 'path',
+  method: 'method',
+  status: 'status',
+  requestId: 'requestId',
+  payloadDigest: 'payloadDigest',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -631,6 +680,12 @@ exports.ReportDeadlinePolicy = exports.$Enums.ReportDeadlinePolicy = {
   AFTER_PERIOD_HOURS: 'AFTER_PERIOD_HOURS'
 };
 
+exports.ReportPeriodType = exports.$Enums.ReportPeriodType = {
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+  YEARLY: 'YEARLY'
+};
+
 exports.MetricFieldType = exports.$Enums.MetricFieldType = {
   NUMBER: 'NUMBER',
   PERCENTAGE: 'PERCENTAGE',
@@ -642,12 +697,6 @@ exports.MetricCalculationType = exports.$Enums.MetricCalculationType = {
   SUM: 'SUM',
   AVERAGE: 'AVERAGE',
   SNAPSHOT: 'SNAPSHOT'
-};
-
-exports.ReportPeriodType = exports.$Enums.ReportPeriodType = {
-  WEEKLY: 'WEEKLY',
-  MONTHLY: 'MONTHLY',
-  YEARLY: 'YEARLY'
 };
 
 exports.ReportStatus = exports.$Enums.ReportStatus = {
@@ -837,6 +886,28 @@ exports.PwaDismissalMode = exports.$Enums.PwaDismissalMode = {
   never: 'never'
 };
 
+exports.ImpersonationMode = exports.$Enums.ImpersonationMode = {
+  READ_ONLY: 'READ_ONLY',
+  MUTATE: 'MUTATE'
+};
+
+exports.ImpersonationEndReason = exports.$Enums.ImpersonationEndReason = {
+  USER: 'USER',
+  EXPIRED: 'EXPIRED',
+  TOKEN_INVALIDATED: 'TOKEN_INVALIDATED'
+};
+
+exports.ImpersonationEventType = exports.$Enums.ImpersonationEventType = {
+  STARTED: 'STARTED',
+  STOPPED: 'STOPPED',
+  MODE_CHANGED: 'MODE_CHANGED',
+  MUTATION_BLOCKED: 'MUTATION_BLOCKED',
+  MUTATION_APPLIED: 'MUTATION_APPLIED',
+  PAGE_VISITED: 'PAGE_VISITED',
+  AUTH_REJECTED: 'AUTH_REJECTED',
+  EVENT_LIMIT_REACHED: 'EVENT_LIMIT_REACHED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   OrgGroup: 'OrgGroup',
@@ -864,12 +935,15 @@ exports.Prisma.ModelName = {
   AssetLifecycleEvent: 'AssetLifecycleEvent',
   AdminConfigEntry: 'AdminConfigEntry',
   FormAssignment: 'FormAssignment',
+  FormAssignmentRule: 'FormAssignmentRule',
   ImportJob: 'ImportJob',
   ImportJobItem: 'ImportJobItem',
   ImportMappingProfile: 'ImportMappingProfile',
   BulkInviteBatch: 'BulkInviteBatch',
   PwaPromptDismissal: 'PwaPromptDismissal',
-  UserActivationToken: 'UserActivationToken'
+  UserActivationToken: 'UserActivationToken',
+  ImpersonationSession: 'ImpersonationSession',
+  ImpersonationEvent: 'ImpersonationEvent'
 };
 
 /**

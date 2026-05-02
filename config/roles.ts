@@ -4,7 +4,7 @@
  * Used to drive nav filtering, permission checks, and dashboard routing.
  */
 
-import { UserRole } from "@/types/global";
+import { ReportPeriodType, UserRole } from "@/types/global";
 import { APP_ROUTES } from "./routes";
 import { CONTENT } from "./content";
 
@@ -163,6 +163,12 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
         canImportSpreadsheets: true,
         canBulkInvite: true,
         canViewScopeOverview: true,
+        cadence: {
+            frequency: ReportPeriodType.WEEKLY,
+            expectedDays: [1],
+            deadlineHours: 72,
+            autoFillTitleTemplate: "Group Review — {group} — {period}",
+        },
         reportVisibilityScope: "group",
     },
     [UserRole.GROUP_ADMIN]: {
@@ -189,6 +195,12 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
         canImportSpreadsheets: true,
         canBulkInvite: true,
         canViewScopeOverview: true,
+        cadence: {
+            frequency: ReportPeriodType.WEEKLY,
+            expectedDays: [1],
+            deadlineHours: 72,
+            autoFillTitleTemplate: "Group Consolidated — {group} — {period}",
+        },
         reportVisibilityScope: "group",
     },
     [UserRole.CAMPUS_PASTOR]: {
@@ -215,6 +227,12 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
         canImportSpreadsheets: false,
         canBulkInvite: true,
         canViewScopeOverview: false,
+        cadence: {
+            frequency: ReportPeriodType.WEEKLY,
+            expectedDays: [0, 1],
+            deadlineHours: 48,
+            autoFillTitleTemplate: "Weekly Review — {campus} — {period}",
+        },
         reportVisibilityScope: "campus",
     },
     [UserRole.CAMPUS_ADMIN]: {
@@ -241,6 +259,13 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
         canImportSpreadsheets: false,
         canBulkInvite: true,
         canViewScopeOverview: false,
+        cadence: {
+            // Campus admin consolidates the campus weekly report on Sunday or Monday.
+            frequency: ReportPeriodType.WEEKLY,
+            expectedDays: [0, 1],
+            deadlineHours: 48,
+            autoFillTitleTemplate: "Weekly Report — {campus} — {period}",
+        },
         reportVisibilityScope: "campus",
     },
     [UserRole.DATA_ENTRY]: {
@@ -267,6 +292,12 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
         canImportSpreadsheets: false,
         canBulkInvite: false,
         canViewScopeOverview: false,
+        cadence: {
+            frequency: "ANY",
+            expectedDays: [],
+            deadlineHours: 96,
+            autoFillTitleTemplate: "Backdated Report — {campus} — {period}",
+        },
         reportVisibilityScope: "own",
     },
     [UserRole.USHER]: {
@@ -293,6 +324,13 @@ export const ROLE_CONFIG: Record<UserRole, RoleConfig> = {
         canImportSpreadsheets: false,
         canBulkInvite: false,
         canViewScopeOverview: false,
+        cadence: {
+            // Twice-weekly Sunday + Wednesday because of midweek service.
+            frequency: "TWICE_WEEKLY",
+            expectedDays: [0, 3],
+            deadlineHours: 48,
+            autoFillTitleTemplate: "Service Report — {campus} — {period}",
+        },
         reportVisibilityScope: "own",
     },
     [UserRole.MEMBER]: {

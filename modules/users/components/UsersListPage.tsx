@@ -8,7 +8,9 @@
 import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Tooltip, Tag } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { useAuth } from "@/providers/AuthProvider";
+import { ImpersonationStartDialog } from "@/modules/admin-config/components/ImpersonationStartDialog";
 import type { ColumnsType } from "antd/es/table";
 import { useApiData } from "@/lib/hooks/useApiData";
 import { API_ROUTES } from "@/config/routes";
@@ -57,7 +59,12 @@ const ROLE_OPTIONS = Object.values(UserRole).map((r) => ({
   label: CONTENT.users.roles[r as keyof typeof CONTENT.users.roles] ?? r,
 }));
 
+const IMPERSONATION_COPY = ((CONTENT.impersonation ?? {}) as Record<string, unknown>);
+
 export function UsersListPage() {
+  const { user: currentUser } = useAuth();
+  const [impersonationTarget, setImpersonationTarget] = useState<{ role: UserRole; userId: string } | null>(null);
+  const canImpersonate = (currentUser?.actualRole ?? currentUser?.role) === UserRole.SUPERADMIN;
   const router = useRouter();
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [currentPage, setPage] = useState(1);
@@ -146,14 +153,26 @@ export function UsersListPage() {
       width: 60,
       render: (_v, u) =>
         u.source === "user" ? (
-          <Tooltip title={CONTENT.common.view as string}>
-            <Button
-              type="text"
-              size="small"
-              icon={<EyeOutlined />}
-              onClick={() => router.push(APP_ROUTES.userDetail(u.id))}
-            />
-          </Tooltip>
+          <div className="flex items-center gap-1">
+            <Tooltip title={CONTENT.common.view as string}>
+              <Button
+                type="text"
+                size="small"
+                icon={<EyeOutlined />}
+                onClick={() => router.push(APP_ROUTES.userDetail(u.id))}
+              />
+            </Tooltip>
+            {canImpersonate && u.role && u.role !== UserRole.SUPERADMIN && u.status === "ACTIVE" && (
+              <Tooltip title={(IMPERSONATION_COPY.rowActionLabel as string) ?? "Preview as this user"}>
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<UserSwitchOutlined />}
+                  onClick={() => setImpersonationTarget({ role: u.role as UserRole, userId: u.id })}
+                />
+              </Tooltip>
+            )}
+          </div>
         ) : null,
     },
   ];
@@ -242,6 +261,14 @@ export function UsersListPage() {
           </div>
         )}
       </div>
+      {canImpersonate && (
+        <ImpersonationStartDialog
+          open={Boolean(impersonationTarget)}
+          onClose={() => setImpersonationTarget(null)}
+          presetRole={impersonationTarget?.role}
+          presetUserId={impersonationTarget?.userId}
+        />
+      )}
     </PageLayout>
   );
 }

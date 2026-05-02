@@ -22,6 +22,7 @@ import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
 import Button from "@/components/ui/Button";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmailTemplatesEditor } from "./EmailTemplatesEditor";
+import { ImpersonationLogPanel } from "./ImpersonationLogPanel";
 import {
     DashboardLayoutEditor,
     ImportsEditor,
@@ -29,6 +30,8 @@ import {
     BulkInvitesEditor,
     AnalyticsEditor,
     TemplatesMappingEditor,
+    RoleCadenceEditor,
+    CorrelationEditor,
 } from "./NamespaceEditors";
 
 const COPY = (CONTENT.adminConfig ?? {}) as Record<string, unknown>;
@@ -48,6 +51,8 @@ const NAMESPACES = [
     "bulkInvites",
     "analytics",
     "emailTemplates",
+    "roleCadence",
+    "correlation",
 ] as const;
 
 type Namespace = (typeof NAMESPACES)[number];
@@ -575,6 +580,10 @@ export function AdminConfigPage() {
                     <AnalyticsEditor snap={snapshots[ns] as never} onSaved={reload} />
                 ) : ns === "emailTemplates" ? (
                     <EmailTemplatesEditor snap={snapshots[ns] as never} onSaved={reload} />
+                ) : ns === "roleCadence" ? (
+                    <RoleCadenceEditor snap={snapshots[ns] as never} onSaved={reload} />
+                ) : ns === "correlation" ? (
+                    <CorrelationEditor snap={snapshots[ns] as never} onSaved={reload} />
                 ) : (
                     <JsonEditor namespace={ns} snap={snapshots[ns]} onSaved={reload} />
                 )}
@@ -582,10 +591,19 @@ export function AdminConfigPage() {
         ),
     }));
 
+    const allTabs = [
+        ...tabItems,
+        {
+            key: "impersonationLog",
+            label: COPY_NS_LABELS.impersonationLog ?? "Impersonation log",
+            children: <ImpersonationLogPanel />,
+        },
+    ];
+
     return (
         <PageLayout>
             <PageHeader title={String(COPY.pageTitle ?? "Admin Config")} subtitle={String(COPY.subtitle ?? "")} />
-            <Tabs activeKey={active} onChange={(k) => setActive(k as Namespace)} items={tabItems} />
+            <Tabs activeKey={active} onChange={(k) => setActive(k as Namespace)} items={allTabs} />
         </PageLayout>
     );
 }

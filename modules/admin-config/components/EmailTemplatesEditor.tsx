@@ -18,7 +18,7 @@ import {
     EMAIL_TEMPLATE_DEFINITIONS,
     type EmailTemplateDefinition,
 } from "@/lib/email/templates/definitions";
-import { renderTemplatePreview } from "@/lib/email/templates/render";
+import { renderTemplatePreview } from "@/lib/email/templates/preview";
 import { API_ROUTES } from "@/config/routes";
 import { CONTENT } from "@/config/content";
 import Button from "@/components/ui/Button";

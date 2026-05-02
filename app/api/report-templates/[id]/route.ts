@@ -10,7 +10,7 @@ import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
 import { createTemplateVersionSnapshot } from "@/lib/utils/audit";
 import { parseCachedJsonSafe } from "@/lib/utils/cacheJson";
-import { UserRole, MetricFieldType, MetricCalculationType, ReportDeadlinePolicy } from "@/types/global";
+import { UserRole, MetricFieldType, MetricCalculationType, ReportDeadlinePolicy, ReportPeriodType } from "@/types/global";
 
 /* ── Schemas ──────────────────────────────────────────────────────────────── */
 
@@ -24,6 +24,7 @@ const MetricSchema = z.object({
     capturesGoal: z.boolean().default(false),
     capturesAchieved: z.boolean().default(false),
     capturesYoY: z.boolean().default(false),
+    correlationGroup: z.string().nullable().optional(),
     order: z.number().int().min(1),
 });
 
@@ -34,6 +35,7 @@ const SectionSchema = z.object({
     description: z.string().optional(),
     order: z.number().int().min(1),
     isRequired: z.boolean().default(true),
+    correlationGroup: z.string().nullable().optional(),
     metrics: z.array(MetricSchema).min(1),
 });
 
@@ -44,6 +46,9 @@ const UpdateTemplateSchema = z.object({
     isArchived: z.boolean().optional(),
     deadlinePolicy: z.nativeEnum(ReportDeadlinePolicy).optional(),
     deadlineOffsetHours: z.number().int().min(1).max(168).optional(),
+    recurrenceFrequency: z.nativeEnum(ReportPeriodType).nullable().optional(),
+    recurrenceDays: z.array(z.number().int().min(0).max(6)).optional(),
+    autoFillTitleTemplate: z.string().max(500).nullable().optional(),
     sections: z.array(SectionSchema).optional(),
 });
 
@@ -180,6 +185,11 @@ export async function PUT(
                         ...(body.isArchived !== undefined && { isActive: !body.isArchived }),
                         ...(body.deadlinePolicy !== undefined && { deadlinePolicy: body.deadlinePolicy }),
                         ...(body.deadlineOffsetHours !== undefined && { deadlineOffsetHours: body.deadlineOffsetHours }),
+                        ...(body.recurrenceFrequency !== undefined && { recurrenceFrequency: body.recurrenceFrequency }),
+                        ...(body.recurrenceDays !== undefined && { recurrenceDays: body.recurrenceDays }),
+                        ...(body.autoFillTitleTemplate !== undefined && {
+                            autoFillTitleTemplate: body.autoFillTitleTemplate,
+                        }),
                         version: { increment: 1 },
                     },
                 });
@@ -209,6 +219,7 @@ export async function PUT(
                                     description: section.description,
                                     order: section.order,
                                     isRequired: section.isRequired,
+                                    correlationGroup: section.correlationGroup ?? null,
                                 },
                             });
                             for (const metric of section.metrics) {
@@ -223,6 +234,7 @@ export async function PUT(
                                         capturesGoal: metric.capturesGoal,
                                         capturesAchieved: metric.capturesAchieved,
                                         capturesYoY: metric.capturesYoY,
+                                        correlationGroup: metric.correlationGroup ?? null,
                                         order: metric.order,
                                     },
                                 });
@@ -241,6 +253,7 @@ export async function PUT(
                                         description: section.description,
                                         order: section.order,
                                         isRequired: section.isRequired,
+                                        correlationGroup: section.correlationGroup ?? null,
                                     },
                                 });
                             } else {
@@ -251,6 +264,7 @@ export async function PUT(
                                         description: section.description,
                                         order: section.order,
                                         isRequired: section.isRequired,
+                                        correlationGroup: section.correlationGroup ?? null,
                                     },
                                 });
                                 sectionId = createdSection.id;
@@ -269,6 +283,7 @@ export async function PUT(
                                             capturesGoal: metric.capturesGoal,
                                             capturesAchieved: metric.capturesAchieved,
                                             capturesYoY: metric.capturesYoY,
+                                            correlationGroup: metric.correlationGroup ?? null,
                                             order: metric.order,
                                         },
                                     });
@@ -284,6 +299,7 @@ export async function PUT(
                                             capturesGoal: metric.capturesGoal,
                                             capturesAchieved: metric.capturesAchieved,
                                             capturesYoY: metric.capturesYoY,
+                                            correlationGroup: metric.correlationGroup ?? null,
                                             order: metric.order,
                                         },
                                     });

@@ -451,6 +451,170 @@ const usherQuickFormWidget: DashboardWidget = {
     render: () => <UsherInlineForm />,
 };
 
+/* ── Metric movers (top movers per current period) ─────────────────────── */
+import { topMover } from "@/lib/data/insights";
+
+const metricMoversWidget: DashboardWidget = {
+    id: "metric-movers",
+    title: "Top movers",
+    render: ({ reports, templates, campuses }) => {
+        // Pick the metric the most reports share (highest fan-out) so we have
+        // enough data to compute a meaningful delta.
+        const metricCounts = new Map<string, number>();
+        for (const r of reports) {
+            for (const sec of (r.sections ?? []) as Array<{ metrics?: Array<{ templateMetricId: string }> }>) {
+                for (const m of sec.metrics ?? []) {
+                    metricCounts.set(m.templateMetricId, (metricCounts.get(m.templateMetricId) ?? 0) + 1);
+                }
+            }
+        }
+        const focusMetricId = Array.from(metricCounts.entries())
+            .sort(([, a], [, b]) => b - a)
+            .map(([id]) => id)[0];
+        const movers = focusMetricId
+            ? topMover(reports as unknown as Parameters<typeof topMover>[0], focusMetricId, 4).slice(0, 5)
+            : [];
+        const focusMetric = templates
+            .flatMap((t) => (t.sections ?? []).flatMap((s: ReportTemplateSection) => s.metrics ?? []))
+            .find((m) => m.id === focusMetricId);
+        return (
+            <Card title="Top movers">
+                {movers.length === 0 ? (
+                    <p className="text-sm text-ds-text-subtle">Not enough data yet for movers.</p>
+                ) : (
+                    <>
+                        <p className="text-xs text-ds-text-subtle mb-2">
+                            Metric: {focusMetric?.name ?? focusMetricId?.slice(0, 6)}
+                        </p>
+                        <ul className="space-y-1">
+                            {movers.map((m) => {
+                                const campus = campuses.find((c) => c.id === m.campusId);
+                                const arrow = m.direction === "up" ? "▲" : "▼";
+                                const colorClass = m.direction === "up" ? "text-ds-state-success" : "text-ds-state-error";
+                                return (
+                                    <li key={m.campusId} className="flex items-center justify-between text-sm">
+                                        <span className="truncate text-ds-text-primary">
+                                            {campus?.name ?? m.campusId.slice(0, 6)}
+                                        </span>
+                                        <span className={`text-xs tabular-nums ${colorClass}`}>
+                                            {arrow} {m.percent}%
+                                        </span>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </>
+                )}
+            </Card>
+        );
+    },
+};
+
+/* ── Correlation matrix (pairwise Pearson within a template's groups) ───── */
+
+const correlationMatrixWidget: DashboardWidget = {
+    id: "correlation-matrix",
+    title: "Metric correlations",
+    render: ({ reports, templates }) => {
+        const out: Array<{ template: string; group: string; cells: ReturnType<typeof summariseGroup> }> = [];
+        function summariseGroup(template: ReportTemplate, group: string) {
+            // Inline import-free: rely on already-imported correlationMatrix when available.
+            // Replace pearson on small samples with null gating.
+            const cells: Array<{ a: string; b: string; r: number | null; n: number }> = [];
+            const metricsInGroup: Array<{ id: string; name: string }> = [];
+            for (const sec of template.sections ?? []) {
+                const secGroup = (sec as { correlationGroup?: string | null }).correlationGroup ?? null;
+                for (const m of sec.metrics ?? []) {
+                    const mGroup = (m as { correlationGroup?: string | null }).correlationGroup ?? secGroup;
+                    if (mGroup === group) metricsInGroup.push({ id: m.id, name: m.name });
+                }
+            }
+            if (metricsInGroup.length < 2) return cells;
+            const seriesById = new Map<string, number[]>(metricsInGroup.map((m) => [m.id, []]));
+            for (const r of reports) {
+                for (const sec of (r.sections ?? []) as Array<{ metrics?: Array<{ templateMetricId: string; monthlyAchieved?: number | null }> }>) {
+                    for (const cell of sec.metrics ?? []) {
+                        const series = seriesById.get(cell.templateMetricId);
+                        if (series && typeof cell.monthlyAchieved === "number") series.push(cell.monthlyAchieved);
+                    }
+                }
+            }
+            for (let i = 0; i < metricsInGroup.length; i++) {
+                for (let j = i + 1; j < metricsInGroup.length; j++) {
+                    const a = metricsInGroup[i];
+                    const b = metricsInGroup[j];
+                    const sa = seriesById.get(a.id) ?? [];
+                    const sb = seriesById.get(b.id) ?? [];
+                    const len = Math.min(sa.length, sb.length);
+                    let r: number | null = null;
+                    if (len >= 5) {
+                        // tiny inline Pearson — see lib/data/insights for the
+                        // canonical implementation used in non-dashboard surfaces.
+                        let sumA = 0, sumB = 0, sumAA = 0, sumBB = 0, sumAB = 0;
+                        for (let k = 0; k < len; k++) {
+                            sumA += sa[k]; sumB += sb[k];
+                            sumAA += sa[k] ** 2; sumBB += sb[k] ** 2;
+                            sumAB += sa[k] * sb[k];
+                        }
+                        const num = len * sumAB - sumA * sumB;
+                        const den = Math.sqrt((len * sumAA - sumA ** 2) * (len * sumBB - sumB ** 2));
+                        r = den === 0 ? null : num / den;
+                    }
+                    cells.push({ a: a.name, b: b.name, r, n: len });
+                }
+            }
+            return cells;
+        }
+        for (const t of templates) {
+            const groups = new Set<string>();
+            for (const sec of t.sections ?? []) {
+                const secGroup = (sec as { correlationGroup?: string | null }).correlationGroup;
+                if (secGroup) groups.add(secGroup);
+                for (const m of sec.metrics ?? []) {
+                    const mGroup = (m as { correlationGroup?: string | null }).correlationGroup;
+                    if (mGroup) groups.add(mGroup);
+                }
+            }
+            for (const g of groups) {
+                const cells = summariseGroup(t, g);
+                if (cells.length > 0) out.push({ template: t.name, group: g, cells });
+            }
+        }
+        if (out.length === 0) {
+            return (
+                <Card title="Metric correlations">
+                    <p className="text-sm text-ds-text-subtle">
+                        No correlation groups defined yet. Mark metrics with a "Correlation group" in
+                        the template editor to surface insights here.
+                    </p>
+                </Card>
+            );
+        }
+        return (
+            <Card title="Metric correlations">
+                <ul className="space-y-2">
+                    {out.slice(0, 3).map((entry) => (
+                        <li key={`${entry.template}:${entry.group}`}>
+                            <p className="text-xs text-ds-text-subtle">
+                                {entry.template} · {entry.group}
+                            </p>
+                            <ul className="text-sm text-ds-text-primary space-y-0.5">
+                                {entry.cells.slice(0, 4).map((c, idx) => (
+                                    <li key={idx}>
+                                        {c.a} ↔ {c.b}:{" "}
+                                        <span className="tabular-nums">{c.r === null ? "—" : c.r.toFixed(2)}</span>
+                                        <span className="text-xs text-ds-text-subtle"> (n={c.n})</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </li>
+                    ))}
+                </ul>
+            </Card>
+        );
+    },
+};
+
 const adminQuickLinksWidget: DashboardWidget = {
     id: "admin-quick-links",
     title: "Quick links",
@@ -490,6 +654,8 @@ const REGISTRY: Record<string, DashboardWidget> = {
     [metricTrendSparkWidget.id]: metricTrendSparkWidget,
     [insightSummaryWidget.id]: insightSummaryWidget,
     [usherQuickFormWidget.id]: usherQuickFormWidget,
+    [metricMoversWidget.id]: metricMoversWidget,
+    [correlationMatrixWidget.id]: correlationMatrixWidget,
 };
 
 export function getWidget(id: string): DashboardWidget | undefined {
@@ -504,7 +670,9 @@ export const DEFAULT_LAYOUT: Record<string, string[]> = {
         "org-compliance",
         "top-campus",
         "top-campus-chart",
+        "metric-movers",
         "metric-trend-spark",
+        "correlation-matrix",
         "group-performance",
         "pending-review-queue",
         "recent-submissions",
@@ -514,13 +682,17 @@ export const DEFAULT_LAYOUT: Record<string, string[]> = {
         "insight-summary",
         "top-campus",
         "top-campus-chart",
+        "metric-movers",
         "metric-trend-spark",
+        "correlation-matrix",
         "pending-review-queue",
         "recent-submissions",
     ],
     "scope-overview-campus": [
         "insight-summary",
         "metric-trend-spark",
+        "metric-movers",
+        "correlation-matrix",
         "org-compliance",
         "recent-submissions",
         "pending-review-queue",

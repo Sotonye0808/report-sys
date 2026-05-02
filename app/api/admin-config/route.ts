@@ -20,6 +20,8 @@ const NAMESPACES = [
     "bulkInvites",
     "analytics",
     "emailTemplates",
+    "roleCadence",
+    "correlation",
 ] as const;
 
 export async function GET(req: NextRequest) {
