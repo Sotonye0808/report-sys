@@ -469,6 +469,9 @@ function EmailSecuritySection() {
 
             <div className="mt-3 flex gap-2">
               <Input
+                type="email"
+                inputMode="email"
+                autoComplete="email"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
                 placeholder={profileText.newEmailPlaceholder as string}

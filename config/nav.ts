@@ -20,7 +20,6 @@ import {
     TrophyOutlined,
     CloudUploadOutlined,
     EditOutlined,
-    UsergroupAddOutlined,
 } from "@ant-design/icons";
 import { UserRole } from "@/types/global";
 import { APP_ROUTES } from "./routes";
@@ -198,13 +197,6 @@ export const DASHBOARD_NAV_ITEMS: NavItem[] = [
         ],
     },
     {
-        key: "bug-reports-manage",
-        label: CONTENT.nav.bugReportsManage,
-        href: APP_ROUTES.bugReportsManage,
-        icon: BugOutlined,
-        allowedRoles: [UserRole.SUPERADMIN],
-    },
-    {
         key: "quick-form",
         label: CONTENT.nav.quickForm,
         href: APP_ROUTES.quickForm,
@@ -218,23 +210,6 @@ export const DASHBOARD_NAV_ITEMS: NavItem[] = [
         icon: CloudUploadOutlined,
         allowedRoles: [
             UserRole.SUPERADMIN,
-            UserRole.GROUP_ADMIN,
-            UserRole.GROUP_PASTOR,
-            UserRole.CHURCH_MINISTRY,
-            UserRole.CEO,
-            UserRole.OFFICE_OF_CEO,
-            UserRole.SPO,
-        ],
-    },
-    {
-        key: "bulk-invites",
-        label: CONTENT.nav.bulkInvites,
-        href: APP_ROUTES.invitesBulk,
-        icon: UsergroupAddOutlined,
-        allowedRoles: [
-            UserRole.SUPERADMIN,
-            UserRole.CAMPUS_ADMIN,
-            UserRole.CAMPUS_PASTOR,
             UserRole.GROUP_ADMIN,
             UserRole.GROUP_PASTOR,
             UserRole.CHURCH_MINISTRY,

@@ -225,4 +225,5 @@ export const API_ROUTES = {
     preregister: "/api/users/preregister",
     activate: "/api/auth/activate",
     pwaDismissal: "/api/notifications/pwa-dismissal",
+    emailTest: "/api/email/test",
 } as const;

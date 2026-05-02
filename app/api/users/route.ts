@@ -8,7 +8,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { verifyAuth } from "@/lib/utils/auth";
 import { db, cache } from "@/lib/data/db";
+import { listDirectory, type DirectoryStatus } from "@/lib/data/userDirectory";
 import { UserRole } from "@/types/global";
+
+const DIRECTORY_STATUSES: DirectoryStatus[] = [
+    "ACTIVE",
+    "INACTIVE",
+    "ACTIVATION_PENDING",
+    "PENDING_INVITE",
+];
 
 /* ── Query schema ─────────────────────────────────────────────────────────── */
 
@@ -19,6 +27,8 @@ const ListUsersSchema = z.object({
     role: z.nativeEnum(UserRole).optional(),
     campusId: z.string().uuid().optional(),
     active: z.enum(["true", "false"]).optional(),
+    includeInvited: z.enum(["true", "false"]).optional(),
+    status: z.string().optional(),
 });
 
 /* ── GET /api/users ───────────────────────────────────────────────────────── */
@@ -38,6 +48,27 @@ export async function GET(req: NextRequest) {
     const query = ListUsersSchema.parse(
         Object.fromEntries(new URL(req.url).searchParams),
     );
+
+    /* Unified directory branch — joins active users + invited + activation-pending */
+    if (query.includeInvited === "true") {
+        const requestedStatuses = (query.status ?? "")
+            .split(",")
+            .map((s) => s.trim().toUpperCase())
+            .filter((s): s is DirectoryStatus => DIRECTORY_STATUSES.includes(s as DirectoryStatus));
+        const dir = await listDirectory({
+            roles: query.role ? [query.role] : undefined,
+            statuses: requestedStatuses.length ? requestedStatuses : undefined,
+            campusId: query.campusId,
+            search: query.search,
+            page: Math.max(query.page - 1, 0),
+            pageSize: query.pageSize,
+        });
+        return NextResponse.json({
+            success: true,
+            data: dir.rows,
+            meta: { total: dir.total, page: query.page, pageSize: query.pageSize, mode: "directory" },
+        });
+    }
 
     /* Build Prisma where clause */
     const where: Record<string, unknown> = {};

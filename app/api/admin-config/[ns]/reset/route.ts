@@ -23,6 +23,7 @@ const ALLOWED_NS: AdminConfigNamespaceName[] = [
     "pwaInstall",
     "bulkInvites",
     "analytics",
+    "emailTemplates",
 ];
 
 export async function POST(

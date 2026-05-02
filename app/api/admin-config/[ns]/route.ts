@@ -22,6 +22,7 @@ import {
     type AdminConfigNamespaceName,
 } from "@/lib/data/adminConfig";
 import { sanitiseRoleConfigPayload } from "@/lib/auth/permissions";
+import { sanitiseEmailTemplatesPayload } from "@/lib/email/templates/render";
 import { UserRole } from "@/types/global";
 
 const ALLOWED_NS: AdminConfigNamespaceName[] = [
@@ -33,6 +34,7 @@ const ALLOWED_NS: AdminConfigNamespaceName[] = [
     "pwaInstall",
     "bulkInvites",
     "analytics",
+    "emailTemplates",
 ];
 
 function resolveNs(raw: string): AdminConfigNamespaceName | null {
@@ -99,6 +101,11 @@ export async function PUT(
                     payload.roleConfig as Partial<Record<UserRole, Partial<RoleConfig>>>,
                 ),
             };
+        }
+        if (ns === "emailTemplates" && payload && typeof payload === "object") {
+            payload = sanitiseEmailTemplatesPayload(
+                payload as { overrides?: Record<string, { subject?: string; html?: string }> },
+            ) as unknown as Record<string, unknown>;
         }
 
         const snap = await writeAdminConfig({

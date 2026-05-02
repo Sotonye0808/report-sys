@@ -883,6 +883,25 @@ export const CONTENT = {
         generationFailed: "Generation failed",
     },
 
+    /* ── Users list ──────────────────────────────────────────────────────────── */
+    usersList: {
+        statusLabels: {
+            ACTIVE: "Active",
+            INACTIVE: "Inactive",
+            ACTIVATION_PENDING: "Awaiting activation",
+            PENDING_INVITE: "Invited",
+        },
+        statusColors: {
+            ACTIVE: "green",
+            INACTIVE: "default",
+            ACTIVATION_PENDING: "blue",
+            PENDING_INVITE: "orange",
+        },
+        filterAll: "All",
+        showInvited: "Show invited & pre-registered",
+        directoryHint: "Includes invited and pre-registered users alongside active accounts.",
+    },
+
     /* ── Admin Config ────────────────────────────────────────────────────────── */
     adminConfig: {
         pageTitle: "Admin Config",
@@ -896,6 +915,7 @@ export const CONTENT = {
             pwaInstall: "PWA Install Copy",
             bulkInvites: "Invite Defaults",
             analytics: "Analytics Defaults",
+            emailTemplates: "Email Templates",
         },
         actions: {
             save: "Save namespace",

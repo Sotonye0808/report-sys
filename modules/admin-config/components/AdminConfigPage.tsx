@@ -21,6 +21,15 @@ import { UserRole } from "@/types/global";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
 import Button from "@/components/ui/Button";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { EmailTemplatesEditor } from "./EmailTemplatesEditor";
+import {
+    DashboardLayoutEditor,
+    ImportsEditor,
+    PwaInstallEditor,
+    BulkInvitesEditor,
+    AnalyticsEditor,
+    TemplatesMappingEditor,
+} from "./NamespaceEditors";
 
 const COPY = (CONTENT.adminConfig ?? {}) as Record<string, unknown>;
 const COPY_NS_LABELS = (COPY.namespaceLabels ?? {}) as Record<string, string>;
@@ -38,6 +47,7 @@ const NAMESPACES = [
     "pwaInstall",
     "bulkInvites",
     "analytics",
+    "emailTemplates",
 ] as const;
 
 type Namespace = (typeof NAMESPACES)[number];
@@ -551,6 +561,20 @@ export function AdminConfigPage() {
                     <RolesEditor snap={snapshots[ns]} onSaved={reload} />
                 ) : ns === "hierarchy" ? (
                     <HierarchyEditor snap={snapshots[ns]} onSaved={reload} />
+                ) : ns === "dashboardLayout" ? (
+                    <DashboardLayoutEditor snap={snapshots[ns] as never} onSaved={reload} />
+                ) : ns === "templatesMapping" ? (
+                    <TemplatesMappingEditor snap={snapshots[ns] as never} onSaved={reload} />
+                ) : ns === "imports" ? (
+                    <ImportsEditor snap={snapshots[ns] as never} onSaved={reload} />
+                ) : ns === "pwaInstall" ? (
+                    <PwaInstallEditor snap={snapshots[ns] as never} onSaved={reload} />
+                ) : ns === "bulkInvites" ? (
+                    <BulkInvitesEditor snap={snapshots[ns] as never} onSaved={reload} />
+                ) : ns === "analytics" ? (
+                    <AnalyticsEditor snap={snapshots[ns] as never} onSaved={reload} />
+                ) : ns === "emailTemplates" ? (
+                    <EmailTemplatesEditor snap={snapshots[ns] as never} onSaved={reload} />
                 ) : (
                     <JsonEditor namespace={ns} snap={snapshots[ns]} onSaved={reload} />
                 )}

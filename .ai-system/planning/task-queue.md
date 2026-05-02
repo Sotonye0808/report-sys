@@ -136,6 +136,66 @@
 - [x] Update `.env.example` (`ADMIN_CONFIG_DB_ENABLED`, `ACTIVATION_TOKEN_TTL_HOURS`, `IMPORT_MAX_FILE_BYTES`, `PWA_BANNER_REENGAGE_DAYS`, `ANALYTICS_CORRELATION_MAX_METRICS`).
 - [x] Add diagnostics-runbook entries for namespace cache keys, SUPERADMIN immutability, import-job inspection, activation-token diagnostics, PWA dismissal, hierarchy CRUD propagation.
 
+### Planned Feature — Dashboard Simplification + Page Consolidation + Unified Users + Email Templates Module + `type="email"` sweep
+
+> **Tightened plan:** see [`.ai-system/planning/temp-dashboard-emails-page-consolidation-plan-2026-04-29.md`](./temp-dashboard-emails-page-consolidation-plan-2026-04-29.md). Tasks below are the canonical sequence; awaiting plan approval before implementation.
+
+#### Phase A — Page consolidation + email-input sweep
+
+- [x] Convert `/invites` to a tabbed surface (Active links | Bulk create); persist tab in `?tab=`.
+- [x] Convert `/bug-reports` to a tabbed surface (Submit | Manage); gate Manage on capability.
+- [x] Replace `/invites/bulk` route handler with a permanent redirect to `/invites?tab=bulk`.
+- [x] Replace `/bug-reports/manage` route handler with a permanent redirect to `/bug-reports?tab=manage`.
+- [x] Drop `bulk-invites` and `bug-reports-manage` nav entries from `config/nav.ts`.
+- [x] Sweep email-collection inputs to `type="email" inputMode="email" autoComplete="email"` across invite, bulk invite, bug-report contact email, register, login, forgot-password, join, profile email-change.
+
+#### Phase B — Unified users directory
+
+- [x] Add `lib/data/userDirectory.ts` joining active users + inactive-with-token + open invite links into one stream with derived status.
+- [x] Extend `GET /api/users` with `includeInvited=true&status=...` flags wired to the directory helper.
+- [x] Add `Status` column + filter chips to `UsersListPage` reading labels from `config/content.ts.usersList.statusLabels`.
+- [x] Add `usersList.statusLabels` to `config/content.ts`.
+
+#### Phase C — Dashboard simplification
+
+- [x] Restyle dashboard CTAs as `grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3` with equal-height cards; preserve severity colors.
+- [x] Add `UsherQuickFormWidget` (inline form for next assignment) — gated on `canQuickFormFill` + active assignment.
+- [x] Add `TopCampusChartWidget` (Recharts BarChart) — registered for `scope-overview-global` and `scope-overview-group` bands.
+- [x] Add `MetricTrendSparkWidget` (Recharts AreaChart, 6-month rolling compliance).
+- [x] Add `InsightSummaryWidget` (computed insights summary).
+- [x] Update `DEFAULT_LAYOUT` per role band including new `quick-form-self` band; layout editable through Admin Config.
+- [x] Auto-fill embedded form values for USHER/DATA_ENTRY: today's date label + user's `campusId` / `orgGroupId`; report period from server-truth.
+
+#### Phase D — Email templates module
+
+- [x] Add `lib/email/templates/definitions.ts` with declarative `{ id, defaultSubject, defaultHtml, variables, sampleVars }` per template.
+- [x] Add `lib/email/templates/render.ts` with `{{var}}` substitution + per-template variable allowlist + structured warning on unknown placeholders.
+- [x] Update each `send*Email` helper in `lib/email/resend.ts` to resolve subject + html via the renderer (DB override → registry fallback) with legacy-registry fallback on renderer failure.
+- [x] Add `emailTemplates` namespace to admin-config substrate (loader fallback returns a snapshot derived from the registry).
+- [x] Add `modules/admin-config/components/EmailTemplatesEditor.tsx` (per-template editor, variable chips, live preview iframe, send-test action).
+- [x] Wire EmailTemplatesEditor into `AdminConfigPage` for the `emailTemplates` namespace.
+- [x] Add `POST /api/email/test`: zod-validate `{ templateId, toEmail, sampleVars }`; render via the new helper; send via Resend when configured else return preview; per-user daily rate limit (`RESEND_TEST_DAILY_LIMIT`).
+- [x] Add `sanitiseEmailTemplatesPayload` helper that drops template ids unknown to the registry on PUT.
+
+#### Bonus — Bespoke GUI editors per namespace
+
+- [x] `DashboardLayoutEditor` (band-by-band ordered widget picker with add/remove/reorder).
+- [x] `ImportsEditor` (file size + MIME tag list).
+- [x] `PwaInstallEditor` (per-OS instruction fields + push prompt copy).
+- [x] `BulkInvitesEditor` (default expiry hours + default role + email gate).
+- [x] `AnalyticsEditor` (correlation cap + default-enabled toggle).
+- [x] `TemplatesMappingEditor` (per-row metric remap CRUD).
+- [x] AdminConfigPage tab dispatcher routes each namespace to its bespoke editor; legacy JSON editor retained only as fallback.
+
+#### Phase E — Tests + docs
+
+- [x] `test/userDirectoryStatus.test.ts` — status priority on dedupe (ACTIVE wins; ACTIVATION_PENDING beats PENDING_INVITE).
+- [x] `test/emailTemplateRender.test.ts` — variable substitution, unknown-placeholder safety, override vs fallback resolution, sanitiser drops unknown ids.
+- [x] `test/dashboardWidgetLayoutMode.test.ts` — quick-form-self band resolves; chart widgets present in defaults; usher widget registered.
+- [x] Update `.ai-system/agents/system-architecture.md` with new modules + data-flow entries (28–33).
+- [x] Update `.ai-system/agents/project-context.md` with email-template, users-directory, and bespoke-GUI constraints.
+- [x] Update `.env.example` (`RESEND_TEST_DAILY_LIMIT`, `EMAIL_TEMPLATES_DB_ENABLED`).
+
 ---
 
 ## Backlog

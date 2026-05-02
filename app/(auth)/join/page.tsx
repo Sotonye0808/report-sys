@@ -301,6 +301,8 @@ function JoinForm() {
           <Input
             size="large"
             type="email"
+            inputMode="email"
+            autoComplete="email"
             prefix={<MailOutlined className="text-ds-text-subtle" />}
             placeholder={CONTENT.auth.emailPlaceholder as string}
           />

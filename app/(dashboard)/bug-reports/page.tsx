@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BugReportPage } from "@/modules/bug-reports";
+import { BugReportsShell } from "@/modules/bug-reports";
 import { CONTENT } from "@/config/content";
 
 export const metadata: Metadata = {
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function BugReportsPage() {
-  return <BugReportPage />;
+  return <BugReportsShell />;
 }

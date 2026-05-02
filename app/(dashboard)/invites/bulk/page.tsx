@@ -1,20 +1,12 @@
-import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import { BulkInvitesPage } from "@/modules/bulk-invites/components/BulkInvitesPage";
-import { CONTENT } from "@/config/content";
-import { verifyAuth } from "@/lib/utils/auth";
-import { APP_ROUTES } from "@/config/routes";
-import { ROLE_CONFIG } from "@/config/roles";
+import { redirect, permanentRedirect } from "next/navigation";
 
-export const metadata: Metadata = {
-    title: ((CONTENT.bulkInvites as unknown as Record<string, string>)?.pageTitle ?? "Bulk Invites") as string,
-    description: CONTENT.seo.invitesDescription,
-};
-
-export default async function Page() {
-    const auth = await verifyAuth(null);
-    if (!auth.success || !ROLE_CONFIG[auth.user.role]?.canBulkInvite) {
-        redirect(APP_ROUTES.dashboard);
-    }
-    return <BulkInvitesPage />;
+/**
+ * Deprecated route. Bulk invites now live as a tab inside `/invites`.
+ * Permanent redirect preserves bookmarks while collapsing nav surface area.
+ */
+export default function Page() {
+    // Use 308 (permanentRedirect) so cached deep links update on subsequent navigations.
+    permanentRedirect("/invites?tab=bulk");
+    // Unreachable — keeps the type checker satisfied.
+    redirect("/invites?tab=bulk");
 }

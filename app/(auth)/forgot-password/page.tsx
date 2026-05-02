@@ -96,6 +96,9 @@ export default function ForgotPasswordPage() {
                 ]}
               >
                 <Input
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
                   size="large"
                   placeholder={CONTENT.auth.emailPlaceholder as string}
                   prefix={<MailOutlined className="text-ds-text-subtle" />}

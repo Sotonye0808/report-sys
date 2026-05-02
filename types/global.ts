@@ -967,6 +967,7 @@ declare global {
         common: Record<string, unknown>;
         footer: Record<string, unknown>;
         offline: Record<string, unknown>;
+        usersList: Record<string, unknown>;
         adminConfig: Record<string, unknown>;
         imports: Record<string, unknown>;
         quickForm: Record<string, unknown>;

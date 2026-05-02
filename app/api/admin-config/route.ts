@@ -19,6 +19,7 @@ const NAMESPACES = [
     "pwaInstall",
     "bulkInvites",
     "analytics",
+    "emailTemplates",
 ] as const;
 
 export async function GET(req: NextRequest) {

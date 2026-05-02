@@ -193,7 +193,7 @@ export function DashboardPage() {
     user ?? null,
   );
 
-  if (dashboardMode === "scope-overview" && user) {
+  if ((dashboardMode === "scope-overview" || dashboardMode === "quick-form") && user) {
     return (
       <PageLayout>
         <PageHeader
@@ -209,6 +209,7 @@ export function DashboardPage() {
             scope: visibilityScope as "own" | "campus" | "group" | "all",
           }}
           isLoading={scopeLoading || !scopeCtx}
+          mode={dashboardMode}
           layoutOverride={
             (dashboardLayoutOverride && typeof dashboardLayoutOverride === "object"
               ? (dashboardLayoutOverride as { byRoleBand?: Record<string, string[]> }).byRoleBand
@@ -605,20 +606,20 @@ export function DashboardPage() {
           };
 
           return (
-            <div className="flex flex-col gap-2 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
               {visible.map((cta) => (
                 <div
                   key={cta.id}
-                  className={`flex items-center justify-between gap-4 px-4 py-3 rounded-ds-xl border text-sm font-medium ${typeStyles[cta.type]}`}
+                  className={`flex flex-col gap-2 px-4 py-3 rounded-ds-xl border text-sm font-medium min-h-[88px] ${typeStyles[cta.type]}`}
                 >
-                  <span className="flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${dotStyles[cta.type]}`} />
-                    {cta.message}
-                  </span>
+                  <div className="flex items-start gap-2 flex-1">
+                    <span className={`w-2 h-2 rounded-full flex-shrink-0 mt-1.5 ${dotStyles[cta.type]}`} />
+                    <span className="leading-snug overflow-hidden text-ellipsis line-clamp-3">{cta.message}</span>
+                  </div>
                   {cta.href ? (
                     <button
                       onClick={() => router.push(cta.href!)}
-                      className="underline underline-offset-2 text-xs opacity-80 hover:opacity-100 whitespace-nowrap flex-shrink-0"
+                      className="self-end underline underline-offset-2 text-xs opacity-80 hover:opacity-100"
                     >
                       {cta.actionLabel ?? ctaContent.viewReports}
                     </button>

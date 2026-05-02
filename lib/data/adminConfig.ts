@@ -16,6 +16,7 @@ import { cache } from "@/lib/data/redis";
 import { ROLE_CONFIG } from "@/config/roles";
 import { ORG_HIERARCHY_CONFIG } from "@/config/hierarchy";
 import { CONTENT } from "@/config/content";
+import { EMAIL_TEMPLATE_DEFINITIONS } from "@/lib/email/templates/definitions";
 
 /* ── Types ──────────────────────────────────────────────────────────────── */
 
@@ -27,7 +28,8 @@ export type AdminConfigNamespaceName =
     | "imports"
     | "pwaInstall"
     | "bulkInvites"
-    | "analytics";
+    | "analytics"
+    | "emailTemplates";
 
 export interface AdminConfigSnapshot<T = Record<string, unknown>> {
     namespace: AdminConfigNamespaceName;
@@ -77,6 +79,18 @@ const FALLBACKS: Record<AdminConfigNamespaceName, () => Record<string, unknown>>
             defaultEnabled: true,
         },
     }),
+    emailTemplates: () => {
+        // Fallback defaults: empty overrides; renderer falls through to the
+        // registry's defaultSubject + defaultHtml for every templateId.
+        const fallback: Record<string, { subject: string; html: string }> = {};
+        for (const def of Object.values(EMAIL_TEMPLATE_DEFINITIONS)) {
+            fallback[def.id] = {
+                subject: def.defaultSubject,
+                html: def.defaultHtml,
+            };
+        }
+        return { overrides: {}, fallback };
+    },
 };
 
 /* ── Cache key + TTL ────────────────────────────────────────────────────── */

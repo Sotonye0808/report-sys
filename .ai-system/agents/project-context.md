@@ -51,6 +51,9 @@ The Harvesters Central Reporting System is a **standalone, role-based web applic
 - Admin-editable config substrate (`lib/data/adminConfig.ts`) must remain DB-first with `config/*` as the immutable fallback. No role names, dashboard widget IDs, metric IDs, push install copy, or import-mapping shapes may be hardcoded in module code — bind them through the namespace loader so admins can tune them at runtime without a deploy.
 - Role labels, capabilities, hierarchy order, dashboard mode, and visibility scope are runtime-CRUDable for every role **except SUPERADMIN**, which is absolute. `lib/auth/permissions.ts` (`sanitiseRoleConfigPayload` + `freezeSuperadmin`) enforces this server-side regardless of payload contents.
 - Hierarchy levels are runtime-CRUDable in shape and depth (group → campus today, but admins can add/remove/reorder levels and bind leader/admin roles per level via the `hierarchy` admin-config namespace). All hierarchy-aware code reads through `resolveHierarchyLevels()` with `ORG_HIERARCHY_CONFIG` as the immutable fallback.
+- Email content (subjects, HTML, placeholder variables) is admin-editable through the `emailTemplates` admin-config namespace. Hardcoded templates in `lib/email/templates/definitions.ts` remain the immutable fallback; the per-template variable allowlist is fixed by the registry and not extensible at runtime.
+- Users table is the canonical user directory: it surfaces invited (`PENDING_INVITE`) and pre-registered (`ACTIVATION_PENDING`) users alongside active accounts. Filters live in `config/content.ts.usersList.statusLabels`.
+- AdminConfigPage uses bespoke GUI editors for every namespace; the JSON editor is retained only as a defensive fallback for unknown namespaces.
 
 ---
 

@@ -245,6 +245,9 @@ export function BulkInvitesPage() {
                                 className="flex flex-wrap gap-2 p-2 border border-ds-border-base rounded-ds-md bg-ds-surface-base"
                             >
                                 <Input
+                                    type="email"
+                                    inputMode="email"
+                                    autoComplete="email"
                                     placeholder="email@example.com"
                                     value={row.email}
                                     onChange={(e) => updateRow(i, { email: e.target.value })}
