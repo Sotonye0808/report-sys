@@ -75,21 +75,23 @@ modules/*
 
 > **Section summary:** Third-party packages and what they're used for. Review before adding new packages.
 
-| Package                                            | Purpose                                          | Used In                                            |
-| -------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------- |
-| `next`                                             | React framework with app router + server actions | `app/` routes, API handlers                        |
-| `react` / `react-dom`                              | UI rendering                                     | frontend components                                |
-| `antd` / `@ant-design/cssinjs`                     | Component library and theming                    | UI components                                      |
-| `prisma` / `@prisma/client` / `@prisma/adapter-pg` | ORM and PostgreSQL adapter                       | `lib/data/prisma.ts`, `lib/data/db.ts`, `prisma/*` |
-| `@upstash/redis`                                   | Redis cache for rate limiting and caching        | `lib/data/redis.ts`                                |
-| `@upstash/ratelimit`                               | Rate limiting helper for API routes              | `lib/api` route handlers                           |
-| `resend`                                           | Email delivery (transactional emails)            | `lib/email/resend.ts`                              |
-| `jose`, `jsonwebtoken`                             | JWT creation/verification                        | Auth API routes                                    |
-| `bcryptjs`                                         | Password hashing                                 | Auth API routes                                    |
-| `zod`                                              | Input validation / schemas                       | API route validation                               |
-| `date-fns`, `dayjs`                                | Date manipulation                                | analytics, report filters, formatting              |
-| `xlsx`                                             | Export reports to Excel                          | `lib/utils/exportReports.ts`                       |
-| `idb-keyval`                                       | Browser storage for offline caching              | `lib/utils/offlineCache.ts`                        |
+| Package                                              | Purpose                                          | Used In                                            |
+| ---------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------- |
+| `next`                                               | React framework with app router + server actions | `app/` routes, API handlers                        |
+| `react` / `react-dom`                                | UI rendering                                     | frontend components                                |
+| `antd` / `@ant-design/icons` / `@ant-design/cssinjs` | Component library and theming                    | UI components                                      |
+| `recharts`                                           | Data visualization (charts/graphs)               | modules/analytics/components/\*                    |
+| `next-themes`                                        | Theme management (light/dark mode)               | providers/ThemeProvider.tsx                        |
+| `prisma` / `@prisma/client` / `@prisma/adapter-pg`   | ORM and PostgreSQL adapter                       | `lib/data/prisma.ts`, `lib/data/db.ts`, `prisma/*` |
+| `@upstash/redis`                                     | Redis cache for rate limiting and caching        | `lib/data/redis.ts`                                |
+| `@upstash/ratelimit`                                 | Rate limiting helper for API routes              | `lib/api` route handlers                           |
+| `resend`                                             | Email delivery (transactional emails)            | `lib/email/resend.ts`                              |
+| `jose`, `jsonwebtoken`                               | JWT creation/verification                        | Auth API routes                                    |
+| `bcryptjs`                                           | Password hashing                                 | Auth API routes                                    |
+| `zod`                                                | Input validation / schemas                       | API route validation                               |
+| `date-fns`, `dayjs`                                  | Date manipulation                                | analytics, report filters, formatting              |
+| `xlsx`                                               | Export reports to Excel                          | `lib/utils/exportReports.ts`                       |
+| `idb-keyval`                                         | Browser storage for offline caching              | `lib/utils/offlineCache.ts`                        |
 
 ---
 

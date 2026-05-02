@@ -91,6 +91,243 @@
 - [x] Add/refresh integration tests for verification lifecycle, email-change lifecycle, readiness-gated behavior, legacy-user prompts, inbox role parity, and footer rendering.
 - [x] Update `.env.example` and `.ai-system` docs (`system-architecture.md`, diagnostics, repair patterns) with new env/config keys, data flow, and failure handling guidance.
 
+### Planned Feature — Admin Config + Quick Forms + Advanced Analytics + Imports + PWA + Invites
+
+> **Tightened plan:** see [`.ai-system/planning/temp-admin-config-quickform-pwa-imports-plan-2026-04-29.md`](./temp-admin-config-quickform-pwa-imports-plan-2026-04-29.md). Tasks below are the canonical sequence and supersede the prior bullet block.
+
+#### Phase A — Foundation
+
+- [x] Add `USHER` role + new capability bits (`canQuickFormFill`, `canManageAdminConfig`, `canImportSpreadsheets`, `canBulkInvite`, `canViewScopeOverview`) to `types/global.ts` and `ROLE_CONFIG`.
+- [x] Add Prisma models: `AdminConfigEntry`, `FormAssignment`, `ImportJob`, `ImportJobItem`, `ImportMappingProfile`, `BulkInviteBatch`, `PwaPromptDismissal`, `UserActivationToken`; add `batchId` to `InviteLink`; add `USHER` to `UserRole` enum.
+- [x] Run migration (`prisma migrate deploy` for data-safe environments).
+- [x] Implement `lib/data/adminConfig.ts`: DB-first load + `config/*` fallback, namespace cache, optimistic-lock writes, audit emit.
+- [x] Implement `lib/data/formAssignment.ts`: resolve-for-user + verify-metric-subset.
+- [x] Implement `lib/data/importPipeline.ts`: parse, mapping store, validate, preview, chunked commit + compensation.
+- [x] Add API routes: `/api/admin-config` (GET/PUT/POST reset), `/api/form-assignments` (CRUD), `/api/imports` (job lifecycle), `/api/invite-links/bulk`, `/api/users/preregister`, `/api/auth/activate`, `/api/notifications/pwa-dismissal`.
+- [x] Add `lib/auth/permissions.ts` reading from `adminConfig.load("roles")` with `ROLE_CONFIG` fallback (SUPERADMIN immutability enforced).
+- [x] Update `config/content.ts` with new namespaces (`adminConfig`, `imports`, `quickForm`, `pwaInstall`, `bulkInvites`, `preregister`, `activation`).
+- [x] Update `config/nav.ts` and `config/routes.ts` for new surfaces.
+
+#### Phase B — UI surfaces
+
+- [x] `modules/admin-config/components/AdminConfigPage.tsx` (Roles CRUD with SUPERADMIN read-only, Hierarchy CRUD, JSON editor for other namespaces, diff/reset).
+- [x] `modules/quick-form/components/QuickFormLandingPage.tsx` + `QuickFormFillPage.tsx` (single-metric input, autosave every 30s, server-enforced subset).
+- [x] `modules/imports/components/ImportWizardPage.tsx` (upload CSV → map columns → validate → commit, saved-mapping profile API).
+- [x] Refactor `modules/dashboard/components/DashboardPage.tsx` into widget registry + role-band layout consumer (scope-overview branch for higher-up roles).
+- [x] `components/ui/PwaInstallBanner.tsx` (platform-aware OS copy, BeforeInstallPromptEvent, dismissal API).
+- [x] `components/ui/PwaPushPrompt.tsx` consolidated into PwaInstallBanner sub-prompt (post-install permission request).
+- [x] Bulk Invite + Pre-register surface at `/invites/bulk` (per-row outcome table; existing InvitesPage untouched).
+- [x] `app/(auth)/join/page.tsx` query-param-aware redirect helper (whitelisted destinations).
+- [x] `app/(auth)/activate/page.tsx` activation token consumer with forced password change.
+- [x] `modules/analytics/components/AnalyticsCorrelationControls.tsx` (config-driven correlation toggle with admin-set max cap; further analytics scope-overview drill-ins served by dashboard widget registry).
+- [x] `providers/RoleConfigProvider.tsx` exposes runtime role labels + dashboard layout to client; mounted at root layout.
+
+#### Phase C — Polish + tests + docs
+
+- [x] `test/adminConfigFallback.test.ts` (substrate-disabled fallback + AdminConfigConflictError context).
+- [x] `test/formAssignmentEnforcement.test.ts` (assignment-bound metric subset, unauthorized metric rejection).
+- [x] `test/importPipeline.test.ts` (CSV parser quoted/escaped fields + validateRows numeric/duplicate/unknown checks).
+- [x] `test/joinRedirect.test.ts` (whitelisted target + query-param scrubbing + protocol-relative rejection).
+- [x] `test/rolesConfigUsher.test.ts` (USHER + scope-overview wiring).
+- [x] `test/rolePermissionsImmutable.test.ts` (SUPERADMIN sanitisation + freezeSuperadmin).
+- [x] `test/dashboardWidgetRegistry.test.ts` (role-band → widget set, override filtering of unknown widget ids).
+- [x] Update `.ai-system/agents/system-architecture.md` (module breakdown rows, data-flow entries 16–27, env keys, tech stack).
+- [x] Update `.ai-system/agents/project-context.md` (USHER role + admin-config + runtime role/hierarchy CRUD constraints).
+- [x] Update `.env.example` (`ADMIN_CONFIG_DB_ENABLED`, `ACTIVATION_TOKEN_TTL_HOURS`, `IMPORT_MAX_FILE_BYTES`, `PWA_BANNER_REENGAGE_DAYS`, `ANALYTICS_CORRELATION_MAX_METRICS`).
+- [x] Add diagnostics-runbook entries for namespace cache keys, SUPERADMIN immutability, import-job inspection, activation-token diagnostics, PWA dismissal, hierarchy CRUD propagation.
+
+### Planned Feature — Dashboard Simplification + Page Consolidation + Unified Users + Email Templates Module + `type="email"` sweep
+
+> **Tightened plan:** see [`.ai-system/planning/temp-dashboard-emails-page-consolidation-plan-2026-04-29.md`](./temp-dashboard-emails-page-consolidation-plan-2026-04-29.md). Tasks below are the canonical sequence; awaiting plan approval before implementation.
+
+#### Phase A — Page consolidation + email-input sweep
+
+- [x] Convert `/invites` to a tabbed surface (Active links | Bulk create); persist tab in `?tab=`.
+- [x] Convert `/bug-reports` to a tabbed surface (Submit | Manage); gate Manage on capability.
+- [x] Replace `/invites/bulk` route handler with a permanent redirect to `/invites?tab=bulk`.
+- [x] Replace `/bug-reports/manage` route handler with a permanent redirect to `/bug-reports?tab=manage`.
+- [x] Drop `bulk-invites` and `bug-reports-manage` nav entries from `config/nav.ts`.
+- [x] Sweep email-collection inputs to `type="email" inputMode="email" autoComplete="email"` across invite, bulk invite, bug-report contact email, register, login, forgot-password, join, profile email-change.
+
+#### Phase B — Unified users directory
+
+- [x] Add `lib/data/userDirectory.ts` joining active users + inactive-with-token + open invite links into one stream with derived status.
+- [x] Extend `GET /api/users` with `includeInvited=true&status=...` flags wired to the directory helper.
+- [x] Add `Status` column + filter chips to `UsersListPage` reading labels from `config/content.ts.usersList.statusLabels`.
+- [x] Add `usersList.statusLabels` to `config/content.ts`.
+
+#### Phase C — Dashboard simplification
+
+- [x] Restyle dashboard CTAs as `grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3` with equal-height cards; preserve severity colors.
+- [x] Add `UsherQuickFormWidget` (inline form for next assignment) — gated on `canQuickFormFill` + active assignment.
+- [x] Add `TopCampusChartWidget` (Recharts BarChart) — registered for `scope-overview-global` and `scope-overview-group` bands.
+- [x] Add `MetricTrendSparkWidget` (Recharts AreaChart, 6-month rolling compliance).
+- [x] Add `InsightSummaryWidget` (computed insights summary).
+- [x] Update `DEFAULT_LAYOUT` per role band including new `quick-form-self` band; layout editable through Admin Config.
+- [x] Auto-fill embedded form values for USHER/DATA_ENTRY: today's date label + user's `campusId` / `orgGroupId`; report period from server-truth.
+
+#### Phase D — Email templates module
+
+- [x] Add `lib/email/templates/definitions.ts` with declarative `{ id, defaultSubject, defaultHtml, variables, sampleVars }` per template.
+- [x] Add `lib/email/templates/render.ts` with `{{var}}` substitution + per-template variable allowlist + structured warning on unknown placeholders.
+- [x] Update each `send*Email` helper in `lib/email/resend.ts` to resolve subject + html via the renderer (DB override → registry fallback) with legacy-registry fallback on renderer failure.
+- [x] Add `emailTemplates` namespace to admin-config substrate (loader fallback returns a snapshot derived from the registry).
+- [x] Add `modules/admin-config/components/EmailTemplatesEditor.tsx` (per-template editor, variable chips, live preview iframe, send-test action).
+- [x] Wire EmailTemplatesEditor into `AdminConfigPage` for the `emailTemplates` namespace.
+- [x] Add `POST /api/email/test`: zod-validate `{ templateId, toEmail, sampleVars }`; render via the new helper; send via Resend when configured else return preview; per-user daily rate limit (`RESEND_TEST_DAILY_LIMIT`).
+- [x] Add `sanitiseEmailTemplatesPayload` helper that drops template ids unknown to the registry on PUT.
+
+#### Bonus — Bespoke GUI editors per namespace
+
+- [x] `DashboardLayoutEditor` (band-by-band ordered widget picker with add/remove/reorder).
+- [x] `ImportsEditor` (file size + MIME tag list).
+- [x] `PwaInstallEditor` (per-OS instruction fields + push prompt copy).
+- [x] `BulkInvitesEditor` (default expiry hours + default role + email gate).
+- [x] `AnalyticsEditor` (correlation cap + default-enabled toggle).
+- [x] `TemplatesMappingEditor` (per-row metric remap CRUD).
+- [x] AdminConfigPage tab dispatcher routes each namespace to its bespoke editor; legacy JSON editor retained only as fallback.
+
+#### Phase E — Tests + docs
+
+- [x] `test/userDirectoryStatus.test.ts` — status priority on dedupe (ACTIVE wins; ACTIVATION_PENDING beats PENDING_INVITE).
+- [x] `test/emailTemplateRender.test.ts` — variable substitution, unknown-placeholder safety, override vs fallback resolution, sanitiser drops unknown ids.
+- [x] `test/dashboardWidgetLayoutMode.test.ts` — quick-form-self band resolves; chart widgets present in defaults; usher widget registered.
+- [x] Update `.ai-system/agents/system-architecture.md` with new modules + data-flow entries (28–33).
+- [x] Update `.ai-system/agents/project-context.md` with email-template, users-directory, and bespoke-GUI constraints.
+- [x] Update `.env.example` (`RESEND_TEST_DAILY_LIMIT`, `EMAIL_TEMPLATES_DB_ENABLED`).
+
+### Planned Feature — Role Cadence + Usher→Report Wiring + Aggregated Quick-Views + Correlation Analytics
+
+> **Tightened plan:** see [`.ai-system/planning/temp-cadence-usher-wiring-aggregated-views-correlation-plan-2026-04-29.md`](./temp-cadence-usher-wiring-aggregated-views-correlation-plan-2026-04-29.md). Tasks below are the canonical sequence; awaiting plan approval before implementation.
+
+#### Phase A — Schema + safe additive migration
+
+- [x] Add `ReportTemplate.recurrenceFrequency`, `ReportTemplate.recurrenceDays Int[] @default([])`, `ReportTemplate.autoFillTitleTemplate String?`.
+- [x] Add `ReportTemplateMetric.correlationGroup String?` and `ReportTemplateSection.correlationGroup String?`.
+- [x] Add `Report.autoCreated Boolean @default(false)`.
+- [x] Add new model `FormAssignmentRule` (id, ownerId, templateId, role, campusId?, orgGroupId?, metricIds String[], cadenceOverride Json?, isActive, createdAt). Add `FormAssignment.ruleId String?` + `periodKey`.
+- [x] Author `prisma/migrations/20260430120000_role_cadence_recurring_assignments_correlation/migration.sql` strictly additive (`ADD COLUMN IF NOT EXISTS ... DEFAULT ...`); apply with `prisma migrate deploy` only.
+- [x] Regenerate Prisma client; `npx prisma validate`.
+
+#### Phase B — Cadence + report shell + recurring assignments
+
+- [x] Extend `RoleConfig` with optional `cadence` and seed fallbacks (USHER Sun+Wed weekly; CAMPUS_ADMIN Sun/Mon weekly; DATA_ENTRY any-day backdated; CAMPUS_PASTOR weekly review; group roles weekly; 48 h default deadline).
+- [x] Add `roleCadence` admin-config namespace + fallback derived from `RoleConfig.cadence`.
+- [x] Add `correlation` admin-config namespace + fallback (`pearsonMinSamples`, `topMoverWindow`, `enableInsights`, `summarySentences`).
+- [x] Implement `lib/utils/cadence.ts` (period math, weekday utilities, deadline resolution).
+- [x] Implement `lib/utils/reportTitle.ts` (placeholder allowlist + safe substitution).
+- [x] Implement `lib/data/reportShellService.ts` with idempotent `ensureReportShell` keyed on `(campusId, templateId, periodKey)`.
+- [x] Implement `lib/data/recurringAssignmentService.ts` (rule resolution + materialisation, calling `ensureReportShell`).
+- [x] Add `POST /api/form-assignments/materialise` invoking the service for the calling user.
+- [x] Update `QuickFormLandingPage` to call materialise on mount before listing assignments.
+- [ ] Show "Last filled by USHER" badge on `ReportEditPage` per metric. *(deferred: requires explicit `lastQuickFillById` column; tracked separately)*
+
+#### Phase C — Auto-fill report title + period at create time
+
+- [x] Add `lib/auth/permissions.ts → resolveRoleCadence(role)` reading `roleCadence` namespace with fallback.
+- [x] Wire `ReportNewPage` to read role cadence + template recurrence + render auto-fill title + pre-select period values; all editable.
+- [ ] Add inline helper text "auto-filled · editable" below title and period inputs (config-driven copy). *(minor polish; deferred)*
+
+#### Phase D — Aggregated quick-view buttons
+
+- [x] Implement `GET /api/reports/[id]/quick-views` returning monthly/quarterly/yearly link + `sourceCount` per scope; cache 60 s.
+- [x] Build `modules/reports/components/QuickViewAggregateBar.tsx` (three CTA pills, disabled when `sourceCount === 0`).
+- [x] Mount the bar on `ReportDetailPage`.
+- [ ] `/reports/aggregate` query-param prefill verification *(manual smoke remaining)*.
+
+#### Phase E — Correlation in template editor + descriptive analytics
+
+- [x] Add `correlationGroup` field to template editor at metric and section levels.
+- [x] Persist via PUT `/api/report-templates/[id]`; legacy clients keep working.
+- [x] Implement `lib/data/insights.ts` pure functions (top mover, biggest gap, Pearson, trend slope, correlation matrix, summariseInsights).
+- [x] `InsightSummaryWidget` upgrade ready — structured payload available; current widget content remains compatible.
+- [x] Add `CorrelationMatrixWidget` (list view; Pearson gated by min-samples).
+- [x] Add `MetricMoversWidget` (top movers per current period).
+- [x] Update `DEFAULT_LAYOUT` per role band to include the new widgets where appropriate.
+
+#### Phase F — Admin Config GUI editors
+
+- [x] Build `RoleCadenceEditor.tsx` (weekday checkbox row, frequency dropdown, deadline hours number, title template input with placeholder chips).
+- [x] Build `CorrelationEditor.tsx` (Pearson min samples, top-mover window, enableInsights toggle, sentence templates table).
+- [x] Wire both into `AdminConfigPage` — replace JSON editors for `roleCadence` and `correlation` namespaces.
+
+#### Phase G — Tests + docs
+
+- [x] `test/cadenceUtils.test.ts` — period math edges (Sun midnight, ISO weeks, weekday wrap, deadline anchor).
+- [x] `test/reportTitleRender.test.ts` — placeholder allowlist + unknown-placeholder safety + numeric placeholders.
+- [x] `test/insightsAlgorithms.test.ts` — Pearson correctness; min-samples gate; top-mover ordering; biggest-gap sort; summariseInsights structure; correlation matrix gating.
+- [x] `test/templateCorrelationFieldOptional.test.ts` — old template payloads (without `correlationGroup`) render without error.
+- [x] `test/migrationAdditiveSafety.test.ts` — migration adds columns only; no DROP / RENAME / TRUNCATE.
+- [ ] `test/recurringAssignmentMaterialisation.test.ts` — *(integration; deferred until Prisma test harness is in place)*
+- [ ] `test/quickViewAvailability.test.ts` — *(integration; deferred until Prisma test harness is in place)*
+- [x] Update `.ai-system/agents/system-architecture.md` — new modules + data-flow entries (34–43).
+- [x] Update `.ai-system/agents/project-context.md` — backward-compat constraint + non-destructive migration rule + admin-editable cadence note.
+- [x] Update `.env.example` (`INSIGHTS_PEARSON_MIN_SAMPLES`, `INSIGHTS_TOP_MOVER_WINDOW_PERIODS`, `INSIGHTS_ENABLED`).
+- [x] Add diagnostics-runbook entries: materialisation idempotency check, quick-view probe cache key, insight algorithm thresholds, cadence + auto-fill, migration safety lock.
+
+### Planned Feature — Superadmin Role Impersonation / Preview
+
+> **Tightened plan:** see [`.ai-system/planning/temp-superadmin-role-impersonation-plan-2026-04-30.md`](./temp-superadmin-role-impersonation-plan-2026-04-30.md). Tasks below are the canonical sequence; awaiting plan approval before implementation.
+
+#### Phase A — Schema + safe additive migration
+
+- [x] Add `ImpersonationSession` and `ImpersonationEvent` models to `prisma/schema.prisma` (strictly additive).
+- [x] Author `prisma/migrations/20260501120000_impersonation_sessions/migration.sql` with `CREATE TABLE IF NOT EXISTS`. No DROP/RENAME. Apply via `prisma migrate deploy`.
+- [x] Regenerate Prisma client; `npx prisma validate`.
+
+#### Phase B — Auth + session core
+
+- [x] `lib/auth/impersonation.ts` — sign/verify cookie, `startSession`, `stopSession`, `changeMode`, `recordEvent`, `loadActiveSession`.
+- [x] `lib/auth/impersonationContext.ts` — request-scoped accessor (memoised via React `cache()`).
+- [x] Extend `lib/utils/auth.ts → verifyAuth` to return `effectiveRole`, `actualRole`, `impersonation` summary; back-compat: `auth.user.role = effectiveRole`.
+- [x] Add `assertNotReadOnly(auth, req)` to `lib/auth/permissions.ts` with allowlist; gate is wired into `verifyAuth` itself so all mutation endpoints inherit it.
+- [x] Add `IMPERSONATION_TTL_MINUTES`, `IMPERSONATION_ENABLED`, `IMPERSONATION_COOKIE_NAME` to `.env.example`.
+
+#### Phase C — APIs
+
+- [x] `app/api/impersonation/start/route.ts` (SUPERADMIN-only; reject SUPERADMIN target; write STARTED event).
+- [x] `app/api/impersonation/stop/route.ts` (clear cookie; write STOPPED event).
+- [x] `app/api/impersonation/me/route.ts` (return active session for caller).
+- [x] `app/api/impersonation/mode/route.ts` (PATCH READ_ONLY ↔ MUTATE).
+- [x] `/api/auth/me` returns `effectiveRole` + `actualRole` + `impersonation` (already on `auth.user`).
+- [x] Mutation gate inherited via `verifyAuth` chokepoint — no per-handler wrapping required.
+
+#### Phase D — UI
+
+- [x] Extend `providers/AuthProvider.tsx` with `startImpersonation`, `stopImpersonation`, `switchImpersonationMode`.
+- [x] Add `lib/hooks/useImpersonation.ts`.
+- [x] `components/ui/ImpersonationBanner.tsx` (sticky banner + countdown + mode toggle + exit + Ctrl+Shift+E) mounted in dashboard layout.
+- [x] `modules/admin-config/components/ImpersonationStartDialog.tsx` (role select + user typeahead + mode toggle); mounted in dashboard header + Users table row action.
+- [x] `UsersListPage` row action "Preview as this user" (SUPERADMIN-only).
+- [x] `Ctrl+Shift+E` keyboard escape handler (in banner).
+- [x] `config/content.ts` `impersonation` namespace.
+- [x] `config/routes.ts` API routes added.
+
+#### Phase E — Audit + safety net
+
+- [x] `IMPERSONATION_*` event family lives in `lib/auth/impersonation.ts → recordEvent`; `lib/utils/audit.ts → createReportEvent` mirrors mutations into the active session as `MUTATION_APPLIED`.
+- [x] Audit tagging via `tagImpersonationIfActive` reads `impersonationContext` and writes a session event for every domain audit emission.
+- [ ] Email + push fan-out footer ("(by SUPERADMIN previewing as <Role>)") — *deferred to follow-up; audit log already captures the context*.
+- [x] `app/api/impersonation/sessions/route.ts` — paginated history (SUPERADMIN-only).
+- [x] Admin Config "Impersonation log" tab via `ImpersonationLogPanel`.
+
+#### Phase F — Tests + docs
+
+- [x] `test/impersonationGuard.test.ts` — `assertNotReadOnly` blocks mutations in READ_ONLY mode; allowlist passes.
+- [ ] `test/impersonationSessionFlow.test.ts` — *(integration; deferred until Prisma test harness is in place)*.
+- [x] `test/impersonationCookieSecurity.test.ts` — token signature + audience + tampered + expired token rejections.
+- [x] `test/impersonationMigrationAdditiveSafety.test.ts` — additive-only guard.
+- [x] Update `.ai-system/agents/system-architecture.md` (modules + data-flow entries 44–48 + env keys).
+- [x] Update `.ai-system/agents/project-context.md` (impersonation business constraint).
+- [x] Update diagnostics-runbook (trace impersonated mutations; force-end stuck sessions; gate response; toggles; migration safety).
+- [x] Update `.env.example` (`IMPERSONATION_TTL_MINUTES`, `IMPERSONATION_ENABLED`).
+
+#### Phase G — Follow-ups (queued, not in initial pass)
+
+- [ ] CI lint rule: fail when a route exports POST/PUT/PATCH/DELETE without calling `assertNotReadOnly` or marking `safeForReadOnly: true`.
+- [ ] "Replay session" affordance — read-only walkthrough of every page visited in a past session.
+- [ ] Optional `record-only` mode capturing intent without storing payloads.
+
 ---
 
 ## Backlog

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { InvitesPage } from "@/modules/users";
+import { InvitesShell } from "@/modules/users";
 import { CONTENT } from "@/config/content";
 import { verifyAuth } from "@/lib/utils/auth";
 import { APP_ROUTES } from "@/config/routes";
@@ -24,5 +24,5 @@ export default async function Page() {
   if (!auth.success) {
     redirect(APP_ROUTES.dashboard);
   }
-  return <InvitesPage />;
+  return <InvitesShell />;
 }

@@ -150,7 +150,13 @@ function RegisterPageContent() {
             { type: "email", message: "Enter a valid email" },
           ]}
         >
-          <Input placeholder={CONTENT.auth.emailPlaceholder} size="large" autoComplete="email" />
+          <Input
+            type="email"
+            inputMode="email"
+            placeholder={CONTENT.auth.emailPlaceholder}
+            size="large"
+            autoComplete="email"
+          />
         </Form.Item>
 
         <Form.Item name="phone" label={CONTENT.auth.phoneLabel}>

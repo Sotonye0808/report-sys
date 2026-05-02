@@ -14,10 +14,12 @@ import {
     FileTextOutlined,
     LayoutOutlined,
     LinkOutlined,
-    SettingOutlined as _SettingOutlined,
+    SettingOutlined,
     TeamOutlined,
     ApartmentOutlined,
     TrophyOutlined,
+    CloudUploadOutlined,
+    EditOutlined,
 } from "@ant-design/icons";
 import { UserRole } from "@/types/global";
 import { APP_ROUTES } from "./routes";
@@ -195,10 +197,32 @@ export const DASHBOARD_NAV_ITEMS: NavItem[] = [
         ],
     },
     {
-        key: "bug-reports-manage",
-        label: CONTENT.nav.bugReportsManage,
-        href: APP_ROUTES.bugReportsManage,
-        icon: BugOutlined,
+        key: "quick-form",
+        label: CONTENT.nav.quickForm,
+        href: APP_ROUTES.quickForm,
+        icon: EditOutlined,
+        allowedRoles: [UserRole.USHER, UserRole.DATA_ENTRY],
+    },
+    {
+        key: "imports",
+        label: CONTENT.nav.imports,
+        href: APP_ROUTES.imports,
+        icon: CloudUploadOutlined,
+        allowedRoles: [
+            UserRole.SUPERADMIN,
+            UserRole.GROUP_ADMIN,
+            UserRole.GROUP_PASTOR,
+            UserRole.CHURCH_MINISTRY,
+            UserRole.CEO,
+            UserRole.OFFICE_OF_CEO,
+            UserRole.SPO,
+        ],
+    },
+    {
+        key: "admin-config",
+        label: CONTENT.nav.adminConfig,
+        href: APP_ROUTES.adminConfig,
+        icon: SettingOutlined,
         allowedRoles: [UserRole.SUPERADMIN],
     },
 ];

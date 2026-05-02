@@ -58,3 +58,13 @@ Agent logic and route handlers should have fallback data paths (e.g., first try 
 
 **Apply When:**
 Any route that currently depends on a single upstream/managed connection (Prisma Accelerate, tRPC server, external web API) is critical for product workflow. Add defensive fallback behavior and error logging.
+
+## Future Planning Items
+
+- **Admin-editable Configurations:** Migrate user definitions, roles, functions and mappings, hierarchy level definitions, and organizations to be fully admin-editable and config-driven, using current hardcoded configs as fallbacks.
+- **Ushers/Data Entry Quick Form Interface:** Develop a quick form interface for ushers or data entry roles to fill in specific values/metrics for reports. This will involve exposing certain report metrics to specific users and adjusting goals visibility to show only a single input field for certain roles.
+- **Simplified Analytical Views:** Create simplified analytical views/UIs for various roles, focusing on clear insights, comparisons, correlations, and statistics, with options for scope-level overviews and deeper dives.
+- **Flexible Report & Metric Comparisons:** Implement more flexibility in report and metric comparisons, including corresponding analytics for various comparisons, correlations, insights, and optional controls for configuring which report metrics should have correlation in analysis (configurable during report creation and at the analytical view point).
+- **Excel/Spreadsheet Import:** Introduce capability to abstract values from Excel/spreadsheet, mapping them to metrics, sections, and templates for simplified report entering.
+- **PWA Installation Notice:** Include a notice on installing the Progressive Web App (PWA) to enhance user experience.
+- **Auto-Invite & Optimized Onboarding:** Implement auto-invite functionality with redirects to forms using query parameter links for optimized UI/UX.

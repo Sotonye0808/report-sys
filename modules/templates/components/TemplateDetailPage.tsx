@@ -59,6 +59,7 @@ interface DraftMetric {
   capturesGoal: boolean;
   capturesAchieved: boolean;
   capturesYoY: boolean;
+  correlationGroup: string;
   order: number;
 }
 
@@ -67,6 +68,7 @@ interface DraftSection {
   name: string;
   description: string;
   isRequired: boolean;
+  correlationGroup: string;
   order: number;
   metrics: DraftMetric[];
 }
@@ -147,6 +149,21 @@ function MetricRow({ metric, onChange, onRemove }: MetricRowProps) {
         </div>
         <Button type="text" danger size="small" icon={<DeleteOutlined />} onClick={onRemove} />
       </div>
+
+      <div>
+        <label className="text-xs font-medium text-ds-text-secondary block mb-1">
+          Correlation group (optional)
+        </label>
+        <Input
+          size="middle"
+          value={metric.correlationGroup}
+          onChange={(e) => onChange({ correlationGroup: e.target.value })}
+          placeholder="e.g. attendance"
+        />
+        <p className="text-xs text-ds-text-subtle mt-1">
+          Metrics sharing a group are paired in correlation analytics. Leave empty to opt out.
+        </p>
+      </div>
     </div>
   );
 }
@@ -206,6 +223,7 @@ export function TemplateDetailPage({ params }: PageProps) {
           name: s.name,
           description: s.description ?? "",
           isRequired: s.isRequired,
+          correlationGroup: s.correlationGroup ?? "",
           order: s.order,
           metrics: (s.metrics ?? [])
             .sort((a, b) => a.order - b.order)
@@ -219,6 +237,7 @@ export function TemplateDetailPage({ params }: PageProps) {
               capturesGoal: m.capturesGoal,
               capturesAchieved: m.capturesAchieved,
               capturesYoY: m.capturesYoY,
+              correlationGroup: m.correlationGroup ?? "",
               order: m.order,
             })),
         })),
@@ -239,6 +258,7 @@ export function TemplateDetailPage({ params }: PageProps) {
         name: "",
         description: "",
         isRequired: true,
+        correlationGroup: "",
         order: (prev ?? []).length + 1,
         metrics: [],
       },
@@ -276,6 +296,7 @@ export function TemplateDetailPage({ params }: PageProps) {
               capturesGoal: true,
               capturesAchieved: true,
               capturesYoY: false,
+              correlationGroup: "",
               order: s.metrics.length + 1,
             },
           ],
@@ -314,6 +335,7 @@ export function TemplateDetailPage({ params }: PageProps) {
           name: s.name.trim(),
           description: s.description || undefined,
           isRequired: s.isRequired,
+          correlationGroup: s.correlationGroup.trim() || null,
           order: si + 1,
           metrics: s.metrics.map((m, mi) => ({
             id: m.id,
@@ -326,6 +348,7 @@ export function TemplateDetailPage({ params }: PageProps) {
             capturesGoal: m.capturesGoal,
             capturesAchieved: m.capturesAchieved,
             capturesYoY: m.capturesYoY,
+            correlationGroup: m.correlationGroup.trim() || null,
             order: mi + 1,
           })),
         })),
@@ -523,6 +546,19 @@ export function TemplateDetailPage({ params }: PageProps) {
                                 {CONTENT.templates.isRequiredLabel as string}
                               </span>
                             </div>
+                          </div>
+                          <div className="sm:col-span-2">
+                            <label className="text-xs font-medium text-ds-text-secondary block mb-1">
+                              Section correlation group (optional)
+                            </label>
+                            <Input
+                              size="middle"
+                              value={section.correlationGroup}
+                              onChange={(e) =>
+                                updateSection(section.id, { correlationGroup: e.target.value })
+                              }
+                              placeholder="e.g. attendance — applies to all metrics in this section by default"
+                            />
                           </div>
                         </div>
 

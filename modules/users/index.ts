@@ -7,3 +7,4 @@ export { UsersListPage }  from "./components/UsersListPage";
 export { UserDetailPage } from "./components/UserDetailPage";
 export { ProfilePage }    from "./components/ProfilePage";
 export { InvitesPage }    from "./components/InvitesPage";
+export { InvitesShell }   from "./components/InvitesShell";

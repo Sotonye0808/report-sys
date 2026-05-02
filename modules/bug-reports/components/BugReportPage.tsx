@@ -260,7 +260,12 @@ export function BugReportPage() {
                 { type: "email", message: "Please enter a valid email." },
               ]}
             >
-              <Input placeholder={CONTENT.bugReports.emailPlaceholder as string} />
+              <Input
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                placeholder={CONTENT.bugReports.emailPlaceholder as string}
+              />
             </Form.Item>
 
             <Button

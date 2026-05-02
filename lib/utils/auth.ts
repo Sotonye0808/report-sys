@@ -193,23 +193,77 @@ export async function verifyAuth(
         return { success: false, error: "User not found or inactive", status: 401 };
     }
 
+    const actualRole = userProfile.role as UserRole;
+
+    // Resolve impersonation overlay (SUPERADMIN-only). Errors are swallowed
+    // so a substrate hiccup never breaks the auth path.
+    let impersonation: AuthUser["impersonation"] = undefined;
+    let effectiveRole: UserRole = actualRole;
+    let impersonatedScope: { campusId?: string; orgGroupId?: string } = {};
+    if (actualRole === UserRole.SUPERADMIN) {
+        try {
+            const { getImpersonationContext } = await import("@/lib/auth/impersonationContext");
+            const ctx = await getImpersonationContext();
+            if (ctx) {
+                impersonation = {
+                    sessionId: ctx.sessionId,
+                    impersonatedRole: ctx.impersonatedRole,
+                    impersonatedUserId: ctx.impersonatedUserId,
+                    mode: ctx.mode,
+                    expiresAt: ctx.expiresAt,
+                };
+                effectiveRole = ctx.impersonatedRole;
+                if (ctx.impersonatedUser) {
+                    impersonatedScope = {
+                        campusId: ctx.impersonatedUser.campusId ?? undefined,
+                        orgGroupId: ctx.impersonatedUser.orgGroupId ?? undefined,
+                    };
+                }
+            }
+        } catch {
+            // ignore — fall through to plain SUPERADMIN identity
+        }
+    }
+
     const user: AuthUser = {
         id: userProfile.id,
         email: userProfile.email,
         pendingEmail: (userProfile as any).pendingEmail ?? undefined,
         firstName: userProfile.firstName,
         lastName: userProfile.lastName,
-        role: userProfile.role as UserRole,
-        campusId: userProfile.campusId ?? undefined,
-        orgGroupId: userProfile.orgGroupId ?? undefined,
+        // `role` is the EFFECTIVE role for back-compat. Existing capability
+        // checks downstream therefore see the impersonated role automatically.
+        role: effectiveRole,
+        actualRole,
+        campusId: impersonatedScope.campusId ?? userProfile.campusId ?? undefined,
+        orgGroupId: impersonatedScope.orgGroupId ?? userProfile.orgGroupId ?? undefined,
         avatar: userProfile.avatar ?? undefined,
         isEmailVerified: Boolean((userProfile as any).emailVerifiedAt),
         emailVerifiedAt: (userProfile as any).emailVerifiedAt?.toISOString?.(),
         emailServiceReady: isEmailServiceReady(),
+        impersonation,
     };
 
     if (allowedRoles && !allowedRoles.includes(user.role)) {
         return { success: false, error: "Insufficient permissions", status: 403 };
+    }
+
+    // Single-chokepoint impersonation read-only gate: every mutation endpoint
+    // that already calls verifyAuth inherits this without per-route wrapping.
+    if (req && user.impersonation?.mode === "READ_ONLY") {
+        try {
+            const { assertNotReadOnly } = await import("@/lib/auth/permissions");
+            const check = await assertNotReadOnly({ user }, req);
+            if (!check.ok) {
+                return {
+                    success: false,
+                    error: check.message ?? "Read-only preview blocks this action",
+                    status: 403,
+                };
+            }
+        } catch {
+            // Module load failure must not break auth.
+        }
     }
 
     return { success: true, user };

@@ -25,6 +25,10 @@ export const CONTENT = {
         profile: "Profile",
         logout: "Logout",
         backToDashboard: "Back to Dashboard",
+        quickForm: "Quick Form",
+        imports: "Imports",
+        bulkInvites: "Bulk Invites",
+        adminConfig: "Admin Config",
     },
 
     /* ── Auth ─────────────────────────────────────────────────────────────── */
@@ -499,6 +503,7 @@ export const CONTENT = {
             CAMPUS_PASTOR: "Campus Pastor",
             CAMPUS_ADMIN: "Campus Admin",
             DATA_ENTRY: "Data Entry",
+            USHER: "Usher",
             MEMBER: "Member",
         },
         recentReports: "Recent Reports",
@@ -876,6 +881,260 @@ export const CONTENT = {
         onlineDescription: "Connection restored.",
         previewFailed: "Preview failed",
         generationFailed: "Generation failed",
+    },
+
+    /* ── Impersonation (superadmin role preview) ──────────────────────────── */
+    impersonation: {
+        bannerReadOnlyTitle: "Previewing as",
+        bannerReadOnlyHint: "Read-only — actions will not apply.",
+        bannerMutateTitle: "Previewing & MUTATING as",
+        bannerMutateHint: "Mutate mode — changes take real effect.",
+        bannerExpiresIn: "Expires in",
+        bannerForUser: "for",
+        modeReadOnlyLabel: "Read only",
+        modeMutateLabel: "Mutate",
+        switchToMutate: "Switch to mutate",
+        switchToReadOnly: "Switch to read-only",
+        exit: "Exit preview",
+        exiting: "Exiting…",
+        startTitle: "Preview the app as another role",
+        startSubtitle:
+            "Time-limited preview. Your SUPERADMIN identity stays the actor of record; every action is audit-tagged.",
+        startSubmit: "Start preview",
+        startCancel: "Cancel",
+        roleLabel: "Role",
+        userLabel: "Specific user (optional)",
+        modeLabel: "Mode",
+        readOnlyDescription:
+            "Walk flows safely. Mutating endpoints will return 403 and be logged as blocked.",
+        mutateDescription:
+            "Actions take real effect on production data. Audit rows are tagged with your impersonation context.",
+        toasts: {
+            started: "Preview started.",
+            stopped: "Preview ended.",
+            modeSwitched: "Mode switched.",
+            mutationBlocked:
+                "Read-only preview — switch to mutate mode to apply changes, or exit preview.",
+            startFailed: "Could not start preview.",
+        },
+        rowActionLabel: "Preview as this user",
+        managePageTitle: "Impersonation log",
+        managePageSubtitle: "Past sessions and per-event timeline.",
+        eventTypeLabels: {
+            STARTED: "Started",
+            STOPPED: "Stopped",
+            MODE_CHANGED: "Mode changed",
+            MUTATION_BLOCKED: "Mutation blocked",
+            MUTATION_APPLIED: "Mutation applied",
+            PAGE_VISITED: "Page visited",
+            AUTH_REJECTED: "Auth rejected",
+            EVENT_LIMIT_REACHED: "Event limit reached",
+        },
+    },
+
+    /* ── Report quick views (aggregated rollup CTAs) ──────────────────────── */
+    reportsQuickViews: {
+        heading: "Aggregated views",
+        regionLabel: "Aggregated report quick views",
+        noDataTooltip: "No source data yet for this rollup",
+    },
+
+    /* ── Users list ──────────────────────────────────────────────────────────── */
+    usersList: {
+        statusLabels: {
+            ACTIVE: "Active",
+            INACTIVE: "Inactive",
+            ACTIVATION_PENDING: "Awaiting activation",
+            PENDING_INVITE: "Invited",
+        },
+        statusColors: {
+            ACTIVE: "green",
+            INACTIVE: "default",
+            ACTIVATION_PENDING: "blue",
+            PENDING_INVITE: "orange",
+        },
+        filterAll: "All",
+        showInvited: "Show invited & pre-registered",
+        directoryHint: "Includes invited and pre-registered users alongside active accounts.",
+    },
+
+    /* ── Admin Config ────────────────────────────────────────────────────────── */
+    adminConfig: {
+        pageTitle: "Admin Config",
+        subtitle: "Tune the substrate that powers roles, dashboards, imports, and onboarding.",
+        namespaceLabels: {
+            roles: "Roles & Capabilities",
+            hierarchy: "Hierarchy Levels",
+            dashboardLayout: "Dashboard Layout",
+            templatesMapping: "Template & Metric Mappings",
+            imports: "Import Defaults",
+            pwaInstall: "PWA Install Copy",
+            bulkInvites: "Invite Defaults",
+            analytics: "Analytics Defaults",
+            emailTemplates: "Email Templates",
+            roleCadence: "Role Cadence",
+            correlation: "Insights & Correlation",
+            impersonationLog: "Impersonation log",
+        },
+        actions: {
+            save: "Save namespace",
+            reset: "Reset to defaults",
+            diff: "Show diff vs fallback",
+        },
+        toasts: {
+            saved: "Configuration saved.",
+            reset: "Reverted to defaults.",
+            conflict: "Someone else updated this namespace. Reload and re-apply.",
+            saveFailed: "Could not save configuration. Try again.",
+        },
+        labels: {
+            currentVersion: "Current version",
+            usingFallback: "Using built-in defaults",
+            usingDbOverride: "Using database override",
+            updatedBy: "Updated by",
+            namespace: "Namespace",
+        },
+        emptyState: {
+            title: "No overrides yet",
+            description: "This namespace is currently served from the built-in defaults. Save changes here to take over.",
+        },
+    },
+
+    /* ── Imports ─────────────────────────────────────────────────────────────── */
+    imports: {
+        pageTitle: "Spreadsheet Imports",
+        subtitle: "Bring CSV/XLSX data into reports with mapped columns and a safe preview.",
+        steps: {
+            upload: "Upload",
+            map: "Map columns",
+            preview: "Preview",
+            commit: "Commit",
+        },
+        actions: {
+            uploadFile: "Choose file",
+            saveMapping: "Save mapping profile",
+            useSavedMapping: "Use saved mapping",
+            validate: "Validate",
+            commit: "Commit import",
+            cancel: "Cancel job",
+        },
+        toasts: {
+            jobCreated: "Import job created.",
+            mappingSaved: "Mapping saved.",
+            validated: "Validation complete.",
+            committed: "Import committed.",
+            failed: "Import failed.",
+            cancelled: "Import cancelled.",
+        },
+        emptyState: {
+            title: "No active imports",
+            description: "Upload a spreadsheet to start a new import job.",
+        },
+        outcomeLabels: {
+            OK: "Ready",
+            WARNING: "Warning",
+            ERROR: "Error",
+            COMMITTED: "Committed",
+        },
+    },
+
+    /* ── Quick Form (Usher / Data Entry) ───────────────────────────────────── */
+    quickForm: {
+        pageTitle: "My Assignments",
+        subtitle: "Fill in the metric values you have been assigned.",
+        fillTitle: "Quick Fill",
+        fillSubtitle: "Enter values for assigned metrics only.",
+        emptyState: {
+            title: "No active assignments",
+            description: "When someone assigns you a form, it will appear here.",
+        },
+        statusLabels: {
+            active: "Active",
+            completed: "Completed",
+            cancelled: "Cancelled",
+            overdue: "Overdue",
+        },
+        actions: {
+            startFill: "Start filling",
+            saveDraft: "Save draft",
+            submit: "Submit values",
+        },
+        autosave: {
+            saving: "Saving…",
+            saved: "Draft saved",
+            failed: "Could not save draft",
+        },
+    },
+
+    /* ── PWA Install Banner ─────────────────────────────────────────────────── */
+    pwaInstall: {
+        bannerTitle: "Install the Harvesters Reporting app",
+        bannerSubtitle: "Get one-tap access, faster load, and offline drafts. Install in under a minute.",
+        installCta: "Install",
+        snoozeCta: "Maybe later",
+        neverCta: "Don't show again",
+        platformInstructions: {
+            IOS: "Tap the Share icon in Safari, then choose “Add to Home Screen”.",
+            ANDROID: "Tap the menu (⋮) in Chrome, then choose “Install app”.",
+            DESKTOP: "Use the install icon in your address bar (Chrome, Edge) or the browser menu.",
+        },
+        push: {
+            title: "Enable notifications",
+            subtitle: "Get instant pings for approvals, deadlines, and assignments.",
+            enableCta: "Enable",
+            laterCta: "Maybe later",
+            blockedHelp: "Notifications are blocked in your browser settings. Allow them and try again.",
+        },
+    },
+
+    /* ── Bulk Invites + Pre-register + Activation ──────────────────────────── */
+    bulkInvites: {
+        pageTitle: "Bulk Invites",
+        subtitle: "Create many invite links in one go.",
+        modes: {
+            link: "Generate invite links",
+            preregister: "Pre-register users",
+        },
+        actions: {
+            addRow: "Add another",
+            paste: "Paste from clipboard",
+            send: "Send invites",
+            preregister: "Create activation links",
+            downloadCsv: "Download outcomes (CSV)",
+        },
+        outcomeLabels: {
+            created: "Invite created",
+            already_invited: "Already invited",
+            already_registered: "Already registered",
+            failed: "Failed",
+            preregistered: "Activation sent",
+            activation_skipped: "User already active",
+        },
+        emptyState: {
+            title: "No bulk batches yet",
+            description: "Add rows above to create your first bulk invite or pre-register batch.",
+        },
+        helpers: {
+            sharedDefaults: "Shared defaults are used unless a row overrides them.",
+            csvHint: "Paste rows as: email, role, campus|group (one per line).",
+        },
+    },
+
+    preregister: {
+        emailSubject: "Activate your Harvesters Reporting account",
+        emailIntro: "Your account has been pre-created. Click below to set your password and sign in.",
+        actionLabel: "Activate account",
+        expiryNote: "This link will expire in",
+    },
+
+    activation: {
+        pageTitle: "Activate your account",
+        subtitle: "Set a new password to finish activating.",
+        invalidTitle: "Activation link invalid or expired",
+        invalidDescription: "Ask your admin to send a new activation link.",
+        successTitle: "Account activated",
+        successDescription: "You can now sign in with your new password.",
+        actionSubmit: "Activate and sign in",
     },
 
     /* ── SEO / Meta ──────────────────────────────────────────────────────────── */

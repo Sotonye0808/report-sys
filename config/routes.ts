@@ -55,6 +55,23 @@ export const APP_ROUTES = {
     bugReports: "/bug-reports",
     bugReportsManage: "/bug-reports/manage",
 
+    /* — Admin Config (superadmin) — */
+    adminConfig: "/admin-config",
+
+    /* — Quick Form (USHER / DATA_ENTRY) — */
+    quickForm: "/quick-form",
+    quickFormFill: (assignmentId: string) => `/quick-form/${assignmentId}`,
+
+    /* — Spreadsheet Imports — */
+    imports: "/imports",
+    importDetail: (id: string) => `/imports/${id}`,
+
+    /* — Bulk Invites — */
+    invitesBulk: "/invites/bulk",
+
+    /* — Activation (after pre-register) — */
+    activate: "/activate",
+
     /* — Member (scaffolded, no routes built yet) — */
     member: {
         dashboard: "/member/dashboard",
@@ -74,6 +91,7 @@ export const ROLE_DASHBOARD_ROUTES: Record<UserRole, string> = {
     [UserRole.CAMPUS_PASTOR]: APP_ROUTES.dashboard,
     [UserRole.CAMPUS_ADMIN]: APP_ROUTES.dashboard,
     [UserRole.DATA_ENTRY]: APP_ROUTES.reports,
+    [UserRole.USHER]: APP_ROUTES.quickForm,
     [UserRole.MEMBER]: APP_ROUTES.dashboard,
 };
 
@@ -111,6 +129,7 @@ export const API_ROUTES = {
         editsReject: (id: string, editId: string) => `/api/reports/${id}/edits/${editId}/reject`,
         history: (id: string) => `/api/reports/${id}/history`,
         aggregate: "/api/reports/aggregate",
+        quickViews: (id: string) => `/api/reports/${id}/quick-views`,
     },
     reportTemplates: {
         list: "/api/report-templates",
@@ -180,5 +199,40 @@ export const API_ROUTES = {
         sessionFinalize: (id: string) => `/api/assets/sessions/${id}/finalize`,
         sessionDiscard: (id: string) => `/api/assets/sessions/${id}/discard`,
         cleanup: "/api/assets/cleanup",
+    },
+    adminConfig: {
+        list: "/api/admin-config",
+        public: "/api/admin-config/public",
+        namespace: (ns: string) => `/api/admin-config/${ns}`,
+        reset: (ns: string) => `/api/admin-config/${ns}/reset`,
+    },
+    formAssignments: {
+        list: "/api/form-assignments",
+        detail: (id: string) => `/api/form-assignments/${id}`,
+        complete: (id: string) => `/api/form-assignments/${id}/complete`,
+        cancel: (id: string) => `/api/form-assignments/${id}/cancel`,
+        materialise: "/api/form-assignments/materialise",
+    },
+    imports: {
+        list: "/api/imports",
+        detail: (id: string) => `/api/imports/${id}`,
+        file: (id: string) => `/api/imports/${id}/file`,
+        mapping: (id: string) => `/api/imports/${id}/mapping`,
+        validate: (id: string) => `/api/imports/${id}/validate`,
+        commit: (id: string) => `/api/imports/${id}/commit`,
+        cancel: (id: string) => `/api/imports/${id}/cancel`,
+        profiles: "/api/imports/profiles",
+    },
+    inviteLinksBulk: "/api/invite-links/bulk",
+    preregister: "/api/users/preregister",
+    activate: "/api/auth/activate",
+    pwaDismissal: "/api/notifications/pwa-dismissal",
+    emailTest: "/api/email/test",
+    impersonation: {
+        start: "/api/impersonation/start",
+        stop: "/api/impersonation/stop",
+        me: "/api/impersonation/me",
+        mode: "/api/impersonation/mode",
+        sessions: "/api/impersonation/sessions",
     },
 } as const;

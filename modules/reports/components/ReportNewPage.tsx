@@ -38,6 +38,18 @@ import {
 } from "./ReportSectionsForm";
 import { ReportPeriodType, UserRole } from "@/types/global";
 import { calculateReportDeadline, formattedDeadlinePolicy } from "@/lib/utils/deadline";
+import { renderTitle } from "@/lib/utils/reportTitle";
+import { quarterFromMonth } from "@/lib/utils/cadence";
+
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+interface TemplateRecurrence {
+  recurrenceFrequency?: ReportPeriodType | null;
+  autoFillTitleTemplate?: string | null;
+}
 
 /* ---- Period type options ---- */
 
@@ -176,6 +188,7 @@ export function ReportNewPage() {
       if (defaultTemplate) {
         form.setFieldValue("templateId", defaultTemplate.id);
         setSelectedTemplate(defaultTemplate);
+        applyTemplateAutoFill(defaultTemplate, cs);
       }
 
       if (!pickerValueRef.current) {
@@ -246,9 +259,48 @@ export function ReportNewPage() {
       const tmpl = templates.find((t) => t.id === templateId) ?? null;
       setSelectedTemplate(tmpl);
       setMetricValues({});
+      if (tmpl) applyTemplateAutoFill(tmpl, campuses);
     },
-    [templates],
+    [templates, campuses],
   );
+
+  /**
+   * Auto-fill title + period type from the template's recurrence + auto-fill
+   * title template. Backwards-compatible: legacy templates without these
+   * fields no-op. The user can override either input freely after auto-fill.
+   */
+  function applyTemplateAutoFill(template: ReportTemplate, campusList: Campus[]) {
+    const t = template as unknown as ReportTemplate & TemplateRecurrence;
+    if (t.recurrenceFrequency) {
+      const currentPeriodType = form.getFieldValue("periodType") as ReportPeriodType | undefined;
+      if (!currentPeriodType || currentPeriodType !== t.recurrenceFrequency) {
+        form.setFieldValue("periodType", t.recurrenceFrequency);
+      }
+    }
+    if (t.autoFillTitleTemplate) {
+      const currentTitle = (form.getFieldValue("title") as string | undefined) ?? "";
+      if (currentTitle.trim().length === 0) {
+        const now = pickerValueRef.current ?? dayjs();
+        const month = now.month() + 1;
+        const campusId = (form.getFieldValue("campusId") as string | undefined) ?? user?.campusId;
+        const campus = campusId ? campusList.find((c) => c.id === campusId) : undefined;
+        const { title } = renderTitle(t.autoFillTitleTemplate, {
+          campus: campus?.name,
+          period:
+            t.recurrenceFrequency === ReportPeriodType.MONTHLY
+              ? `${MONTH_NAMES[month - 1]} ${now.year()}`
+              : t.recurrenceFrequency === ReportPeriodType.YEARLY
+              ? String(now.year())
+              : `Week ${now.week()} ${now.year()}`,
+          weekNumber: now.week(),
+          monthName: MONTH_NAMES[month - 1],
+          quarter: quarterFromMonth(month),
+          year: now.year(),
+        });
+        if (title) form.setFieldValue("title", title);
+      }
+    }
+  }
 
   const handleMetricChange = useCallback((metricId: string, v: MetricValues) => {
     setMetricValues((prev) => ({ ...prev, [metricId]: v }));

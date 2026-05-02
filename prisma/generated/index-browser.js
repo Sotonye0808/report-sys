@@ -186,7 +186,10 @@ exports.Prisma.ReportTemplateScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deadlineOffsetHours: 'deadlineOffsetHours',
-  deadlinePolicy: 'deadlinePolicy'
+  deadlinePolicy: 'deadlinePolicy',
+  recurrenceFrequency: 'recurrenceFrequency',
+  recurrenceDays: 'recurrenceDays',
+  autoFillTitleTemplate: 'autoFillTitleTemplate'
 };
 
 exports.Prisma.ReportTemplateSectionScalarFieldEnum = {
@@ -195,7 +198,8 @@ exports.Prisma.ReportTemplateSectionScalarFieldEnum = {
   name: 'name',
   description: 'description',
   order: 'order',
-  isRequired: 'isRequired'
+  isRequired: 'isRequired',
+  correlationGroup: 'correlationGroup'
 };
 
 exports.Prisma.ReportTemplateMetricScalarFieldEnum = {
@@ -211,7 +215,8 @@ exports.Prisma.ReportTemplateMetricScalarFieldEnum = {
   order: 'order',
   capturesGoal: 'capturesGoal',
   capturesAchieved: 'capturesAchieved',
-  capturesYoY: 'capturesYoY'
+  capturesYoY: 'capturesYoY',
+  correlationGroup: 'correlationGroup'
 };
 
 exports.Prisma.ReportTemplateVersionScalarFieldEnum = {
@@ -247,6 +252,7 @@ exports.Prisma.ReportScalarFieldEnum = {
   dataEntryById: 'dataEntryById',
   dataEntryDate: 'dataEntryDate',
   notes: 'notes',
+  autoCreated: 'autoCreated',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -407,6 +413,8 @@ exports.Prisma.InviteLinkScalarFieldEnum = {
   usedAt: 'usedAt',
   expiresAt: 'expiresAt',
   isActive: 'isActive',
+  recipientEmail: 'recipientEmail',
+  batchId: 'batchId',
   createdAt: 'createdAt'
 };
 
@@ -476,6 +484,145 @@ exports.Prisma.AssetLifecycleEventScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.AdminConfigEntryScalarFieldEnum = {
+  id: 'id',
+  namespace: 'namespace',
+  version: 'version',
+  payload: 'payload',
+  isFallback: 'isFallback',
+  actorId: 'actorId',
+  notes: 'notes',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.FormAssignmentScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  assigneeId: 'assigneeId',
+  assignedById: 'assignedById',
+  metricIds: 'metricIds',
+  dueAt: 'dueAt',
+  completedAt: 'completedAt',
+  cancelledAt: 'cancelledAt',
+  notes: 'notes',
+  ruleId: 'ruleId',
+  periodKey: 'periodKey',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FormAssignmentRuleScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  templateId: 'templateId',
+  role: 'role',
+  assigneeId: 'assigneeId',
+  campusId: 'campusId',
+  orgGroupId: 'orgGroupId',
+  metricIds: 'metricIds',
+  cadenceOverride: 'cadenceOverride',
+  isActive: 'isActive',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ImportJobScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  templateId: 'templateId',
+  status: 'status',
+  fileName: 'fileName',
+  fileMime: 'fileMime',
+  fileBytes: 'fileBytes',
+  storageRef: 'storageRef',
+  mappingProfileId: 'mappingProfileId',
+  mapping: 'mapping',
+  validationSummary: 'validationSummary',
+  commitSummary: 'commitSummary',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ImportJobItemScalarFieldEnum = {
+  id: 'id',
+  jobId: 'jobId',
+  rowIndex: 'rowIndex',
+  rawValues: 'rawValues',
+  normalizedValues: 'normalizedValues',
+  outcome: 'outcome',
+  errors: 'errors',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ImportMappingProfileScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  templateId: 'templateId',
+  name: 'name',
+  mapping: 'mapping',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BulkInviteBatchScalarFieldEnum = {
+  id: 'id',
+  createdById: 'createdById',
+  kind: 'kind',
+  sharedAttrs: 'sharedAttrs',
+  totalEntries: 'totalEntries',
+  successCount: 'successCount',
+  skippedCount: 'skippedCount',
+  failedCount: 'failedCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PwaPromptDismissalScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  kind: 'kind',
+  platform: 'platform',
+  mode: 'mode',
+  nextEligibleAt: 'nextEligibleAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserActivationTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ImpersonationSessionScalarFieldEnum = {
+  id: 'id',
+  superadminId: 'superadminId',
+  impersonatedRole: 'impersonatedRole',
+  impersonatedUserId: 'impersonatedUserId',
+  mode: 'mode',
+  startedAt: 'startedAt',
+  expiresAt: 'expiresAt',
+  endedAt: 'endedAt',
+  endedReason: 'endedReason',
+  eventCount: 'eventCount'
+};
+
+exports.Prisma.ImpersonationEventScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  type: 'type',
+  path: 'path',
+  method: 'method',
+  status: 'status',
+  requestId: 'requestId',
+  payloadDigest: 'payloadDigest',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -522,7 +669,8 @@ exports.UserRole = exports.$Enums.UserRole = {
   CAMPUS_ADMIN: 'CAMPUS_ADMIN',
   DATA_ENTRY: 'DATA_ENTRY',
   MEMBER: 'MEMBER',
-  OFFICE_OF_CEO: 'OFFICE_OF_CEO'
+  OFFICE_OF_CEO: 'OFFICE_OF_CEO',
+  USHER: 'USHER'
 };
 
 exports.ReportDeadlinePolicy = exports.$Enums.ReportDeadlinePolicy = {
@@ -530,6 +678,12 @@ exports.ReportDeadlinePolicy = exports.$Enums.ReportDeadlinePolicy = {
   PERIOD_MIDDLE: 'PERIOD_MIDDLE',
   PERIOD_END: 'PERIOD_END',
   AFTER_PERIOD_HOURS: 'AFTER_PERIOD_HOURS'
+};
+
+exports.ReportPeriodType = exports.$Enums.ReportPeriodType = {
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+  YEARLY: 'YEARLY'
 };
 
 exports.MetricFieldType = exports.$Enums.MetricFieldType = {
@@ -543,12 +697,6 @@ exports.MetricCalculationType = exports.$Enums.MetricCalculationType = {
   SUM: 'SUM',
   AVERAGE: 'AVERAGE',
   SNAPSHOT: 'SNAPSHOT'
-};
-
-exports.ReportPeriodType = exports.$Enums.ReportPeriodType = {
-  WEEKLY: 'WEEKLY',
-  MONTHLY: 'MONTHLY',
-  YEARLY: 'YEARLY'
 };
 
 exports.ReportStatus = exports.$Enums.ReportStatus = {
@@ -700,6 +848,66 @@ exports.AssetLifecycleEventType = exports.$Enums.AssetLifecycleEventType = {
   COMPENSATION_FAILED: 'COMPENSATION_FAILED'
 };
 
+exports.ImportJobStatus = exports.$Enums.ImportJobStatus = {
+  DRAFT: 'DRAFT',
+  FILE_UPLOADED: 'FILE_UPLOADED',
+  MAPPED: 'MAPPED',
+  VALIDATED: 'VALIDATED',
+  COMMITTED: 'COMMITTED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.ImportRowOutcome = exports.$Enums.ImportRowOutcome = {
+  OK: 'OK',
+  WARNING: 'WARNING',
+  ERROR: 'ERROR',
+  COMMITTED: 'COMMITTED'
+};
+
+exports.BulkInviteKind = exports.$Enums.BulkInviteKind = {
+  INVITE_LINK: 'INVITE_LINK',
+  PRE_REGISTER: 'PRE_REGISTER'
+};
+
+exports.PwaPromptKind = exports.$Enums.PwaPromptKind = {
+  INSTALL: 'INSTALL',
+  PUSH: 'PUSH'
+};
+
+exports.PwaPromptPlatform = exports.$Enums.PwaPromptPlatform = {
+  IOS: 'IOS',
+  ANDROID: 'ANDROID',
+  DESKTOP: 'DESKTOP'
+};
+
+exports.PwaDismissalMode = exports.$Enums.PwaDismissalMode = {
+  snooze: 'snooze',
+  never: 'never'
+};
+
+exports.ImpersonationMode = exports.$Enums.ImpersonationMode = {
+  READ_ONLY: 'READ_ONLY',
+  MUTATE: 'MUTATE'
+};
+
+exports.ImpersonationEndReason = exports.$Enums.ImpersonationEndReason = {
+  USER: 'USER',
+  EXPIRED: 'EXPIRED',
+  TOKEN_INVALIDATED: 'TOKEN_INVALIDATED'
+};
+
+exports.ImpersonationEventType = exports.$Enums.ImpersonationEventType = {
+  STARTED: 'STARTED',
+  STOPPED: 'STOPPED',
+  MODE_CHANGED: 'MODE_CHANGED',
+  MUTATION_BLOCKED: 'MUTATION_BLOCKED',
+  MUTATION_APPLIED: 'MUTATION_APPLIED',
+  PAGE_VISITED: 'PAGE_VISITED',
+  AUTH_REJECTED: 'AUTH_REJECTED',
+  EVENT_LIMIT_REACHED: 'EVENT_LIMIT_REACHED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   OrgGroup: 'OrgGroup',
@@ -724,7 +932,18 @@ exports.Prisma.ModelName = {
   BugReport: 'BugReport',
   MediaAsset: 'MediaAsset',
   AssetUploadSession: 'AssetUploadSession',
-  AssetLifecycleEvent: 'AssetLifecycleEvent'
+  AssetLifecycleEvent: 'AssetLifecycleEvent',
+  AdminConfigEntry: 'AdminConfigEntry',
+  FormAssignment: 'FormAssignment',
+  FormAssignmentRule: 'FormAssignmentRule',
+  ImportJob: 'ImportJob',
+  ImportJobItem: 'ImportJobItem',
+  ImportMappingProfile: 'ImportMappingProfile',
+  BulkInviteBatch: 'BulkInviteBatch',
+  PwaPromptDismissal: 'PwaPromptDismissal',
+  UserActivationToken: 'UserActivationToken',
+  ImpersonationSession: 'ImpersonationSession',
+  ImpersonationEvent: 'ImpersonationEvent'
 };
 
 /**

@@ -22,6 +22,7 @@ export enum UserRole {
     CAMPUS_PASTOR = "CAMPUS_PASTOR",
     CAMPUS_ADMIN = "CAMPUS_ADMIN",
     DATA_ENTRY = "DATA_ENTRY",
+    USHER = "USHER",
     MEMBER = "MEMBER",
 }
 
@@ -221,7 +222,8 @@ export const HIERARCHY_ORDER: Record<UserRole, number> = {
     [UserRole.CAMPUS_PASTOR]: 7,
     [UserRole.CAMPUS_ADMIN]: 8,
     [UserRole.DATA_ENTRY]: 9,
-    [UserRole.MEMBER]: 10,
+    [UserRole.USHER]: 10,
+    [UserRole.MEMBER]: 11,
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -236,7 +238,10 @@ declare global {
         id: string;
         email: string;
         pendingEmail?: string;
+        /** Effective role: equals `actualRole` unless impersonating. */
         role: UserRole;
+        /** The user's real role; equals `role` unless an impersonation session is active. */
+        actualRole?: UserRole;
         campusId?: string;
         orgGroupId?: string;
         firstName: string;
@@ -245,6 +250,14 @@ declare global {
         isEmailVerified?: boolean;
         emailVerifiedAt?: string;
         emailServiceReady?: boolean;
+        /** Active impersonation session, if any. SUPERADMIN-only. */
+        impersonation?: {
+            sessionId: string;
+            impersonatedRole: UserRole;
+            impersonatedUserId?: string;
+            mode: "READ_ONLY" | "MUTATE";
+            expiresAt: string;
+        };
     }
 
     interface AuthContextValue {
@@ -253,6 +266,13 @@ declare global {
         login: (email: string, password: string, rememberMe?: boolean, redirectTo?: string) => Promise<void>;
         logout: () => Promise<void>;
         refreshToken: () => Promise<void>;
+        startImpersonation: (input: {
+            impersonatedRole: UserRole;
+            impersonatedUserId?: string;
+            mode?: "READ_ONLY" | "MUTATE";
+        }) => Promise<void>;
+        stopImpersonation: () => Promise<void>;
+        switchImpersonationMode: (mode: "READ_ONLY" | "MUTATE") => Promise<void>;
     }
 
     interface UserProfile {
@@ -378,6 +398,9 @@ declare global {
         isDefault: boolean;
         deadlinePolicy?: ReportDeadlinePolicy;
         deadlineOffsetHours?: number;
+        recurrenceFrequency?: ReportPeriodType | null;
+        recurrenceDays?: number[];
+        autoFillTitleTemplate?: string | null;
         createdById: string;
         campusId?: string;
         orgGroupId?: string;
@@ -392,6 +415,7 @@ declare global {
         description?: string;
         order: number;
         isRequired: boolean;
+        correlationGroup?: string | null;
         metrics: ReportTemplateMetric[];
     }
 
@@ -409,6 +433,7 @@ declare global {
         capturesGoal: boolean;
         capturesAchieved: boolean;
         capturesYoY: boolean;
+        correlationGroup?: string | null;
     }
 
     interface ReportTemplateVersion {
@@ -704,12 +729,31 @@ declare global {
         createdAt: string;
     }
 
+    /** Per-role recurring cadence: drives auto-fill of report period + title and recurring assignment expansion. */
+    interface RoleCadence {
+        /** Period type for reports this role fills. */
+        frequency: ReportPeriodType | "TWICE_WEEKLY" | "ANY";
+        /** Days of week (0=Sun … 6=Sat) the role is expected to enter. Empty = no constraint. */
+        expectedDays: number[];
+        /** Hours after the period boundary by which entry is expected. */
+        deadlineHours: number;
+        /** Optional title template e.g. "Weekly Report — {campus} — {period}". Allowlisted placeholders only. */
+        autoFillTitleTemplate?: string;
+    }
+
     interface RoleConfig {
         role: UserRole;
         label: string;
         hierarchyOrder: number;
         dashboardRoute: string;
-        dashboardMode: "report-fill" | "report-review" | "report-reviewed" | "analytics" | "system";
+        dashboardMode:
+            | "report-fill"
+            | "report-review"
+            | "report-reviewed"
+            | "analytics"
+            | "system"
+            | "scope-overview"
+            | "quick-form";
         canCreateReports: boolean;
         canFillReports: boolean;
         canSubmitReports: boolean;
@@ -723,7 +767,123 @@ declare global {
         canManageOrg: boolean;
         canSetGoals: boolean;
         canApproveGoalUnlock: boolean;
+        canQuickFormFill?: boolean;
+        canManageAdminConfig?: boolean;
+        canImportSpreadsheets?: boolean;
+        canBulkInvite?: boolean;
+        canViewScopeOverview?: boolean;
+        cadence?: RoleCadence;
         reportVisibilityScope: "own" | "campus" | "group" | "all";
+    }
+
+    /* ── Admin Config + Form Assignment + Imports + PWA + Bulk Invite ───────── */
+
+    type AdminConfigNamespace =
+        | "roles"
+        | "hierarchy"
+        | "dashboardLayout"
+        | "templatesMapping"
+        | "imports"
+        | "pwaInstall"
+        | "bulkInvites"
+        | "analytics";
+
+    interface AdminConfigEntry {
+        id: string;
+        namespace: AdminConfigNamespace | string;
+        version: number;
+        payload: Record<string, unknown>;
+        isFallback: boolean;
+        actorId: string;
+        createdAt: string;
+    }
+
+    interface FormAssignment {
+        id: string;
+        reportId: string;
+        assigneeId: string;
+        assignedById: string;
+        metricIds: string[];
+        dueAt?: string;
+        completedAt?: string;
+        cancelledAt?: string;
+        notes?: string;
+        createdAt: string;
+        updatedAt: string;
+    }
+
+    interface ImportJob {
+        id: string;
+        ownerId: string;
+        templateId?: string;
+        status:
+            | "DRAFT"
+            | "FILE_UPLOADED"
+            | "MAPPED"
+            | "VALIDATED"
+            | "COMMITTED"
+            | "FAILED"
+            | "CANCELLED";
+        fileName?: string;
+        fileMime?: string;
+        fileBytes?: number;
+        mappingProfileId?: string;
+        mapping?: Record<string, unknown>;
+        validationSummary?: Record<string, unknown>;
+        commitSummary?: Record<string, unknown>;
+        createdAt: string;
+        updatedAt: string;
+    }
+
+    interface ImportJobItem {
+        id: string;
+        jobId: string;
+        rowIndex: number;
+        rawValues: Record<string, unknown>;
+        normalizedValues?: Record<string, unknown>;
+        outcome: "OK" | "WARNING" | "ERROR" | "COMMITTED";
+        errors?: string[];
+    }
+
+    interface ImportMappingProfile {
+        id: string;
+        ownerId: string;
+        templateId?: string;
+        name: string;
+        mapping: Record<string, unknown>;
+        createdAt: string;
+        updatedAt: string;
+    }
+
+    interface BulkInviteBatch {
+        id: string;
+        createdById: string;
+        kind: "INVITE_LINK" | "PRE_REGISTER";
+        sharedAttrs?: Record<string, unknown>;
+        totalEntries: number;
+        successCount: number;
+        skippedCount: number;
+        failedCount: number;
+        createdAt: string;
+    }
+
+    interface PwaPromptDismissal {
+        id: string;
+        userId: string;
+        kind: "INSTALL" | "PUSH";
+        platform: "IOS" | "ANDROID" | "DESKTOP";
+        mode: "snooze" | "never";
+        nextEligibleAt?: string;
+        createdAt: string;
+    }
+
+    interface UserActivationToken {
+        id: string;
+        userId: string;
+        tokenHash: string;
+        expiresAt: string;
+        usedAt?: string;
+        createdAt: string;
     }
 
     interface OrgLevelConfig {
@@ -843,6 +1003,16 @@ declare global {
         common: Record<string, unknown>;
         footer: Record<string, unknown>;
         offline: Record<string, unknown>;
+        usersList: Record<string, unknown>;
+        reportsQuickViews: Record<string, unknown>;
+        impersonation: Record<string, unknown>;
+        adminConfig: Record<string, unknown>;
+        imports: Record<string, unknown>;
+        quickForm: Record<string, unknown>;
+        pwaInstall: Record<string, unknown>;
+        bulkInvites: Record<string, unknown>;
+        preregister: Record<string, unknown>;
+        activation: Record<string, unknown>;
         seo: Record<string, string>;
     }
 }

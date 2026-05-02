@@ -20,6 +20,7 @@ import {
   BellOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 import Image from "next/image";
@@ -33,6 +34,9 @@ import Button from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { AppFooter } from "@/components/ui/AppFooter";
+import { PwaInstallBanner } from "@/components/ui/PwaInstallBanner";
+import { ImpersonationBanner } from "@/components/ui/ImpersonationBanner";
+import { ImpersonationStartDialog } from "@/modules/admin-config/components/ImpersonationStartDialog";
 import { UserRole } from "@/types/global";
 
 const SIDEBAR_FULL_WIDTH = 240;
@@ -128,10 +132,13 @@ function Sidebar({ navItems, currentPath, collapsed, onClose }: SidebarProps) {
 interface UserMenuProps {
   user: AuthUser;
   onLogout: () => void;
+  onStartImpersonation: () => void;
 }
 
-function UserMenu({ user, onLogout }: UserMenuProps) {
+function UserMenu({ user, onLogout, onStartImpersonation }: UserMenuProps) {
   const router = useRouter();
+  const isSuperadmin = (user.actualRole ?? user.role) === UserRole.SUPERADMIN;
+  const impersonationActive = Boolean(user.impersonation);
 
   const items: MenuProps["items"] = [
     {
@@ -153,6 +160,17 @@ function UserMenu({ user, onLogout }: UserMenuProps) {
       label: CONTENT.nav.profile,
       onClick: () => router.push(APP_ROUTES.profile),
     },
+    ...(isSuperadmin && !impersonationActive
+      ? [
+          { type: "divider" as const },
+          {
+            key: "start-impersonation",
+            icon: <UserSwitchOutlined />,
+            label: ((CONTENT.impersonation as unknown) as Record<string, string>)?.startTitle ?? "Preview as another role",
+            onClick: onStartImpersonation,
+          },
+        ]
+      : []),
     { type: "divider" },
     {
       key: "logout",
@@ -190,6 +208,7 @@ interface HeaderProps {
   onDesktopCollapseToggle: () => void;
   sidebarCollapsed: boolean;
   onLogout: () => void;
+  onStartImpersonation: () => void;
   unreadCount?: number;
 }
 
@@ -199,6 +218,7 @@ function Header({
   onDesktopCollapseToggle,
   sidebarCollapsed,
   onLogout,
+  onStartImpersonation,
   unreadCount = 0,
 }: HeaderProps) {
   const router = useRouter();
@@ -243,7 +263,7 @@ function Header({
           </Badge>
         </button>
 
-        <UserMenu user={user} onLogout={onLogout} />
+        <UserMenu user={user} onLogout={onLogout} onStartImpersonation={onStartImpersonation} />
       </div>
     </header>
   );
@@ -257,6 +277,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { user, isLoading, logout } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [impersonationDialogOpen, setImpersonationDialogOpen] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
 
   // Close mobile drawer on route change
@@ -329,9 +350,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           onDesktopCollapseToggle={() => setSidebarCollapsed((v) => !v)}
           sidebarCollapsed={sidebarCollapsed}
           onLogout={logout}
+          onStartImpersonation={() => setImpersonationDialogOpen(true)}
           unreadCount={unreadCount}
         />
+        <ImpersonationStartDialog
+          open={impersonationDialogOpen}
+          onClose={() => setImpersonationDialogOpen(false)}
+        />
         <main ref={mainRef} className="flex-1 overflow-y-auto p-4 md:p-6">
+          <ImpersonationBanner />
+          <PwaInstallBanner />
           {children}
           <AppFooter className="mt-8 border-t border-ds-border-subtle" />
           <ScrollToTop scrollContainerRef={mainRef} />

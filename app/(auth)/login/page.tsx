@@ -94,6 +94,8 @@ function LoginForm() {
           ]}
         >
           <Input
+            type="email"
+            inputMode="email"
             prefix={<UserOutlined className="text-ds-text-subtle" />}
             placeholder={CONTENT.auth.emailPlaceholder}
             size="large"

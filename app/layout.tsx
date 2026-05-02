@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AntdProvider } from "@/providers/AntdProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { RoleConfigProvider } from "@/providers/RoleConfigProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { ServiceWorkerRegistrar } from "@/components/ui/ServiceWorkerRegistrar";
 import OfflineIndicator from "@/components/ui/OfflineIndicator";
@@ -84,16 +85,18 @@ export default function RootLayout({
         >
           <AntdProvider>
             <AuthProvider>
-              {/* Skip to main content — accessibility */}
-              <a
-                href="#main-content"
-                className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-md focus-visible:bg-ds-brand-accent focus-visible:text-white"
-              >
-                Skip to main content
-              </a>
-              <main id="main-content">{children}</main>
-              <OfflineIndicator />
-              <ServiceWorkerRegistrar />
+              <RoleConfigProvider>
+                {/* Skip to main content — accessibility */}
+                <a
+                  href="#main-content"
+                  className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-md focus-visible:bg-ds-brand-accent focus-visible:text-white"
+                >
+                  Skip to main content
+                </a>
+                <main id="main-content">{children}</main>
+                <OfflineIndicator />
+                <ServiceWorkerRegistrar />
+              </RoleConfigProvider>
             </AuthProvider>
           </AntdProvider>
         </ThemeProvider>

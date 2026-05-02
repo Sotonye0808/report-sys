@@ -33,6 +33,7 @@ The Harvesters Central Reporting System is a **standalone, role-based web applic
 | CAMPUS_PASTOR   | Campus Pastor   | /leader     | Reviews submitted campus reports; approves or requests edits                                                    |
 | CAMPUS_ADMIN    | Campus Admin    | /leader     | Primary report filler; compiles and submits consolidated campus report                                          |
 | DATA_ENTRY      | Data Entry      | /leader     | Enters historical/back-filled reports with custom date selection; no review/approval capabilities               |
+| USHER           | Usher           | /quick-form | Quick-form data entry only; sees only metrics assigned to them via `FormAssignment` and never the goal context  |
 | MEMBER          | Member          | /member     | Scaffolded only — defined in enums and ROLE_CONFIG but no routes built in this iteration                        |
 
 ---
@@ -47,6 +48,16 @@ The Harvesters Central Reporting System is a **standalone, role-based web applic
 - No relic CRM features (see Out of Scope)
 - All IDs are UUIDs; no hardcoded org/campus/group IDs
 - Design tokens (`--ds-*`) are the only allowed color/spacing source
+- Admin-editable config substrate (`lib/data/adminConfig.ts`) must remain DB-first with `config/*` as the immutable fallback. No role names, dashboard widget IDs, metric IDs, push install copy, or import-mapping shapes may be hardcoded in module code — bind them through the namespace loader so admins can tune them at runtime without a deploy.
+- Role labels, capabilities, hierarchy order, dashboard mode, and visibility scope are runtime-CRUDable for every role **except SUPERADMIN**, which is absolute. `lib/auth/permissions.ts` (`sanitiseRoleConfigPayload` + `freezeSuperadmin`) enforces this server-side regardless of payload contents.
+- Hierarchy levels are runtime-CRUDable in shape and depth (group → campus today, but admins can add/remove/reorder levels and bind leader/admin roles per level via the `hierarchy` admin-config namespace). All hierarchy-aware code reads through `resolveHierarchyLevels()` with `ORG_HIERARCHY_CONFIG` as the immutable fallback.
+- Per-role cadence (frequency, expected weekdays, deadline hours, auto-fill title template) is admin-editable through the `roleCadence` namespace with hardcoded `RoleConfig.cadence` fallbacks. Cadence drives recurring-assignment expansion, report-shell auto-creation, and the auto-filled report title + period. SUPERADMIN does not fill reports and has no cadence.
+- Existing reports and templates must continue to function when new optional fields are absent. Read paths must null-coalesce to safe defaults: legacy templates resolve recurrence from role cadence, legacy reports without `autoCreated` are treated as user-created, metrics without `correlationGroup` are silently excluded from correlation analytics rather than raising.
+- Migrations against any data-bearing environment are strictly additive. Never use `prisma migrate reset` or any destructive operation; apply with `prisma migrate deploy`. Drift resolution uses `prisma migrate resolve` only when explicitly approved.
+- SUPERADMIN may impersonate any non-SUPERADMIN role for time-limited preview (default 30 min). Mutations are gated by a server-enforced read-only mode by default; switching to mutate mode tags every audit row + side-effect with the impersonation context. SUPERADMIN identity always remains the actor of record. Impersonating SUPERADMIN is forbidden by both UI and server.
+- Email content (subjects, HTML, placeholder variables) is admin-editable through the `emailTemplates` admin-config namespace. Hardcoded templates in `lib/email/templates/definitions.ts` remain the immutable fallback; the per-template variable allowlist is fixed by the registry and not extensible at runtime.
+- Users table is the canonical user directory: it surfaces invited (`PENDING_INVITE`) and pre-registered (`ACTIVATION_PENDING`) users alongside active accounts. Filters live in `config/content.ts.usersList.statusLabels`.
+- AdminConfigPage uses bespoke GUI editors for every namespace; the JSON editor is retained only as a defensive fallback for unknown namespaces.
 
 ---
 

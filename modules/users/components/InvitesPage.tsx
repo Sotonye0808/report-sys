@@ -172,6 +172,9 @@ function CreateInviteForm({ currentRole, onCreated }: CreateFormProps) {
           rules={[{ type: "email", message: "Please enter a valid email." }]}
         >
           <input
+            type="email"
+            inputMode="email"
+            autoComplete="email"
             className="border border-ds-border-base rounded-ds-md px-3 py-1.5 text-sm bg-ds-surface-base text-ds-text-primary focus:outline-none focus:ring-2 focus:ring-ds-brand-accent w-full"
             placeholder={
               ((CONTENT.invites as any).recipientEmailPlaceholder as string) ??

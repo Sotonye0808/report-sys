@@ -7,8 +7,10 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Tooltip } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
+import { Tooltip, Tag } from "antd";
+import { EyeOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { useAuth } from "@/providers/AuthProvider";
+import { ImpersonationStartDialog } from "@/modules/admin-config/components/ImpersonationStartDialog";
 import type { ColumnsType } from "antd/es/table";
 import { useApiData } from "@/lib/hooks/useApiData";
 import { API_ROUTES } from "@/config/routes";
@@ -19,32 +21,56 @@ import { FilterToolbar } from "@/components/ui/FilterToolbar";
 import { Table } from "@/components/ui/Table";
 import { Pagination } from "@/components/ui/Pagination";
 import { PageLayout } from "@/components/ui/PageLayout";
-import { RoleBadge, ActiveBadge } from "@/components/ui/StatusBadge";
+import { RoleBadge } from "@/components/ui/StatusBadge";
 import SearchInput from "@/components/ui/SearchInput";
 import { UserRole } from "@/types/global";
 
 const DEFAULT_PAGE_SIZE = 20;
 
+type DirectoryStatus = "ACTIVE" | "INACTIVE" | "ACTIVATION_PENDING" | "PENDING_INVITE";
+
+interface DirectoryRow {
+  id: string;
+  source: "user" | "invite";
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole | null;
+  status: DirectoryStatus;
+  campusId?: string | null;
+  orgGroupId?: string | null;
+  createdAt: string;
+  inviteExpiresAt?: string;
+  activationExpiresAt?: string;
+}
+
 interface Filters {
   search: string;
   role: UserRole | "";
-  active: "true" | "false" | "";
+  status: DirectoryStatus | "";
 }
 
-const DEFAULT_FILTERS: Filters = { search: "", role: "", active: "" };
+const DEFAULT_FILTERS: Filters = { search: "", role: "", status: "" };
+const STATUS_LABELS = ((CONTENT.usersList as unknown) as Record<string, Record<string, string>>).statusLabels ?? {};
+const STATUS_COLORS = ((CONTENT.usersList as unknown) as Record<string, Record<string, string>>).statusColors ?? {};
 
 const ROLE_OPTIONS = Object.values(UserRole).map((r) => ({
   value: r,
   label: CONTENT.users.roles[r as keyof typeof CONTENT.users.roles] ?? r,
 }));
 
+const IMPERSONATION_COPY = ((CONTENT.impersonation ?? {}) as Record<string, unknown>);
+
 export function UsersListPage() {
+  const { user: currentUser } = useAuth();
+  const [impersonationTarget, setImpersonationTarget] = useState<{ role: UserRole; userId: string } | null>(null);
+  const canImpersonate = (currentUser?.actualRole ?? currentUser?.role) === UserRole.SUPERADMIN;
   const router = useRouter();
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [currentPage, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
 
-  const { data: users } = useApiData<UserProfile[]>(API_ROUTES.users.list);
+  const { data: users } = useApiData<DirectoryRow[]>(`${API_ROUTES.users.list}?includeInvited=true`);
   const { data: campuses } = useApiData<Campus[]>(API_ROUTES.org.campuses);
   const campusNamesById = useMemo(
     () => new Map((campuses ?? []).map((campus) => [campus.id, campus.name])),
@@ -55,10 +81,7 @@ export function UsersListPage() {
     if (!users) return [];
     return users.filter((u) => {
       if (filters.role && u.role !== filters.role) return false;
-      if (filters.active !== "") {
-        const active = filters.active === "true";
-        if (u.isActive !== active) return false;
-      }
+      if (filters.status !== "" && u.status !== filters.status) return false;
       if (filters.search) {
         const q = filters.search.toLowerCase();
         const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
@@ -78,26 +101,29 @@ export function UsersListPage() {
     setPage(1);
   }, []);
 
-  const columns: ColumnsType<UserProfile> = [
+  const columns: ColumnsType<DirectoryRow> = [
     {
       key: "name",
       title: CONTENT.users.nameLabel as string,
       dataIndex: "firstName",
-      render: (_v, u) => (
-        <div>
-          <p className="text-sm font-medium text-ds-text-primary">
-            {u.firstName} {u.lastName}
-          </p>
-          <p className="text-xs text-ds-text-subtle">{u.email}</p>
-        </div>
-      ),
+      render: (_v, u) => {
+        const name = `${u.firstName} ${u.lastName}`.trim();
+        return (
+          <div>
+            <p className="text-sm font-medium text-ds-text-primary">
+              {name || (u.source === "invite" ? "—" : u.email)}
+            </p>
+            <p className="text-xs text-ds-text-subtle">{u.email}</p>
+          </div>
+        );
+      },
     },
     {
       key: "role",
       title: CONTENT.users.roleLabel as string,
       dataIndex: "role",
       width: 160,
-      render: (v) => <RoleBadge role={v as UserRole} />,
+      render: (v) => (v ? <RoleBadge role={v as UserRole} /> : <span className="text-ds-text-subtle text-xs">—</span>),
     },
     {
       key: "campus",
@@ -114,28 +140,44 @@ export function UsersListPage() {
     {
       key: "status",
       title: CONTENT.users.statusLabel as string,
-      dataIndex: "isActive",
-      width: 100,
-      render: (v) => <ActiveBadge isActive={v as boolean} />,
+      dataIndex: "status",
+      width: 160,
+      render: (v) => {
+        const key = v as DirectoryStatus;
+        return <Tag color={STATUS_COLORS[key] ?? "default"}>{STATUS_LABELS[key] ?? key}</Tag>;
+      },
     },
     {
       key: "actions",
       title: "",
       width: 60,
-      render: (_v, u) => (
-        <Tooltip title={CONTENT.common.view as string}>
-          <Button
-            type="text"
-            size="small"
-            icon={<EyeOutlined />}
-            onClick={() => router.push(APP_ROUTES.userDetail(u.id))}
-          />
-        </Tooltip>
-      ),
+      render: (_v, u) =>
+        u.source === "user" ? (
+          <div className="flex items-center gap-1">
+            <Tooltip title={CONTENT.common.view as string}>
+              <Button
+                type="text"
+                size="small"
+                icon={<EyeOutlined />}
+                onClick={() => router.push(APP_ROUTES.userDetail(u.id))}
+              />
+            </Tooltip>
+            {canImpersonate && u.role && u.role !== UserRole.SUPERADMIN && u.status === "ACTIVE" && (
+              <Tooltip title={(IMPERSONATION_COPY.rowActionLabel as string) ?? "Preview as this user"}>
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<UserSwitchOutlined />}
+                  onClick={() => setImpersonationTarget({ role: u.role as UserRole, userId: u.id })}
+                />
+              </Tooltip>
+            )}
+          </div>
+        ) : null,
     },
   ];
 
-  const isFiltered = filters.role !== "" || filters.active !== "" || filters.search !== "";
+  const isFiltered = filters.role !== "" || filters.status !== "" || filters.search !== "";
 
   return (
     <PageLayout title={CONTENT.users.pageTitle as string}>
@@ -171,23 +213,31 @@ export function UsersListPage() {
         </select>
 
         <select
-          value={filters.active}
-          onChange={(e) => updateFilter({ active: e.target.value as "true" | "false" | "" })}
+          value={filters.status}
+          onChange={(e) => updateFilter({ status: e.target.value as DirectoryStatus | "" })}
           title={CONTENT.users.statusLabel as string}
           aria-label={CONTENT.users.statusLabel as string}
           className="h-9 px-3 rounded-ds-lg border border-ds-border-base bg-ds-surface-elevated text-sm text-ds-text-primary focus:outline-1 focus:outline-ds-brand-accent"
         >
-          <option value="">{CONTENT.users.statusLabel as string}</option>
-          <option value="true">{CONTENT.users.activeStatus as string}</option>
-          <option value="false">{CONTENT.users.inactiveStatus as string}</option>
+          <option value="">
+            {((CONTENT.usersList as unknown) as Record<string, string>).filterAll ?? "All"}
+          </option>
+          {(Object.keys(STATUS_LABELS) as DirectoryStatus[]).map((status) => (
+            <option key={status} value={status}>
+              {STATUS_LABELS[status]}
+            </option>
+          ))}
         </select>
       </FilterToolbar>
+      <p className="text-xs text-ds-text-subtle mb-3 mt-1">
+        {((CONTENT.usersList as unknown) as Record<string, string>).directoryHint ?? ""}
+      </p>
 
       <div className="bg-ds-surface-elevated rounded-ds-2xl border border-ds-border-base overflow-hidden">
-        <Table<UserProfile>
+        <Table<DirectoryRow>
           dataSource={paginated}
           columns={columns}
-          rowKey="id"
+          rowKey={(row) => `${row.source}:${row.id}`}
           loading={users === undefined}
           pagination={false}
           scroll={{ x: 600 }}
@@ -211,6 +261,14 @@ export function UsersListPage() {
           </div>
         )}
       </div>
+      {canImpersonate && (
+        <ImpersonationStartDialog
+          open={Boolean(impersonationTarget)}
+          onClose={() => setImpersonationTarget(null)}
+          presetRole={impersonationTarget?.role}
+          presetUserId={impersonationTarget?.userId}
+        />
+      )}
     </PageLayout>
   );
 }
