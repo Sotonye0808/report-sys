@@ -544,8 +544,14 @@ declare global {
         templateId: string;
         role?: UserRole | null;
         assigneeId?: string | null;
+        /** @deprecated Prefer `campusIds`. Kept for legacy rows. */
         campusId?: string | null;
+        /** @deprecated Prefer `orgGroupIds`. Kept for legacy rows. */
         orgGroupId?: string | null;
+        /** Empty array = applies to all campuses. */
+        campusIds?: string[];
+        /** Empty array = applies to all groups. */
+        orgGroupIds?: string[];
         metricIds: string[];
         cadenceOverride?: Record<string, unknown> | null;
         notes?: string | null;

@@ -523,6 +523,8 @@ exports.Prisma.FormAssignmentRuleScalarFieldEnum = {
   assigneeId: 'assigneeId',
   campusId: 'campusId',
   orgGroupId: 'orgGroupId',
+  campusIds: 'campusIds',
+  orgGroupIds: 'orgGroupIds',
   metricIds: 'metricIds',
   cadenceOverride: 'cadenceOverride',
   isActive: 'isActive',

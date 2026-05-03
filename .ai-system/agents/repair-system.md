@@ -464,3 +464,52 @@ Modal open flow unconditionally reset `interactiveBulk`, `interactiveGroups`, `b
 - `modules/org/components/OrgPage.tsx`
 
 **Date:** 2026-04-09
+
+## Form-assignment rule rejected with 400 for campus-scoped roles
+
+**Symptom:**
+Creating a quick-form rule for a campus-scoped role (e.g. USHER) returned `400 Bad Request` even though templates are platform-scoped. The validator forced a single `campusId` on every campus-bound role, but admins reasonably expect to define a rule that fans out across all campuses (or a hand-picked subset).
+
+**Root Cause:**
+`lib/data/formAssignmentRule.ts → validate` required `campusId` whenever `role` was in `CAMPUS_SCOPED_ROLES`. UI seeded role=USHER as the default so the very first POST always failed coherence.
+
+**Fix Applied:**
+- Added additive `campusIds String[] @default([])` and `orgGroupIds String[] @default([])` columns to `form_assignment_rules` (migration `20260503120000_form_assignment_rule_multi_scope`).
+- Removed the campus-required check from the validator; templates are platform-scoped and the materialiser keys reports off the user's own campus.
+- New `ruleMatchesUser` helper: empty arrays + null legacy fields ⇒ rule applies to every campus / group; otherwise the user's own scope must intersect.
+- UI editor switched to a multi-select per scope with placeholder **"Leave empty to apply to all campuses"**; PATCH body sends `campusIds`/`orgGroupIds` arrays and clears the legacy single-value column to avoid drift.
+
+**Prevention:**
+- When a model column expresses "scope", default to an array semantic (`empty = unbounded`). A single nullable scalar invites the wrong validator.
+- Validator coherence checks must respect that templates and rules can be platform-scoped even when target roles are campus-bound — the user supplies their own campus at materialise time.
+
+**Files Affected:**
+- `prisma/schema.prisma`
+- `prisma/migrations/20260503120000_form_assignment_rule_multi_scope/migration.sql`
+- `lib/data/formAssignmentRule.ts`
+- `lib/data/recurringAssignmentService.ts`
+- `app/api/form-assignment-rules/route.ts`
+- `app/api/form-assignment-rules/[id]/route.ts`
+- `modules/templates/components/TemplateAssignmentsEditor.tsx`
+- `types/global.ts`
+
+**Date:** 2026-05-03
+
+## Form-assignment editor active toggle stretched to full width
+
+**Symptom:**
+The "Active" Switch in the rule editor rendered with the full grid-column width instead of its compact pill, breaking the row's visual rhythm.
+
+**Root Cause:**
+The Switch sat directly inside a `flex flex-col` grid cell and inherited the cell's stretch behaviour. AntD's Switch is `display: inline-flex` by default, but inside a flex column it stretches.
+
+**Fix Applied:**
+Wrapped the Switch in a `<div className="flex items-center h-8">` so the Switch keeps its intrinsic width and the row keeps a consistent input-row height.
+
+**Prevention:**
+Inline controls that should keep their intrinsic width inside a flex column must be wrapped in an inline-flex anchor. Linting/visual review on any new Switch placed inside a flex/grid cell.
+
+**Files Affected:**
+- `modules/templates/components/TemplateAssignmentsEditor.tsx`
+
+**Date:** 2026-05-03

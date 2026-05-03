@@ -644,6 +644,8 @@ model FormAssignmentRule {
   assigneeId      String?
   campusId        String?
   orgGroupId      String?
+  campusIds       String[]  @default([])
+  orgGroupIds     String[]  @default([])
   metricIds       String[]
   cadenceOverride Json?
   isActive        Boolean   @default(true)
