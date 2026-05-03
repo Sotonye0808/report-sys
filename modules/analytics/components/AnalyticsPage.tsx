@@ -42,6 +42,7 @@ import {
   renderMetricChart,
   formatAxisLabel,
   ChartScrollContainer,
+  RotatedTick,
 } from "@/modules/analytics/chartUtils";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRole } from "@/lib/hooks/useRole";
@@ -54,6 +55,8 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import Card from "@/components/ui/Card";
 import { UserRole, MetricCalculationType, ReportStatus } from "@/types/global";
+import { MetricComparisonPanel } from "./MetricComparisonPanel";
+import { ReportComparisonPanel } from "./ReportComparisonPanel";
 
 /* ── API response types ───────────────────────────────────────────────────── */
 
@@ -1131,13 +1134,13 @@ export function AnalyticsPage() {
             <ChartScrollContainer minWidthClass="min-w-[820px]">
               <ResponsiveContainer width="100%" height={280}>
                 {overviewChartType === "line" ? (
-                  <LineChart data={campusBreakdownNamed}>
+                  <LineChart data={campusBreakdownNamed} margin={{ bottom: 40 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
                     <XAxis
                       dataKey="name"
-                      tick={{ fontSize: 10, fill: "var(--ds-text-subtle)" }}
                       interval={0}
-                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 20)}
+                      height={56}
+                      tick={<RotatedTick maxChars={14} />}
                     />
                     <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
                     <Tooltip contentStyle={TOOLTIP_STYLE} />
@@ -1156,13 +1159,13 @@ export function AnalyticsPage() {
                     />
                   </LineChart>
                 ) : overviewChartType === "area" ? (
-                  <AreaChart data={campusBreakdownNamed}>
+                  <AreaChart data={campusBreakdownNamed} margin={{ bottom: 40 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
                     <XAxis
                       dataKey="name"
-                      tick={{ fontSize: 10, fill: "var(--ds-text-subtle)" }}
                       interval={0}
-                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 20)}
+                      height={56}
+                      tick={<RotatedTick maxChars={14} />}
                     />
                     <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
                     <Tooltip contentStyle={TOOLTIP_STYLE} />
@@ -1187,11 +1190,9 @@ export function AnalyticsPage() {
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--ds-border-subtle)" />
                     <XAxis
                       dataKey="name"
-                      tick={{ fontSize: 10, fill: "var(--ds-text-subtle)" }}
-                      angle={-30}
-                      textAnchor="end"
                       interval={0}
-                      tickFormatter={(value) => formatAxisLabel(String(value), axisLabelMode, 20)}
+                      height={56}
+                      tick={<RotatedTick maxChars={14} />}
                     />
                     <YAxis tick={{ fontSize: 11, fill: "var(--ds-text-subtle)" }} />
                     <Tooltip contentStyle={TOOLTIP_STYLE} />
@@ -1929,6 +1930,12 @@ export function AnalyticsPage() {
       </div>
     );
 
+  const allLoadedReports = reportListData?.reports ?? [];
+  const firstTemplateId = allLoadedReports[0]?.templateId;
+  const { data: comparisonTemplate } = useApiData<ReportTemplate>(
+    firstTemplateId ? API_ROUTES.reportTemplates.detail(firstTemplateId) : null,
+  );
+
   const TAB_ITEMS = [
     { key: "overview", label: CONTENT.analytics.tab.overview as string, children: overviewTab },
     { key: "metrics", label: CONTENT.analytics.tab.metrics as string, children: metricsTab },
@@ -1942,6 +1949,18 @@ export function AnalyticsPage() {
       key: "quarterly",
       label: CONTENT.analytics.tab.quarterly as string,
       children: quarterlyTab,
+    },
+    {
+      key: "compare-metrics",
+      label: "Compare metrics",
+      children: (
+        <MetricComparisonPanel reports={allLoadedReports as never} template={comparisonTemplate ?? null} />
+      ),
+    },
+    {
+      key: "compare-reports",
+      label: "Compare reports",
+      children: <ReportComparisonPanel reports={allLoadedReports as never} />,
     },
   ];
 

@@ -222,20 +222,29 @@ export function ImportWizardPage({ jobId: initialJobId }: { jobId?: string }) {
         }
     };
 
+    // Grouped options keep the picker scannable: System | Template → Section → Metric.
     const metricOptions = useMemo(() => {
-        const options: Array<{ value: string; label: string }> = [
-            { value: "skip", label: "Skip" },
-            { value: "campusId", label: "Campus ID (system)" },
-            { value: "period", label: "Report period (system)" },
+        type Group = { label: string; options: Array<{ value: string; label: string }> };
+        const groups: Group[] = [
+            {
+                label: "System",
+                options: [
+                    { value: "skip", label: "Skip" },
+                    { value: "campusId", label: "Campus ID" },
+                    { value: "period", label: "Report period" },
+                ],
+            },
         ];
         for (const t of templates ?? []) {
             for (const sec of t.sections ?? []) {
-                for (const m of sec.metrics ?? []) {
-                    options.push({ value: m.id, label: `${t.name} → ${sec.name} → ${m.name}` });
-                }
+                if ((sec.metrics ?? []).length === 0) continue;
+                groups.push({
+                    label: `${t.name} → ${sec.name}`,
+                    options: (sec.metrics ?? []).map((m) => ({ value: m.id, label: m.name })),
+                });
             }
         }
-        return options;
+        return groups;
     }, [templates]);
 
     const stepIndex = STEP_INDEX[jobDetail?.status ?? "DRAFT"] ?? 0;

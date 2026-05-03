@@ -166,24 +166,28 @@ model ReportTemplateSection {
 }
 
 model ReportTemplateMetric {
-  id               String                @id @default(uuid())
-  sectionId        String
-  name             String
-  description      String?
-  fieldType        MetricFieldType       @default(NUMBER)
-  calculationType  MetricCalculationType @default(SUM)
-  isRequired       Boolean               @default(true)
-  minValue         Float?
-  maxValue         Float?
-  order            Int
-  capturesGoal     Boolean               @default(false)
-  capturesAchieved Boolean               @default(false)
-  capturesYoY      Boolean               @default(false)
-  correlationGroup String?
-  goals            Goal[]                @relation("GoalMetric")
-  metricEntries    MetricEntry[]
-  reportMetrics    ReportMetric[]
-  section          ReportTemplateSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  id                       String                @id @default(uuid())
+  sectionId                String
+  name                     String
+  description              String?
+  fieldType                MetricFieldType       @default(NUMBER)
+  calculationType          MetricCalculationType @default(SUM)
+  isRequired               Boolean               @default(true)
+  minValue                 Float?
+  maxValue                 Float?
+  order                    Int
+  capturesGoal             Boolean               @default(false)
+  capturesAchieved         Boolean               @default(false)
+  capturesYoY              Boolean               @default(false)
+  capturesWoW              Boolean               @default(false)
+  correlationGroup         String?
+  isAutoTotal              Boolean               @default(false)
+  autoTotalSourceMetricIds String[]              @default([])
+  autoTotalScope           String?               @default("SECTION")
+  goals                    Goal[]                @relation("GoalMetric")
+  metricEntries            MetricEntry[]
+  reportMetrics            ReportMetric[]
+  section                  ReportTemplateSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 
   @@index([sectionId])
   @@map("report_template_metrics")

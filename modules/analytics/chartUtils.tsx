@@ -84,6 +84,46 @@ function renderXAxisTick(
   );
 }
 
+/**
+ * Reusable rotated x-axis tick for charts whose labels are long enough to
+ * overlap when rendered horizontally (campus names, metric names).
+ *
+ *  - Rotates -30° anchored at the right edge so labels read into the chart.
+ *  - Truncates beyond `maxChars` (default 14) with ellipsis.
+ *  - Embeds full label in `<title>` so native + Recharts tooltips show the
+ *    untruncated text on hover.
+ *  - Short labels render straight (no rotation) — graceful fallback.
+ */
+export function RotatedTick(props: {
+  x?: number;
+  y?: number;
+  payload?: { value?: string | number };
+  maxChars?: number;
+}): React.ReactElement {
+  const { x = 0, y = 0, payload, maxChars = 14 } = props;
+  const full = String(payload?.value ?? "");
+  const truncated = full.length > maxChars ? `${full.slice(0, maxChars - 1)}…` : full;
+  const rotate = full.length > maxChars;
+  return (
+    <g transform={`translate(${x},${y + 8})`}>
+      <text
+        textAnchor={rotate ? "end" : "middle"}
+        transform={rotate ? "rotate(-30)" : undefined}
+        fill="var(--ds-text-subtle)"
+        style={{ fontSize: 11 }}
+      >
+        <title>{full}</title>
+        {truncated}
+      </text>
+    </g>
+  );
+}
+
+/** Convenience formatter mirror of {@link RotatedTick} for non-tick contexts. */
+export function formatXAxisTick(label: string, maxChars = 14): string {
+  return label.length > maxChars ? `${label.slice(0, maxChars - 1)}…` : label;
+}
+
 const PIE_COLORS = [
   "var(--ds-chart-1)",
   "var(--ds-chart-2)",

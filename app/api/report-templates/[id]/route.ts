@@ -24,7 +24,11 @@ const MetricSchema = z.object({
     capturesGoal: z.boolean().default(false),
     capturesAchieved: z.boolean().default(false),
     capturesYoY: z.boolean().default(false),
+    capturesWoW: z.boolean().default(false),
     correlationGroup: z.string().nullable().optional(),
+    isAutoTotal: z.boolean().default(false),
+    autoTotalSourceMetricIds: z.array(z.string()).default([]),
+    autoTotalScope: z.enum(["SECTION", "TEMPLATE"]).nullable().optional(),
     order: z.number().int().min(1),
 });
 
@@ -154,6 +158,29 @@ export async function PUT(
 
         const body = parseResult.data;
 
+        // Validate auto-total configuration (no chains, no self-reference,
+        // SECTION-scoped totals can't reference cross-section sources).
+        if (body.sections) {
+            const { validateAutoTotalConfig } = await import("@/lib/data/autoTotal");
+            const flatMetrics = body.sections.flatMap((s) =>
+                s.metrics.map((m) => ({
+                    id: m.id ?? "",
+                    name: m.name,
+                    sectionId: s.id ?? "",
+                    isAutoTotal: m.isAutoTotal,
+                    autoTotalSourceMetricIds: m.autoTotalSourceMetricIds,
+                    autoTotalScope: m.autoTotalScope ?? "SECTION",
+                })),
+            );
+            const errors = validateAutoTotalConfig(flatMetrics);
+            if (errors.length > 0) {
+                return NextResponse.json(
+                    { success: false, error: errors.join("; "), code: 400 },
+                    { status: 400 },
+                );
+            }
+        }
+
         const existing = await db.reportTemplate.findUnique({ where: { id } });
         if (!existing) {
             return NextResponse.json({ success: false, error: "Template not found." }, { status: 404 });
@@ -234,7 +261,11 @@ export async function PUT(
                                         capturesGoal: metric.capturesGoal,
                                         capturesAchieved: metric.capturesAchieved,
                                         capturesYoY: metric.capturesYoY,
+                                        capturesWoW: metric.capturesWoW,
                                         correlationGroup: metric.correlationGroup ?? null,
+                                        isAutoTotal: metric.isAutoTotal,
+                                        autoTotalSourceMetricIds: metric.autoTotalSourceMetricIds,
+                                        autoTotalScope: metric.autoTotalScope ?? "SECTION",
                                         order: metric.order,
                                     },
                                 });
