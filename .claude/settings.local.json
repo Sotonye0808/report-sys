@@ -16,7 +16,8 @@
       "Bash(npm run *)",
       "Bash(DATABASE_URL=postgresql://localhost:5432/test_placeholder npx tsx test/emailTemplateRender.test.ts)",
       "Bash(grep -n \"^---$\\\\|^## Backlog\" 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\.ai-system\\\\planning\\\\task-queue.md')",
-      "Bash(grep -n \"prisma.report.create\\\\|select: { id: true, campusId: true, templateId: true, status: true }\" 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\lib\\\\data\\\\reportShellService.ts')"
+      "Bash(grep -n \"prisma.report.create\\\\|select: { id: true, campusId: true, templateId: true, status: true }\" 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\lib\\\\data\\\\reportShellService.ts')",
+      "Bash(grep -n \"^## Resolved Errors Archive\\\\|^## Error Log\\\\|^### Resolved\\\\|^---$\" 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\.ai-system\\\\agents\\\\repair-system.md')"
     ]
   }
 }
