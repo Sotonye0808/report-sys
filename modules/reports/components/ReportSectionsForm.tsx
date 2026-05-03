@@ -188,6 +188,14 @@ interface MetricRowProps {
 function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowProps) {
   const isCurrency = metric.fieldType === MetricFieldType.CURRENCY;
   const isPercentage = metric.fieldType === MetricFieldType.PERCENTAGE;
+  const isAutoTotal = Boolean((metric as { isAutoTotal?: boolean }).isAutoTotal);
+  const capturesWoW = Boolean((metric as { capturesWoW?: boolean }).capturesWoW);
+  const wowGoal = (values as { wowGoal?: number | null }).wowGoal ?? null;
+  const wowAchieved = (values as { wowAchieved?: number | null }).wowAchieved ?? values.monthlyAchieved;
+  const wowDelta =
+    capturesWoW && typeof wowAchieved === "number" && typeof wowGoal === "number"
+      ? wowAchieved - wowGoal
+      : null;
   const prefix = isCurrency ? "₦" : undefined;
 
   // YoY visibility: hidden for DATA_ENTRY/MEMBER, read-only for CAMPUS_ADMIN/CAMPUS_PASTOR
@@ -231,6 +239,18 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
               <Tag color="purple" className="text-[10px]">
                 %
               </Tag>
+            )}
+            {isAutoTotal && (
+              <Tooltip
+                title={
+                  values.comment ??
+                  "Server-computed total. Edit the source metrics to change this value."
+                }
+              >
+                <Tag color="geekblue" className="text-[10px] cursor-help">
+                  AUTO
+                </Tag>
+              </Tooltip>
             )}
           </div>
           {metric.description && (
@@ -280,7 +300,9 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
                 const isGoalReadOnly = isGoalField && !!goalInfo;
                 // YoY field: read-only for campus-level roles
                 const isYoyFieldReadOnly = valueKey === "yoyGoal" && isYoyReadOnly;
-                const isReadOnly = isGoalReadOnly || isYoyFieldReadOnly;
+                // Auto-total achievement is server-computed; never editable client-side.
+                const isAutoTotalAchievement = isAutoTotal && valueKey === "monthlyAchieved";
+                const isReadOnly = isGoalReadOnly || isYoyFieldReadOnly || isAutoTotalAchievement;
 
                 const displayValue = isGoalReadOnly
                   ? goalInfo!.targetValue
@@ -328,7 +350,7 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
             />
 
             {/* Live statistics row */}
-            {(livePct !== null || liveYoy !== null) && (
+            {(livePct !== null || liveYoy !== null || wowDelta !== null) && (
               <div className="flex flex-wrap items-center gap-4 mt-2 pt-2 border-t border-ds-border-subtle">
                 {livePct !== null && (
                   <div className="flex items-center gap-2 min-w-[160px]">
@@ -358,6 +380,19 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
                       {liveYoy}%
                     </span>
                   </div>
+                )}
+                {wowDelta !== null && (
+                  <Tooltip title={`Prior week: ${wowGoal ?? "—"} · This week: ${wowAchieved ?? "—"}`}>
+                    <div className="flex items-center gap-1 cursor-help">
+                      <span className="text-[11px] text-ds-text-subtle">vs WoW</span>
+                      <span
+                        className={`text-xs font-semibold ${wowDelta >= 0 ? "text-green-500" : "text-red-500"}`}
+                      >
+                        {wowDelta >= 0 ? "+" : ""}
+                        {wowDelta}
+                      </span>
+                    </div>
+                  </Tooltip>
                 )}
               </div>
             )}

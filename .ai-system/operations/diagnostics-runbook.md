@@ -242,3 +242,52 @@ Added 2026-05-01.
 
 - Migration `20260501120000_impersonation_sessions` is strictly additive: every enum guarded with `EXCEPTION WHEN duplicate_object`; tables use `CREATE TABLE IF NOT EXISTS`; FK constraints guarded the same way.
 - `test/impersonationMigrationAdditiveSafety.test.ts` regresses this — never relax the forbidden-pattern list without a written exception.
+
+---
+
+## Quick-Form Rules + Auto-Total + Week-on-Week + Comparison surfaces
+
+Added 2026-05-02.
+
+### Quick-form rule editor
+
+- UI: `/templates/[id]?tab=assignments` (TemplateAssignmentsEditor).
+- API: `GET /api/form-assignment-rules?templateId=...&role=...`, `POST`, `PATCH /:id`, `DELETE /:id`.
+- Validation rejects:
+  - empty `metricIds`
+  - metric ids that don't belong to the template
+  - campus-scoped roles without a `campusId` (USHER, CAMPUS_*, DATA_ENTRY)
+  - group-scoped roles without `orgGroupId` or `campusId` (GROUP_*)
+- Materialise (USHER landing on `/quick-form`) reads these rules and creates per-period `FormAssignment` rows + report shells idempotently.
+
+### Auto-total metric
+
+- Server is source of truth: `recomputeAutoTotals` runs on report PATCH and on `ensureReportShell`.
+- Validation at template save (`POST/PUT /api/report-templates/[id]`): rejects chains (auto-total → auto-total), self-references, and SECTION-scoped totals that pull from another section.
+- The auto-total cell carries `isLocked: true`; the form renders it read-only with an "AUTO" tag and the auto-generated comment in the tooltip.
+- Diagnostic: a recomputed total comment matches the regex `^Auto-total of /` followed by the source names, sorted alphabetically.
+
+### Week-on-Week
+
+- Opt-in per metric via `capturesWoW: true`.
+- `attachWeekOnWeekContext` runs in `GET /api/reports/[id]` only when the template has at least one WoW metric AND the period is weekly.
+- Prior-week lookup keyed on `(campusId, templateId, periodYear, periodWeek - 1)`. ISO week 1 wraps to last week of prior year.
+- Non-blocking: if no prior-week report exists, `wowGoal` is `null` and the form indicator hides.
+- The indicator in `ReportSectionsForm` reads `values.wowGoal` / `values.wowAchieved` directly from the payload — no extra round trip.
+
+### Smart selects
+
+- `MetricSelect` builds grouped options (template → section → metric); out-of-list values render as "Custom: <id>" so legacy refs still display.
+- `CorrelationGroupSelect` reads existing groups from the current template draft (`sections` prop) and offers `+ Create group "X"` as the last option.
+- Imports wizard's per-column "Target" picker uses the same grouped pattern with `optionFilterProp="label"` for search.
+
+### Chart x-axis polish
+
+- `chartUtils.RotatedTick` rotates labels longer than `maxChars` (default 14) and embeds the full label in `<title>`.
+- Migrated CampusBreakdown chart to it. To migrate a new chart, set `<XAxis tick={<RotatedTick maxChars={14} />} interval={0} height={56} />` and add `margin={{ bottom: 40 }}` to the chart so labels don't overflow.
+
+### Comparison surfaces
+
+- `/analytics → Compare metrics` and `/analytics → Compare reports` are new tabs. Both reuse the analytics page's already-loaded report list (no new fetches).
+- Pearson is gated by min-samples (5); below that the matrix shows `n/a (need ≥ 5 samples)` rather than misleading numbers.
+- Insight sentences only appear for pairs with `|r| ≥ 0.5`.

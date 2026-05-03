@@ -216,7 +216,11 @@ exports.Prisma.ReportTemplateMetricScalarFieldEnum = {
   capturesGoal: 'capturesGoal',
   capturesAchieved: 'capturesAchieved',
   capturesYoY: 'capturesYoY',
-  correlationGroup: 'correlationGroup'
+  capturesWoW: 'capturesWoW',
+  correlationGroup: 'correlationGroup',
+  isAutoTotal: 'isAutoTotal',
+  autoTotalSourceMetricIds: 'autoTotalSourceMetricIds',
+  autoTotalScope: 'autoTotalScope'
 };
 
 exports.Prisma.ReportTemplateVersionScalarFieldEnum = {

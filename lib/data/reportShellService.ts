@@ -15,6 +15,7 @@
  */
 
 import { prisma } from "@/lib/data/prisma";
+import { recomputeAutoTotals } from "@/lib/data/autoTotal";
 import { renderTitle } from "@/lib/utils/reportTitle";
 import {
     type CadenceFrequency,
@@ -159,6 +160,58 @@ export async function ensureReportShell(
         },
         select: { id: true, campusId: true, templateId: true, status: true },
     });
+
+    // Seed auto-total values + comments on the freshly-built shell so
+    // the form opens with totals already at zero (and comment stamped).
+    try {
+        const fresh = await prisma.report.findUnique({
+            where: { id: created.id },
+            include: { sections: { include: { metrics: true } } },
+        });
+        if (fresh && fresh.sections) {
+            const tplMetrics = template.sections.flatMap((s) =>
+                s.metrics.map((m) => ({
+                    id: m.id,
+                    name: m.name,
+                    sectionId: s.id,
+                    isAutoTotal: (m as { isAutoTotal?: boolean }).isAutoTotal ?? false,
+                    autoTotalSourceMetricIds:
+                        (m as { autoTotalSourceMetricIds?: string[] }).autoTotalSourceMetricIds ?? [],
+                    autoTotalScope:
+                        (m as { autoTotalScope?: string }).autoTotalScope ?? "SECTION",
+                })),
+            );
+            if (tplMetrics.some((m) => m.isAutoTotal)) {
+                const sectionsForRecompute = fresh.sections.map((sec) => ({
+                    id: sec.id,
+                    templateSectionId: sec.templateSectionId,
+                    metrics: sec.metrics.map((m) => ({
+                        id: m.id,
+                        templateMetricId: m.templateMetricId,
+                        monthlyAchieved: m.monthlyAchieved,
+                        comment: m.comment,
+                        isLocked: m.isLocked,
+                    })),
+                }));
+                const result = recomputeAutoTotals(sectionsForRecompute, tplMetrics);
+                for (const sec of result.sections) {
+                    for (const cell of sec.metrics ?? []) {
+                        if (cell.id == null) continue;
+                        await prisma.reportMetric.update({
+                            where: { id: cell.id },
+                            data: {
+                                monthlyAchieved: cell.monthlyAchieved ?? null,
+                                comment: cell.comment ?? null,
+                                isLocked: cell.isLocked ?? false,
+                            },
+                        });
+                    }
+                }
+            }
+        }
+    } catch {
+        // Non-fatal — shell creation succeeded; auto-total seeding can retry on next save.
+    }
 
     return { report: created as EnsureReportShellResult["report"], created: true };
 }

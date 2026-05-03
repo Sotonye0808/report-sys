@@ -63,6 +63,26 @@ export async function GET(
             return errorResponse("You do not have access to this report.", 403);
         }
 
+        // Attach Week-on-Week context (non-blocking; only relevant for weekly templates).
+        try {
+            const tplWithMetrics = await db.reportTemplate.findUnique({
+                where: { id: report.templateId },
+                include: { sections: { include: { metrics: true } } },
+            });
+            const flatTplMetrics = tplWithMetrics?.sections.flatMap((s) =>
+                s.metrics.map((m) => ({
+                    id: m.id,
+                    capturesWoW: (m as { capturesWoW?: boolean }).capturesWoW ?? false,
+                })),
+            ) ?? [];
+            if (flatTplMetrics.some((m) => m.capturesWoW)) {
+                const { attachWeekOnWeekContext } = await import("@/lib/data/wow");
+                await attachWeekOnWeekContext(report as never, flatTplMetrics);
+            }
+        } catch {
+            // WoW is non-blocking — ignore failures and return the raw report.
+        }
+
         await cache.set(cacheKey, JSON.stringify(report), 60);
         return NextResponse.json(successResponse(report));
     } catch (err) {
@@ -132,6 +152,65 @@ export async function PUT(
                         comment?: string;
                     }>;
                 }>;
+
+                // Recompute auto-totals server-side BEFORE persisting so the
+                // total cell value + comment are server-truth (not client-trusted).
+                try {
+                    const tplWithMetrics = await tx.reportTemplate.findUnique({
+                        where: { id: r.templateId },
+                        include: { sections: { include: { metrics: true } } },
+                    });
+                    const flatMetrics = tplWithMetrics?.sections.flatMap((s) =>
+                        s.metrics.map((m) => ({
+                            id: m.id,
+                            name: m.name,
+                            sectionId: s.id,
+                            isAutoTotal:
+                                (m as { isAutoTotal?: boolean }).isAutoTotal ?? false,
+                            autoTotalSourceMetricIds:
+                                (m as { autoTotalSourceMetricIds?: string[] }).autoTotalSourceMetricIds ?? [],
+                            autoTotalScope:
+                                (m as { autoTotalScope?: string }).autoTotalScope ?? "SECTION",
+                        })),
+                    ) ?? [];
+                    if (flatMetrics.some((m) => m.isAutoTotal)) {
+                        const { recomputeAutoTotals } = await import("@/lib/data/autoTotal");
+                        const sectionsForRecompute = sections.map((sec) => {
+                            const tplSec = tplWithMetrics?.sections.find(
+                                (s) => s.id === sec.templateSectionId,
+                            );
+                            return {
+                                id: tplSec?.id ?? sec.templateSectionId,
+                                templateSectionId: sec.templateSectionId,
+                                metrics: sec.metrics.map((m) => ({
+                                    templateMetricId: m.templateMetricId,
+                                    monthlyAchieved: m.monthlyAchieved,
+                                    comment: m.comment,
+                                    isLocked: m.isLocked,
+                                })),
+                            };
+                        });
+                        const result = recomputeAutoTotals(sectionsForRecompute, flatMetrics);
+                        // Apply back to `sections` (mutated by reference inside the result).
+                        for (const sec of result.sections) {
+                            const targetSec = sections.find(
+                                (s) => s.templateSectionId === sec.templateSectionId,
+                            );
+                            if (!targetSec) continue;
+                            for (const cell of sec.metrics ?? []) {
+                                const targetMetric = targetSec.metrics.find(
+                                    (m) => m.templateMetricId === cell.templateMetricId,
+                                );
+                                if (!targetMetric) continue;
+                                targetMetric.monthlyAchieved = cell.monthlyAchieved ?? undefined;
+                                targetMetric.comment = cell.comment ?? undefined;
+                                targetMetric.isLocked = cell.isLocked ?? false;
+                            }
+                        }
+                    }
+                } catch {
+                    // Recompute failure is non-fatal; persist what the client sent.
+                }
 
                 for (const section of sections) {
                     await tx.reportSection.create({

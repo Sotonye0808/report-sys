@@ -8,7 +8,9 @@
 
 import { useState, useEffect, useRef, use } from "react";
 import { useRouter } from "next/navigation";
-import { Form, message, Modal, Switch, Select, Tag, Collapse, Badge } from "antd";
+import { Form, message, Modal, Switch, Select, Tag, Collapse, Badge, Tabs } from "antd";
+import { TemplateAssignmentsEditor } from "./TemplateAssignmentsEditor";
+import { CorrelationGroupSelect } from "./CorrelationGroupSelect";
 import {
   SaveOutlined,
   PlusOutlined,
@@ -59,7 +61,11 @@ interface DraftMetric {
   capturesGoal: boolean;
   capturesAchieved: boolean;
   capturesYoY: boolean;
+  capturesWoW: boolean;
   correlationGroup: string;
+  isAutoTotal: boolean;
+  autoTotalSourceMetricIds: string[];
+  autoTotalScope: "SECTION" | "TEMPLATE";
   order: number;
 }
 
@@ -85,14 +91,25 @@ interface MetricRowProps {
   onRemove: () => void;
 }
 
-function MetricRow({ metric, onChange, onRemove }: MetricRowProps) {
-  type BoolKey = "isRequired" | "capturesGoal" | "capturesAchieved" | "capturesYoY";
+function MetricRow({
+  metric,
+  onChange,
+  onRemove,
+  sectionMetrics,
+  allSections,
+}: MetricRowProps & { sectionMetrics: DraftMetric[]; allSections: DraftSection[] }) {
+  type BoolKey = "isRequired" | "capturesGoal" | "capturesAchieved" | "capturesYoY" | "capturesWoW";
   const TOGGLES: { key: BoolKey; label: string }[] = [
     { key: "isRequired", label: CONTENT.templates.isRequiredLabel as string },
     { key: "capturesGoal", label: CONTENT.templates.capturesGoalLabel as string },
     { key: "capturesAchieved", label: CONTENT.templates.capturesAchievedLabel as string },
     { key: "capturesYoY", label: CONTENT.templates.capturesYoYLabel as string },
+    { key: "capturesWoW", label: "Capture WoW" },
   ];
+
+  const sourceOptions = sectionMetrics
+    .filter((m) => m.id !== metric.id && !m.isAutoTotal)
+    .map((m) => ({ value: m.id, label: m.name || `Metric ${m.id.slice(0, 6)}` }));
 
   return (
     <div className="p-4 bg-ds-surface-sunken rounded-ds-lg border border-ds-border-subtle space-y-3">
@@ -154,15 +171,67 @@ function MetricRow({ metric, onChange, onRemove }: MetricRowProps) {
         <label className="text-xs font-medium text-ds-text-secondary block mb-1">
           Correlation group (optional)
         </label>
-        <Input
-          size="middle"
+        <CorrelationGroupSelect
+          sections={allSections}
           value={metric.correlationGroup}
-          onChange={(e) => onChange({ correlationGroup: e.target.value })}
-          placeholder="e.g. attendance"
+          onChange={(v) => onChange({ correlationGroup: v })}
+          placeholder="Pick a group or type a new one"
         />
         <p className="text-xs text-ds-text-subtle mt-1">
           Metrics sharing a group are paired in correlation analytics. Leave empty to opt out.
         </p>
+      </div>
+
+      {/* Auto-total configuration */}
+      <div className="border-t border-ds-border-subtle pt-3">
+        <div className="flex items-center gap-2 mb-2">
+          <Switch
+            size="small"
+            checked={metric.isAutoTotal}
+            onChange={(v) =>
+              onChange({
+                isAutoTotal: v,
+                autoTotalSourceMetricIds: v ? metric.autoTotalSourceMetricIds : [],
+                autoTotalScope: metric.autoTotalScope ?? "SECTION",
+              })
+            }
+          />
+          <span className="text-xs text-ds-text-secondary">Auto-total (server-computed sum)</span>
+        </div>
+        {metric.isAutoTotal && (
+          <div className="grid gap-2 sm:grid-cols-2">
+            <div className="sm:col-span-2 flex flex-col gap-1">
+              <span className="text-xs text-ds-text-subtle">Source metrics (sum)</span>
+              <Select
+                mode="multiple"
+                value={metric.autoTotalSourceMetricIds}
+                onChange={(v) => onChange({ autoTotalSourceMetricIds: v as string[] })}
+                options={sourceOptions}
+                placeholder="Pick metrics in this section"
+                size="middle"
+                showSearch
+                optionFilterProp="label"
+                disabled={sourceOptions.length === 0}
+              />
+              <p className="text-xs text-ds-text-subtle">
+                The total is computed server-side and rendered read-only on the form. The comment is
+                auto-stamped with the source names.
+              </p>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-ds-text-subtle">Scope</span>
+              <Select
+                value={metric.autoTotalScope ?? "SECTION"}
+                onChange={(v) => onChange({ autoTotalScope: v as "SECTION" | "TEMPLATE" })}
+                options={[
+                  { value: "SECTION", label: "Section (default)" },
+                  { value: "TEMPLATE", label: "Cross-section (advanced)" },
+                ]}
+                size="middle"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -237,7 +306,13 @@ export function TemplateDetailPage({ params }: PageProps) {
               capturesGoal: m.capturesGoal,
               capturesAchieved: m.capturesAchieved,
               capturesYoY: m.capturesYoY,
+              capturesWoW: (m as { capturesWoW?: boolean }).capturesWoW ?? false,
               correlationGroup: m.correlationGroup ?? "",
+              isAutoTotal: (m as { isAutoTotal?: boolean }).isAutoTotal ?? false,
+              autoTotalSourceMetricIds:
+                (m as { autoTotalSourceMetricIds?: string[] }).autoTotalSourceMetricIds ?? [],
+              autoTotalScope:
+                ((m as { autoTotalScope?: string }).autoTotalScope as "SECTION" | "TEMPLATE") ?? "SECTION",
               order: m.order,
             })),
         })),
@@ -296,7 +371,11 @@ export function TemplateDetailPage({ params }: PageProps) {
               capturesGoal: true,
               capturesAchieved: true,
               capturesYoY: false,
+              capturesWoW: false,
               correlationGroup: "",
+              isAutoTotal: false,
+              autoTotalSourceMetricIds: [],
+              autoTotalScope: "SECTION",
               order: s.metrics.length + 1,
             },
           ],
@@ -348,7 +427,11 @@ export function TemplateDetailPage({ params }: PageProps) {
             capturesGoal: m.capturesGoal,
             capturesAchieved: m.capturesAchieved,
             capturesYoY: m.capturesYoY,
+            capturesWoW: m.capturesWoW,
             correlationGroup: m.correlationGroup.trim() || null,
+            isAutoTotal: m.isAutoTotal,
+            autoTotalSourceMetricIds: m.autoTotalSourceMetricIds,
+            autoTotalScope: m.autoTotalScope,
             order: mi + 1,
           })),
         })),
@@ -413,6 +496,14 @@ export function TemplateDetailPage({ params }: PageProps) {
           </Button>
         }
       >
+        <Tabs
+          defaultActiveKey="sections"
+          destroyOnHidden={false}
+          items={[
+            {
+              key: "sections",
+              label: "Sections & metrics",
+              children: (
         <Form form={form} layout="vertical" onFinish={handleSave} requiredMark={false}>
           <div className="max-w-4xl space-y-6 form-scroll-container">
             {/* Metadata card */}
@@ -551,13 +642,11 @@ export function TemplateDetailPage({ params }: PageProps) {
                             <label className="text-xs font-medium text-ds-text-secondary block mb-1">
                               Section correlation group (optional)
                             </label>
-                            <Input
-                              size="middle"
+                            <CorrelationGroupSelect
+                              sections={draft}
                               value={section.correlationGroup}
-                              onChange={(e) =>
-                                updateSection(section.id, { correlationGroup: e.target.value })
-                              }
-                              placeholder="e.g. attendance — applies to all metrics in this section by default"
+                              onChange={(v) => updateSection(section.id, { correlationGroup: v })}
+                              placeholder="Pick or create — applies to all metrics in this section by default"
                             />
                           </div>
                         </div>
@@ -573,6 +662,8 @@ export function TemplateDetailPage({ params }: PageProps) {
                             <MetricRow
                               key={metric.id}
                               metric={metric}
+                              sectionMetrics={section.metrics}
+                              allSections={draft}
                               onChange={(patch) => updateMetric(section.id, metric.id, patch)}
                               onRemove={() => removeMetric(section.id, metric.id)}
                             />
@@ -616,6 +707,19 @@ export function TemplateDetailPage({ params }: PageProps) {
             </div>
           </div>
         </Form>
+              ),
+            },
+            {
+              key: "assignments",
+              label: "Quick-form assignments",
+              children: (
+                <div className="max-w-4xl">
+                  <TemplateAssignmentsEditor templateId={id} template={template} />
+                </div>
+              ),
+            },
+          ]}
+        />
       </PageLayout>
 
       {/* Goal-update prompt modal */}

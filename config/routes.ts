@@ -213,6 +213,10 @@ export const API_ROUTES = {
         cancel: (id: string) => `/api/form-assignments/${id}/cancel`,
         materialise: "/api/form-assignments/materialise",
     },
+    formAssignmentRules: {
+        list: "/api/form-assignment-rules",
+        detail: (id: string) => `/api/form-assignment-rules/${id}`,
+    },
     imports: {
         list: "/api/imports",
         detail: (id: string) => `/api/imports/${id}`,

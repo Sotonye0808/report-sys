@@ -328,6 +328,62 @@
 - [ ] "Replay session" affordance — read-only walkthrough of every page visited in a past session.
 - [ ] Optional `record-only` mode capturing intent without storing payloads.
 
+### Planned Feature — Quick-Form Rule Editor + Smart Selects + Auto-Total Metrics + Week-on-Week + Chart Polish + Comparison Surfaces
+
+> **Tightened plan:** see [`.ai-system/planning/temp-quickform-rules-smartselects-autototal-wow-comparisons-plan-2026-05-02.md`](./temp-quickform-rules-smartselects-autototal-wow-comparisons-plan-2026-05-02.md). Tasks below are the canonical sequence — awaiting approval before implementation.
+
+#### Phase A — Schema + safe additive migration
+
+- [x] Add `ReportTemplateMetric.isAutoTotal`, `autoTotalSourceMetricIds`, `autoTotalScope`, `capturesWoW`.
+- [x] Author `prisma/migrations/20260502120000_auto_total_and_wow_metrics/migration.sql` strictly additive; apply with `prisma migrate deploy`.
+- [x] Regenerate Prisma client; `npx prisma validate`.
+- [x] Extend `types/global.ts` `ReportTemplateMetric` + `ReportMetric` with the new fields; add `FormAssignmentRule` interface.
+
+#### Phase B — FormAssignmentRule CRUD (closes the missing entry point)
+
+- [x] `lib/data/formAssignmentRule.ts` with metric-subset + scope coherence validators.
+- [x] `app/api/form-assignment-rules/route.ts` (GET list, POST create) + `[id]/route.ts` (PATCH, DELETE archive). SUPERADMIN + rule owner authorised.
+- [x] `modules/templates/components/MetricSelect.tsx` (grouped options, search, multi-select).
+- [x] `modules/templates/components/TemplateAssignmentsEditor.tsx` reusing MetricSelect.
+- [x] Wrap `TemplateDetailPage` body in AntDesign Tabs (Sections | Quick-form assignments); mount editor under the Assignments tab.
+
+#### Phase C — Auto-total metric type
+
+- [x] `lib/data/autoTotal.ts → recomputeAutoTotals` + `validateAutoTotalConfig` + `buildAutoTotalComment`.
+- [x] Wire `recomputeAutoTotals` into `ensureReportShell` (post-create) and into the report PUT handler (pre-persist).
+- [x] Validate the auto-total source list at template save time (no chaining, no self-reference, scope-coherent).
+- [x] Extend `MetricRow` in `TemplateDetailPage` with the auto-total toggle + source multi-select + scope dropdown.
+- [x] Render auto-total cells read-only with "AUTO" tag + tooltip in `ReportSectionsForm`.
+
+#### Phase D — Week-on-Week comparison
+
+- [x] `lib/data/wow.ts` (`applyWowContext` pure + `attachWeekOnWeekContext` async).
+- [x] Wired into report GET when at least one metric has `capturesWoW`; non-blocking on missing prior week.
+- [x] Add `capturesWoW` toggle to MetricRow in `TemplateDetailPage`.
+- [x] Render WoW delta indicator in `ReportSectionsForm` live-stats row with prior/current tooltip.
+
+#### Phase E — Smart selects
+
+- [x] `modules/templates/components/CorrelationGroupSelect.tsx` (existing groups + `+ Create group "X"`).
+- [x] Replace free-text correlation-group inputs in `TemplateDetailPage` (metric-level + section-level) with `CorrelationGroupSelect`.
+- [x] Convert imports wizard "Target" picker to grouped options (System / template → section → metric) with search.
+
+#### Phase F — Chart polish + comparison surfaces
+
+- [x] `chartUtils.RotatedTick` + `formatXAxisTick`. CampusBreakdown chart migrated.
+- [x] `modules/analytics/components/MetricComparisonPanel.tsx` (multi-metric MetricSelect + Recharts LineChart + correlation matrix + insights).
+- [x] `modules/analytics/components/ReportComparisonPanel.tsx` (multi-report picker + per-metric BarChart + insights).
+- [x] Mount both panels as new tabs under `/analytics` ("Compare metrics", "Compare reports").
+
+#### Phase G — Tests + docs
+
+- [x] `test/autoTotalRecompute.test.ts` (12 ✓) — sum correctness; chain + self-ref + scope-drift guards; comment dedupe + sort.
+- [x] `test/wowAttach.test.ts` (3 ✓) — prior-week presence/absence; non-blocking on missing prior; opt-in only.
+- [x] `test/metricComparisonInsights.test.ts` (6 ✓) — Pearson gating + correctness + zero-variance null + biggestGap order + summariseInsights structure.
+- [x] Update `.ai-system/agents/system-architecture.md` (modules + data-flow entries 49–54 + env keys).
+- [x] Update `.ai-system/agents/project-context.md` (rule editor + auto-total + WoW business constraints).
+- [x] Update `diagnostics-runbook.md` with chain-detection error path, WoW silent-degrade, smart-select drift, RotatedTick adoption guidance, comparison min-samples behaviour.
+
 ---
 
 ## Backlog

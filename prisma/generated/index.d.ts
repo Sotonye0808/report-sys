@@ -13019,7 +13019,10 @@ export namespace Prisma {
     capturesGoal: boolean | null
     capturesAchieved: boolean | null
     capturesYoY: boolean | null
+    capturesWoW: boolean | null
     correlationGroup: string | null
+    isAutoTotal: boolean | null
+    autoTotalScope: string | null
   }
 
   export type ReportTemplateMetricMaxAggregateOutputType = {
@@ -13036,7 +13039,10 @@ export namespace Prisma {
     capturesGoal: boolean | null
     capturesAchieved: boolean | null
     capturesYoY: boolean | null
+    capturesWoW: boolean | null
     correlationGroup: string | null
+    isAutoTotal: boolean | null
+    autoTotalScope: string | null
   }
 
   export type ReportTemplateMetricCountAggregateOutputType = {
@@ -13053,7 +13059,11 @@ export namespace Prisma {
     capturesGoal: number
     capturesAchieved: number
     capturesYoY: number
+    capturesWoW: number
     correlationGroup: number
+    isAutoTotal: number
+    autoTotalSourceMetricIds: number
+    autoTotalScope: number
     _all: number
   }
 
@@ -13084,7 +13094,10 @@ export namespace Prisma {
     capturesGoal?: true
     capturesAchieved?: true
     capturesYoY?: true
+    capturesWoW?: true
     correlationGroup?: true
+    isAutoTotal?: true
+    autoTotalScope?: true
   }
 
   export type ReportTemplateMetricMaxAggregateInputType = {
@@ -13101,7 +13114,10 @@ export namespace Prisma {
     capturesGoal?: true
     capturesAchieved?: true
     capturesYoY?: true
+    capturesWoW?: true
     correlationGroup?: true
+    isAutoTotal?: true
+    autoTotalScope?: true
   }
 
   export type ReportTemplateMetricCountAggregateInputType = {
@@ -13118,7 +13134,11 @@ export namespace Prisma {
     capturesGoal?: true
     capturesAchieved?: true
     capturesYoY?: true
+    capturesWoW?: true
     correlationGroup?: true
+    isAutoTotal?: true
+    autoTotalSourceMetricIds?: true
+    autoTotalScope?: true
     _all?: true
   }
 
@@ -13222,7 +13242,11 @@ export namespace Prisma {
     capturesGoal: boolean
     capturesAchieved: boolean
     capturesYoY: boolean
+    capturesWoW: boolean
     correlationGroup: string | null
+    isAutoTotal: boolean
+    autoTotalSourceMetricIds: string[]
+    autoTotalScope: string | null
     _count: ReportTemplateMetricCountAggregateOutputType | null
     _avg: ReportTemplateMetricAvgAggregateOutputType | null
     _sum: ReportTemplateMetricSumAggregateOutputType | null
@@ -13258,7 +13282,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: boolean
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: boolean
+    autoTotalScope?: boolean
     goals?: boolean | ReportTemplateMetric$goalsArgs<ExtArgs>
     metricEntries?: boolean | ReportTemplateMetric$metricEntriesArgs<ExtArgs>
     reportMetrics?: boolean | ReportTemplateMetric$reportMetricsArgs<ExtArgs>
@@ -13280,7 +13308,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: boolean
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: boolean
+    autoTotalScope?: boolean
     section?: boolean | ReportTemplateSectionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reportTemplateMetric"]>
 
@@ -13298,7 +13330,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: boolean
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: boolean
+    autoTotalScope?: boolean
     section?: boolean | ReportTemplateSectionDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["reportTemplateMetric"]>
 
@@ -13316,10 +13352,14 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: boolean
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: boolean
+    autoTotalScope?: boolean
   }
 
-  export type ReportTemplateMetricOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sectionId" | "name" | "description" | "fieldType" | "calculationType" | "isRequired" | "minValue" | "maxValue" | "order" | "capturesGoal" | "capturesAchieved" | "capturesYoY" | "correlationGroup", ExtArgs["result"]["reportTemplateMetric"]>
+  export type ReportTemplateMetricOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sectionId" | "name" | "description" | "fieldType" | "calculationType" | "isRequired" | "minValue" | "maxValue" | "order" | "capturesGoal" | "capturesAchieved" | "capturesYoY" | "capturesWoW" | "correlationGroup" | "isAutoTotal" | "autoTotalSourceMetricIds" | "autoTotalScope", ExtArgs["result"]["reportTemplateMetric"]>
   export type ReportTemplateMetricInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     goals?: boolean | ReportTemplateMetric$goalsArgs<ExtArgs>
     metricEntries?: boolean | ReportTemplateMetric$metricEntriesArgs<ExtArgs>
@@ -13356,7 +13396,11 @@ export namespace Prisma {
       capturesGoal: boolean
       capturesAchieved: boolean
       capturesYoY: boolean
+      capturesWoW: boolean
       correlationGroup: string | null
+      isAutoTotal: boolean
+      autoTotalSourceMetricIds: string[]
+      autoTotalScope: string | null
     }, ExtArgs["result"]["reportTemplateMetric"]>
     composites: {}
   }
@@ -13797,7 +13841,11 @@ export namespace Prisma {
     readonly capturesGoal: FieldRef<"ReportTemplateMetric", 'Boolean'>
     readonly capturesAchieved: FieldRef<"ReportTemplateMetric", 'Boolean'>
     readonly capturesYoY: FieldRef<"ReportTemplateMetric", 'Boolean'>
+    readonly capturesWoW: FieldRef<"ReportTemplateMetric", 'Boolean'>
     readonly correlationGroup: FieldRef<"ReportTemplateMetric", 'String'>
+    readonly isAutoTotal: FieldRef<"ReportTemplateMetric", 'Boolean'>
+    readonly autoTotalSourceMetricIds: FieldRef<"ReportTemplateMetric", 'String[]'>
+    readonly autoTotalScope: FieldRef<"ReportTemplateMetric", 'String'>
   }
     
 
@@ -49016,7 +49064,11 @@ export namespace Prisma {
     capturesGoal: 'capturesGoal',
     capturesAchieved: 'capturesAchieved',
     capturesYoY: 'capturesYoY',
-    correlationGroup: 'correlationGroup'
+    capturesWoW: 'capturesWoW',
+    correlationGroup: 'correlationGroup',
+    isAutoTotal: 'isAutoTotal',
+    autoTotalSourceMetricIds: 'autoTotalSourceMetricIds',
+    autoTotalScope: 'autoTotalScope'
   };
 
   export type ReportTemplateMetricScalarFieldEnum = (typeof ReportTemplateMetricScalarFieldEnum)[keyof typeof ReportTemplateMetricScalarFieldEnum]
@@ -50767,7 +50819,11 @@ export namespace Prisma {
     capturesGoal?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesAchieved?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesYoY?: BoolFilter<"ReportTemplateMetric"> | boolean
+    capturesWoW?: BoolFilter<"ReportTemplateMetric"> | boolean
     correlationGroup?: StringNullableFilter<"ReportTemplateMetric"> | string | null
+    isAutoTotal?: BoolFilter<"ReportTemplateMetric"> | boolean
+    autoTotalSourceMetricIds?: StringNullableListFilter<"ReportTemplateMetric">
+    autoTotalScope?: StringNullableFilter<"ReportTemplateMetric"> | string | null
     goals?: GoalListRelationFilter
     metricEntries?: MetricEntryListRelationFilter
     reportMetrics?: ReportMetricListRelationFilter
@@ -50788,7 +50844,11 @@ export namespace Prisma {
     capturesGoal?: SortOrder
     capturesAchieved?: SortOrder
     capturesYoY?: SortOrder
+    capturesWoW?: SortOrder
     correlationGroup?: SortOrderInput | SortOrder
+    isAutoTotal?: SortOrder
+    autoTotalSourceMetricIds?: SortOrder
+    autoTotalScope?: SortOrderInput | SortOrder
     goals?: GoalOrderByRelationAggregateInput
     metricEntries?: MetricEntryOrderByRelationAggregateInput
     reportMetrics?: ReportMetricOrderByRelationAggregateInput
@@ -50812,7 +50872,11 @@ export namespace Prisma {
     capturesGoal?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesAchieved?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesYoY?: BoolFilter<"ReportTemplateMetric"> | boolean
+    capturesWoW?: BoolFilter<"ReportTemplateMetric"> | boolean
     correlationGroup?: StringNullableFilter<"ReportTemplateMetric"> | string | null
+    isAutoTotal?: BoolFilter<"ReportTemplateMetric"> | boolean
+    autoTotalSourceMetricIds?: StringNullableListFilter<"ReportTemplateMetric">
+    autoTotalScope?: StringNullableFilter<"ReportTemplateMetric"> | string | null
     goals?: GoalListRelationFilter
     metricEntries?: MetricEntryListRelationFilter
     reportMetrics?: ReportMetricListRelationFilter
@@ -50833,7 +50897,11 @@ export namespace Prisma {
     capturesGoal?: SortOrder
     capturesAchieved?: SortOrder
     capturesYoY?: SortOrder
+    capturesWoW?: SortOrder
     correlationGroup?: SortOrderInput | SortOrder
+    isAutoTotal?: SortOrder
+    autoTotalSourceMetricIds?: SortOrder
+    autoTotalScope?: SortOrderInput | SortOrder
     _count?: ReportTemplateMetricCountOrderByAggregateInput
     _avg?: ReportTemplateMetricAvgOrderByAggregateInput
     _max?: ReportTemplateMetricMaxOrderByAggregateInput
@@ -50858,7 +50926,11 @@ export namespace Prisma {
     capturesGoal?: BoolWithAggregatesFilter<"ReportTemplateMetric"> | boolean
     capturesAchieved?: BoolWithAggregatesFilter<"ReportTemplateMetric"> | boolean
     capturesYoY?: BoolWithAggregatesFilter<"ReportTemplateMetric"> | boolean
+    capturesWoW?: BoolWithAggregatesFilter<"ReportTemplateMetric"> | boolean
     correlationGroup?: StringNullableWithAggregatesFilter<"ReportTemplateMetric"> | string | null
+    isAutoTotal?: BoolWithAggregatesFilter<"ReportTemplateMetric"> | boolean
+    autoTotalSourceMetricIds?: StringNullableListFilter<"ReportTemplateMetric">
+    autoTotalScope?: StringNullableWithAggregatesFilter<"ReportTemplateMetric"> | string | null
   }
 
   export type ReportTemplateVersionWhereInput = {
@@ -54298,7 +54370,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricCreateNestedManyWithoutTemplateMetricInput
@@ -54319,7 +54395,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryUncheckedCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricUncheckedCreateNestedManyWithoutTemplateMetricInput
@@ -54338,7 +54418,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUpdateManyWithoutTemplateMetricNestedInput
@@ -54359,7 +54443,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUncheckedUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUncheckedUpdateManyWithoutTemplateMetricNestedInput
@@ -54379,7 +54467,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
   }
 
   export type ReportTemplateMetricUpdateManyMutationInput = {
@@ -54395,7 +54487,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportTemplateMetricUncheckedUpdateManyInput = {
@@ -54412,7 +54508,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReportTemplateVersionCreateInput = {
@@ -58157,6 +58257,14 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type ReportTemplateSectionScalarRelationFilter = {
     is?: ReportTemplateSectionWhereInput
     isNot?: ReportTemplateSectionWhereInput
@@ -58176,7 +58284,11 @@ export namespace Prisma {
     capturesGoal?: SortOrder
     capturesAchieved?: SortOrder
     capturesYoY?: SortOrder
+    capturesWoW?: SortOrder
     correlationGroup?: SortOrder
+    isAutoTotal?: SortOrder
+    autoTotalSourceMetricIds?: SortOrder
+    autoTotalScope?: SortOrder
   }
 
   export type ReportTemplateMetricAvgOrderByAggregateInput = {
@@ -58199,7 +58311,10 @@ export namespace Prisma {
     capturesGoal?: SortOrder
     capturesAchieved?: SortOrder
     capturesYoY?: SortOrder
+    capturesWoW?: SortOrder
     correlationGroup?: SortOrder
+    isAutoTotal?: SortOrder
+    autoTotalScope?: SortOrder
   }
 
   export type ReportTemplateMetricMinOrderByAggregateInput = {
@@ -58216,7 +58331,10 @@ export namespace Prisma {
     capturesGoal?: SortOrder
     capturesAchieved?: SortOrder
     capturesYoY?: SortOrder
+    capturesWoW?: SortOrder
     correlationGroup?: SortOrder
+    isAutoTotal?: SortOrder
+    autoTotalScope?: SortOrder
   }
 
   export type ReportTemplateMetricSumOrderByAggregateInput = {
@@ -59704,14 +59822,6 @@ export namespace Prisma {
 
   export type AdminConfigEntrySumOrderByAggregateInput = {
     version?: SortOrder
-  }
-
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
   }
 
   export type FormAssignmentRuleNullableScalarRelationFilter = {
@@ -62714,6 +62824,10 @@ export namespace Prisma {
     deleteMany?: ReportTemplateMetricScalarWhereInput | ReportTemplateMetricScalarWhereInput[]
   }
 
+  export type ReportTemplateMetricCreateautoTotalSourceMetricIdsInput = {
+    set: string[]
+  }
+
   export type GoalCreateNestedManyWithoutTemplateMetricInput = {
     create?: XOR<GoalCreateWithoutTemplateMetricInput, GoalUncheckedCreateWithoutTemplateMetricInput> | GoalCreateWithoutTemplateMetricInput[] | GoalUncheckedCreateWithoutTemplateMetricInput[]
     connectOrCreate?: GoalCreateOrConnectWithoutTemplateMetricInput | GoalCreateOrConnectWithoutTemplateMetricInput[]
@@ -62776,6 +62890,11 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type GoalUpdateManyWithoutTemplateMetricNestedInput = {
@@ -70499,7 +70618,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricCreateNestedManyWithoutTemplateMetricInput
@@ -70518,7 +70641,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryUncheckedCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricUncheckedCreateNestedManyWithoutTemplateMetricInput
@@ -70620,7 +70747,11 @@ export namespace Prisma {
     capturesGoal?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesAchieved?: BoolFilter<"ReportTemplateMetric"> | boolean
     capturesYoY?: BoolFilter<"ReportTemplateMetric"> | boolean
+    capturesWoW?: BoolFilter<"ReportTemplateMetric"> | boolean
     correlationGroup?: StringNullableFilter<"ReportTemplateMetric"> | string | null
+    isAutoTotal?: BoolFilter<"ReportTemplateMetric"> | boolean
+    autoTotalSourceMetricIds?: StringNullableListFilter<"ReportTemplateMetric">
+    autoTotalScope?: StringNullableFilter<"ReportTemplateMetric"> | string | null
   }
 
   export type ReportTemplateUpsertWithoutSectionsInput = {
@@ -73553,7 +73684,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryCreateNestedManyWithoutTemplateMetricInput
     section: ReportTemplateSectionCreateNestedOneWithoutMetricsInput
@@ -73573,7 +73708,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateMetricInput
     metricEntries?: MetricEntryUncheckedCreateNestedManyWithoutTemplateMetricInput
   }
@@ -73767,7 +73906,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUpdateManyWithoutTemplateMetricNestedInput
     section?: ReportTemplateSectionUpdateOneRequiredWithoutMetricsNestedInput
@@ -73787,7 +73930,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUncheckedUpdateManyWithoutTemplateMetricNestedInput
   }
@@ -76420,7 +76567,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
     metricEntries?: MetricEntryCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricCreateNestedManyWithoutTemplateMetricInput
     section: ReportTemplateSectionCreateNestedOneWithoutMetricsInput
@@ -76440,7 +76591,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
     metricEntries?: MetricEntryUncheckedCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricUncheckedCreateNestedManyWithoutTemplateMetricInput
   }
@@ -76909,7 +77064,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
     metricEntries?: MetricEntryUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUpdateManyWithoutTemplateMetricNestedInput
     section?: ReportTemplateSectionUpdateOneRequiredWithoutMetricsNestedInput
@@ -76929,7 +77088,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
     metricEntries?: MetricEntryUncheckedUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUncheckedUpdateManyWithoutTemplateMetricNestedInput
   }
@@ -77612,7 +77775,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
     goals?: GoalCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricCreateNestedManyWithoutTemplateMetricInput
     section: ReportTemplateSectionCreateNestedOneWithoutMetricsInput
@@ -77632,7 +77799,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
     goals?: GoalUncheckedCreateNestedManyWithoutTemplateMetricInput
     reportMetrics?: ReportMetricUncheckedCreateNestedManyWithoutTemplateMetricInput
   }
@@ -77717,7 +77888,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUpdateManyWithoutTemplateMetricNestedInput
     section?: ReportTemplateSectionUpdateOneRequiredWithoutMetricsNestedInput
@@ -77737,7 +77912,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUncheckedUpdateManyWithoutTemplateMetricNestedInput
   }
@@ -87998,7 +88177,11 @@ export namespace Prisma {
     capturesGoal?: boolean
     capturesAchieved?: boolean
     capturesYoY?: boolean
+    capturesWoW?: boolean
     correlationGroup?: string | null
+    isAutoTotal?: boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricCreateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: string | null
   }
 
   export type ReportTemplateMetricUpdateWithoutSectionInput = {
@@ -88014,7 +88197,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUpdateManyWithoutTemplateMetricNestedInput
@@ -88033,7 +88220,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
     goals?: GoalUncheckedUpdateManyWithoutTemplateMetricNestedInput
     metricEntries?: MetricEntryUncheckedUpdateManyWithoutTemplateMetricNestedInput
     reportMetrics?: ReportMetricUncheckedUpdateManyWithoutTemplateMetricNestedInput
@@ -88052,7 +88243,11 @@ export namespace Prisma {
     capturesGoal?: BoolFieldUpdateOperationsInput | boolean
     capturesAchieved?: BoolFieldUpdateOperationsInput | boolean
     capturesYoY?: BoolFieldUpdateOperationsInput | boolean
+    capturesWoW?: BoolFieldUpdateOperationsInput | boolean
     correlationGroup?: NullableStringFieldUpdateOperationsInput | string | null
+    isAutoTotal?: BoolFieldUpdateOperationsInput | boolean
+    autoTotalSourceMetricIds?: ReportTemplateMetricUpdateautoTotalSourceMetricIdsInput | string[]
+    autoTotalScope?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GoalCreateManyTemplateMetricInput = {

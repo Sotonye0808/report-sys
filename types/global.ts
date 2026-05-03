@@ -433,7 +433,11 @@ declare global {
         capturesGoal: boolean;
         capturesAchieved: boolean;
         capturesYoY: boolean;
+        capturesWoW?: boolean;
         correlationGroup?: string | null;
+        isAutoTotal?: boolean;
+        autoTotalSourceMetricIds?: string[];
+        autoTotalScope?: "SECTION" | "TEMPLATE" | null;
     }
 
     interface ReportTemplateVersion {
@@ -525,11 +529,29 @@ declare global {
         monthlyGoal?: number;
         monthlyAchieved?: number;
         yoyGoal?: number;
+        wowGoal?: number;
+        wowAchieved?: number;
         computedPercentage?: number;
         isLocked: boolean;
         lockedAt?: string;
         lockedById?: string;
         comment?: string;
+    }
+
+    interface FormAssignmentRule {
+        id: string;
+        ownerId: string;
+        templateId: string;
+        role?: UserRole | null;
+        assigneeId?: string | null;
+        campusId?: string | null;
+        orgGroupId?: string | null;
+        metricIds: string[];
+        cadenceOverride?: Record<string, unknown> | null;
+        notes?: string | null;
+        isActive: boolean;
+        createdAt: string;
+        updatedAt: string;
     }
 
     interface ReportWithDetails extends Report {
