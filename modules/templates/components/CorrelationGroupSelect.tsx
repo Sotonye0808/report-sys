@@ -49,26 +49,48 @@ export function CorrelationGroupSelect({
     const groups = useMemo(() => gatherGroups(sections), [sections]);
     const [search, setSearch] = useState("");
 
-    const baseOptions = groups.map((g) => ({ value: g, label: g }));
-    const showCreate =
-        search.trim().length > 0 && !groups.includes(search.trim());
+    // Compose options: existing groups + the current value when it isn't
+    // already in the list (so a saved out-of-list value still renders the
+    // selected label rather than a bare id).
+    const optionMap = new Map<string, string>();
+    for (const g of groups) optionMap.set(g, g);
+    if (value && !optionMap.has(value)) optionMap.set(value, `${value} (custom)`);
+
+    const baseOptions = Array.from(optionMap.entries()).map(([v, label]) => ({ value: v, label }));
+    const trimmed = search.trim();
+    const showCreate = trimmed.length > 0 && !optionMap.has(trimmed);
 
     const options = showCreate
-        ? [...baseOptions, { value: search.trim(), label: `+ Create group "${search.trim()}"` }]
+        ? [...baseOptions, { value: trimmed, label: `+ Create group "${trimmed}"` }]
         : baseOptions;
+
+    const isEmptyState = baseOptions.length === 0 && !showCreate;
 
     return (
         <Select
             value={value || undefined}
-            onChange={(v) => onChange((v as string) ?? "")}
+            onChange={(v) => {
+                onChange((v as string) ?? "");
+                setSearch("");
+            }}
             options={options}
             allowClear
             showSearch
             optionFilterProp="label"
             onSearch={setSearch}
-            placeholder={placeholder ?? "Pick or create a group"}
+            placeholder={placeholder ?? "Pick or type to create a correlation group"}
             disabled={disabled}
-            style={style}
+            // Default to full-width so a parent grid/flex doesn't squeeze it
+            // into a 0-width cell. Caller can still override via `style`.
+            style={{ width: "100%", ...style }}
+            popupMatchSelectWidth={false}
+            notFoundContent={
+                isEmptyState ? (
+                    <span className="text-xs text-ds-text-subtle">
+                        Type a name to create a new correlation group
+                    </span>
+                ) : undefined
+            }
         />
     );
 }

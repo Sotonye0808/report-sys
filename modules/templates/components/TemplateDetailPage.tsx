@@ -107,9 +107,10 @@ function MetricRow({
     { key: "capturesWoW", label: "Capture WoW" },
   ];
 
-  const sourceOptions = sectionMetrics
-    .filter((m) => m.id !== metric.id && !m.isAutoTotal)
-    .map((m) => ({ value: m.id, label: m.name || `Metric ${m.id.slice(0, 6)}` }));
+  // sectionMetrics + allSections passed for context (used by correlation group
+  // suggestions). Auto-sum configuration was promoted to a section-level
+  // `AutoSumPanel` so the per-metric row stays focused on data-entry fields.
+  void sectionMetrics;
 
   return (
     <div className="p-4 bg-ds-surface-sunken rounded-ds-lg border border-ds-border-subtle space-y-3">
@@ -182,57 +183,171 @@ function MetricRow({
         </p>
       </div>
 
-      {/* Auto-total configuration */}
-      <div className="border-t border-ds-border-subtle pt-3">
-        <div className="flex items-center gap-2 mb-2">
-          <Switch
-            size="small"
-            checked={metric.isAutoTotal}
-            onChange={(v) =>
-              onChange({
-                isAutoTotal: v,
-                autoTotalSourceMetricIds: v ? metric.autoTotalSourceMetricIds : [],
-                autoTotalScope: metric.autoTotalScope ?? "SECTION",
-              })
-            }
-          />
-          <span className="text-xs text-ds-text-secondary">Auto-total (server-computed sum)</span>
+    </div>
+  );
+}
+
+/* ── Section-level auto-sum panel ─────────────────────────────────────────
+ *
+ * Auto-sums live as `ReportTemplateMetric` rows with `isAutoTotal: true` on
+ * the SAME section, so the data model is unchanged. The UI surfaces them
+ * in a dedicated panel attached to the section so admins can configure
+ * multiple totals per section, including cross-section sources.
+ */
+interface AutoSumPanelProps {
+  section: DraftSection;
+  allSections: DraftSection[];
+  onMetricsChange: (sectionId: string, nextMetrics: DraftMetric[]) => void;
+}
+
+function AutoSumPanel({ section, allSections, onMetricsChange }: AutoSumPanelProps) {
+  const autoSums = section.metrics.filter((m) => m.isAutoTotal);
+
+  /** Same-section non-auto metrics. */
+  const sectionSourceOptions = section.metrics
+    .filter((m) => !m.isAutoTotal)
+    .map((m) => ({ value: m.id, label: m.name || `Metric ${m.id.slice(0, 6)}` }));
+
+  /** Template-wide non-auto metrics, grouped by section. */
+  const templateSourceOptions = allSections.map((sec) => ({
+    label: sec.name || `Section`,
+    options: (sec.metrics ?? [])
+      .filter((m) => !m.isAutoTotal)
+      .map((m) => ({ value: m.id, label: m.name || `Metric ${m.id.slice(0, 6)}` })),
+  }));
+
+  const updateAutoSum = (metricId: string, patch: Partial<DraftMetric>) => {
+    const next = section.metrics.map((m) => (m.id === metricId ? { ...m, ...patch } : m));
+    onMetricsChange(section.id, next);
+  };
+
+  const removeAutoSum = (metricId: string) => {
+    const next = section.metrics.filter((m) => m.id !== metricId);
+    onMetricsChange(section.id, next);
+  };
+
+  const addAutoSum = () => {
+    const suggested = `Total ${section.name || "Section"}`.trim();
+    const newMetric: DraftMetric = {
+      id: crypto.randomUUID(),
+      name: suggested,
+      description: "",
+      fieldType: MetricFieldType.NUMBER,
+      calculationType: MetricCalculationType.SUM,
+      isRequired: false,
+      capturesGoal: false,
+      capturesAchieved: true,
+      capturesYoY: false,
+      capturesWoW: false,
+      correlationGroup: "",
+      isAutoTotal: true,
+      autoTotalSourceMetricIds: [],
+      autoTotalScope: "SECTION",
+      order: section.metrics.length + 1,
+    };
+    onMetricsChange(section.id, [...section.metrics, newMetric]);
+  };
+
+  return (
+    <div className="border border-dashed border-ds-border-base rounded-ds-lg p-3 bg-ds-surface-base/30 space-y-3">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex flex-col gap-0.5">
+          <p className="text-xs font-semibold text-ds-text-primary uppercase tracking-wide">
+            Auto-sum totals ({autoSums.length})
+          </p>
+          <p className="text-xs text-ds-text-subtle">
+            Server-computed sums of other metrics. Add multiple per section; cross-section sources are
+            allowed when scope is set to Cross-section.
+          </p>
         </div>
-        {metric.isAutoTotal && (
-          <div className="grid gap-2 sm:grid-cols-2">
-            <div className="sm:col-span-2 flex flex-col gap-1">
-              <span className="text-xs text-ds-text-subtle">Source metrics (sum)</span>
-              <Select
-                mode="multiple"
-                value={metric.autoTotalSourceMetricIds}
-                onChange={(v) => onChange({ autoTotalSourceMetricIds: v as string[] })}
-                options={sourceOptions}
-                placeholder="Pick metrics in this section"
-                size="middle"
-                showSearch
-                optionFilterProp="label"
-                disabled={sourceOptions.length === 0}
-              />
-              <p className="text-xs text-ds-text-subtle">
-                The total is computed server-side and rendered read-only on the form. The comment is
-                auto-stamped with the source names.
-              </p>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-xs text-ds-text-subtle">Scope</span>
-              <Select
-                value={metric.autoTotalScope ?? "SECTION"}
-                onChange={(v) => onChange({ autoTotalScope: v as "SECTION" | "TEMPLATE" })}
-                options={[
-                  { value: "SECTION", label: "Section (default)" },
-                  { value: "TEMPLATE", label: "Cross-section (advanced)" },
-                ]}
-                size="middle"
-              />
-            </div>
-          </div>
-        )}
+        <Button size="small" icon={<PlusOutlined />} onClick={addAutoSum}>
+          Add auto-sum
+        </Button>
       </div>
+      {autoSums.length === 0 ? null : (
+        <div className="space-y-2">
+          {autoSums.map((m) => {
+            const scope = m.autoTotalScope ?? "SECTION";
+            const sourceOptions =
+              scope === "TEMPLATE" ? templateSourceOptions : sectionSourceOptions;
+            const noSources =
+              scope === "TEMPLATE"
+                ? templateSourceOptions.every((g) => g.options.length === 0)
+                : sectionSourceOptions.length === 0;
+            return (
+              <div
+                key={m.id}
+                className="p-3 rounded-ds-md border border-ds-border-subtle bg-ds-surface-sunken space-y-2"
+              >
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-xs text-ds-text-subtle">Total name</span>
+                    <Input
+                      size="middle"
+                      value={m.name}
+                      onChange={(e) => updateAutoSum(m.id, { name: e.target.value })}
+                      placeholder={`Total ${section.name || "Section"}`}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-xs text-ds-text-subtle">Scope</span>
+                    <Select
+                      size="middle"
+                      value={scope}
+                      onChange={(v) =>
+                        updateAutoSum(m.id, {
+                          autoTotalScope: v as "SECTION" | "TEMPLATE",
+                          // Drop sources that no longer fit the new scope.
+                          autoTotalSourceMetricIds:
+                            v === "SECTION"
+                              ? m.autoTotalSourceMetricIds.filter((id) =>
+                                  section.metrics.some((sm) => sm.id === id),
+                                )
+                              : m.autoTotalSourceMetricIds,
+                        })
+                      }
+                      options={[
+                        { value: "SECTION", label: "Same section" },
+                        { value: "TEMPLATE", label: "Cross-section (any section in this template)" },
+                      ]}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs text-ds-text-subtle">Source metrics (summed)</span>
+                  <Select
+                    mode="multiple"
+                    size="middle"
+                    value={m.autoTotalSourceMetricIds}
+                    onChange={(v) => updateAutoSum(m.id, { autoTotalSourceMetricIds: v as string[] })}
+                    options={sourceOptions as never}
+                    placeholder={
+                      noSources
+                        ? "Add data metrics to this section first"
+                        : scope === "SECTION"
+                          ? "Pick metrics in this section"
+                          : "Pick any data metrics across the template"
+                    }
+                    style={{ width: "100%" }}
+                    showSearch
+                    optionFilterProp="label"
+                    disabled={noSources}
+                  />
+                  <p className="text-xs text-ds-text-subtle">
+                    Computed server-side, rendered read-only on the report, comment auto-stamped with
+                    the source names.
+                  </p>
+                </div>
+                <div className="flex items-center justify-end">
+                  <Button size="small" type="text" danger icon={<DeleteOutlined />} onClick={() => removeAutoSum(m.id)}>
+                    Remove
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -352,6 +467,17 @@ export function TemplateDetailPage({ params }: PageProps) {
       (prev ?? []).map((s) =>
         s.id === sId ? { ...s, metrics: s.metrics.filter((m) => m.id !== mId) } : s,
       ),
+    );
+
+  /**
+   * Replace a section's full metrics array. Used by the section-level
+   * auto-sum panel so it can add / edit / remove auto-sum entries (which are
+   * just `ReportTemplateMetric` rows with `isAutoTotal: true`) without
+   * touching the regular metric list.
+   */
+  const setSectionMetrics = (sId: string, nextMetrics: DraftMetric[]) =>
+    setSections((prev) =>
+      (prev ?? []).map((s) => (s.id === sId ? { ...s, metrics: nextMetrics } : s)),
     );
   const addMetric = (sId: string) =>
     setSections((prev) =>
@@ -651,24 +777,36 @@ export function TemplateDetailPage({ params }: PageProps) {
                           </div>
                         </div>
 
-                        {/* Metrics */}
-                        <div className="space-y-2">
-                          {section.metrics.length === 0 && (
-                            <p className="text-xs text-ds-text-subtle py-2">
-                              No metrics yet. Add a metric below.
-                            </p>
-                          )}
-                          {section.metrics.map((metric) => (
-                            <MetricRow
-                              key={metric.id}
-                              metric={metric}
-                              sectionMetrics={section.metrics}
-                              allSections={draft}
-                              onChange={(patch) => updateMetric(section.id, metric.id, patch)}
-                              onRemove={() => removeMetric(section.id, metric.id)}
-                            />
-                          ))}
-                        </div>
+                        {/* Data metrics (auto-sums are surfaced separately in AutoSumPanel below) */}
+                        {(() => {
+                          const dataMetrics = section.metrics.filter((m) => !m.isAutoTotal);
+                          return (
+                            <div className="space-y-2">
+                              {dataMetrics.length === 0 && (
+                                <p className="text-xs text-ds-text-subtle py-2">
+                                  No metrics yet. Add a metric below.
+                                </p>
+                              )}
+                              {dataMetrics.map((metric) => (
+                                <MetricRow
+                                  key={metric.id}
+                                  metric={metric}
+                                  sectionMetrics={section.metrics}
+                                  allSections={draft}
+                                  onChange={(patch) => updateMetric(section.id, metric.id, patch)}
+                                  onRemove={() => removeMetric(section.id, metric.id)}
+                                />
+                              ))}
+                            </div>
+                          );
+                        })()}
+
+                        {/* Section-level auto-sum totals (multiple per section, optional cross-section sources) */}
+                        <AutoSumPanel
+                          section={section}
+                          allSections={draft}
+                          onMetricsChange={setSectionMetrics}
+                        />
 
                         {/* Section footer actions */}
                         <div className="flex items-center justify-between pt-2 border-t border-ds-border-subtle">

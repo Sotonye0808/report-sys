@@ -70,38 +70,28 @@ export function TemplateAssignmentsEditor({ templateId, template }: Props) {
         void reload();
     }, [templateId]);
 
-    const addRule = async () => {
-        // Server requires role + non-empty metricIds; seed with sensible defaults
-        // and let the user complete before save.
-        const firstSection = template?.sections?.[0];
-        const seedMetricIds = firstSection?.metrics?.[0]?.id ? [firstSection.metrics[0].id] : [];
-        if (seedMetricIds.length === 0) {
-            message.error("Add at least one metric to the template before creating an assignment rule.");
-            return;
-        }
-        try {
-            const res = await fetch(API_ROUTES.formAssignmentRules.list, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    templateId,
-                    role: UserRole.USHER,
-                    metricIds: seedMetricIds,
-                }),
-            });
-            const json = (await res.json()) as { success: boolean; data?: RuleRow; error?: string };
-            if (!res.ok || !json.success) {
-                message.error(json.error ?? "Could not create rule");
-                return;
-            }
-            await reload();
-            message.success("Rule created");
-        } catch {
-            message.error("Could not create rule");
-        }
+    /**
+     * Deferred-create flow: "Add assignment rule" creates a CLIENT-side draft
+     * row only. The POST fires only once the operator has set role + metrics
+     * (+ scope when role is campus/group-scoped) so server-side coherence
+     * checks can never reject the initial create.
+     */
+    const addRule = () => {
+        const draftId = `draft-${crypto.randomUUID()}`;
+        setRules((prev) => [
+            { id: draftId, templateId, metricIds: [], isActive: true, role: null, notes: null } as RuleRow,
+            ...prev,
+        ]);
     };
 
+    const isDraft = (id: string) => id.startsWith("draft-");
+
+    /** Local edit — drafts get patched in state only; persisted rows hit PATCH. */
     const patch = async (id: string, body: Partial<RuleRow>) => {
+        if (isDraft(id)) {
+            setRules((prev) => prev.map((r) => (r.id === id ? { ...r, ...body } : r)));
+            return;
+        }
         setSaving(id);
         try {
             const res = await fetch(API_ROUTES.formAssignmentRules.detail(id), {
@@ -120,7 +110,60 @@ export function TemplateAssignmentsEditor({ templateId, template }: Props) {
         }
     };
 
+    /** Validate a draft against the server schema BEFORE we POST. */
+    const isDraftReady = (r: RuleRow): { ok: true } | { ok: false; reason: string } => {
+        if (!r.role && !r.assigneeId) return { ok: false, reason: "Pick a role first." };
+        if (r.metricIds.length === 0) return { ok: false, reason: "Pick at least one metric." };
+        if (r.role && CAMPUS_SCOPED_ROLES.includes(r.role) && !r.campusId) {
+            return { ok: false, reason: `${ROLE_CONFIG[r.role].label} is campus-scoped — pick a campus.` };
+        }
+        if (r.role && GROUP_SCOPED_ROLES.includes(r.role) && !r.orgGroupId && !r.campusId) {
+            return { ok: false, reason: `${ROLE_CONFIG[r.role].label} is group-scoped — pick a group or campus.` };
+        }
+        return { ok: true };
+    };
+
+    const commitDraft = async (draft: RuleRow) => {
+        const ready = isDraftReady(draft);
+        if (!ready.ok) {
+            message.warning(ready.reason);
+            return;
+        }
+        setSaving(draft.id);
+        try {
+            const res = await fetch(API_ROUTES.formAssignmentRules.list, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    templateId,
+                    role: draft.role ?? undefined,
+                    assigneeId: draft.assigneeId ?? undefined,
+                    campusId: draft.campusId ?? undefined,
+                    orgGroupId: draft.orgGroupId ?? undefined,
+                    metricIds: draft.metricIds,
+                    notes: draft.notes ?? undefined,
+                    isActive: draft.isActive,
+                }),
+            });
+            const json = (await res.json()) as { success: boolean; data?: RuleRow; error?: string };
+            if (!res.ok || !json.success || !json.data) {
+                message.error(json.error ?? "Could not save rule");
+                return;
+            }
+            const created = json.data;
+            setRules((prev) => prev.map((r) => (r.id === draft.id ? created : r)));
+            message.success("Rule saved");
+        } finally {
+            setSaving(null);
+        }
+    };
+
+    const discardDraft = (id: string) => {
+        setRules((prev) => prev.filter((r) => r.id !== id));
+    };
+
     const remove = async (id: string) => {
+        if (isDraft(id)) return discardDraft(id);
         try {
             const res = await fetch(API_ROUTES.formAssignmentRules.detail(id), { method: "DELETE" });
             const json = (await res.json()) as { success: boolean; error?: string };
@@ -227,13 +270,33 @@ export function TemplateAssignmentsEditor({ templateId, template }: Props) {
                                         disabled={Boolean(saving)}
                                     />
                                 </div>
-                                <div className="md:col-span-2 flex items-center justify-between">
-                                    <Tag color={r.isActive ? "green" : "default"}>
-                                        {r.isActive ? "Active" : "Archived"}
-                                    </Tag>
-                                    <Button danger size="small" onClick={() => remove(r.id)}>
-                                        Archive
-                                    </Button>
+                                <div className="md:col-span-2 flex items-center justify-between flex-wrap gap-2">
+                                    {isDraft(r.id) ? (
+                                        <Tag color="blue">Unsaved draft</Tag>
+                                    ) : (
+                                        <Tag color={r.isActive ? "green" : "default"}>
+                                            {r.isActive ? "Active" : "Archived"}
+                                        </Tag>
+                                    )}
+                                    <div className="flex items-center gap-2">
+                                        {isDraft(r.id) && (
+                                            <Button
+                                                size="small"
+                                                type="primary"
+                                                loading={saving === r.id}
+                                                onClick={() => commitDraft(r)}
+                                            >
+                                                Save rule
+                                            </Button>
+                                        )}
+                                        <Button
+                                            danger={!isDraft(r.id)}
+                                            size="small"
+                                            onClick={() => remove(r.id)}
+                                        >
+                                            {isDraft(r.id) ? "Discard" : "Archive"}
+                                        </Button>
+                                    </div>
                                 </div>
                             </li>
                         );

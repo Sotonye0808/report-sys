@@ -99,6 +99,72 @@
 
 [Entries move here when the underlying cause has been permanently fixed]
 
+## Form-assignment rule editor 400 on Add (USHER seed + scope coherence)
+
+**Symptom:**
+Clicking "Add assignment rule" in `/templates/[id]?tab=assignments` returned `POST /api/form-assignment-rules 400 Bad Request`.
+
+**Root Cause:**
+The editor seeded `role: USHER` on the create payload. USHER is in `CAMPUS_SCOPED_ROLES`, and `lib/data/formAssignmentRule.ts → validate` requires `campusId` for campus-scoped roles. The seed did not include a campus, so the server threw `FormAssignmentRuleValidationError("Role USHER is campus-scoped — campusId is required")`.
+
+**Fix Applied:**
+- Switched the editor to a deferred-create flow. "Add" now creates a CLIENT-side draft (`id: "draft-…"`) instead of POSTing immediately. The draft surfaces a "Save rule" button that only fires once the rule is coherent (role + metrics + scope).
+- Added `isDraftReady` mirror of the server validator so users see the same friendly error inline before the request goes out.
+
+**Prevention:**
+Defer create calls until the payload satisfies server-side coherence checks. Surface inline validation that mirrors the server's rejection reasons.
+
+**Files Affected:**
+- `modules/templates/components/TemplateAssignmentsEditor.tsx`
+
+**Date:** 2026-05-03
+
+## CorrelationGroupSelect: empty options + overflow
+
+**Symptom:**
+The correlation-group select in the template editor showed no options (even when the user wanted to create a new group) and rendered far wider than its parent grid cell, breaking the layout.
+
+**Root Cause:**
+- `+ Create group "X"` only surfaced when the user typed AND the typed value wasn't already in the list. With no existing groups, the dropdown looked empty and the create affordance was undiscoverable.
+- The component had no default width style, so AntDesign's Select shrank to its content width inside a flex/grid cell.
+- Saved out-of-list values (legacy free-text rows) rendered as bare ids because they weren't in the option list.
+
+**Fix Applied:**
+- Default `style: { width: "100%" }` (caller can override).
+- `notFoundContent` shows "Type a name to create a new correlation group" so the create affordance is discoverable from an empty state.
+- The current `value` is included in the options when not present in the suggestion set, with a "(custom)" suffix.
+- `popupMatchSelectWidth={false}` so long group names aren't truncated in the dropdown.
+
+**Prevention:**
+For free-text-with-suggestion selects: always include the current value in the options, default to full-width, and surface the create affordance from the empty state — not just on type.
+
+**Files Affected:**
+- `modules/templates/components/CorrelationGroupSelect.tsx`
+
+**Date:** 2026-05-03
+
+## Auto-sum configurator placement (per-metric → section-level)
+
+**Symptom:**
+Auto-total toggle + source picker lived inside each `MetricRow`. Created visual clutter on data metrics, hid auto-sums in the metric list, and made it awkward to define multiple totals per section or cross-section sums.
+
+**Root Cause:**
+Initial implementation co-located the configuration with the metric it produced. That mirrored the data model (each auto-sum IS a `ReportTemplateMetric`) but didn't match the operator's mental model (totals are a section-level concept).
+
+**Fix Applied:**
+- Stripped the auto-total block from `MetricRow`.
+- Added `AutoSumPanel` per section: lists existing auto-sums (filtered from `section.metrics` where `isAutoTotal: true`), exposes "+ Add auto-sum" with a suggested name (`Total <SectionName>`), and lets each row pick scope (Same section / Cross-section) + sources (powered by grouped MetricSelect-style options).
+- Filter `MetricRow` rendering to non-auto-total metrics so data metrics and totals don't co-mingle in the same list.
+- Data model unchanged — auto-sums are still `ReportTemplateMetric` rows with `isAutoTotal: true`. Server-side recompute and validation are unaffected.
+
+**Prevention:**
+When a configuration concept has cardinality `>1` per parent and a different mental model, surface it in a dedicated panel attached to the parent, not inline on each child.
+
+**Files Affected:**
+- `modules/templates/components/TemplateDetailPage.tsx`
+
+**Date:** 2026-05-03
+
 ## Resend client initialization during build
 
 **Symptom:**
