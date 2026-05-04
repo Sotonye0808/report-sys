@@ -3,15 +3,21 @@
  *
  * CRUD service for FormAssignmentRule. Validates that:
  *  - every metricId referenced belongs to the rule's templateId,
- *  - either `assigneeId` or `role` is provided (not neither, not both),
- *  - scope (campus/group) is coherent with the role when provided.
+ *  - either `assigneeId` or `role` is provided (not neither, not both).
+ *
+ * Scope semantics:
+ *   - `campusIds` / `orgGroupIds` are optional. Empty array = applies to ALL
+ *     campuses (or all groups) — useful since templates are platform-scoped
+ *     and a campus-bound role like USHER always wires their own campus from
+ *     the user profile at materialise time.
+ *   - Legacy single-value `campusId` / `orgGroupId` are still honoured for
+ *     rows created before this contract; new rules should prefer the arrays.
  *
  * Returns plain rows (no Prisma client objects); API routes serialise to JSON.
  */
 
 import { prisma } from "@/lib/data/prisma";
 import { UserRole } from "@/types/global";
-import { CAMPUS_SCOPED_ROLES, GROUP_SCOPED_ROLES } from "@/config/hierarchy";
 
 export class FormAssignmentRuleValidationError extends Error {
     constructor(public reason: string) {
@@ -24,8 +30,14 @@ export interface RuleInput {
     templateId: string;
     role?: UserRole;
     assigneeId?: string;
+    /** @deprecated Prefer `campusIds`. Kept for legacy rows. */
     campusId?: string;
+    /** @deprecated Prefer `orgGroupIds`. Kept for legacy rows. */
     orgGroupId?: string;
+    /** Empty array = applies to all campuses. */
+    campusIds?: string[];
+    /** Empty array = applies to all groups. */
+    orgGroupIds?: string[];
     metricIds: string[];
     cadenceOverride?: Record<string, unknown> | null;
     notes?: string | null;
@@ -54,19 +66,9 @@ async function validate(input: RuleInput): Promise<void> {
             `Metric ids do not belong to template: ${missing.join(", ")}`,
         );
     }
-    // Scope coherence: campus-scoped roles need a campusId; group-scoped roles need an orgGroupId.
-    if (input.role) {
-        if (CAMPUS_SCOPED_ROLES.includes(input.role) && !input.campusId) {
-            throw new FormAssignmentRuleValidationError(
-                `Role ${input.role} is campus-scoped — campusId is required`,
-            );
-        }
-        if (GROUP_SCOPED_ROLES.includes(input.role) && !input.orgGroupId && !input.campusId) {
-            throw new FormAssignmentRuleValidationError(
-                `Role ${input.role} is group-scoped — orgGroupId or campusId is required`,
-            );
-        }
-    }
+    // No campus/group requirement: empty scope = all campuses/groups.
+    // Templates are platform-scoped and the materialiser pulls the user's
+    // own campus at runtime when the rule has no scope set.
 }
 
 export async function listForTemplate(templateId: string) {
@@ -100,6 +102,8 @@ export async function createRule(input: RuleInput, ownerId: string) {
             assigneeId: input.assigneeId,
             campusId: input.campusId,
             orgGroupId: input.orgGroupId,
+            campusIds: input.campusIds ?? [],
+            orgGroupIds: input.orgGroupIds ?? [],
             metricIds: input.metricIds,
             cadenceOverride: (input.cadenceOverride as never) ?? undefined,
             notes: input.notes,
@@ -117,6 +121,8 @@ export async function updateRule(id: string, patch: Partial<RuleInput>) {
         assigneeId: patch.assigneeId ?? existing.assigneeId ?? undefined,
         campusId: patch.campusId ?? existing.campusId ?? undefined,
         orgGroupId: patch.orgGroupId ?? existing.orgGroupId ?? undefined,
+        campusIds: patch.campusIds ?? existing.campusIds ?? [],
+        orgGroupIds: patch.orgGroupIds ?? existing.orgGroupIds ?? [],
         metricIds: patch.metricIds ?? existing.metricIds,
         cadenceOverride: patch.cadenceOverride ?? (existing.cadenceOverride as Record<string, unknown> | null),
         notes: patch.notes ?? existing.notes,
@@ -130,6 +136,8 @@ export async function updateRule(id: string, patch: Partial<RuleInput>) {
             assigneeId: merged.assigneeId,
             campusId: merged.campusId,
             orgGroupId: merged.orgGroupId,
+            campusIds: merged.campusIds ?? [],
+            orgGroupIds: merged.orgGroupIds ?? [],
             metricIds: merged.metricIds,
             cadenceOverride: (merged.cadenceOverride as never) ?? undefined,
             notes: merged.notes,
@@ -143,4 +151,50 @@ export async function archiveRule(id: string) {
         where: { id },
         data: { isActive: false },
     });
+}
+
+/* ── Match helper used by materialiser ──────────────────────────────────── */
+
+interface MatchUser {
+    id: string;
+    role: UserRole;
+    campusId?: string | null;
+    orgGroupId?: string | null;
+}
+
+interface MatchableRule {
+    role: UserRole | null;
+    assigneeId: string | null;
+    campusId: string | null;
+    orgGroupId: string | null;
+    campusIds: string[];
+    orgGroupIds: string[];
+}
+
+/**
+ * Returns true when the rule applies to the given user. Honours both the
+ * legacy single-value scope columns and the new array columns. Empty arrays
+ * AND null legacy fields ⇒ rule applies to every campus / group.
+ */
+export function ruleMatchesUser(rule: MatchableRule, user: MatchUser): boolean {
+    // Direct user match always wins.
+    if (rule.assigneeId && rule.assigneeId === user.id) return true;
+    if (!rule.role) return false;
+    if (rule.role !== user.role) return false;
+
+    const campusList = (rule.campusIds && rule.campusIds.length > 0)
+        ? rule.campusIds
+        : rule.campusId
+            ? [rule.campusId]
+            : [];
+    const groupList = (rule.orgGroupIds && rule.orgGroupIds.length > 0)
+        ? rule.orgGroupIds
+        : rule.orgGroupId
+            ? [rule.orgGroupId]
+            : [];
+
+    if (campusList.length === 0 && groupList.length === 0) return true;
+    if (user.campusId && campusList.includes(user.campusId)) return true;
+    if (user.orgGroupId && groupList.includes(user.orgGroupId)) return true;
+    return false;
 }

@@ -6,17 +6,21 @@
  * report shell exists. Idempotent: a rule + period + user tuple resolves
  * to one assignment; subsequent calls return the same row.
  *
- * A rule matches a user when:
- *   - rule.assigneeId === user.id, OR
- *   - rule.role === user.role AND (rule.campusId == null || user.campusId === rule.campusId)
- *     AND (rule.orgGroupId == null || user.orgGroupId === rule.orgGroupId)
+ * Match contract (see `formAssignmentRule.ruleMatchesUser`):
+ *   - direct: rule.assigneeId === user.id, OR
+ *   - role + scope: rule.role === user.role AND (
+ *        empty scope arrays + null legacy fields ⇒ all campuses/groups,
+ *        OR user.campusId ∈ rule.campusIds (or legacy rule.campusId match),
+ *        OR user.orgGroupId ∈ rule.orgGroupIds (or legacy rule.orgGroupId match)
+ *     ).
  */
 
 import { prisma } from "@/lib/data/prisma";
 import { ensureReportShell } from "@/lib/data/reportShellService";
+import { ruleMatchesUser } from "@/lib/data/formAssignmentRule";
 import { getCurrentPeriod, type CadenceFrequency } from "@/lib/utils/cadence";
 import { resolveRoleCadence } from "@/lib/auth/permissions";
-import { ReportPeriodType, type UserRole } from "@/types/global";
+import { type UserRole } from "@/types/global";
 
 export interface MaterialiseInput {
     userId: string;
@@ -43,25 +47,40 @@ export async function materialiseAssignmentsForUser(
     const asOf = input.asOf ?? new Date();
     const cadence = await resolveRoleCadence(input.role);
 
-    const rules = await prisma.formAssignmentRule.findMany({
+    // Pull every active rule that *could* match this user (DB-side filter is
+    // intentionally broad — the precise scope check happens in `ruleMatchesUser`
+    // so legacy single-value scope, new array scope, and "empty = all" all work).
+    const candidateRules = await prisma.formAssignmentRule.findMany({
         where: {
             isActive: true,
             OR: [
                 { assigneeId: input.userId },
-                {
-                    role: input.role,
-                    OR: [
-                        { campusId: null, orgGroupId: null },
-                        { campusId: input.campusId ?? undefined },
-                        { orgGroupId: input.orgGroupId ?? undefined },
-                    ],
-                },
+                { role: input.role },
             ],
         },
     });
 
+    const matching = candidateRules.filter((rule) =>
+        ruleMatchesUser(
+            {
+                role: (rule.role as UserRole | null) ?? null,
+                assigneeId: rule.assigneeId,
+                campusId: rule.campusId,
+                orgGroupId: rule.orgGroupId,
+                campusIds: rule.campusIds ?? [],
+                orgGroupIds: rule.orgGroupIds ?? [],
+            },
+            {
+                id: input.userId,
+                role: input.role,
+                campusId: input.campusId ?? null,
+                orgGroupId: input.orgGroupId ?? null,
+            },
+        ),
+    );
+
     const out: MaterialisedAssignment[] = [];
-    for (const rule of rules) {
+    for (const rule of matching) {
         const ruleCadence = (rule.cadenceOverride as Record<string, unknown> | null) ?? null;
         const frequency = (ruleCadence?.frequency as CadenceFrequency | undefined) ?? cadence.frequency;
         const expectedDays = (ruleCadence?.expectedDays as number[] | undefined) ?? cadence.expectedDays;
@@ -70,8 +89,11 @@ export async function materialiseAssignmentsForUser(
             (ruleCadence?.autoFillTitleTemplate as string | undefined) ?? cadence.autoFillTitleTemplate;
 
         const period = getCurrentPeriod(frequency, asOf);
-        const campusId = rule.campusId ?? input.campusId ?? null;
-        const orgGroupId = rule.orgGroupId ?? input.orgGroupId ?? null;
+        // Campus is keyed off the user (campus-scoped roles like USHER always
+        // wire into their own campus). Rule scope only filters which users
+        // qualify — it never overrides the campus the report is created against.
+        const campusId = input.campusId ?? rule.campusId ?? null;
+        const orgGroupId = input.orgGroupId ?? rule.orgGroupId ?? null;
         if (!campusId || !orgGroupId) continue;
 
         const { report } = await ensureReportShell(

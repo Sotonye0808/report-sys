@@ -38562,6 +38562,8 @@ export namespace Prisma {
     assigneeId: number
     campusId: number
     orgGroupId: number
+    campusIds: number
+    orgGroupIds: number
     metricIds: number
     cadenceOverride: number
     isActive: number
@@ -38608,6 +38610,8 @@ export namespace Prisma {
     assigneeId?: true
     campusId?: true
     orgGroupId?: true
+    campusIds?: true
+    orgGroupIds?: true
     metricIds?: true
     cadenceOverride?: true
     isActive?: true
@@ -38697,6 +38701,8 @@ export namespace Prisma {
     assigneeId: string | null
     campusId: string | null
     orgGroupId: string | null
+    campusIds: string[]
+    orgGroupIds: string[]
     metricIds: string[]
     cadenceOverride: JsonValue | null
     isActive: boolean
@@ -38730,6 +38736,8 @@ export namespace Prisma {
     assigneeId?: boolean
     campusId?: boolean
     orgGroupId?: boolean
+    campusIds?: boolean
+    orgGroupIds?: boolean
     metricIds?: boolean
     cadenceOverride?: boolean
     isActive?: boolean
@@ -38751,6 +38759,8 @@ export namespace Prisma {
     assigneeId?: boolean
     campusId?: boolean
     orgGroupId?: boolean
+    campusIds?: boolean
+    orgGroupIds?: boolean
     metricIds?: boolean
     cadenceOverride?: boolean
     isActive?: boolean
@@ -38770,6 +38780,8 @@ export namespace Prisma {
     assigneeId?: boolean
     campusId?: boolean
     orgGroupId?: boolean
+    campusIds?: boolean
+    orgGroupIds?: boolean
     metricIds?: boolean
     cadenceOverride?: boolean
     isActive?: boolean
@@ -38789,6 +38801,8 @@ export namespace Prisma {
     assigneeId?: boolean
     campusId?: boolean
     orgGroupId?: boolean
+    campusIds?: boolean
+    orgGroupIds?: boolean
     metricIds?: boolean
     cadenceOverride?: boolean
     isActive?: boolean
@@ -38797,7 +38811,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type FormAssignmentRuleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ownerId" | "templateId" | "role" | "assigneeId" | "campusId" | "orgGroupId" | "metricIds" | "cadenceOverride" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["formAssignmentRule"]>
+  export type FormAssignmentRuleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ownerId" | "templateId" | "role" | "assigneeId" | "campusId" | "orgGroupId" | "campusIds" | "orgGroupIds" | "metricIds" | "cadenceOverride" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["formAssignmentRule"]>
   export type FormAssignmentRuleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     owner?: boolean | UserDefaultArgs<ExtArgs>
     template?: boolean | ReportTemplateDefaultArgs<ExtArgs>
@@ -38832,6 +38846,8 @@ export namespace Prisma {
       assigneeId: string | null
       campusId: string | null
       orgGroupId: string | null
+      campusIds: string[]
+      orgGroupIds: string[]
       metricIds: string[]
       cadenceOverride: Prisma.JsonValue | null
       isActive: boolean
@@ -39272,6 +39288,8 @@ export namespace Prisma {
     readonly assigneeId: FieldRef<"FormAssignmentRule", 'String'>
     readonly campusId: FieldRef<"FormAssignmentRule", 'String'>
     readonly orgGroupId: FieldRef<"FormAssignmentRule", 'String'>
+    readonly campusIds: FieldRef<"FormAssignmentRule", 'String[]'>
+    readonly orgGroupIds: FieldRef<"FormAssignmentRule", 'String[]'>
     readonly metricIds: FieldRef<"FormAssignmentRule", 'String[]'>
     readonly cadenceOverride: FieldRef<"FormAssignmentRule", 'Json'>
     readonly isActive: FieldRef<"FormAssignmentRule", 'Boolean'>
@@ -49434,6 +49452,8 @@ export namespace Prisma {
     assigneeId: 'assigneeId',
     campusId: 'campusId',
     orgGroupId: 'orgGroupId',
+    campusIds: 'campusIds',
+    orgGroupIds: 'orgGroupIds',
     metricIds: 'metricIds',
     cadenceOverride: 'cadenceOverride',
     isActive: 'isActive',
@@ -52856,6 +52876,8 @@ export namespace Prisma {
     assigneeId?: StringNullableFilter<"FormAssignmentRule"> | string | null
     campusId?: StringNullableFilter<"FormAssignmentRule"> | string | null
     orgGroupId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    campusIds?: StringNullableListFilter<"FormAssignmentRule">
+    orgGroupIds?: StringNullableListFilter<"FormAssignmentRule">
     metricIds?: StringNullableListFilter<"FormAssignmentRule">
     cadenceOverride?: JsonNullableFilter<"FormAssignmentRule">
     isActive?: BoolFilter<"FormAssignmentRule"> | boolean
@@ -52876,6 +52898,8 @@ export namespace Prisma {
     assigneeId?: SortOrderInput | SortOrder
     campusId?: SortOrderInput | SortOrder
     orgGroupId?: SortOrderInput | SortOrder
+    campusIds?: SortOrder
+    orgGroupIds?: SortOrder
     metricIds?: SortOrder
     cadenceOverride?: SortOrderInput | SortOrder
     isActive?: SortOrder
@@ -52899,6 +52923,8 @@ export namespace Prisma {
     assigneeId?: StringNullableFilter<"FormAssignmentRule"> | string | null
     campusId?: StringNullableFilter<"FormAssignmentRule"> | string | null
     orgGroupId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    campusIds?: StringNullableListFilter<"FormAssignmentRule">
+    orgGroupIds?: StringNullableListFilter<"FormAssignmentRule">
     metricIds?: StringNullableListFilter<"FormAssignmentRule">
     cadenceOverride?: JsonNullableFilter<"FormAssignmentRule">
     isActive?: BoolFilter<"FormAssignmentRule"> | boolean
@@ -52919,6 +52945,8 @@ export namespace Prisma {
     assigneeId?: SortOrderInput | SortOrder
     campusId?: SortOrderInput | SortOrder
     orgGroupId?: SortOrderInput | SortOrder
+    campusIds?: SortOrder
+    orgGroupIds?: SortOrder
     metricIds?: SortOrder
     cadenceOverride?: SortOrderInput | SortOrder
     isActive?: SortOrder
@@ -52941,6 +52969,8 @@ export namespace Prisma {
     assigneeId?: StringNullableWithAggregatesFilter<"FormAssignmentRule"> | string | null
     campusId?: StringNullableWithAggregatesFilter<"FormAssignmentRule"> | string | null
     orgGroupId?: StringNullableWithAggregatesFilter<"FormAssignmentRule"> | string | null
+    campusIds?: StringNullableListFilter<"FormAssignmentRule">
+    orgGroupIds?: StringNullableListFilter<"FormAssignmentRule">
     metricIds?: StringNullableListFilter<"FormAssignmentRule">
     cadenceOverride?: JsonNullableWithAggregatesFilter<"FormAssignmentRule">
     isActive?: BoolWithAggregatesFilter<"FormAssignmentRule"> | boolean
@@ -56560,6 +56590,8 @@ export namespace Prisma {
     role?: $Enums.UserRole | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -56580,6 +56612,8 @@ export namespace Prisma {
     assigneeId?: string | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -56594,6 +56628,8 @@ export namespace Prisma {
     role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -56614,6 +56650,8 @@ export namespace Prisma {
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -56631,6 +56669,8 @@ export namespace Prisma {
     assigneeId?: string | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -56644,6 +56684,8 @@ export namespace Prisma {
     role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -56660,6 +56702,8 @@ export namespace Prisma {
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -59883,6 +59927,8 @@ export namespace Prisma {
     assigneeId?: SortOrder
     campusId?: SortOrder
     orgGroupId?: SortOrder
+    campusIds?: SortOrder
+    orgGroupIds?: SortOrder
     metricIds?: SortOrder
     cadenceOverride?: SortOrder
     isActive?: SortOrder
@@ -64358,6 +64404,14 @@ export namespace Prisma {
     update?: XOR<XOR<FormAssignmentRuleUpdateToOneWithWhereWithoutAssignmentsInput, FormAssignmentRuleUpdateWithoutAssignmentsInput>, FormAssignmentRuleUncheckedUpdateWithoutAssignmentsInput>
   }
 
+  export type FormAssignmentRuleCreatecampusIdsInput = {
+    set: string[]
+  }
+
+  export type FormAssignmentRuleCreateorgGroupIdsInput = {
+    set: string[]
+  }
+
   export type FormAssignmentRuleCreatemetricIdsInput = {
     set: string[]
   }
@@ -64392,6 +64446,16 @@ export namespace Prisma {
     connectOrCreate?: FormAssignmentCreateOrConnectWithoutRuleInput | FormAssignmentCreateOrConnectWithoutRuleInput[]
     createMany?: FormAssignmentCreateManyRuleInputEnvelope
     connect?: FormAssignmentWhereUniqueInput | FormAssignmentWhereUniqueInput[]
+  }
+
+  export type FormAssignmentRuleUpdatecampusIdsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type FormAssignmentRuleUpdateorgGroupIdsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type FormAssignmentRuleUpdatemetricIdsInput = {
@@ -67045,6 +67109,8 @@ export namespace Prisma {
     role?: $Enums.UserRole | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -67063,6 +67129,8 @@ export namespace Prisma {
     assigneeId?: string | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -67087,6 +67155,8 @@ export namespace Prisma {
     role?: $Enums.UserRole | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -67105,6 +67175,8 @@ export namespace Prisma {
     role?: $Enums.UserRole | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -68329,6 +68401,8 @@ export namespace Prisma {
     assigneeId?: StringNullableFilter<"FormAssignmentRule"> | string | null
     campusId?: StringNullableFilter<"FormAssignmentRule"> | string | null
     orgGroupId?: StringNullableFilter<"FormAssignmentRule"> | string | null
+    campusIds?: StringNullableListFilter<"FormAssignmentRule">
+    orgGroupIds?: StringNullableListFilter<"FormAssignmentRule">
     metricIds?: StringNullableListFilter<"FormAssignmentRule">
     cadenceOverride?: JsonNullableFilter<"FormAssignmentRule">
     isActive?: BoolFilter<"FormAssignmentRule"> | boolean
@@ -70340,6 +70414,8 @@ export namespace Prisma {
     role?: $Enums.UserRole | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -70358,6 +70434,8 @@ export namespace Prisma {
     assigneeId?: string | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -81091,6 +81169,8 @@ export namespace Prisma {
     role?: $Enums.UserRole | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -81110,6 +81190,8 @@ export namespace Prisma {
     assigneeId?: string | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -81488,6 +81570,8 @@ export namespace Prisma {
     role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -81507,6 +81591,8 @@ export namespace Prisma {
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -84996,6 +85082,8 @@ export namespace Prisma {
     assigneeId?: string | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -85011,6 +85099,8 @@ export namespace Prisma {
     role?: $Enums.UserRole | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -86638,6 +86728,8 @@ export namespace Prisma {
     role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -86656,6 +86748,8 @@ export namespace Prisma {
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -86672,6 +86766,8 @@ export namespace Prisma {
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -86685,6 +86781,8 @@ export namespace Prisma {
     role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -86703,6 +86801,8 @@ export namespace Prisma {
     role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -86719,6 +86819,8 @@ export namespace Prisma {
     role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -87904,6 +88006,8 @@ export namespace Prisma {
     assigneeId?: string | null
     campusId?: string | null
     orgGroupId?: string | null
+    campusIds?: FormAssignmentRuleCreatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleCreateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleCreatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: boolean
@@ -88122,6 +88226,8 @@ export namespace Prisma {
     role?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -88140,6 +88246,8 @@ export namespace Prisma {
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -88156,6 +88264,8 @@ export namespace Prisma {
     assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
     campusId?: NullableStringFieldUpdateOperationsInput | string | null
     orgGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    campusIds?: FormAssignmentRuleUpdatecampusIdsInput | string[]
+    orgGroupIds?: FormAssignmentRuleUpdateorgGroupIdsInput | string[]
     metricIds?: FormAssignmentRuleUpdatemetricIdsInput | string[]
     cadenceOverride?: NullableJsonNullValueInput | InputJsonValue
     isActive?: BoolFieldUpdateOperationsInput | boolean

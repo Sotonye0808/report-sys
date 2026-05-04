@@ -26,6 +26,8 @@ const PatchSchema = z.object({
     assigneeId: z.string().uuid().nullable().optional(),
     campusId: z.string().uuid().nullable().optional(),
     orgGroupId: z.string().uuid().nullable().optional(),
+    campusIds: z.array(z.string().uuid()).max(500).optional(),
+    orgGroupIds: z.array(z.string().uuid()).max(500).optional(),
     metricIds: z.array(z.string().uuid()).min(1).max(200).optional(),
     cadenceOverride: z.record(z.string(), z.unknown()).nullable().optional(),
     notes: z.string().max(500).nullable().optional(),

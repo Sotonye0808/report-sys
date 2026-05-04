@@ -34,8 +34,14 @@ const CreateSchema = z.object({
     templateId: z.string().uuid(),
     role: z.nativeEnum(UserRole).optional(),
     assigneeId: z.string().uuid().optional(),
+    /** Legacy single-value scope. Prefer `campusIds` for new rules. */
     campusId: z.string().uuid().optional(),
+    /** Legacy single-value scope. Prefer `orgGroupIds` for new rules. */
     orgGroupId: z.string().uuid().optional(),
+    /** Empty array = applies to all campuses. */
+    campusIds: z.array(z.string().uuid()).max(500).optional(),
+    /** Empty array = applies to all groups. */
+    orgGroupIds: z.array(z.string().uuid()).max(500).optional(),
     metricIds: z.array(z.string().uuid()).min(1).max(200),
     cadenceOverride: z.record(z.string(), z.unknown()).nullable().optional(),
     notes: z.string().max(500).nullable().optional(),

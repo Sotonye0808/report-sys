@@ -31,12 +31,30 @@ interface RuleRow {
     templateId: string;
     role?: UserRole | null;
     assigneeId?: string | null;
+    /** Legacy single-value scope; treated as a one-element array on read. */
     campusId?: string | null;
+    /** Legacy single-value scope; treated as a one-element array on read. */
     orgGroupId?: string | null;
+    /** Empty array = applies to all campuses. */
+    campusIds?: string[];
+    /** Empty array = applies to all groups. */
+    orgGroupIds?: string[];
     metricIds: string[];
     notes?: string | null;
     isActive: boolean;
     cadenceOverride?: Record<string, unknown> | null;
+}
+
+function effectiveCampusIds(r: RuleRow): string[] {
+    if (r.campusIds && r.campusIds.length > 0) return r.campusIds;
+    if (r.campusId) return [r.campusId];
+    return [];
+}
+
+function effectiveGroupIds(r: RuleRow): string[] {
+    if (r.orgGroupIds && r.orgGroupIds.length > 0) return r.orgGroupIds;
+    if (r.orgGroupId) return [r.orgGroupId];
+    return [];
 }
 
 const ROLE_OPTIONS = (Object.keys(ROLE_CONFIG) as UserRole[])
@@ -110,16 +128,15 @@ export function TemplateAssignmentsEditor({ templateId, template }: Props) {
         }
     };
 
-    /** Validate a draft against the server schema BEFORE we POST. */
+    /**
+     * Validate a draft before POST. Templates are platform-scoped so a rule
+     * with NO campus/group restriction is fine — it will simply apply to
+     * every user matching the role. The materialiser keys reports off the
+     * user's own campus.
+     */
     const isDraftReady = (r: RuleRow): { ok: true } | { ok: false; reason: string } => {
         if (!r.role && !r.assigneeId) return { ok: false, reason: "Pick a role first." };
         if (r.metricIds.length === 0) return { ok: false, reason: "Pick at least one metric." };
-        if (r.role && CAMPUS_SCOPED_ROLES.includes(r.role) && !r.campusId) {
-            return { ok: false, reason: `${ROLE_CONFIG[r.role].label} is campus-scoped — pick a campus.` };
-        }
-        if (r.role && GROUP_SCOPED_ROLES.includes(r.role) && !r.orgGroupId && !r.campusId) {
-            return { ok: false, reason: `${ROLE_CONFIG[r.role].label} is group-scoped — pick a group or campus.` };
-        }
         return { ok: true };
     };
 
@@ -138,8 +155,8 @@ export function TemplateAssignmentsEditor({ templateId, template }: Props) {
                     templateId,
                     role: draft.role ?? undefined,
                     assigneeId: draft.assigneeId ?? undefined,
-                    campusId: draft.campusId ?? undefined,
-                    orgGroupId: draft.orgGroupId ?? undefined,
+                    campusIds: effectiveCampusIds(draft),
+                    orgGroupIds: effectiveGroupIds(draft),
                     metricIds: draft.metricIds,
                     notes: draft.notes ?? undefined,
                     isActive: draft.isActive,
@@ -198,6 +215,8 @@ export function TemplateAssignmentsEditor({ templateId, template }: Props) {
                         const role = r.role ?? UserRole.USHER;
                         const showCampus = CAMPUS_SCOPED_ROLES.includes(role);
                         const showGroup = GROUP_SCOPED_ROLES.includes(role);
+                        const campusValue = effectiveCampusIds(r);
+                        const groupValue = effectiveGroupIds(r);
                         return (
                             <li
                                 key={r.id}
@@ -214,37 +233,61 @@ export function TemplateAssignmentsEditor({ templateId, template }: Props) {
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <span className="text-xs text-ds-text-subtle">Active</span>
-                                    <Switch
-                                        checked={r.isActive}
-                                        onChange={(v) => patch(r.id, { isActive: v })}
-                                        disabled={Boolean(saving)}
-                                    />
-                                </div>
-                                {showCampus && (
-                                    <div className="flex flex-col gap-1">
-                                        <span className="text-xs text-ds-text-subtle">Campus</span>
-                                        <Select
-                                            value={r.campusId ?? undefined}
-                                            options={campusOptions}
-                                            onChange={(v) => patch(r.id, { campusId: v as string })}
-                                            allowClear
-                                            showSearch
-                                            optionFilterProp="label"
+                                    <div className="flex items-center h-8">
+                                        <Switch
+                                            checked={r.isActive}
+                                            onChange={(v) => patch(r.id, { isActive: v })}
                                             disabled={Boolean(saving)}
                                         />
                                     </div>
-                                )}
-                                {showGroup && (
+                                </div>
+                                {(showCampus || campusValue.length > 0) && (
                                     <div className="flex flex-col gap-1">
-                                        <span className="text-xs text-ds-text-subtle">Group</span>
+                                        <span className="text-xs text-ds-text-subtle">
+                                            Campuses {showCampus ? "" : "(optional)"}
+                                        </span>
                                         <Select
-                                            value={r.orgGroupId ?? undefined}
-                                            options={groupOptions}
-                                            onChange={(v) => patch(r.id, { orgGroupId: v as string })}
+                                            mode="multiple"
+                                            value={campusValue}
+                                            options={campusOptions}
+                                            onChange={(v) =>
+                                                patch(r.id, {
+                                                    campusIds: v as string[],
+                                                    campusId: null,
+                                                })
+                                            }
                                             allowClear
                                             showSearch
                                             optionFilterProp="label"
                                             disabled={Boolean(saving)}
+                                            placeholder="Leave empty to apply to all campuses"
+                                            maxTagCount="responsive"
+                                            style={{ width: "100%" }}
+                                        />
+                                    </div>
+                                )}
+                                {(showGroup || groupValue.length > 0) && (
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-xs text-ds-text-subtle">
+                                            Groups {showGroup ? "" : "(optional)"}
+                                        </span>
+                                        <Select
+                                            mode="multiple"
+                                            value={groupValue}
+                                            options={groupOptions}
+                                            onChange={(v) =>
+                                                patch(r.id, {
+                                                    orgGroupIds: v as string[],
+                                                    orgGroupId: null,
+                                                })
+                                            }
+                                            allowClear
+                                            showSearch
+                                            optionFilterProp="label"
+                                            disabled={Boolean(saving)}
+                                            placeholder="Leave empty to apply to all groups"
+                                            maxTagCount="responsive"
+                                            style={{ width: "100%" }}
                                         />
                                     </div>
                                 )}
