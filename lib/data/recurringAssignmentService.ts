@@ -63,7 +63,7 @@ export async function materialiseAssignmentsForUser(
     const matching = candidateRules.filter((rule) =>
         ruleMatchesUser(
             {
-                role: rule.role,
+                role: (rule.role as UserRole | null) ?? null,
                 assigneeId: rule.assigneeId,
                 campusId: rule.campusId,
                 orgGroupId: rule.orgGroupId,
