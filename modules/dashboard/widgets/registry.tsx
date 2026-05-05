@@ -362,8 +362,28 @@ interface InlineReportPayload {
 function UsherInlineForm() {
     const router = useRouter();
     const { user } = useAuth();
+    // Materialise recurring assignment rules into per-period rows before listing.
+    // The list endpoint shows the *materialised* rows; without this fire-and-forget
+    // call the widget would render "No active assignments" until the user manually
+    // visits /quick-form.
+    const [materialised, setMaterialised] = useState(false);
+    useEffect(() => {
+        let cancelled = false;
+        void (async () => {
+            try {
+                await fetch(API_ROUTES.formAssignments.materialise, { method: "POST" });
+            } catch {
+                // non-blocking — fall through to list query so the widget still renders
+            } finally {
+                if (!cancelled) setMaterialised(true);
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
     const { data: assignments } = useApiData<AssignmentInline[]>(
-        `${API_ROUTES.formAssignments.list}?scope=me&status=active`,
+        materialised ? `${API_ROUTES.formAssignments.list}?scope=me&status=active` : null,
     );
     const active = useMemo(
         () =>

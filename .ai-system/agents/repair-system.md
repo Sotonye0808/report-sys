@@ -550,4 +550,104 @@ Inline controls that should keep their intrinsic width inside a flex column must
 **Files Affected:**
 - `modules/templates/components/TemplateAssignmentsEditor.tsx`
 
+## Quick form blank for ushers — assigned report fetch returns 403
+
+**Symptom:**
+Ushers (and dashboard's `UsherInlineForm` widget) saw "No metrics assigned" / a blank quick-form fill page, even after admins authored a `FormAssignmentRule` with metric ids that should match. The assignment row materialised correctly; the report shell was created; but the form rendered nothing.
+
+**Root Cause:**
+Two compounding bugs:
+1. `USHER`'s `reportVisibilityScope` is `"own"`, and `isOwnScopedReport(report, userId)` only accepts `createdById | submittedById | dataEntryById`. The report shell is created by `recurringAssignmentService` with `createdById = rule.ownerId` (the admin), so the GET on `/api/reports/[id]` returned 403 for the assignee. With `report` undefined the fill page filtered metrics against an empty list → blank form.
+2. The dashboard `UsherInlineForm` widget never called `/api/form-assignments/materialise`, so before the user visited `/quick-form` once the widget always saw an empty assignment list.
+
+**Fix Applied:**
+- `app/api/reports/[id]/route.ts` GET: when an "own"-scoped user fails the ownership check, fall back to `prisma.formAssignment.findFirst({ reportId, assigneeId, cancelledAt: null })`. If they have an active assignment, grant read access. Quick-fill writes already used `loadAssignmentForUser` so they were unaffected — only reads were broken.
+- `modules/dashboard/widgets/registry.tsx → UsherInlineForm`: added a fire-and-forget materialise call on mount (gated `useApiData` until it resolves) so the widget mirrors `QuickFormLandingPage`'s priming step.
+
+**Prevention:**
+- "Own scope" should always include "actively delegated to me via FormAssignment" — otherwise auto-created shells become invisible to their assignees. New report-visibility code paths should consult both ownership AND assignment.
+- Any list/widget that reads materialised assignments must call materialise first; otherwise the experience depends on which page the user happened to visit before.
+
+**Files Affected:**
+- `app/api/reports/[id]/route.ts`
+- `modules/dashboard/widgets/registry.tsx`
+
+**Date:** 2026-05-05
+
+## Invite-signup redirect appears to hang on /login
+
+**Symptom:**
+After registering with an invite link, users saw a "Redirecting to login in N s…" countdown, then landed on `/login` (re-authentication required). When the page transition stalled — slow chunk, transient navigation glitch — the screen looked stuck on the success card forever with no clear next step beyond the "Login" button.
+
+**Root Cause:**
+`/api/auth/register` already calls `setAuthCookies` so the user is signed in by the time `/join` shows the success card, yet `SuccessRedirect` always pushed `/login` (with optional `?from=…`). The destination copy said "Redirecting to login" so users assumed it was working as designed, even though the right destination was the role's dashboard. There was also no fallback if Next's `router.push` failed silently.
+
+**Fix Applied:**
+- `app/(auth)/join/page.tsx`: read `data.user.role` from the register response, compute `ROLE_DASHBOARD_ROUTES[role]` (or the sanitised `?redirect=` target if explicit), and pass that as `destinationHref` to `SuccessRedirect`.
+- New `describeDestination(href)` produces a friendly label ("your dashboard", "your quick form", etc.) so the success card says exactly where the user is going.
+- `SuccessRedirect` shortened the countdown to 3 s, switched to `router.replace()` (so back-button doesn't bounce to `/join`), and added a hard fallback: if the pathname hasn't changed within 1.2 s, force `window.location.href = destinationHref`.
+- The CTA button text now reads "Go to {destination} now" — no more "Login" CTA when the user is already signed in.
+
+**Prevention:**
+- Any auth lifecycle endpoint that sets cookies (register/activate/reset+autosignin) must redirect users into the app, not back to `/login`. Login pages don't currently auto-detect signed-in users and bounce them.
+- Auto-redirects with countdowns should always have a hard `window.location` fallback so a router glitch can't strand the user.
+
+**Files Affected:**
+- `app/(auth)/join/page.tsx`
+
+**Date:** 2026-05-05
+
+## Correlation group editor confusion (cross-section discoverability)
+
+**Symptom:**
+Admins didn't realise correlation groups could span sections — the only way to assign a metric to a group was to dig into the per-metric settings palette, then re-type (or pick from a small smart-select) the same group name on every related metric. Section-level groups had a separate copy in the section settings cog, deepening the confusion.
+
+**Root Cause:**
+The data model already supported cross-section grouping via shared `correlationGroup` strings on metrics; only the UX implied each group was a per-metric attribute, with no surface that listed groups + members in one place.
+
+**Fix Applied:**
+- New `CorrelationGroupsPanel` mounted directly below `AutoSumPanel` per section. Structurally it mirrors `AutoSumPanel`: collapsible header with count + tooltip, group cards with `Same section ↔ Cross-section` scope toggle, multi-select members, "Remove group" + "Add correlation group" actions.
+- Renames cascade across sections; removing a group clears `correlationGroup` on every member; flipping scope from `TEMPLATE → SECTION` drops cross-section members. Membership edits use a new `setAllSections((prev) => next)` mutator on the page state.
+- Removed the inline correlation-group editor from `MetricRow`'s settings palette (replaced with a read-only badge + "edit in *Correlation groups* below" pointer) and from `SectionSettingsPalette`. Single source of truth.
+- The persisted shape is unchanged — `correlationGroup` strings on `ReportTemplateMetric` (and the still-present `correlationGroup` on `ReportTemplateSection` is kept for read-only back-compat). Backend untouched.
+
+**Prevention:**
+- A field that joins multiple records ("group", "tag", "category") needs a list-of-groups surface in addition to per-record attribution. Per-record-only is fine for ownership; for joinable attributes, expose the join.
+- When two scope toggles already exist with the same shape (auto-totals' SECTION/TEMPLATE), reuse that mental model elsewhere — admins recognise the pattern instead of re-learning it.
+
+**Files Affected:**
+- `modules/templates/components/TemplateDetailPage.tsx`
+
+**Date:** 2026-05-05
+
+## Imports wizard 500 on .xlsx upload
+
+**Symptom:**
+Uploading an `.xlsx` file to the imports wizard surfaced a Prisma-flavoured error in the dev console and never advanced past the upload step. The wizard's `accept` prop nominally allowed only CSV, but some browsers + drag-drop sources still let xlsx files through, and `parseCsv(buffer)` produced garbage rows that downstream Prisma writes choked on.
+
+**Root Cause:**
+`lib/data/importPipeline.ts` was CSV-only. The file route stored every upload as raw text in `storageRef`, and validate/commit ran `parseCsv(storageRef)` unconditionally. xlsx binary content parsed into a single garbage row whose values triggered NaN coercion + bad templateMetricId lookups.
+
+**Fix Applied:**
+- Added `parseXlsx(buffer)` (lazy SheetJS import, server-only) returning `{ sheets: [{ name, rows }] }` with a `MAX_SHEETS` cap.
+- New `parseSpreadsheet({ format, payload, selectedSheet })` dispatcher used by every import route.
+- `ImportJob.fileFormat` + `selectedSheet` columns added (additive migration).
+- File route sniffs xlsx by mime + filename, validates the workbook on upload, and returns sheet names + a friendly `import_parse_failed` error code instead of the prior 500. Failure paths return `400` with `{ code, error }`.
+- Wizard now accepts `.csv|.xlsx|.xls`, sends xlsx as binary via ArrayBuffer, surfaces a sheet-picker on multi-sheet workbooks, and shows friendly parse errors via `message.error`.
+
+**Prevention:**
+- Any time a route stores user-uploaded bytes, the storage shape needs a `fileFormat` discriminator. Don't assume "text-only" forever.
+- Validation that fails should always produce a stable `code` field so the UI can display human-readable messages without parsing stack traces.
+
+**Files Affected:**
+- `lib/data/importPipeline.ts`
+- `app/api/imports/[id]/file/route.ts`
+- `app/api/imports/[id]/mapping/route.ts`
+- `app/api/imports/[id]/validate/route.ts`
+- `modules/imports/components/ImportWizardPage.tsx`
+- `prisma/schema.prisma` (added `ImportJob.fileFormat`, `ImportJob.selectedSheet`)
+- `prisma/migrations/20260505120000_org_role_polymorphism_and_imports_xlsx/migration.sql`
+
+**Date:** 2026-05-05
+
 **Date:** 2026-05-03

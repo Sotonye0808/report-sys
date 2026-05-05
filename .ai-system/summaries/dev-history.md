@@ -502,3 +502,127 @@ Synchronized the AI development system documentation with the current codebase s
 **Next Sprint Focus:**
 
 - Begin planning and implementation for "Advanced Flexibility & Analytics" phase.
+
+## 2026-05-05 — Quick-form usher visibility, invite-signup redirect, correlation panel
+
+**Summary:**
+Three follow-up fixes after end-user feedback on the quick-form, invite-signup, and template-builder UX. (1) Ushers now actually see the metrics admins assigned them; (2) the post-invite-registration flow redirects users into the app instead of the login page; (3) correlation groups in the template builder now have a dedicated, structured panel parallel to auto-totals, with explicit cross-section scope.
+
+**Completed:**
+
+- Fixed quick-form blank state: `/api/reports/[id]` GET now grants read access to USHER (or any "own"-scoped role) when they hold an active `FormAssignment` for the report; previously the admin-created shell was invisible to its assignee. The dashboard `UsherInlineForm` widget also now calls `materialise` on mount so it doesn't depend on the user having visited `/quick-form` first.
+- Replaced the post-register `→ /login` redirect with a role-aware destination: read role from register response, push `ROLE_DASHBOARD_ROUTES[role]` (or sanitised `?redirect=` target). New `describeDestination` helper produces friendly copy. Added a hard `window.location` fallback after 1.2 s in case `router.replace` stalls so users can't end up stuck on the success card.
+- Built `CorrelationGroupsPanel` in `TemplateDetailPage.tsx` and mounted it directly below `AutoSumPanel`. Mirrors the auto-total structure: collapsible header, group cards with same-section/cross-section scope toggle, multi-select members, rename/delete actions. Inline correlation editor removed from `MetricRow` (replaced by a read-only badge pointing at the panel) and from `SectionSettingsPalette`.
+- Validation: `npx tsc --noEmit` ✓.
+
+**Key Changes:**
+
+- Report visibility check now consults FormAssignment as a fallback for "own" scope — closes a class of bugs where auto-created shells become invisible to delegated assignees.
+- Invite-signup redirect honours the role's dashboard route + has a hard `window.location` safety net.
+- Correlation groups now have a single editing surface per section (cross-section by toggle) and back-compat with the existing `correlationGroup` string-based data model.
+
+**Files Modified:**
+
+- `app/api/reports/[id]/route.ts`
+- `modules/dashboard/widgets/registry.tsx`
+- `app/(auth)/join/page.tsx`
+- `modules/templates/components/TemplateDetailPage.tsx`
+- `.ai-system/agents/repair-system.md`
+- `.ai-system/summaries/dev-history.md`
+- `.ai-system/checkpoints/session-log.md`
+
+**Next Sprint Focus:**
+
+- Watch for any related visibility quirks for DATA_ENTRY (also "own"-scoped) and add a focused regression once the Prisma test harness lands.
+- Promote the shared `<TemplateBuilder>` extraction (queued in backlog) so the new correlation panel + auto-totals automatically appear in the create-template flow without manual sync.
+
+## 2026-05-05 (Pass 2) — Polymorphic substrate + xlsx fix + role CRUD + public-copy editors + new playgrounds
+
+**Summary:**
+
+Largest refactor of the sprint, executed in four passes:
+
+- **Pass 1 (foundation):** Polymorphic `OrgUnit` (multi-root, self-FK, variable depth) + runtime `Role` table (system + custom) + `RoleScope` join + additive `unitId`/`roleId` columns on every legacy carrier. Migration is strictly additive (`CREATE TABLE IF NOT EXISTS` + `ALTER TABLE ADD COLUMN IF NOT EXISTS` + idempotent `INSERT … ON CONFLICT DO NOTHING` back-fills) so existing rows survive untouched. Built `lib/data/{orgUnit,orgUnitMatcher,role,publicCopy,reconcile}.ts` and the `parseSpreadsheet` dispatcher with SheetJS-backed xlsx parser. The import wizard accepts `.csv|.xlsx|.xls`, prompts for sheets on multi-sheet workbooks, and surfaces `import_parse_failed` instead of Prisma stack traces.
+- **Pass 2 (read paths + APIs):** `/api/org/units/*` (list/tree/CRUD/promote), `/api/roles/*` (CRUD with system-protection), `/api/public-copy/[ns]` (sanitised public read), `/api/admin-config/reconcile` (dry-run + live; SUPERADMIN-only). Report visibility check now does `unitInScope` against the polymorphic graph in addition to the legacy column-equality test (legacy + new substrate both work end-to-end). Public pages (landing, how-it-works, about/privacy/terms) read from the substrate via `loadPublicCopy` with sanitisation + deep-merge.
+- **Pass 3 (admin editors):** New `OrgUnitTreeEditor` (multi-root tabs, drag-friendly tree, archive/promote/edit/add per node), `RolesEditorV2` (CREATE flow, scope-pin, capability subset enforcement, archive non-system rows), `LandingCopyEditor` + `HowItWorksEditor` + `SimplePageEditor` (about/privacy/terms), `ReconcilePanel` (preview + run). Mounted under the existing AdminConfigPage tabs alongside the legacy editors.
+- **Pass 4 (playgrounds + fallback refresh + tests):** Seven new how-it-works playgrounds (`analytics-chart-toggle`, `template-builder-effect`, `correlation-matrix-builder`, `auto-sum-chain`, `insight-summary-preview`, `aggregation-rollup`, `import-wizard-demo`). Refreshed `config/content.ts` so landing/how-it-works fallbacks reflect current platform reality (xlsx imports, polymorphic hierarchy, role CRUD, correlation panel, etc.). Added `test/{publicCopySanitise,orgUnitMatcher,spreadsheetParse}.test.ts`.
+
+**Completed:**
+
+- Schema: `OrgUnit`, `Role`, `RoleScope` + `User.{roleId,unitId}` + `Report.unitId` + `InviteLink.{targetRoleId,unitId}` + `FormAssignmentRule.{roleId,unitIds}` + `ImportJob.{fileFormat,selectedSheet}`. Strictly additive.
+- Migration `20260505120000_org_role_polymorphism_and_imports_xlsx` with idempotent back-fills.
+- `scripts/seed-roles-and-units.ts` (re-runnable, supports `--dry`).
+- `lib/data/orgUnit.ts` (CRUD + tree + descendants/ancestors + multi-root + archive/restore/promote).
+- `lib/data/orgUnitMatcher.ts` (graph cache + `unitInScope` + `mergeLegacyScope`).
+- `lib/data/role.ts` (CRUD with `SUPERADMIN`-immutable + capability subset enforcement + scope-binding + `resolveRoleByCode` fallback).
+- `lib/data/publicCopy.ts` (sanitisation + deep-merge over fallback).
+- `lib/data/reconcile.ts` + `/api/admin-config/reconcile` (dry-run + live).
+- `lib/data/importPipeline.ts → parseXlsx + parseSpreadsheet` dispatcher with SheetJS lazy import + `IMPORT_XLSX_MAX_SHEETS` cap + `SpreadsheetParseError`.
+- API routes: `/api/org/units/*`, `/api/roles/*`, `/api/public-copy/[ns]`, `/api/admin-config/reconcile`.
+- Visibility refactor in `/api/reports/[id]` to consult `unitInScope` after legacy column-equality.
+- Public pages: `/`, `/how-it-works`, new `/about`, `/privacy`, `/terms` reading via `loadPublicCopy`.
+- Admin editors: `OrgUnitTreeEditor`, `RolesEditorV2`, `LandingCopyEditor`, `HowItWorksEditor`, `SimplePageEditor`, `ReconcilePanel` mounted in `AdminConfigPage`.
+- Seven new playgrounds + tab assignments updated.
+- `config/content.ts` fallbacks refreshed: landing.features, how-it-works tabs/FAQs/playgroundIds, new aboutPage/privacyPage/termsPage stubs.
+- `.env.example` updated with `IMPORT_XLSX_MAX_SHEETS`, `IMPORT_ALLOWED_MIMES`, `PUBLIC_COPY_DB_ENABLED`.
+- Targeted tests: `test/publicCopySanitise.test.ts` (8 ✓), `test/orgUnitMatcher.test.ts` (4 ✓), `test/spreadsheetParse.test.ts` (11 ✓).
+- Validation: `npx tsc --noEmit` ✓; `npx prisma validate` ✓; `npx prisma generate` ✓.
+
+**Key Changes:**
+
+- Polymorphic OrgUnit table coexists with legacy Campus + OrgGroup. Existing FKs keep working unchanged. New `unitId` columns are populated by the back-fill (via migration SQL or runtime Reconcile) without overwriting populated values.
+- Runtime Role table seeded with the original UserRole enum values; admins can CREATE custom roles via the new RolesEditorV2 UI. SUPERADMIN row is immutable; non-SUPERADMIN built-ins can be edited (label/cadence/capabilities) but not deleted (only archived). Custom roles can be created and archived without a deploy.
+- Imports now accept xlsx + multi-sheet workbooks. Errors return `{ code: "import_parse_failed" }` with a 400 instead of generic 500s.
+- Public-page content (landing, how-it-works, about, privacy, terms, footer) is admin-editable through the existing admin-config substrate with deep-merge + XSS sanitisation; hard-coded fallbacks in `config/content.ts` are now up-to-date with platform reality.
+- Admins can run a Reconcile (dry-run preview or live) from the Admin Config UI to migrate any legacy rows that haven't been touched by the migration's back-fill — idempotent, never overwrites populated values.
+
+**Files Modified:**
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260505120000_org_role_polymorphism_and_imports_xlsx/migration.sql`
+- `scripts/seed-roles-and-units.ts`
+- `lib/data/orgUnit.ts`
+- `lib/data/orgUnitMatcher.ts`
+- `lib/data/role.ts`
+- `lib/data/publicCopy.ts`
+- `lib/data/reconcile.ts`
+- `lib/data/adminConfig.ts` (extended namespace registry)
+- `lib/data/importPipeline.ts`
+- `app/api/imports/[id]/file/route.ts`
+- `app/api/imports/[id]/mapping/route.ts`
+- `app/api/imports/[id]/validate/route.ts`
+- `app/api/org/units/route.ts` (new)
+- `app/api/org/units/[id]/route.ts` (new)
+- `app/api/org/units/[id]/promote/route.ts` (new)
+- `app/api/roles/route.ts` (new)
+- `app/api/roles/[id]/route.ts` (new)
+- `app/api/public-copy/[ns]/route.ts` (new)
+- `app/api/admin-config/reconcile/route.ts` (new)
+- `app/api/reports/[id]/route.ts` (visibility refactor)
+- `app/page.tsx`
+- `app/how-it-works/page.tsx`
+- `app/about/page.tsx` (new)
+- `app/privacy/page.tsx` (new)
+- `app/terms/page.tsx` (new)
+- `modules/imports/components/ImportWizardPage.tsx`
+- `modules/admin-config/components/AdminConfigPage.tsx`
+- `modules/admin-config/components/OrgUnitTreeEditor.tsx` (new)
+- `modules/admin-config/components/RolesEditorV2.tsx` (new)
+- `modules/admin-config/components/PublicCopyEditors.tsx` (new)
+- `modules/how-it-works/playgrounds.tsx` (7 new playgrounds)
+- `config/content.ts`
+- `config/routes.ts`
+- `types/global.ts`
+- `.env.example`
+- `test/publicCopySanitise.test.ts` (new)
+- `test/orgUnitMatcher.test.ts` (new)
+- `test/spreadsheetParse.test.ts` (new)
+- `.ai-system/agents/repair-system.md`
+- `.ai-system/summaries/dev-history.md`
+- `.ai-system/checkpoints/session-log.md`
+
+**Next Sprint Focus:**
+
+- Wire the polymorphic `unitInScope` matcher through the aggregation engine (`/api/reports/aggregate` + `lib/data/reportAggregation.ts`) once admins start using multi-tree hierarchies in production.
+- Surface custom Role table rows in the auth layer (`auth.user.roleId` resolved through `resolveRoleByCode` when set) so capability checks can honour custom roles end-to-end.
+- Add the long-deferred integration tests once the Prisma test harness exists (`test/orgUnitTreeCrud.test.ts`, `test/roleCrudPermissions.test.ts`).

@@ -19,6 +19,7 @@ import { ROLE_CONFIG } from "@/config/roles";
 import { UserRole, ReportStatus, ReportEventType, MetricCalculationType } from "@/types/global";
 import { parseCachedJsonSafe } from "@/lib/utils/cacheJson";
 import { isOwnScopedReport } from "@/lib/utils/reportVisibility";
+import { unitInScope } from "@/lib/data/orgUnitMatcher";
 
 /* ── Update schema ─────────────────────────────────────────────────────────── */
 
@@ -51,15 +52,54 @@ export async function GET(
         });
         if (!report) return notFoundResponse("Report not found.");
 
-        /* Scope check */
+        /* Scope check
+         *
+         * Two-stage: (1) the legacy column-equality check, kept so existing
+         * data with no `unitId` populated still resolves correctly; (2) the
+         * polymorphic `unitInScope(target, [user.unitId])` fallback so the
+         * new substrate is honored after reconciliation moves users + reports
+         * onto `unitId`. Either path passing grants access — no regression
+         * for legacy rows, and new multi-tree scopes work end-to-end.
+         */
         const roleConfig = ROLE_CONFIG[auth.user.role as UserRole];
-        if (roleConfig.reportVisibilityScope === "campus" && report.campusId !== auth.user.campusId) {
-            return errorResponse("You do not have access to this report.", 403);
+        const reportSnap = report;
+        const userSnap = auth.user;
+        const reportUnitId =
+            (reportSnap as { unitId?: string | null }).unitId ?? reportSnap.campusId;
+        const userUnitId =
+            (userSnap as { unitId?: string | null }).unitId ?? userSnap.campusId ?? null;
+
+        const scope = roleConfig.reportVisibilityScope;
+        let allowed = false;
+        if (scope === "all") {
+            allowed = true;
+        } else if (scope === "campus") {
+            allowed =
+                reportSnap.campusId === userSnap.campusId ||
+                (Boolean(userUnitId) && (await unitInScope(reportUnitId, [userUnitId!])));
+        } else if (scope === "group") {
+            allowed =
+                reportSnap.orgGroupId === userSnap.orgGroupId ||
+                (Boolean(userUnitId) && (await unitInScope(reportUnitId, [userUnitId!]))) ||
+                (Boolean(userSnap.orgGroupId) &&
+                    (await unitInScope(reportUnitId, [userSnap.orgGroupId!])));
+        } else if (scope === "own") {
+            if (isOwnScopedReport(reportSnap, userSnap.id)) {
+                allowed = true;
+            } else {
+                const hasAssignment = await db.formAssignment.findFirst({
+                    where: {
+                        reportId: reportSnap.id,
+                        assigneeId: userSnap.id,
+                        cancelledAt: null,
+                    },
+                    select: { id: true },
+                });
+                allowed = Boolean(hasAssignment);
+            }
         }
-        if (roleConfig.reportVisibilityScope === "group" && report.orgGroupId !== auth.user.orgGroupId) {
-            return errorResponse("You do not have access to this report.", 403);
-        }
-        if (roleConfig.reportVisibilityScope === "own" && !isOwnScopedReport(report, auth.user.id)) {
+
+        if (!allowed) {
             return errorResponse("You do not have access to this report.", 403);
         }
 

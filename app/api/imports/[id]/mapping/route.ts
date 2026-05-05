@@ -14,7 +14,7 @@ import {
     notFoundResponse,
     handleApiError,
 } from "@/lib/utils/api";
-import { parseCsv } from "@/lib/data/importPipeline";
+import { parseSpreadsheet, SpreadsheetParseError, type SpreadsheetFormat } from "@/lib/data/importPipeline";
 
 const Schema = z.object({
     columns: z
@@ -29,7 +29,27 @@ const Schema = z.object({
         .max(200),
     profileName: z.string().min(1).max(200).optional(),
     saveProfile: z.boolean().optional(),
+    selectedSheet: z.string().min(1).max(200).optional(),
 });
+
+async function loadJobRows(job: {
+    storageRef: string | null;
+    fileFormat: string | null;
+    selectedSheet: string | null;
+}): Promise<{ rows: string[][]; sheetNames: string[]; sheetName?: string }> {
+    if (!job.storageRef) return { rows: [], sheetNames: [] };
+    const format: SpreadsheetFormat = (job.fileFormat as SpreadsheetFormat | null) ?? "CSV";
+    const parsed = await parseSpreadsheet({
+        format,
+        payload: job.storageRef,
+        selectedSheet: job.selectedSheet,
+    });
+    return {
+        rows: parsed.rows,
+        sheetNames: parsed.sheetNames ?? [],
+        sheetName: parsed.sheetName,
+    };
+}
 
 export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
     try {
@@ -43,11 +63,26 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ id: string 
         if (job.ownerId !== auth.user.id) {
             return NextResponse.json(forbiddenResponse("Not your import job"), { status: 403 });
         }
-        const sampleRows = job.storageRef ? parseCsv(job.storageRef).slice(0, 6) : [];
-        return NextResponse.json(successResponse({
-            mapping: job.mapping ?? null,
-            sample: sampleRows,
-        }));
+        try {
+            const parsed = await loadJobRows(job);
+            return NextResponse.json(
+                successResponse({
+                    mapping: job.mapping ?? null,
+                    sample: parsed.rows.slice(0, 6),
+                    fileFormat: job.fileFormat ?? "CSV",
+                    sheetNames: parsed.sheetNames,
+                    selectedSheet: parsed.sheetName ?? job.selectedSheet ?? null,
+                }),
+            );
+        } catch (err) {
+            if (err instanceof SpreadsheetParseError) {
+                return NextResponse.json(
+                    { success: false, error: err.reason, code: "import_parse_failed" },
+                    { status: 400 },
+                );
+            }
+            throw err;
+        }
     } catch (err) {
         return handleApiError(err);
     }
@@ -77,6 +112,9 @@ export async function PUT(req: NextRequest, ctx: { params: Promise<{ id: string 
             data: {
                 status: "MAPPED",
                 mapping: { columns: parsed.data.columns, templateId: job.templateId } as never,
+                ...(parsed.data.selectedSheet !== undefined && {
+                    selectedSheet: parsed.data.selectedSheet,
+                }),
             },
         });
         if (parsed.data.saveProfile && parsed.data.profileName) {

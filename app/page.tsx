@@ -13,6 +13,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { verifyAccessToken } from "@/lib/utils/auth";
 import { loadAdminConfig } from "@/lib/data/adminConfig";
+import { loadPublicCopy } from "@/lib/data/publicCopy";
 import { CONTENT } from "@/config/content";
 import { ROLE_DASHBOARD_ROUTES } from "@/config/routes";
 import { UserRole } from "@/types/global";
@@ -64,7 +65,9 @@ async function readAuth(): Promise<{ firstName?: string; role?: UserRole; signed
 
 export default async function LandingPage() {
     const auth = await readAuth();
-    const snap = await loadAdminConfig<LandingPayload>("landing").catch(() => null);
+    // loadPublicCopy applies sanitisation + deep-merges any partial admin
+    // override onto the typed fallback so the page never renders blank fields.
+    const snap = await loadPublicCopy<LandingPayload>("landing").catch(() => null);
     const fallback = (CONTENT.landing as unknown) as LandingPayload;
     const data = snap?.payload ?? fallback;
 

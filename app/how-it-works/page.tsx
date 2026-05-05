@@ -12,7 +12,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { HowItWorksPage } from "@/modules/how-it-works";
-import { loadAdminConfig } from "@/lib/data/adminConfig";
+import { loadPublicCopy } from "@/lib/data/publicCopy";
 import { CONTENT } from "@/config/content";
 import { verifyAccessToken } from "@/lib/utils/auth";
 import { ROLE_DASHBOARD_ROUTES } from "@/config/routes";
@@ -51,7 +51,8 @@ async function readAuth(): Promise<{
 
 export default async function Page() {
     const auth = await readAuth();
-    const snap = await loadAdminConfig("howItWorks").catch(() => null);
+    // Sanitised + fallback-merged read so partial admin edits never blank a tab.
+    const snap = await loadPublicCopy("howItWorks").catch(() => null);
     const fallback = CONTENT.howItWorks as unknown as Record<string, unknown>;
     const initial = (snap?.payload ?? fallback) as never;
     const landingCopy = (CONTENT.landing as unknown) as {

@@ -206,6 +206,20 @@ export const API_ROUTES = {
         public: "/api/admin-config/public",
         namespace: (ns: string) => `/api/admin-config/${ns}`,
         reset: (ns: string) => `/api/admin-config/${ns}/reset`,
+        reconcile: "/api/admin-config/reconcile",
+    },
+    orgUnits: {
+        list: "/api/org/units",
+        detail: (id: string) => `/api/org/units/${id}`,
+        archive: (id: string) => `/api/org/units/${id}/archive`,
+        promote: (id: string) => `/api/org/units/${id}/promote`,
+    },
+    rolesV2: {
+        list: "/api/roles",
+        detail: (id: string) => `/api/roles/${id}`,
+    },
+    publicCopy: {
+        namespace: (ns: string) => `/api/public-copy/${ns}`,
     },
     formAssignments: {
         list: "/api/form-assignments",

@@ -45,6 +45,8 @@ interface JobDetail {
     id: string;
     status: string;
     fileName?: string | null;
+    fileFormat?: string | null;
+    selectedSheet?: string | null;
     mapping?: { columns: ColumnMapping[]; templateId?: string } | null;
     validationSummary?: { total: number; ok: number; warning: number; error: number } | null;
     commitSummary?: { committed: number; failed: number } | null;
@@ -60,6 +62,17 @@ const STEP_INDEX: Record<string, number> = {
     CANCELLED: 0,
 };
 
+const XLSX_MIMES = [
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.ms-excel",
+];
+
+function isXlsxFile(file: File): boolean {
+    if (XLSX_MIMES.includes((file.type || "").toLowerCase())) return true;
+    const lower = file.name.toLowerCase();
+    return lower.endsWith(".xlsx") || lower.endsWith(".xls");
+}
+
 export function ImportWizardPage({ jobId: initialJobId }: { jobId?: string }) {
     const router = useRouter();
     const [jobId, setJobId] = useState<string | undefined>(initialJobId);
@@ -68,6 +81,8 @@ export function ImportWizardPage({ jobId: initialJobId }: { jobId?: string }) {
     const [columnsMapping, setColumnsMapping] = useState<ColumnMapping[]>([]);
     const [preview, setPreview] = useState<PreviewRow[] | null>(null);
     const [busy, setBusy] = useState(false);
+    const [sheetNames, setSheetNames] = useState<string[]>([]);
+    const [selectedSheet, setSelectedSheet] = useState<string | null>(null);
 
     const { data: templates } = useApiData<ReportTemplate[]>(API_ROUTES.reportTemplates.list);
 
@@ -113,42 +128,110 @@ export function ImportWizardPage({ jobId: initialJobId }: { jobId?: string }) {
         return json.data.id;
     };
 
+    const refreshMappingPreview = async (id: string) => {
+        const mapRes = await fetch(API_ROUTES.imports.mapping(id), { cache: "no-store" });
+        const mapJson = (await mapRes.json()) as {
+            success: boolean;
+            data?: {
+                sample: string[][];
+                fileFormat?: string;
+                sheetNames?: string[];
+                selectedSheet?: string | null;
+            };
+            error?: string;
+            code?: string;
+        };
+        if (!mapRes.ok || !mapJson.success) {
+            message.error(mapJson.error ?? "Could not load mapping preview");
+            return;
+        }
+        if (mapJson.data) {
+            setSample(mapJson.data.sample ?? []);
+            setSheetNames(mapJson.data.sheetNames ?? []);
+            if (mapJson.data.selectedSheet !== undefined) {
+                setSelectedSheet(mapJson.data.selectedSheet ?? null);
+            }
+            if ((mapJson.data.sample ?? []).length > 0) {
+                const header = mapJson.data.sample[0];
+                setColumnsMapping(
+                    header.map((h, i) => ({ index: i, header: h, target: "skip" })),
+                );
+            }
+        }
+    };
+
     const handleUpload = async (file: File): Promise<boolean> => {
         const id = await ensureJob();
         if (!id) return false;
         setBusy(true);
         try {
-            const text = await file.text();
+            const isXlsx = isXlsxFile(file);
+            const headers: Record<string, string> = {
+                "x-import-filename": file.name,
+                "Content-Type": isXlsx
+                    ? file.type || XLSX_MIMES[0]
+                    : file.type || "text/csv",
+            };
+            // Send the file as binary for xlsx, text for csv. Browsers correctly
+            // handle ArrayBuffer in fetch bodies.
+            const body = isXlsx ? await file.arrayBuffer() : await file.text();
             const res = await fetch(API_ROUTES.imports.file(id), {
                 method: "PUT",
-                headers: { "Content-Type": "text/csv", "x-import-filename": file.name },
-                body: text,
+                headers,
+                body: body as BodyInit,
             });
-            const json = (await res.json()) as { success: boolean; error?: string };
+            const json = (await res.json()) as {
+                success: boolean;
+                error?: string;
+                code?: string;
+                data?: {
+                    fileFormat?: string;
+                    sheetNames?: string[];
+                    selectedSheet?: string | null;
+                };
+            };
             if (!res.ok || !json.success) {
-                message.error(json.error ?? "Upload failed");
+                if (json.code === "import_parse_failed") {
+                    message.error(`Parse failed: ${json.error ?? "Spreadsheet could not be read."}`);
+                } else {
+                    message.error(json.error ?? "Upload failed");
+                }
                 return false;
             }
             message.success(COPY_TOASTS.jobCreated ?? "File uploaded");
-            // refresh job detail (re-trigger effect by toggling sample)
-            const mapRes = await fetch(API_ROUTES.imports.mapping(id), { cache: "no-store" });
-            const mapJson = (await mapRes.json()) as {
-                success: boolean;
-                data?: { sample: string[][] };
-            };
-            if (mapJson.success && mapJson.data) {
-                setSample(mapJson.data.sample ?? []);
-                if ((mapJson.data.sample ?? []).length > 0) {
-                    const header = mapJson.data.sample[0];
-                    setColumnsMapping(
-                        header.map((h, i) => ({ index: i, header: h, target: "skip" })),
-                    );
-                }
-            }
+            if (json.data?.sheetNames) setSheetNames(json.data.sheetNames);
+            if (json.data?.selectedSheet !== undefined) setSelectedSheet(json.data.selectedSheet ?? null);
+            await refreshMappingPreview(id);
             const detailRes = await fetch(API_ROUTES.imports.detail(id), { cache: "no-store" });
             const detailJson = (await detailRes.json()) as { success: boolean; data?: JobDetail };
             if (detailJson.success && detailJson.data) setJobDetail(detailJson.data);
             return true;
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const onSheetChange = async (next: string) => {
+        if (!jobId) return;
+        setBusy(true);
+        try {
+            // Persist via the mapping PUT (it accepts selectedSheet) without
+            // overwriting existing column mappings: we re-send the current ones.
+            const res = await fetch(API_ROUTES.imports.mapping(jobId), {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    columns: columnsMapping.length > 0 ? columnsMapping : [{ index: 0, header: "_", target: "skip" }],
+                    selectedSheet: next,
+                }),
+            });
+            const json = (await res.json()) as { success: boolean; error?: string };
+            if (!res.ok || !json.success) {
+                message.error(json.error ?? "Could not switch sheet");
+                return;
+            }
+            setSelectedSheet(next);
+            await refreshMappingPreview(jobId);
         } finally {
             setBusy(false);
         }
@@ -264,7 +347,7 @@ export function ImportWizardPage({ jobId: initialJobId }: { jobId?: string }) {
             />
             {!jobId || stepIndex === 0 ? (
                 <Upload.Dragger
-                    accept=".csv,text/csv"
+                    accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
                     multiple={false}
                     showUploadList={false}
                     disabled={busy}
@@ -277,10 +360,32 @@ export function ImportWizardPage({ jobId: initialJobId }: { jobId?: string }) {
                         <InboxOutlined />
                     </p>
                     <p className="text-sm text-ds-text-secondary">
-                        {COPY_ACTIONS.uploadFile ?? "Click or drag a CSV file"}
+                        {COPY_ACTIONS.uploadFile ?? "Click or drag a CSV or Excel file"}
+                    </p>
+                    <p className="text-xs text-ds-text-subtle mt-1">
+                        Supported: .csv · .xlsx · .xls
                     </p>
                 </Upload.Dragger>
             ) : null}
+
+            {jobId && stepIndex >= 1 && sheetNames.length > 1 && (
+                <div className="mt-4 mb-2 p-3 rounded-ds-md border border-ds-border-subtle bg-ds-surface-elevated flex items-center gap-3 flex-wrap">
+                    <span className="text-xs uppercase tracking-wide text-ds-text-subtle">
+                        Workbook sheet
+                    </span>
+                    <Select
+                        size="small"
+                        value={selectedSheet ?? sheetNames[0]}
+                        onChange={(v) => void onSheetChange(v)}
+                        options={sheetNames.map((n) => ({ value: n, label: n }))}
+                        style={{ minWidth: 220 }}
+                        disabled={busy}
+                    />
+                    <span className="text-xs text-ds-text-subtle">
+                        Switch sheets to re-load the column mapping preview.
+                    </span>
+                </div>
+            )}
 
             {jobId && stepIndex >= 1 && (
                 <div className="flex flex-col gap-3 mt-4">
