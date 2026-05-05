@@ -236,12 +236,29 @@ export async function PUT(
                 }
             }
 
+            // Capture a brief change-summary in `details` so the audit trail
+            // surfaces what was actually touched, not just "edit applied".
+            const editSummary = (() => {
+                const editedSections = (body.sections ?? []) as Array<{ metrics?: unknown[] }>;
+                if (editedSections.length === 0) {
+                    return body.notes ? `Notes: ${body.notes}` : "Report fields edited";
+                }
+                const sectionCount = editedSections.length;
+                let metricCount = 0;
+                for (const s of editedSections) {
+                    metricCount += s.metrics?.length ?? 0;
+                }
+                const noteSuffix = body.notes ? ` · Notes: ${body.notes}` : "";
+                return `Edited ${metricCount} metric${metricCount === 1 ? "" : "s"} across ${sectionCount} section${sectionCount === 1 ? "" : "s"}${noteSuffix}`;
+            })();
+
             await tx.reportEvent.create({
                 data: {
                     reportId: id,
                     eventType: ReportEventType.EDIT_APPLIED,
                     actorId: auth.user.id,
                     timestamp: new Date(),
+                    details: editSummary,
                 },
             });
 

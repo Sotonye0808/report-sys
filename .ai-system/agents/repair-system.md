@@ -104,6 +104,15 @@
 
 ---
 
+### `/how-it-works` build-time prerender bails out
+
+- Symptom: `npm run build` fails with `useSearchParams() should be wrapped in a suspense boundary at page "/how-it-works"`. Stack trace points into the prerender pipeline. Build worker exits with code 1.
+- Root cause: the `<HowItWorksPage />` client component uses `useSearchParams` for the `?tab=` deep-link contract. Next 16's static-export contract requires every client component using that hook to live inside a `<Suspense>` boundary so prerender can bail to a fallback when the search-params snapshot is unknown.
+- Fix: wrap the consumer in `<Suspense fallback={<LoadingSkeleton rows={6} />}>` inside `app/how-it-works/page.tsx` (already shipped).
+- Prevention: any future server route mounting a client child that uses `useSearchParams` / `useRouter` / `usePathname` should wrap it at the seam. Dev mode tolerates the missing boundary; only `npm run build` catches it.
+
+---
+
 ### Mutation routes silently bypassing the impersonation read-only gate
 
 - Symptom: a new mutation route ships without going through `verifyAuth(req)`, so the impersonation chokepoint can't fire and a SUPERADMIN in `READ_ONLY` mode silently mutates real data.

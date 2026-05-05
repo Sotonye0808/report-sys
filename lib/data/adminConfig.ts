@@ -33,7 +33,8 @@ export type AdminConfigNamespaceName =
     | "roleCadence"
     | "correlation"
     | "landing"
-    | "howItWorks";
+    | "howItWorks"
+    | "goalAutomation";
 
 export interface AdminConfigSnapshot<T = Record<string, unknown>> {
     namespace: AdminConfigNamespaceName;
@@ -116,6 +117,14 @@ const FALLBACKS: Record<AdminConfigNamespaceName, () => Record<string, unknown>>
     },
     landing: () => ({ ...(CONTENT.landing as Record<string, unknown>) }),
     howItWorks: () => ({ ...(CONTENT.howItWorks as Record<string, unknown>) }),
+    goalAutomation: () => ({
+        // Default growth parameters used when admin hasn't tuned per-metric values.
+        // 5% w/w, 8% m/m, 15% y/y are sensible church-attendance defaults.
+        growthWeekly: 0.05,
+        growthMonthly: 0.08,
+        growthYearly: 0.15,
+        perMetric: {},
+    }),
 };
 
 /* ── Cache key + TTL ────────────────────────────────────────────────────── */

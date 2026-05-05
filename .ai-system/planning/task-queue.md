@@ -325,7 +325,7 @@
 #### Phase G — Follow-ups (queued, not in initial pass)
 
 - [x] CI lint rule: `npm run check:mutation-auth` (script `scripts/check-mutation-auth.ts`) statically scans every `app/api/**/route.ts` and fails when a `POST/PUT/PATCH/DELETE` export lacks a `verifyAuth(` call. The impersonation read-only gate fires inside `verifyAuth`, so this single chokepoint covers the original intent. Public auth lifecycle endpoints opt out via the `// @public-mutation` annotation (9 routes tagged).
-- [ ] "Replay session" affordance — read-only walkthrough of every page visited in a past session.
+- [x] "Replay session" affordance — `ImpersonationLogPanel` modal renders a Tabs split (Timeline / Replay narrative) + a "Restart preview" CTA that opens a fresh session with the same role + target user + mode. *Note: literal page-by-page walkthrough still requires a client `PAGE_VISITED` emitter on each navigation — the event type exists in `ImpersonationEventType` but no emitter is wired today; tracked as a follow-up if needed.*
 - [ ] Optional `record-only` mode capturing intent without storing payloads.
 
 ### Planned Feature — Quick-Form Rule Editor + Smart Selects + Auto-Total Metrics + Week-on-Week + Chart Polish + Comparison Surfaces
@@ -383,6 +383,38 @@
 - [x] Update `.ai-system/agents/system-architecture.md` (modules + data-flow entries 49–54 + env keys).
 - [x] Update `.ai-system/agents/project-context.md` (rule editor + auto-total + WoW business constraints).
 - [x] Update `diagnostics-runbook.md` with chain-detection error path, WoW silent-degrade, smart-select drift, RotatedTick adoption guidance, comparison min-samples behaviour.
+
+### Planned Feature — Polymorphic Org Units (deprecate hardcoded Campus / OrgGroup tables)
+
+> **Tightened plan:** see [`.ai-system/planning/temp-org-unit-polymorphism-plan-2026-05-04.md`](./temp-org-unit-polymorphism-plan-2026-05-04.md). Multi-day scope; awaits explicit approval before implementation. Today's audit confirms the existing roles + org CRUD surfaces (Admin Config Roles editor with label/cap overrides, OrgPage groups + campuses CRUD) cover their own shapes — but the underlying tables still encode "Campus"/"OrgGroup" by name, so renaming a level or adding a new level (e.g. Zone) requires this polymorphism work.
+
+#### Phase A — Schema + back-fill + dual-write
+
+- [ ] Add `OrgUnit` model with self-FK + `level` + `parentId` + metadata fields.
+- [ ] Author `*_org_units_backfill` migration: CREATE table, INSERT from `org_groups` + `campuses`, add `unitId` columns alongside legacy FKs, install dual-write triggers.
+- [ ] Regenerate Prisma client; `npx prisma validate`.
+
+#### Phase B — Read paths
+
+- [ ] `lib/data/orgUnit.ts` (CRUD + tree).
+- [ ] `lib/data/orgUnitMatcher.ts` (scope-match used by aggregation + form-assignment matching).
+- [ ] `/api/org/units` REST surface.
+- [ ] Refactor `OrgPage` to a tree view with admin-configurable level labels.
+- [ ] Sweep hardcoded "Campus" / "Group" strings across UI surfaces; resolve via `resolveHierarchyLevels()`.
+- [ ] Update aggregation engine to filter by `unitId` + `level`.
+- [ ] Update form-assignment materialiser to use `unitIds[]` + `levelHint`.
+
+#### Phase C — Write paths + deprecation
+
+- [ ] Legacy `/api/org/campuses` + `/api/org/groups` become thin wrappers writing to `org_units`.
+- [ ] Drop dual-write triggers; legacy tables become VIEWs over `org_units`.
+- [ ] Admin Config "Hierarchy" tab creates `org_units` rows when admin adds/removes a level.
+
+#### Phase D — Cleanup + lint
+
+- [ ] ESLint rule `no-hardcoded-org-label` failing when "Campus"/"Group"/"campusId" appears in user-facing strings outside the hierarchy config.
+- [ ] Update `.ai-system` docs (system-architecture, project-context, repair-system) with the new substrate.
+- [ ] Regression tests: tree CRUD, scope-match correctness, aggregation across arbitrary depth.
 
 ---
 

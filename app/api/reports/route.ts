@@ -276,12 +276,25 @@ export async function POST(req: NextRequest) {
                 },
             });
 
+            // Capture creation context (period, draft note) so the audit
+            // trail entry isn't a bare "Created" tag.
+            const createdSummary = (() => {
+                const parts: string[] = [];
+                if (body.periodType) parts.push(String(body.periodType).toLowerCase());
+                if (body.periodYear) parts.push(String(body.periodYear));
+                if (body.periodMonth) parts.push(`month ${body.periodMonth}`);
+                if (body.periodWeek) parts.push(`week ${body.periodWeek}`);
+                const meta = parts.length > 0 ? `Period: ${parts.join(" · ")}` : "Draft created";
+                return body.notes ? `${meta} · Notes: ${body.notes}` : meta;
+            })();
+
             await tx.reportEvent.create({
                 data: {
                     reportId: newReport.id,
                     eventType: ReportEventType.CREATED,
                     actorId: auth.user.id,
                     timestamp: new Date(),
+                    details: createdSummary,
                 },
             });
 
