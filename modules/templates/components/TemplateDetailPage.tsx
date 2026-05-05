@@ -20,6 +20,8 @@ import {
   StarOutlined,
   DragOutlined,
   TrophyOutlined,
+  SettingOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import { useApiData } from "@/lib/hooks/useApiData";
 import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
@@ -109,7 +111,7 @@ function MetricRow({
     {
       key: "capturesGoal",
       label: CONTENT.templates.capturesGoalLabel as string,
-      tip: "Show a goal field on the form. Goals can also auto-prefill from the previous period — see Goal Automation in Admin Config.",
+      tip: "Show a goal field on the form. Goals can auto-prefill from the previous period — see Goal Automation in Admin Config.",
     },
     {
       key: "capturesAchieved",
@@ -133,90 +135,224 @@ function MetricRow({
   // `AutoSumPanel` so the per-metric row stays focused on data-entry fields.
   void sectionMetrics;
 
+  // Settings panel hidden by default — Forms/Zoho-style blank canvas.
+  // The row collapses to JUST the borderless name input + settings/delete icons
+  // until the admin opts in to configuration.
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  // A small pill-strip summary of which captures are active, so the
+  // collapsed row still gives a quick read of what's configured.
+  const activeCaptures = TOGGLES.filter((t) => Boolean(metric[t.key])).map((t) => t.label);
+
   return (
-    <div className="p-4 bg-ds-surface-sunken rounded-ds-lg border border-ds-border-subtle space-y-3">
-      {/* Inline-editable metric title — no separate label */}
-      <div className="flex items-start justify-between gap-2">
+    <div
+      className={[
+        "rounded-ds-lg border bg-ds-surface-elevated transition-shadow",
+        settingsOpen
+          ? "border-ds-brand-accent/40 shadow-ds-sm"
+          : "border-ds-border-subtle hover:shadow-ds-sm",
+      ].join(" ")}
+    >
+      {/* Default state: bare inline name input + collapsed settings cog */}
+      <div className="flex items-center gap-2 px-3 py-2.5">
         <Input
           value={metric.name}
           onChange={(e) => onChange({ name: e.target.value })}
           placeholder="Untitled metric"
           variant="borderless"
-          className="!text-base !font-medium !text-ds-text-primary !px-0"
+          className="!text-base !font-medium !text-ds-text-primary !px-0 flex-1"
           aria-label="Metric name"
         />
-        <Tooltip title="Remove this metric">
-          <Button type="text" danger size="small" icon={<DeleteOutlined />} onClick={onRemove} />
-        </Tooltip>
-      </div>
-
-      {/* Compact configuration row — dropdowns with (i) tooltips */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="flex flex-col gap-1">
-          <Tooltip title="Field type controls how the value is rendered + validated on the form (number / percentage / currency / text).">
-            <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1">
-              {CONTENT.templates.fieldTypeLabel as string}
-              <InfoCircleOutlined />
-            </span>
-          </Tooltip>
-          <Select
-            size="middle"
-            value={metric.fieldType}
-            options={FIELD_TYPE_OPTIONS}
-            onChange={(v) => onChange({ fieldType: v })}
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <Tooltip title="How aggregated reports combine values across periods: Sum (cumulative), Average (rolling mean), or Snapshot (latest value).">
-            <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1">
-              {CONTENT.templates.calculationTypeLabel as string}
-              <InfoCircleOutlined />
-            </span>
-          </Tooltip>
-          <Select
-            size="middle"
-            value={metric.calculationType}
-            options={CALC_TYPE_OPTIONS}
-            onChange={(v) => onChange({ calculationType: v })}
-            className="w-full"
-          />
-        </div>
-      </div>
-
-      {/* Toggle chips — each with an (i) tooltip */}
-      <div className="flex flex-wrap gap-x-4 gap-y-2">
-        {TOGGLES.map(({ key, label, tip }) => (
-          <Tooltip key={key} title={tip}>
-            <span className="inline-flex items-center gap-1.5 text-xs text-ds-text-secondary">
-              <Switch
-                size="small"
-                checked={metric[key] as boolean}
-                onChange={(v) => onChange({ [key]: v })}
-              />
-              {label}
-              <InfoCircleOutlined className="text-ds-text-subtle" />
-            </span>
-          </Tooltip>
-        ))}
-      </div>
-
-      <div className="flex items-center gap-2 flex-wrap">
-        <Tooltip title="Optional correlation group. Metrics sharing a group form a Pearson correlation matrix in Analytics (gated by min-sample size).">
-          <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1 flex-shrink-0">
-            Correlation
-            <InfoCircleOutlined />
+        {activeCaptures.length > 0 && !settingsOpen && (
+          <span className="hidden sm:inline-flex items-center gap-1 text-[10px] uppercase tracking-wide text-ds-text-subtle">
+            {activeCaptures.slice(0, 3).map((c) => (
+              <Tag key={c} className="!m-0 !text-[10px]">{c}</Tag>
+            ))}
+            {activeCaptures.length > 3 && (
+              <Tag className="!m-0 !text-[10px]">+{activeCaptures.length - 3}</Tag>
+            )}
           </span>
-        </Tooltip>
-        <div className="flex-1 min-w-[200px]">
-          <CorrelationGroupSelect
-            sections={allSections}
-            value={metric.correlationGroup}
-            onChange={(v) => onChange({ correlationGroup: v })}
-            placeholder="Pick or create a group"
+        )}
+        <Tooltip title={settingsOpen ? "Close settings" : "Open settings"}>
+          <Button
+            type="text"
+            size="small"
+            icon={settingsOpen ? <CloseOutlined /> : <SettingOutlined />}
+            onClick={() => setSettingsOpen((v) => !v)}
+            aria-label={settingsOpen ? "Close metric settings" : "Open metric settings"}
+            aria-expanded={settingsOpen ? "true" : "false"}
           />
-        </div>
+        </Tooltip>
+        <Tooltip title="Remove this metric">
+          <Button
+            type="text"
+            danger
+            size="small"
+            icon={<DeleteOutlined />}
+            onClick={onRemove}
+            aria-label="Remove metric"
+          />
+        </Tooltip>
       </div>
+
+      {/* Settings palette — only when toggled open */}
+      {settingsOpen && (
+        <div className="px-3 pb-3 pt-0 border-t border-ds-border-subtle space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+            <div className="flex flex-col gap-1">
+              <Tooltip title="Field type controls how the value is rendered + validated on the form (number / percentage / currency / text).">
+                <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1">
+                  {CONTENT.templates.fieldTypeLabel as string}
+                  <InfoCircleOutlined />
+                </span>
+              </Tooltip>
+              <Select
+                size="middle"
+                value={metric.fieldType}
+                options={FIELD_TYPE_OPTIONS}
+                onChange={(v) => onChange({ fieldType: v })}
+                className="w-full"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <Tooltip title="How aggregated reports combine values across periods: Sum (cumulative), Average (rolling mean), or Snapshot (latest value).">
+                <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1">
+                  {CONTENT.templates.calculationTypeLabel as string}
+                  <InfoCircleOutlined />
+                </span>
+              </Tooltip>
+              <Select
+                size="middle"
+                value={metric.calculationType}
+                options={CALC_TYPE_OPTIONS}
+                onChange={(v) => onChange({ calculationType: v })}
+                className="w-full"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            {TOGGLES.map(({ key, label, tip }) => (
+              <Tooltip key={key} title={tip}>
+                <span className="inline-flex items-center gap-1.5 text-xs text-ds-text-secondary">
+                  <Switch
+                    size="small"
+                    checked={metric[key] as boolean}
+                    onChange={(v) => onChange({ [key]: v })}
+                  />
+                  {label}
+                  <InfoCircleOutlined className="text-ds-text-subtle" />
+                </span>
+              </Tooltip>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <Tooltip title="Optional correlation group. Metrics sharing a group form a Pearson correlation matrix in Analytics (gated by min-sample size).">
+              <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1 flex-shrink-0">
+                Correlation
+                <InfoCircleOutlined />
+              </span>
+            </Tooltip>
+            <div className="flex-1 min-w-[200px]">
+              <CorrelationGroupSelect
+                sections={allSections}
+                value={metric.correlationGroup}
+                onChange={(v) => onChange({ correlationGroup: v })}
+                placeholder="Pick or create a group"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Section settings palette ──────────────────────────────────────────────
+ *
+ * Hidden-by-default panel for description + isRequired + correlation group.
+ * Mirrors the MetricRow approach: blank canvas first, settings on demand.
+ */
+interface SectionSettingsPaletteProps {
+  section: DraftSection;
+  allSections: DraftSection[];
+  updateSection: (sId: string, patch: Partial<DraftSection>) => void;
+}
+
+function SectionSettingsPalette({
+  section,
+  allSections,
+  updateSection,
+}: SectionSettingsPaletteProps) {
+  const [open, setOpen] = useState(false);
+
+  // Auto-open when settings already differ from defaults so the user knows
+  // the panel exists without having to discover the cog.
+  const hasNonDefaultConfig =
+    Boolean(section.description) ||
+    Boolean(section.correlationGroup) ||
+    section.isRequired === false; // default is true; flipping false counts as configured
+
+  const isOpen = open || hasNonDefaultConfig;
+
+  return (
+    <div className="rounded-ds-md border border-dashed border-ds-border-subtle bg-ds-surface-base/40">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-2 px-3 py-2 text-xs text-ds-text-secondary hover:bg-ds-surface-sunken/40 transition-colors"
+        aria-expanded={isOpen ? "true" : "false"}
+      >
+        <span className="inline-flex items-center gap-1.5">
+          <SettingOutlined />
+          Section settings
+        </span>
+        <span className="text-[10px] text-ds-text-subtle">
+          {isOpen ? "Hide" : "Show"}
+        </span>
+      </button>
+      {isOpen && (
+        <div className="px-3 pb-3 pt-1 space-y-3 border-t border-ds-border-subtle">
+          <Input
+            value={section.description}
+            onChange={(e) => updateSection(section.id, { description: e.target.value })}
+            placeholder="Description (optional)"
+            variant="borderless"
+            className="!text-sm !text-ds-text-secondary !px-0"
+            aria-label="Section description"
+          />
+          <div className="flex flex-wrap items-center gap-3">
+            <Tooltip title="Required sections must be filled before the report can be submitted.">
+              <span className="inline-flex items-center gap-1.5 text-xs text-ds-text-secondary">
+                <Switch
+                  size="small"
+                  checked={section.isRequired}
+                  onChange={(v) => updateSection(section.id, { isRequired: v })}
+                />
+                {CONTENT.templates.isRequiredLabel as string}
+                <InfoCircleOutlined className="text-ds-text-subtle" />
+              </span>
+            </Tooltip>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Tooltip title="Metrics sharing a correlation group are paired in analytics and the InsightSummary card. Leave empty to opt this section out.">
+              <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1 flex-shrink-0">
+                Correlation
+                <InfoCircleOutlined />
+              </span>
+            </Tooltip>
+            <div className="flex-1 min-w-[220px]">
+              <CorrelationGroupSelect
+                sections={allSections}
+                value={section.correlationGroup}
+                onChange={(v) => updateSection(section.id, { correlationGroup: v })}
+                placeholder="Pick or create a group"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -746,68 +882,41 @@ export function TemplateDetailPage({ params }: PageProps) {
                   defaultActiveKey={draft.map((s) => s.id)}
                   items={draft.map((section, si) => ({
                     key: section.id,
+                    /*
+                      Section dropdown header IS the borderless inline name input.
+                      Clicks + key strokes on the input are stopped from
+                      bubbling so editing doesn't accidentally collapse the
+                      section. The little metric-count + drag handle ride on
+                      the right of the same row.
+                    */
                     label: (
-                      <div className="flex items-center gap-3 min-w-0">
+                      <div className="flex items-center gap-2 min-w-0 w-full">
                         <DragOutlined className="text-ds-text-subtle flex-shrink-0" />
-                        <span className="font-medium text-ds-text-primary truncate">
-                          {section.name || `Section ${si + 1}`}
-                        </span>
-                        <span className="text-xs text-ds-text-subtle flex-shrink-0">
+                        <Input
+                          value={section.name}
+                          onChange={(e) => updateSection(section.id, { name: e.target.value })}
+                          placeholder={`Section ${si + 1} name`}
+                          variant="borderless"
+                          className="!text-base !font-semibold !text-ds-text-primary !px-0 flex-1 min-w-0"
+                          aria-label="Section name"
+                          onClick={(e) => e.stopPropagation()}
+                          onKeyDown={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.stopPropagation()}
+                        />
+                        <span className="text-xs text-ds-text-subtle flex-shrink-0 hidden sm:inline">
                           {section.metrics.length} metric{section.metrics.length === 1 ? "" : "s"}
-                          {section.isRequired && <span className="ml-1 text-red-500">*</span>}
+                          {section.isRequired && <span className="ml-1 text-red-500" title="Required">*</span>}
                         </span>
                       </div>
                     ),
                     children: (
                       <div className="space-y-4 pt-1">
-                        {/* Section header — Forms-style inline-editable title + description, no labels */}
-                        <div className="space-y-2">
-                          <Input
-                            value={section.name}
-                            onChange={(e) => updateSection(section.id, { name: e.target.value })}
-                            placeholder="Untitled section"
-                            variant="borderless"
-                            className="!text-lg !font-semibold !text-ds-text-primary !px-0"
-                            aria-label="Section title"
-                          />
-                          <Input
-                            value={section.description}
-                            onChange={(e) =>
-                              updateSection(section.id, { description: e.target.value })
-                            }
-                            placeholder="Description (optional)"
-                            variant="borderless"
-                            className="!text-sm !text-ds-text-secondary !px-0"
-                            aria-label="Section description"
-                          />
-                          <div className="flex flex-wrap items-center gap-3 pt-1">
-                            <Tooltip title="Required sections must be filled before the report can be submitted.">
-                              <span className="inline-flex items-center gap-1.5 text-xs text-ds-text-secondary">
-                                <Switch
-                                  size="small"
-                                  checked={section.isRequired}
-                                  onChange={(v) => updateSection(section.id, { isRequired: v })}
-                                />
-                                {CONTENT.templates.isRequiredLabel as string}
-                                <InfoCircleOutlined className="text-ds-text-subtle" />
-                              </span>
-                            </Tooltip>
-                            <Tooltip title="Metrics sharing a correlation group are paired in analytics and the InsightSummary card. Leave empty to opt this section out.">
-                              <span className="inline-flex items-center gap-1.5 text-xs text-ds-text-secondary">
-                                Correlation
-                                <InfoCircleOutlined className="text-ds-text-subtle" />
-                              </span>
-                            </Tooltip>
-                            <div className="flex-1 min-w-[220px]">
-                              <CorrelationGroupSelect
-                                sections={draft}
-                                value={section.correlationGroup}
-                                onChange={(v) => updateSection(section.id, { correlationGroup: v })}
-                                placeholder="Pick or create a group"
-                              />
-                            </div>
-                          </div>
-                        </div>
+                        {/* Section settings palette — hidden by default; user opts in to configure */}
+                        <SectionSettingsPalette
+                          section={section}
+                          allSections={draft}
+                          updateSection={updateSection}
+                        />
 
                         {/* Data metrics (auto-sums are surfaced separately in AutoSumPanel below) */}
                         {(() => {

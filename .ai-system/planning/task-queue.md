@@ -422,8 +422,32 @@
 
 > **Section summary:** Known work that needs to be done but hasn't been scheduled yet.
 
-- [ ] [Backlog item 1]
-- [ ] [Backlog item 2]
+### Goal automation — form-side wiring
+
+- [ ] `GoalsPage`: pre-fill each metric's goal input via `computeAutomatedGoal({ priorAchieved, periodKind, templateMetricId, config })`. Pull config once on mount from `GET /api/goals/automation`. Allow override; don't blow away values the admin already typed.
+- [ ] `ReportSectionsForm`: render the goal-source tooltip ("Auto-prefilled from prior week-on-week value of 245 (Week 17, 2026), with +5% growth applied. You can override.") next to every goal input that came from automation.
+- [ ] Analytics surfaces: anywhere a goal value is rendered (compliance %, top-mover, biggest-gap), surface a small (i) tooltip explaining the goal's provenance (manual vs automated + parameters).
+- [ ] Add a `goalAutomation` GUI editor in Admin Config (replacing the JSON fallback) — sliders for w/w + m/m + y/y + per-metric override table.
+
+### Impersonation follow-ups
+
+- [ ] `record-only` impersonation mode — capture intent without storing payloads. Schema flag (`recordOnly: boolean` on `ImpersonationSession`), UI toggle next to the existing READ_ONLY / MUTATE pair, audit fan-out keeps writing events but redacts `payloadDigest`.
+- [ ] `PAGE_VISITED` client emitter — small dashboard-layout hook that records a `PAGE_VISITED` impersonation event on every route change when `auth.user.impersonation` is active. Completes the literal page-by-page replay angle. Event type already exists in `ImpersonationEventType`.
+- [ ] Email + push fan-out footer: when an action is taken under impersonation, append "(by SUPERADMIN previewing as <Role>)" footer to outbound emails + push payloads. Touches every send-site; needs a single helper threaded through all `send*Email` callers.
+
+### Quick-form / report
+
+- [ ] "Last filled by USHER" badge on `ReportEditPage` per metric. Requires explicit `lastQuickFillById` column on `ReportMetric` (currently inferable only via `lockedById` proxy). Migration is additive (`ADD COLUMN IF NOT EXISTS`).
+
+### Integration tests (blocked on Prisma test harness)
+
+- [ ] `test/recurringAssignmentMaterialisation.test.ts` — idempotency on concurrent calls; correct period-keying; campus-drift handling.
+- [ ] `test/quickViewAvailability.test.ts` — sourceCount probe path; cache TTL.
+- [ ] `test/impersonationSessionFlow.test.ts` — start / mode-switch / stop + DB-row state transitions.
+
+### Manual smokes
+
+- [ ] `/reports/aggregate` query-param prefill verification (no automated test surface today; needs UI-level smoke).
 
 ---
 
