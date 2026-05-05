@@ -1034,6 +1034,11 @@ declare global {
         usersList: Record<string, unknown>;
         reportsQuickViews: Record<string, unknown>;
         impersonation: Record<string, unknown>;
+        landing: Record<string, unknown>;
+        howItWorks: Record<string, unknown>;
+        helpAnchors: Record<string, string>;
+        helpLinkLabel: string;
+        helpLinkAria: string;
         adminConfig: Record<string, unknown>;
         imports: Record<string, unknown>;
         quickForm: Record<string, unknown>;

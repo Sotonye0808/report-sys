@@ -700,6 +700,13 @@ export const CONTENT = {
         builtByLabel: "Built by",
         developerName: "S.D",
         developerUrl: "https://sotonye-dagogo.is-a.dev",
+        links: [
+            { label: "Home", href: "/" },
+            { label: "How it works", href: "/how-it-works" },
+            { label: "About", href: "/about" },
+            { label: "Privacy", href: "/privacy" },
+            { label: "Terms", href: "/terms" },
+        ],
     },
 
     /* ── Profile ───────────────────────────────────────────────────────────── */
@@ -883,6 +890,265 @@ export const CONTENT = {
         generationFailed: "Generation failed",
     },
 
+    /* ── Landing page (root /) ─────────────────────────────────────────────── */
+    landing: {
+        hero: {
+            eyebrow: "Harvesters Reporting System",
+            headline: "Every campus report, in one auditable, analytics-ready place.",
+            subheadline:
+                "Standardise weekly + monthly reporting across campuses and groups. Run review workflows, roll up to group / org level, and surface the insights leadership actually needs.",
+            primaryCtaGuestLabel: "Sign in",
+            primaryCtaGuestHref: "/login",
+            primaryCtaAuthLabel: "Open my dashboard",
+            secondaryCtaLabel: "How it works",
+            secondaryCtaHref: "/how-it-works",
+        },
+        features: [
+            {
+                title: "Config-driven from end to end",
+                body: "Roles, hierarchy levels, dashboards, email templates, cadence — all admin-editable through the substrate. No deploys for copy changes or workflow tweaks.",
+            },
+            {
+                title: "Quick-form for ushers",
+                body: "Service-day data entry that wires straight into the campus admin's report. Recurring assignment rules + auto-totals keep the numbers consistent.",
+            },
+            {
+                title: "Aggregated rollups",
+                body: "Monthly, quarterly, and yearly views computed live across any defined org level. One click into the aggregation engine from any report detail.",
+            },
+            {
+                title: "Insights that matter",
+                body: "Pearson correlations across template-defined metric groups, top-mover deltas, biggest-gap rankings — gated by a sample-size floor so the numbers stay honest.",
+            },
+            {
+                title: "Safe by default",
+                body: "Strict TypeScript, Zod-validated APIs, audit-tagged impersonation for safe role previews, additive-only DB migrations. Existing data is never at risk.",
+            },
+            {
+                title: "Offline-tolerant",
+                body: "Drafts auto-save locally and sync when you're back online. Push notifications + email are optional and gracefully degrade when the service isn't configured.",
+            },
+        ],
+        quickLinksHeading: "Jump in",
+        quickLinks: {
+            authenticated: [
+                { label: "Dashboard", href: "/dashboard" },
+                { label: "Reports", href: "/reports" },
+                { label: "Analytics", href: "/analytics" },
+                { label: "How it works", href: "/how-it-works" },
+            ],
+            guest: [
+                { label: "Sign in", href: "/login" },
+                { label: "Have an invite?", href: "/join" },
+                { label: "How it works", href: "/how-it-works" },
+                { label: "About", href: "/about" },
+            ],
+        },
+        welcomeBack: "Welcome back",
+        signedOutBadge: "Not signed in",
+        learnMore: "Learn more",
+    },
+
+    /* ── How It Works page ──────────────────────────────────────────────────── */
+    howItWorks: {
+        pageTitle: "How it works",
+        pageSubtitle:
+            "Concise walkthroughs by feature and role, with scenarios, FAQs, and in-page playgrounds.",
+        intro:
+            "Pick a tab below — each one walks through the typical flow, includes a short scenario, and ends with frequently-asked questions and a hands-on playground where applicable.",
+        tabs: [
+            {
+                slug: "overview",
+                title: "Overview",
+                sections: [
+                    {
+                        heading: "What this platform is",
+                        body:
+                            "The Harvesters Reporting System replaces fragmented Excel + WhatsApp + Word workflows with a single auditable surface for campus reports, reviews, approvals, and analytics. Every value is traceable; every action is logged.",
+                    },
+                    {
+                        heading: "How roles fit together",
+                        body:
+                            "Ushers enter raw service-day numbers via the quick form. Campus admins consolidate and submit the weekly / monthly report. Group admins and pastors review and roll up. CEO / Office of CEO / Church Ministry / SPO see scope-overview analytics first, with one-click access to aggregated reports.",
+                    },
+                    {
+                        heading: "What's admin-editable",
+                        body:
+                            "Roles + capability bits, hierarchy levels, dashboard widget sets, email templates, role cadence (frequency + expected days + deadline), correlation defaults, PWA copy, invite defaults — all editable at runtime through Admin Config without a deploy.",
+                    },
+                ],
+                faqs: [
+                    {
+                        q: "Do I need to be online to fill a report?",
+                        a: "No. Drafts auto-save locally and sync when you're back online. The offline indicator in the corner shows the queue length.",
+                    },
+                    {
+                        q: "What happens if I lose access mid-edit?",
+                        a: "Your current draft survives. Sign back in and the form rehydrates with the values you'd entered.",
+                    },
+                ],
+                playgroundIds: [],
+            },
+            {
+                slug: "ushers",
+                title: "For Ushers",
+                sections: [
+                    {
+                        heading: "Quick-form basics",
+                        body:
+                            "When you sign in you land on the Quick Form page. Each card is one assignment — only the metrics your admin chose for you to fill, no goal context. Type in your numbers, the system auto-saves every 30 seconds, and tap Submit when you're done.",
+                    },
+                    {
+                        heading: "Who decides which metrics you fill?",
+                        body:
+                            "A campus or group admin opens the template editor → Quick-form assignments tab and creates a rule for the USHER role. They pick which metrics, optionally restrict to specific campuses, and set a cadence (typically weekly Sunday + Wednesday).",
+                    },
+                    {
+                        heading: "Where the values go",
+                        body:
+                            "Your submission flows directly into the campus admin's weekly / monthly report — no copy-paste. The campus admin sees a small 'auto-filled by usher' badge so they know which numbers came from you.",
+                    },
+                ],
+                faqs: [
+                    {
+                        q: "What if I'm assigned to fill a metric I don't have data for?",
+                        a: "Leave it blank. Save Draft. The campus admin can follow up directly or fill it themselves.",
+                    },
+                    {
+                        q: "Can I edit a value after submitting?",
+                        a: "Until the assignment is marked complete, yes. After completion, your campus admin handles edits.",
+                    },
+                ],
+                playgroundIds: ["quick-form-demo"],
+            },
+            {
+                slug: "campus-admin",
+                title: "For Campus Admins",
+                sections: [
+                    {
+                        heading: "Filling the campus report",
+                        body:
+                            "Open Reports → New report. The template auto-fills the title and period from its recurrence settings. Ushers' submissions are already in the corresponding cells. Add the rest, run a preview, and Submit when ready.",
+                    },
+                    {
+                        heading: "Aggregated quick views",
+                        body:
+                            "On any report detail you'll see Monthly / Quarterly / Yearly chips — one click takes you to a server-aggregated rollup of all your campus's reports for that period. No extra setup.",
+                    },
+                    {
+                        heading: "Auto-totals",
+                        body:
+                            "If your template has an auto-total metric (e.g. 'Total attendance' = Men + Women + Children), the cell is server-computed and read-only on the form, with a comment listing the source metrics.",
+                    },
+                ],
+                faqs: [
+                    {
+                        q: "Can I unlock a metric an usher already filled?",
+                        a: "Yes — the value is editable until the report is approved. After approval, request an unlock from your campus pastor.",
+                    },
+                ],
+                playgroundIds: [],
+            },
+            {
+                slug: "group-leadership",
+                title: "For Group Admins / Pastors",
+                sections: [
+                    {
+                        heading: "Scope overview at a glance",
+                        body:
+                            "Your dashboard lands on a scope-overview view: campus performance ranking, top-movers, compliance heatmap, period selector. From there, drill into any campus's reports without leaving the page.",
+                    },
+                    {
+                        heading: "Approving + reviewing",
+                        body:
+                            "Submitted campus reports queue under 'Pending review'. Mark Reviewed once the data passes your check; if something's off, request edits with a reason — the campus admin gets notified inline + by email if the service is configured.",
+                    },
+                ],
+                faqs: [
+                    {
+                        q: "How do I see a quarter or year roll-up?",
+                        a: "From any campus report detail, click the Quarterly or Yearly chip. The aggregation engine computes it live across all source reports in the period.",
+                    },
+                ],
+                playgroundIds: [],
+            },
+            {
+                slug: "executive",
+                title: "For CEO / SPO / Office of CEO / Church Ministry",
+                sections: [
+                    {
+                        heading: "Org-wide scope overview",
+                        body:
+                            "Your dashboard shows group performance ranking, top campus, org compliance, recent submissions, pending review queue, and admin quick-links. The widget set is admin-editable from Admin Config → Dashboard layout.",
+                    },
+                    {
+                        heading: "Insights",
+                        body:
+                            "InsightSummary card surfaces top-mover, biggest-gap, and compliance-delta sentences. CorrelationMatrix renders a Pearson heatmap when at least 5 paired samples exist (configurable).",
+                    },
+                ],
+                faqs: [
+                    {
+                        q: "Can I preview the platform as another role?",
+                        a: "Yes — superadmin can start a time-limited impersonation session. Read-only by default; switch to mutate mode if you need to take real actions. Every event is audit-logged.",
+                    },
+                ],
+                playgroundIds: [],
+            },
+            {
+                slug: "admin-config",
+                title: "For Superadmin",
+                sections: [
+                    {
+                        heading: "Admin Config substrate",
+                        body:
+                            "The Admin Config page is where every admin-editable bit lives: roles + capabilities, hierarchy levels, dashboard layout per role band, email templates, role cadence, correlation thresholds, PWA copy, invite defaults. Each namespace has a typed fallback in `config/*` — DB overrides take effect on next read with optimistic-lock conflict detection on save.",
+                    },
+                    {
+                        heading: "Templates editor",
+                        body:
+                            "Templates → tabs: Sections & metrics for the data shape, Quick-form assignments for the recurring rule editor. Auto-sum panel sits at the section level — pick source metrics from the same section or, with a one-click opt-in, across the template.",
+                    },
+                    {
+                        heading: "Impersonation",
+                        body:
+                            "Open the user menu → Preview as another role. Pick the role; for campus / group-scoped roles you must pick a target user so the preview inherits real campus + group context. Sessions auto-expire (default 30 min) and log every event.",
+                    },
+                ],
+                faqs: [
+                    {
+                        q: "How do I roll back a bad config change?",
+                        a: "Each namespace tab has a Reset to defaults button — that writes a tombstone row marking the namespace as fallback, restoring the typed defaults from `config/*`.",
+                    },
+                    {
+                        q: "Can I add new roles at runtime?",
+                        a: "Labels and capabilities for existing roles are admin-editable. Adding a brand-new role enum requires a deploy because user.role is a Postgres enum — but you can re-purpose any non-SUPERADMIN role with a fresh label + capability set.",
+                    },
+                ],
+                playgroundIds: ["correlation-demo"],
+            },
+        ],
+        playgroundComingSoon: "Hands-on playground — coming soon for this section.",
+        relatedHelpHeading: "Related help",
+    },
+
+    /* ── Need Help? anchor + page → tab map ────────────────────────────────── */
+    helpAnchors: {
+        "/dashboard": "overview",
+        "/reports": "campus-admin",
+        "/reports/new": "campus-admin",
+        "/reports/aggregate": "group-leadership",
+        "/quick-form": "ushers",
+        "/templates": "admin-config",
+        "/admin-config": "admin-config",
+        "/analytics": "executive",
+        "/users": "admin-config",
+        "/invites": "admin-config",
+        "/imports": "admin-config",
+    },
+    helpLinkLabel: "Need help?",
+    helpLinkAria: "Open help for this page",
+
     /* ── Impersonation (superadmin role preview) ──────────────────────────── */
     impersonation: {
         bannerReadOnlyTitle: "Previewing as",
@@ -904,6 +1170,11 @@ export const CONTENT = {
         startCancel: "Cancel",
         roleLabel: "Role",
         userLabel: "Specific user (optional)",
+        userLabelRequired: "Specific user (required for campus/group-scoped roles)",
+        targetRequired:
+            "This role is scoped to a campus or group — pick a real user so the preview inherits their scope. Without a target the preview can't materialise their assignments.",
+        previewNoCampusBanner:
+            "You're previewing this scoped role without a target user, so there's no campus context to materialise assignments against. Exit and start over with a target user picked.",
         modeLabel: "Mode",
         readOnlyDescription:
             "Walk flows safely. Mutating endpoints will return 403 and be logged as blocked.",

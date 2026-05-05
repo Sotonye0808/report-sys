@@ -1,3 +1,4 @@
+// @public-mutation -- intentionally unauthenticated (auth lifecycle endpoint).
 /**
  * app/api/auth/register/route.ts
  * POST /api/auth/register — public registration (creates MEMBER by default)

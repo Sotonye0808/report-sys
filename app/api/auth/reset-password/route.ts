@@ -1,3 +1,4 @@
+// @public-mutation -- intentionally unauthenticated (auth lifecycle endpoint).
 /**
  * app/api/auth/reset-password/route.ts
  * POST /api/auth/reset-password

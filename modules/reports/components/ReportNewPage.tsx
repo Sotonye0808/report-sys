@@ -427,6 +427,11 @@ export function ReportNewPage() {
               name="title"
               label={CONTENT.reports.columnLabels.title as string}
               rules={[{ required: true, message: "Report title is required." }]}
+              extra={
+                selectedTemplate && (selectedTemplate as ReportTemplate & { autoFillTitleTemplate?: string | null }).autoFillTitleTemplate
+                  ? "Auto-filled from the template — editable."
+                  : undefined
+              }
             >
               <Input placeholder="e.g. Lekki Campus — March 2025" size="large" />
             </Form.Item>
@@ -496,6 +501,11 @@ export function ReportNewPage() {
                 name="periodType"
                 label={CONTENT.reports.metadata.periodTypeLabel as string}
                 rules={[{ required: true }]}
+                extra={
+                  selectedTemplate && (selectedTemplate as ReportTemplate & { recurrenceFrequency?: ReportPeriodType | null }).recurrenceFrequency
+                    ? "Pre-set from the template's recurrence — editable."
+                    : undefined
+                }
               >
                 <Select
                   size="large"

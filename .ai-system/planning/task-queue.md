@@ -226,7 +226,7 @@
 
 - [x] Add `lib/auth/permissions.ts → resolveRoleCadence(role)` reading `roleCadence` namespace with fallback.
 - [x] Wire `ReportNewPage` to read role cadence + template recurrence + render auto-fill title + pre-select period values; all editable.
-- [ ] Add inline helper text "auto-filled · editable" below title and period inputs (config-driven copy). *(minor polish; deferred)*
+- [x] Add inline helper text "auto-filled · editable" below title and period inputs (Form.Item `extra` slot; conditional on template carrying `autoFillTitleTemplate` / `recurrenceFrequency`).
 
 #### Phase D — Aggregated quick-view buttons
 
@@ -324,7 +324,7 @@
 
 #### Phase G — Follow-ups (queued, not in initial pass)
 
-- [ ] CI lint rule: fail when a route exports POST/PUT/PATCH/DELETE without calling `assertNotReadOnly` or marking `safeForReadOnly: true`.
+- [x] CI lint rule: `npm run check:mutation-auth` (script `scripts/check-mutation-auth.ts`) statically scans every `app/api/**/route.ts` and fails when a `POST/PUT/PATCH/DELETE` export lacks a `verifyAuth(` call. The impersonation read-only gate fires inside `verifyAuth`, so this single chokepoint covers the original intent. Public auth lifecycle endpoints opt out via the `// @public-mutation` annotation (9 routes tagged).
 - [ ] "Replay session" affordance — read-only walkthrough of every page visited in a past session.
 - [ ] Optional `record-only` mode capturing intent without storing payloads.
 

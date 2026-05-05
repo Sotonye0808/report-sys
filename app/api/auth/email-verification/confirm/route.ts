@@ -1,3 +1,4 @@
+// @public-mutation -- intentionally unauthenticated (auth lifecycle endpoint).
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getRequestContext } from "@/lib/server/requestContext";

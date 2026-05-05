@@ -1,3 +1,4 @@
+// @public-mutation -- intentionally unauthenticated (auth lifecycle endpoint).
 /**
  * POST /api/auth/activate
  * Consume a UserActivationToken and force a new password.

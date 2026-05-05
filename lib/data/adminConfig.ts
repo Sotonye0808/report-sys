@@ -31,7 +31,9 @@ export type AdminConfigNamespaceName =
     | "analytics"
     | "emailTemplates"
     | "roleCadence"
-    | "correlation";
+    | "correlation"
+    | "landing"
+    | "howItWorks";
 
 export interface AdminConfigSnapshot<T = Record<string, unknown>> {
     namespace: AdminConfigNamespaceName;
@@ -112,6 +114,8 @@ const FALLBACKS: Record<AdminConfigNamespaceName, () => Record<string, unknown>>
         }
         return { overrides: {}, fallback };
     },
+    landing: () => ({ ...(CONTENT.landing as Record<string, unknown>) }),
+    howItWorks: () => ({ ...(CONTENT.howItWorks as Record<string, unknown>) }),
 };
 
 /* ── Cache key + TTL ────────────────────────────────────────────────────── */

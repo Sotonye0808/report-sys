@@ -33,6 +33,7 @@ import { getNavItems } from "@/config/nav";
 import Button from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
+import { HelpLink } from "@/components/ui/HelpLink";
 import { AppFooter } from "@/components/ui/AppFooter";
 import { PwaInstallBanner } from "@/components/ui/PwaInstallBanner";
 import { ImpersonationBanner } from "@/components/ui/ImpersonationBanner";
@@ -363,6 +364,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {children}
           <AppFooter className="mt-8 border-t border-ds-border-subtle" />
           <ScrollToTop scrollContainerRef={mainRef} />
+          <HelpLink />
         </main>
       </div>
     </div>

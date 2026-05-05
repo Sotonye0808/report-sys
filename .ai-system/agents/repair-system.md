@@ -93,6 +93,25 @@
 
 ---
 
+### Impersonation / Preview
+
+**SUPERADMIN previewing a campus-scoped role sees an empty Quick-Form list even though rules + assignees exist**
+
+- Symptom: SUPERADMIN starts impersonation as USHER (or other campus/group-scoped role) WITHOUT picking a target user, opens `/quick-form`, sees zero assignments. Server logs show no errors.
+- Root cause: `verifyAuth` resolves `auth.user.campusId = impersonatedScope.campusId ?? userProfile.campusId`. When no target user is picked, `impersonatedScope` is empty and SUPERADMIN's own profile typically has no campus. The materialiser (`recurringAssignmentService.materialiseAssignmentsForUser`) then short-circuits at `if (!campusId || !orgGroupId) continue;` — silently skipping every rule, regardless of whether `rule.campusIds` is empty (apply-to-all) or restricted.
+- Fix: `ImpersonationStartDialog` now requires a target user when the impersonated role is in `CAMPUS_SCOPED_ROLES` or `GROUP_SCOPED_ROLES`. The submit is blocked with an inline error. `QuickFormLandingPage` additionally renders a friendly amber banner detecting "previewing without campus context" so legacy active sessions surface the gap instead of looking empty.
+- Prevention: any future preview surface that relies on `auth.user.campusId` / `auth.user.orgGroupId` should null-coalesce to the same diagnostic banner pattern; the `auth.user.impersonation` field is the canonical detector.
+
+---
+
+### Mutation routes silently bypassing the impersonation read-only gate
+
+- Symptom: a new mutation route ships without going through `verifyAuth(req)`, so the impersonation chokepoint can't fire and a SUPERADMIN in `READ_ONLY` mode silently mutates real data.
+- Fix: `npm run check:mutation-auth` (script `scripts/check-mutation-auth.ts`) statically scans every `app/api/**/route.ts` for `POST/PUT/PATCH/DELETE` exports and fails the build if any of them lacks a `verifyAuth(` call. Routes that are intentionally public (auth lifecycle: login / logout / refresh / register / forgot-password / reset-password / activate / email-verification confirm / email-change confirm) opt out via the file-level `// @public-mutation` annotation.
+- Prevention: wire `npm run check:mutation-auth` into CI — running before `tsc --noEmit` is enough. The 9 existing public auth routes are already tagged.
+
+---
+
 ## Resolved Errors Archive
 
 > **Section summary:** Errors that have been fully resolved and are unlikely to recur. Kept for reference.

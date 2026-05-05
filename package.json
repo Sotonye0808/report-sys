@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "check:mutation-auth": "tsx scripts/check-mutation-auth.ts",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
