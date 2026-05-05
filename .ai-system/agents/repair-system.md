@@ -113,6 +113,16 @@
 
 ---
 
+### Template builder UI changes only land on one of the two flows
+
+- Symptom: a UX refactor of `TemplateDetailPage` (edit flow) ships clean, but `TemplateNewPage` (create flow) still shows the old UI. Caught 2026-05-04 when the Forms-style simplification — inline borderless name inputs, hidden settings palette, settings cog — only appeared on edit.
+- Root cause: `TemplateNewPage.tsx` and `TemplateDetailPage.tsx` each maintain their own copy of `MetricRow`, the section-Collapse rendering, and the section settings panel. They were structured as siblings rather than around a shared builder component, so any change has to be ported twice. The header doc-comment in `TemplateNewPage` even reads "Mirrors TemplateDetailPage architecture" — i.e. duplication-by-design.
+- Fix (immediate, 2026-05-04): patched both files to apply the same simplified pattern.
+- Fix (durable, queued in task-queue.md → Backlog → "Template builder — extract shared `<TemplateBuilder>` component"): extract a single `<TemplateSectionsEditor>` that both pages render. Their own concerns stay focused on form metadata + save handlers + draft persistence + breadcrumbs.
+- Prevention: never add a third copy of the builder. The new shared module is the canonical place for any future builder change. Pages with a doc-comment that says "Mirrors X architecture" are a smell — that comment should always link back to the shared component.
+
+---
+
 ### Mutation routes silently bypassing the impersonation read-only gate
 
 - Symptom: a new mutation route ships without going through `verifyAuth(req)`, so the impersonation chokepoint can't fire and a SUPERADMIN in `READ_ONLY` mode silently mutates real data.

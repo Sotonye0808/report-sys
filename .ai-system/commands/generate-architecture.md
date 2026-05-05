@@ -1,7 +1,6 @@
 # Generate Architecture Command
 
 > **Overview:** Use this to produce or refresh the system architecture documentation. Can be run on an existing codebase to document what's there, or on a greenfield project to design what should be built.
-=]]
 ---
 
 ## Prompt

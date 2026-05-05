@@ -422,6 +422,17 @@
 
 > **Section summary:** Known work that needs to be done but hasn't been scheduled yet.
 
+### Template builder — extract shared `<TemplateBuilder>` component
+
+> **Why:** `TemplateNewPage` and `TemplateDetailPage` each maintain their own copy of `MetricRow`, `SectionSettingsPalette`, the section-Collapse render, and (in the edit page only) `AutoSumPanel`. The drift between them caused the create flow to keep showing the old, non-simplified UI even after the edit flow was redesigned (caught 2026-05-04). The fix that day patched both copies but didn't deduplicate — a single shared component is the durable answer.
+> **Scope:** Extract `modules/templates/components/TemplateBuilder.tsx` exporting `<TemplateSectionsEditor>` plus `BuilderSection`/`BuilderMetric` types. Both pages render the same component; their own concerns stay focused on form metadata + save handlers + draft persistence + breadcrumbs.
+
+- [ ] Build `TemplateBuilder.tsx` consolidating `MetricRow`, `SectionSettingsPalette`, `AutoSumPanel`, the section-Collapse rendering, and the empty/initial state.
+- [ ] Migrate `TemplateNewPage` to consume it (drops ~200 lines + automatically inherits AutoSum, WoW, correlation features that today only live on the edit page).
+- [ ] Migrate `TemplateDetailPage` to consume it (drops ~400 lines).
+- [ ] Add a regression test that snapshots both pages render the same builder for the same draft input.
+- [ ] Update `repair-system.md` with the extraction note so future devs know there is one canonical builder.
+
 ### Goal automation — form-side wiring
 
 - [ ] `GoalsPage`: pre-fill each metric's goal input via `computeAutomatedGoal({ priorAchieved, periodKind, templateMetricId, config })`. Pull config once on mount from `GET /api/goals/automation`. Allow override; don't blow away values the admin already typed.
