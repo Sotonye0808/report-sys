@@ -1036,6 +1036,9 @@ declare global {
         impersonation: Record<string, unknown>;
         landing: Record<string, unknown>;
         howItWorks: Record<string, unknown>;
+        aboutPage: Record<string, unknown>;
+        privacyPage: Record<string, unknown>;
+        termsPage: Record<string, unknown>;
         helpAnchors: Record<string, string>;
         helpLinkLabel: string;
         helpLinkAria: string;

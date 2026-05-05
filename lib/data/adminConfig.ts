@@ -34,7 +34,11 @@ export type AdminConfigNamespaceName =
     | "correlation"
     | "landing"
     | "howItWorks"
-    | "goalAutomation";
+    | "goalAutomation"
+    | "aboutPage"
+    | "privacyPage"
+    | "termsPage"
+    | "footer";
 
 export interface AdminConfigSnapshot<T = Record<string, unknown>> {
     namespace: AdminConfigNamespaceName;
@@ -125,6 +129,14 @@ const FALLBACKS: Record<AdminConfigNamespaceName, () => Record<string, unknown>>
         growthYearly: 0.15,
         perMetric: {},
     }),
+    // Public-page copy. Each namespace's fallback is a typed object pulled
+    // from `config/content.ts`. Admins can override via the Admin Config UI;
+    // missing override keys fall through to the typed shape so partial edits
+    // never blank out a section.
+    aboutPage: () => ({ ...((CONTENT.aboutPage as Record<string, unknown>) ?? {}) }),
+    privacyPage: () => ({ ...((CONTENT.privacyPage as Record<string, unknown>) ?? {}) }),
+    termsPage: () => ({ ...((CONTENT.termsPage as Record<string, unknown>) ?? {}) }),
+    footer: () => ({ ...((CONTENT.footer as Record<string, unknown>) ?? {}) }),
 };
 
 /* ── Cache key + TTL ────────────────────────────────────────────────────── */

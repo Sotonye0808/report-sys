@@ -21,10 +21,24 @@ import {
 } from "@ant-design/icons";
 import Image from "next/image";
 import { CONTENT } from "@/config/content";
-import { API_ROUTES, APP_ROUTES } from "@/config/routes";
+import { API_ROUTES, APP_ROUTES, ROLE_DASHBOARD_ROUTES } from "@/config/routes";
+import { UserRole } from "@/types/global";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { sanitiseJoinRedirect } from "@/lib/utils/joinRedirect";
+
+/** Friendly label for the destination route — shown in the redirect copy. */
+function describeDestination(href: string): string {
+  // Strip query string before matching.
+  const path = href.split("?")[0];
+  if (path === APP_ROUTES.quickForm) return "your quick form";
+  if (path === APP_ROUTES.reports) return "your reports";
+  if (path === APP_ROUTES.reportNew) return "the new report form";
+  if (path === APP_ROUTES.reportAggregate) return "the aggregate reports page";
+  if (path === APP_ROUTES.goals) return "the goals page";
+  if (path === APP_ROUTES.imports) return "the imports page";
+  return "your dashboard";
+}
 
 /* ── Invite metadata returned by GET /api/invite-links/[token] ───────────── */
 
@@ -52,46 +66,58 @@ function SuccessRedirect({
   router,
   email,
   emailServiceReady,
-  redirectTarget,
+  destinationHref,
 }: {
   router: ReturnType<typeof useRouter>;
   email?: string;
   emailServiceReady?: boolean;
-  redirectTarget?: string;
+  /** Resolved, signed-in destination (role dashboard or sanitised redirect target). */
+  destinationHref: string;
 }) {
-  const [seconds, setSeconds] = useState(5);
+  const [seconds, setSeconds] = useState(3);
+  const destinationLabel = describeDestination(destinationHref);
 
-  const loginHref = redirectTarget && redirectTarget !== APP_ROUTES.dashboard
-    ? `${APP_ROUTES.login}?from=${encodeURIComponent(redirectTarget)}`
-    : APP_ROUTES.login;
+  const goNow = useCallback(() => {
+    // `replace` so the back button doesn't bounce the user back to /join.
+    router.replace(destinationHref);
+    // Hard fallback: if Next's router doesn't navigate within 1.2s (rare —
+    // happens if a chunk fails to load), force a full-page nav so the user
+    // is never stranded on a "Redirecting…" screen indefinitely.
+    window.setTimeout(() => {
+      try {
+        const target = new URL(destinationHref, window.location.origin);
+        if (window.location.pathname !== target.pathname) {
+          window.location.href = destinationHref;
+        }
+      } catch {
+        window.location.href = destinationHref;
+      }
+    }, 1200);
+  }, [router, destinationHref]);
 
   useEffect(() => {
     if (seconds <= 0) {
-      router.push(loginHref);
+      goNow();
       return;
     }
     const timer = setTimeout(() => setSeconds((s) => s - 1), 1000);
     return () => clearTimeout(timer);
-  }, [seconds, router, loginHref]);
+  }, [seconds, goNow]);
 
   return (
     <div className="flex flex-col items-center gap-4 text-center">
       <CheckCircleOutlined className="text-4xl text-ds-brand-accent" />
       <h2 className="text-lg font-semibold text-ds-text-primary">
-        {(CONTENT.auth.registrationSuccessTitle as string) ?? "Account Created!"}
+        {(CONTENT.auth.registrationSuccessTitle as string) ?? "Account created!"}
       </h2>
       <p className="text-sm text-ds-text-secondary">
-        {(CONTENT.auth.registrationSuccessMessage as string) ??
-          "Your account is ready. Please log in."}
+        You&apos;re signed in. Taking you to {destinationLabel} in {seconds}s…
       </p>
       {emailServiceReady && email ? (
         <p className="text-xs text-ds-text-subtle">Verification email sent to {email}</p>
       ) : null}
-      <p className="text-xs text-ds-text-subtle">
-        {(CONTENT.auth.redirectingIn as string) ?? "Redirecting to login in"} {seconds}s…
-      </p>
-      <Button type="primary" onClick={() => router.push(loginHref)}>
-        {CONTENT.auth.loginButton as string}
+      <Button type="primary" onClick={goNow}>
+        Go to {destinationLabel} now
       </Button>
     </div>
   );
@@ -111,9 +137,10 @@ function JoinForm() {
   >("loading");
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
-  const [countdown, setCountdown] = useState(5);
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [emailServiceReady, setEmailServiceReady] = useState(false);
+  /** Resolved destination — set when register succeeds; the user is already signed in. */
+  const [destinationHref, setDestinationHref] = useState<string>(APP_ROUTES.dashboard);
 
   const [form] = Form.useForm<JoinFormValues>();
 
@@ -181,6 +208,15 @@ function JoinForm() {
       }
       setRegisteredEmail(json?.data?.user?.email ?? values.email);
       setEmailServiceReady(Boolean(json?.data?.user?.emailServiceReady));
+      // The register endpoint sets auth cookies, so the user is already signed in.
+      // Send them to the explicit ?redirect=… target if provided, otherwise to
+      // their role's dashboard. Falling back to /login (the old behaviour) made
+      // the user log in again, and any hiccup left them on a "loading" screen.
+      const role = (json?.data?.user?.role as UserRole | undefined) ?? UserRole.MEMBER;
+      const roleDashboard = ROLE_DASHBOARD_ROUTES[role] ?? APP_ROUTES.dashboard;
+      const explicitTarget =
+        redirectTarget && redirectTarget !== APP_ROUTES.dashboard ? redirectTarget : null;
+      setDestinationHref(explicitTarget ?? roleDashboard);
       setStatus("done");
     } catch {
       setErrorMsg((CONTENT.errors as Record<string, string>).generic ?? "Registration failed.");
@@ -241,7 +277,7 @@ function JoinForm() {
         router={router}
         email={registeredEmail}
         emailServiceReady={emailServiceReady}
-        redirectTarget={redirectTarget}
+        destinationHref={destinationHref}
       />
     );
   }

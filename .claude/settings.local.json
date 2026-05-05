@@ -20,7 +20,17 @@
       "Bash(grep -n \"^## Resolved Errors Archive\\\\|^## Error Log\\\\|^### Resolved\\\\|^---$\" 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\.ai-system\\\\agents\\\\repair-system.md')",
       "Bash(grep -n \"## Known Error Patterns\\\\|## Error Catalogue\\\\|## Patterns\\\\|^---$\" 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\.ai-system\\\\agents\\\\repair-system.md')",
       "Bash(grep -n \"sectionNameLabel\\\\|Section header\\\\|onChange.*section\\\\.id, { name\\\\|<Input.*size=\\\\\"large\\\\\".*value=\" 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\modules\\\\templates\\\\components\\\\TemplateDetailPage.tsx')",
-      "Bash(DATABASE_URL=postgresql://localhost:5432/test_placeholder npx tsx test/goalAutomation.test.ts)"
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test_placeholder npx tsx test/goalAutomation.test.ts)",
+      "Bash(grep -v \"^$\")",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(mkdir -p 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\app\\\\api\\\\org\\\\units' 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\app\\\\api\\\\org\\\\units\\\\[id]' 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\app\\\\api\\\\org\\\\units\\\\[id]\\\\archive' 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\app\\\\api\\\\org\\\\units\\\\[id]\\\\promote' 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\app\\\\api\\\\roles' 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\app\\\\api\\\\roles\\\\[id]' 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\app\\\\api\\\\public-copy\\\\[ns]' 'c:\\\\Users\\\\Harvesters WebDev\\\\Downloads\\\\web-dev\\\\report-sys\\\\app\\\\api\\\\admin-config\\\\reconcile')",
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx test/publicCopySanitise.test.ts)",
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx test/orgUnitMatcher.test.ts)",
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx test/spreadsheetParse.test.ts)",
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx scripts/check-mutation-auth.ts)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Harvesters WebDev\\Downloads\\web-dev\\report-sys\\app\\api\\org\\units"
     ]
   }
 }

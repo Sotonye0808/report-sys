@@ -384,7 +384,84 @@
 - [x] Update `.ai-system/agents/project-context.md` (rule editor + auto-total + WoW business constraints).
 - [x] Update `diagnostics-runbook.md` with chain-detection error path, WoW silent-degrade, smart-select drift, RotatedTick adoption guidance, comparison min-samples behaviour.
 
-### Planned Feature — Polymorphic Org Units (deprecate hardcoded Campus / OrgGroup tables)
+### Planned Feature — Admin-editable public content + xlsx imports + role/org CRUD + multi-tree polymorphic hierarchy
+
+> **Tightened plan:** see [`.ai-system/planning/temp-public-content-imports-roles-org-polymorphism-plan-2026-05-05.md`](./temp-public-content-imports-roles-org-polymorphism-plan-2026-05-05.md). Multi-pass scope; awaits explicit approval before implementation. Supersedes the earlier polymorphism-only plan by bundling four related tracks (public-copy substrate, xlsx imports, role CRUD with CREATE, multi-tree polymorphic hierarchy) since they all hit the same admin-config + role + org boundary.
+
+#### Phase A — Schema + safe additive migration
+
+- [x] Add `OrgUnit` (with `rootKey`, `level`, self-FK, metadata) + `Role` (with `isSystem`, capabilities jsonb) + `RoleScope` to `prisma/schema.prisma`. Strictly additive. *(2026-05-05)*
+- [x] Add `unitId` + `roleId` columns alongside every legacy carrier (`users`, `reports`, `invite_links`, `form_assignment_rules`). *(2026-05-05)*
+- [x] Author migration `20260505120000_org_role_polymorphism_and_imports_xlsx` with `CREATE TABLE IF NOT EXISTS` + `INSERT INTO ... SELECT ...` back-fills. No `DROP`, no `RENAME`. Apply via `prisma migrate deploy`. *(2026-05-05; dual-write triggers omitted — back-fill is idempotent + the runtime Reconcile action covers drift)*
+- [x] Author `scripts/seed-roles-and-units.ts` — idempotent seeder that delegates to `lib/data/reconcile.ts → reconcileSubstrate` (supports `--dry`). *(2026-05-05)*
+- [x] Regenerate Prisma client; `npx prisma validate`. *(2026-05-05)*
+
+#### Phase B — Read paths
+
+- [x] Implement `lib/data/orgUnit.ts` (CRUD + multi-root tree). *(2026-05-05)*
+- [x] Implement `lib/data/orgUnitMatcher.ts` (`unitInScope`, `descendantSet`, `mergeLegacyScope`). *(2026-05-05)*
+- [x] Implement `lib/data/role.ts` (CRUD with system-protected guard + capability validator + `resolveRoleByCode` fallback). *(2026-05-05)*
+- [x] Implement `lib/data/publicCopy.ts` (sanitisation + deep-merge over fallback). *(2026-05-05)*
+- [x] Add `app/api/org/units/*`, `app/api/roles/*`, `app/api/public-copy/[ns]`, `app/api/admin-config/reconcile` route surfaces. *(2026-05-05)*
+- [x] Refactor `app/api/reports/[id]/route.ts` to use `unitInScope` after legacy column-equality (legacy + new substrate both work end-to-end). *(2026-05-05)*
+- [ ] Refactor `app/api/reports/aggregate/route.ts` + `lib/data/reportAggregation.ts` to use `unitInScope`. *(deferred — aggregation engine still uses campusId/orgGroupId equality; scope-match upgrade tracked for next pass)*
+- [ ] Refactor `lib/data/recurringAssignmentService.ts` + `lib/data/formAssignmentRule.ts` to use `unitIds[]` + the matcher. *(deferred — ruleMatchesUser still uses legacy fields; back-compat path unchanged)*
+- [ ] Refactor `lib/auth/permissions.ts` to read `Role`-table rows first. *(deferred — runtime Role table is read by RolesEditorV2 today; capability resolver upgrade is the next pass)*
+- [x] Refactor `app/page.tsx` + `app/how-it-works/page.tsx` + new `app/about/page.tsx` + `app/privacy/page.tsx` + `app/terms/page.tsx` to read from the new namespaces with `config/content.ts` fallback. *(2026-05-05)*
+
+#### Phase C — Imports xlsx fix
+
+- [x] `xlsx` (SheetJS) already in package.json. Implement `parseXlsx(buf): { sheets: Array<{ name, rows: string[][] }> }` (lazy server-only import). *(2026-05-05)*
+- [x] Refactor `lib/data/importPipeline.ts → parseSpreadsheet(input)` dispatcher; `parseCsv` unchanged. *(2026-05-05)*
+- [x] Update `app/api/imports/[id]/file/route.ts` to accept `.xlsx`/`.xls` mimes; persist as base64 with `fileFormat` discriminator; validate on upload + return `sheetNames`. *(2026-05-05)*
+- [x] Update `app/api/imports/[id]/mapping/route.ts` to dispatch + return per-sheet sample rows. *(2026-05-05)*
+- [x] Update `validate` route to iterate the chosen sheet's rows; commit route was already format-agnostic. *(2026-05-05)*
+- [x] Update `modules/imports/components/ImportWizardPage.tsx` (wider mime set, sheet picker on multi-sheet xlsx, friendly `import_parse_failed` messages). *(2026-05-05)*
+
+#### Phase D — Admin Config UI extensions
+
+- [x] Build `RolesEditorV2.tsx` with CREATE dialog (code + label + capability picker + visibility scope + dashboard mode + optional scope-unit pin). Mounted alongside the legacy `RolesEditor` so admins can transition incrementally. *(2026-05-05)*
+- [x] Build `OrgUnitTreeEditor.tsx` (multi-root tabs, per-node add/edit/promote/archive). *(2026-05-05)*
+- [x] Build `LandingCopyEditor` + `HowItWorksEditor` + `SimplePageEditor` (about/privacy/terms) + `ReconcilePanel` in `PublicCopyEditors.tsx`. *(2026-05-05)*
+- [x] Mount all editors as new tabs under Admin Config; legacy JSON editor remains as fallback for unknown namespaces. *(2026-05-05)*
+
+#### Phase E — How-It-Works playgrounds
+
+- [x] Add seven new playgrounds: `analytics-chart-toggle`, `template-builder-effect`, `correlation-matrix-builder`, `auto-sum-chain`, `insight-summary-preview`, `aggregation-rollup`, `import-wizard-demo`. *(2026-05-05)*
+- [x] Update each tab in the `howItWorks` fallback to reference appropriate `playgroundIds`. *(2026-05-05)*
+
+#### Phase F — Hardcoded-fallback refresh
+
+- [x] Update `config/content.ts → landing.features` to mention polymorphic hierarchy + multi-tree + role CRUD + xlsx imports as live capabilities. *(2026-05-05)*
+- [x] Refresh `config/content.ts → howItWorks.tabs[*].sections + faqs` so every claim matches the platform's current state. *(2026-05-05)*
+- [x] Add `aboutPage` + `privacyPage` + `termsPage` namespace stubs in `config/content.ts` (full content, not stubs). *(2026-05-05)*
+
+#### Phase G — Tests + docs
+
+- [ ] `test/orgUnitTreeCrud.test.ts` — multi-root tree creation, descendants, ancestors, archive flow. *(deferred — needs Prisma test harness)*
+- [x] `test/orgUnitMatcher.test.ts` — pure-function unit tests on `mergeLegacyScope` (4 ✓). Full `unitInScope` deferred to Prisma harness. *(2026-05-05)*
+- [ ] `test/roleCrudPermissions.test.ts` — SUPERADMIN write rejection, capability-subset validator, scope-binding round-trip. *(deferred — needs Prisma test harness)*
+- [x] `test/publicCopySanitise.test.ts` — script tag, javascript URL, protocol-relative URL all rejected (8 ✓). *(2026-05-05)*
+- [x] `test/spreadsheetParse.test.ts` — single-sheet, multi-sheet, missing-sheet rejection, dispatcher contract (11 ✓). *(2026-05-05)*
+- [ ] `test/playgroundsMount.test.ts` — every registered playground mounts without error. *(deferred — needs jsdom/Testing Library harness)*
+- [ ] `test/migrationAdditiveSafety.test.ts` extension — new migration adds columns + tables only. *(deferred)*
+- [x] Update `.ai-system/agents/system-architecture.md` (module rows + data-flow entries 65–78). *(2026-05-05)*
+- [ ] Update `.ai-system/agents/project-context.md` (multi-tree hierarchy + role CRUD + public-copy constraints). *(deferred — small follow-up)*
+- [x] Update `.ai-system/agents/repair-system.md` with xlsx parse error entry. *(2026-05-05)*
+- [x] Update `.env.example` (`PUBLIC_COPY_DB_ENABLED`, `IMPORT_ALLOWED_MIMES`, `IMPORT_XLSX_MAX_SHEETS`). *(2026-05-05)*
+- [ ] Update `.ai-system/planning/project-plan.md` Phase 6: tick "Admin-editable configuration system" + "Excel/Spreadsheet import"; add "Multi-tree polymorphic hierarchy" line. *(deferred — small follow-up)*
+
+#### Phase H — Cleanup + lint
+
+- [ ] Add ESLint rule `no-hardcoded-org-label`. *(deferred)*
+- [ ] Add ESLint rule `no-hardcoded-role-label`. *(deferred)*
+- [ ] Sweep every UI surface that says "Campus" / "Group" / role label and resolve through `resolveHierarchyLevels()` + `resolveRoleConfig()`. *(deferred — incremental sweep across many surfaces)*
+
+---
+
+### Planned Feature — Polymorphic Org Units (superseded — see plan above)
+
+> **Status (2026-05-05):** Superseded by the bundled 2026-05-05 plan above, which absorbs this scope and adds the public-copy substrate, role CRUD, xlsx fix, and multi-tree hierarchy. Tasks below kept for trace.
 
 > **Tightened plan:** see [`.ai-system/planning/temp-org-unit-polymorphism-plan-2026-05-04.md`](./temp-org-unit-polymorphism-plan-2026-05-04.md). Multi-day scope; awaits explicit approval before implementation. Today's audit confirms the existing roles + org CRUD surfaces (Admin Config Roles editor with label/cap overrides, OrgPage groups + campuses CRUD) cover their own shapes — but the underlying tables still encode "Campus"/"OrgGroup" by name, so renaming a level or adding a new level (e.g. Zone) requires this polymorphism work.
 

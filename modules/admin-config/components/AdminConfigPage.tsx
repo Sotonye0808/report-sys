@@ -23,6 +23,14 @@ import Button from "@/components/ui/Button";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmailTemplatesEditor } from "./EmailTemplatesEditor";
 import { ImpersonationLogPanel } from "./ImpersonationLogPanel";
+import { OrgUnitTreeEditor } from "./OrgUnitTreeEditor";
+import { RolesEditorV2 } from "./RolesEditorV2";
+import {
+    LandingCopyEditor,
+    HowItWorksEditor,
+    SimplePageEditor,
+    ReconcilePanel,
+} from "./PublicCopyEditors";
 import {
     DashboardLayoutEditor,
     ImportsEditor,
@@ -53,6 +61,11 @@ const NAMESPACES = [
     "emailTemplates",
     "roleCadence",
     "correlation",
+    "landing",
+    "howItWorks",
+    "aboutPage",
+    "privacyPage",
+    "termsPage",
 ] as const;
 
 type Namespace = (typeof NAMESPACES)[number];
@@ -563,9 +576,45 @@ export function AdminConfigPage() {
                     </Button>
                 </div>
                 {ns === "roles" ? (
-                    <RolesEditor snap={snapshots[ns]} onSaved={reload} />
+                    <div className="flex flex-col gap-4">
+                        {/*
+                          Two surfaces side-by-side:
+                            (1) RolesEditor — legacy enum capability overlays via admin-config namespace
+                            (2) RolesEditorV2 — runtime CRUD + CREATE on the new Role table
+                          Both stay live during the cut-over so admins can continue
+                          using overlays while exploring the new substrate.
+                        */}
+                        <RolesEditor snap={snapshots[ns]} onSaved={reload} />
+                        <details className="border border-ds-border-subtle rounded-ds-md bg-ds-surface-base/50">
+                            <summary className="cursor-pointer px-4 py-2 text-sm font-semibold text-ds-text-primary">
+                                Runtime role table + custom roles (new)
+                            </summary>
+                            <div className="px-4 py-3 border-t border-ds-border-subtle">
+                                <RolesEditorV2 />
+                            </div>
+                        </details>
+                    </div>
                 ) : ns === "hierarchy" ? (
-                    <HierarchyEditor snap={snapshots[ns]} onSaved={reload} />
+                    <div className="flex flex-col gap-4">
+                        <HierarchyEditor snap={snapshots[ns]} onSaved={reload} />
+                        <details
+                            open
+                            className="border border-ds-border-subtle rounded-ds-md bg-ds-surface-base/50"
+                        >
+                            <summary className="cursor-pointer px-4 py-2 text-sm font-semibold text-ds-text-primary">
+                                Polymorphic org-unit tree (multi-root)
+                            </summary>
+                            <div className="px-4 py-3 border-t border-ds-border-subtle">
+                                <OrgUnitTreeEditor />
+                                <div className="mt-4 border-t border-ds-border-subtle pt-3">
+                                    <p className="text-xs uppercase tracking-wide text-ds-text-subtle mb-2">
+                                        Reconcile (dry update)
+                                    </p>
+                                    <ReconcilePanel />
+                                </div>
+                            </div>
+                        </details>
+                    </div>
                 ) : ns === "dashboardLayout" ? (
                     <DashboardLayoutEditor snap={snapshots[ns] as never} onSaved={reload} />
                 ) : ns === "templatesMapping" ? (
@@ -584,6 +633,12 @@ export function AdminConfigPage() {
                     <RoleCadenceEditor snap={snapshots[ns] as never} onSaved={reload} />
                 ) : ns === "correlation" ? (
                     <CorrelationEditor snap={snapshots[ns] as never} onSaved={reload} />
+                ) : ns === "landing" ? (
+                    <LandingCopyEditor snap={snapshots[ns]} onSaved={reload} />
+                ) : ns === "howItWorks" ? (
+                    <HowItWorksEditor snap={snapshots[ns]} onSaved={reload} />
+                ) : ns === "aboutPage" || ns === "privacyPage" || ns === "termsPage" ? (
+                    <SimplePageEditor namespace={ns} snap={snapshots[ns]} onSaved={reload} />
                 ) : (
                     <JsonEditor namespace={ns} snap={snapshots[ns]} onSaved={reload} />
                 )}

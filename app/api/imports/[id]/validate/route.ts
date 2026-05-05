@@ -14,7 +14,13 @@ import {
     notFoundResponse,
     handleApiError,
 } from "@/lib/utils/api";
-import { parseCsv, validateRows, type ImportMapping } from "@/lib/data/importPipeline";
+import {
+    parseSpreadsheet,
+    validateRows,
+    SpreadsheetParseError,
+    type ImportMapping,
+    type SpreadsheetFormat,
+} from "@/lib/data/importPipeline";
 
 export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
     try {
@@ -35,7 +41,23 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
             return NextResponse.json(badRequestResponse("No mapping configured"), { status: 400 });
         }
 
-        const rows = parseCsv(job.storageRef);
+        let rows: string[][];
+        try {
+            const parsed = await parseSpreadsheet({
+                format: (job.fileFormat as SpreadsheetFormat | null) ?? "CSV",
+                payload: job.storageRef,
+                selectedSheet: job.selectedSheet,
+            });
+            rows = parsed.rows;
+        } catch (err) {
+            if (err instanceof SpreadsheetParseError) {
+                return NextResponse.json(
+                    { success: false, error: err.reason, code: "import_parse_failed" },
+                    { status: 400 },
+                );
+            }
+            throw err;
+        }
         const mapping = job.mapping as unknown as ImportMapping;
 
         // Resolve known templateMetricIds. If templateId is set, restrict to that template.

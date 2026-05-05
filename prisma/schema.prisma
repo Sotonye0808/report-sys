@@ -22,6 +22,12 @@ model User {
   phone                   String?
   gender                  Gender?
   role                    UserRole                @default(MEMBER)
+  /// Optional FK into the runtime Role table; populated by the reconciliation
+  /// flow. Legacy `role` enum stays as the source of truth until reconciled.
+  roleId                  String?
+  /// Optional FK into the polymorphic OrgUnit substrate (any level). Coexists
+  /// with legacy campusId / orgGroupId — read paths prefer this when set.
+  unitId                  String?
   campusId                String?
   orgGroupId              String?
   avatar                  String?
@@ -70,11 +76,17 @@ model User {
   activationTokens        UserActivationToken[]   @relation("UserActivationOwner")
   campus                  Campus?                 @relation("CampusUsers", fields: [campusId], references: [id])
   orgGroup                OrgGroup?               @relation("OrgGroupUsers", fields: [orgGroupId], references: [id])
+  unit                    OrgUnit?                @relation("OrgUnitUsers", fields: [unitId], references: [id])
+  roleEntry               Role?                   @relation("RoleUsers", fields: [roleId], references: [id])
+  ownedUnits              OrgUnit[]               @relation("OrgUnitLeader")
+  ownedAdminUnits         OrgUnit[]               @relation("OrgUnitAdmin")
 
   @@index([email])
   @@index([role])
   @@index([campusId])
   @@index([orgGroupId])
+  @@index([unitId])
+  @@index([roleId])
   @@map("users")
 }
 
@@ -120,6 +132,108 @@ model Campus {
 
   @@index([parentId])
   @@map("campuses")
+}
+
+/* ── Polymorphic Org Units (multi-tree, variable-depth) ────────────────────
+ *
+ * Single substrate for every "scope" the platform tracks. Each row carries a
+ * `level` (admin-defined: GROUP, CAMPUS, DEPARTMENT, ZONE, …), a `parentId`
+ * (self-FK; null for roots) and a `rootKey` that groups roots into trees so
+ * multiple parallel hierarchies can coexist (e.g. "primary" tree of
+ * Group→Campus alongside "departments" tree of Department→Sub-department).
+ *
+ * Migration discipline: every existing Campus + OrgGroup row is back-filled
+ * into this table with the SAME UUID so existing FKs resolve through either
+ * path. Legacy tables stay live as compatibility surfaces; new code reads
+ * org_units exclusively.
+ */
+model OrgUnit {
+  id           String    @id @default(uuid())
+  /// Optional admin-set short slug. Useful for stable cross-tree references.
+  code         String?
+  /// Admin-defined level (e.g. "GROUP", "CAMPUS", "DEPARTMENT"). Free-form
+  /// because the hierarchy admin-config namespace owns the canonical list.
+  level        String
+  name         String
+  description  String?
+  parentId     String?
+  /// Groups roots into separate trees. Default seed value is "primary".
+  rootKey      String    @default("primary")
+  country      String?
+  location     String?
+  address      String?
+  phone        String?
+  leaderId     String?
+  adminId      String?
+  metadata     Json?
+  isActive     Boolean   @default(true)
+  archivedAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  parent       OrgUnit?  @relation("OrgUnitChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  children     OrgUnit[] @relation("OrgUnitChildren")
+  leader       User?     @relation("OrgUnitLeader", fields: [leaderId], references: [id])
+  unitAdmin    User?     @relation("OrgUnitAdmin", fields: [adminId], references: [id])
+  users        User[]    @relation("OrgUnitUsers")
+  reports      Report[]  @relation("ReportUnit")
+  scopedRoles  RoleScope[] @relation("OrgUnitRoleScope")
+
+  @@index([rootKey, level])
+  @@index([parentId])
+  @@index([level])
+  @@map("org_units")
+}
+
+/* ── Runtime-managed Role substrate ──────────────────────────────────────
+ *
+ * Built-in roles (one per UserRole enum value) are seeded with `isSystem=true`
+ * so they're protected from delete; SUPERADMIN's capabilities are also
+ * locked. Admins can CREATE custom roles at runtime — they get a fresh UUID,
+ * a unique uppercase code, and a capability subset (cannot grant any of the
+ * SUPERADMIN-only bits).
+ *
+ * `User.roleId` (added above) optionally pins a user to a runtime role row.
+ * When null, code falls back to the legacy `User.role` enum.
+ */
+model Role {
+  id                    String       @id @default(uuid())
+  /// Stable uppercase slug. Built-in roles use the matching UserRole enum value;
+  /// custom roles use any uppercase identifier the admin chooses (uniqueness enforced).
+  code                  String       @unique
+  label                 String
+  description           String?
+  hierarchyOrder        Int          @default(50)
+  dashboardMode         String       @default("scope-overview")
+  reportVisibilityScope String       @default("own")
+  capabilities          Json
+  cadence               Json?
+  /// True for seed roles that mirror the UserRole enum. System roles cannot
+  /// be deleted (only archived) and SUPERADMIN cannot be edited at all.
+  isSystem              Boolean      @default(false)
+  archivedAt            DateTime?
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+
+  users                 User[]       @relation("RoleUsers")
+  scopes                RoleScope[]  @relation("RoleScopes")
+
+  @@index([archivedAt])
+  @@map("roles")
+}
+
+model RoleScope {
+  id        String   @id @default(uuid())
+  roleId    String
+  unitId    String
+  createdAt DateTime @default(now())
+
+  role      Role     @relation("RoleScopes", fields: [roleId], references: [id], onDelete: Cascade)
+  unit      OrgUnit  @relation("OrgUnitRoleScope", fields: [unitId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, unitId])
+  @@index([unitId])
+  @@map("role_scopes")
 }
 
 model ReportTemplate {
@@ -215,6 +329,9 @@ model Report {
   templateVersionId String?
   campusId          String
   orgGroupId        String
+  /// Optional FK into OrgUnit. Coexists with legacy campusId/orgGroupId
+  /// during the migration window; reads prefer this when set.
+  unitId            String?
   period            String?
   periodType        ReportPeriodType
   periodYear        Int
@@ -248,9 +365,11 @@ model Report {
   reviewedBy        User?                 @relation("ReportReviewer", fields: [reviewedById], references: [id])
   submittedBy       User?                 @relation("ReportSubmitter", fields: [submittedById], references: [id])
   template          ReportTemplate        @relation("ReportTemplate", fields: [templateId], references: [id])
+  unit              OrgUnit?              @relation("ReportUnit", fields: [unitId], references: [id])
 
   @@index([campusId])
   @@index([orgGroupId])
+  @@index([unitId])
   @@index([templateId])
   @@index([status])
   @@index([periodYear, periodMonth])
@@ -472,8 +591,14 @@ model InviteLink {
   type           InviteLinkType
   targetId       String?
   targetRole     UserRole?
+  /// Optional FK into Role table for runtime-defined roles; falls back to
+  /// the legacy targetRole enum during the cut-over.
+  targetRoleId   String?
   campusId       String?
   groupId        String?
+  /// Optional polymorphic OrgUnit scope; when set, the invitee inherits this
+  /// unit on activation (legacy campusId/groupId still respected).
+  unitId         String?
   note           String?
   createdById    String
   usedAt         DateTime?
@@ -487,6 +612,7 @@ model InviteLink {
 
   @@index([token])
   @@index([batchId])
+  @@index([unitId])
   @@map("invite_links")
 }
 
@@ -639,11 +765,18 @@ model FormAssignmentRule {
   ownerId         String
   templateId      String
   role            UserRole?
+  /// Optional FK into Role table; when present takes precedence over the
+  /// legacy `role` enum. Legacy column stays readable for back-compat.
+  roleId          String?
   assigneeId      String?
   campusId        String?
   orgGroupId      String?
   campusIds       String[]         @default([])
   orgGroupIds     String[]         @default([])
+  /// Polymorphic scope — any OrgUnit ids at any level. Empty array = applies
+  /// to every unit. New writes prefer this; legacy `campusIds`/`orgGroupIds`
+  /// remain readable so existing rules continue to materialise.
+  unitIds         String[]         @default([])
   metricIds       String[]
   cadenceOverride Json?
   isActive        Boolean          @default(true)
@@ -670,6 +803,11 @@ model ImportJob {
   fileName           String?
   fileMime           String?
   fileBytes          Int?
+  /// "CSV" or "XLSX". When XLSX, `storageRef` is base64-encoded bytes;
+  /// when CSV (or unset for legacy rows), `storageRef` is raw text.
+  fileFormat         String?
+  /// For multi-sheet xlsx, the user-chosen sheet name. Null = first sheet.
+  selectedSheet      String?
   storageRef         String?
   mappingProfileId   String?
   mapping            Json?

@@ -1,10 +1,13 @@
 /**
  * lib/data/importPipeline.ts
  *
- * CSV-only spreadsheet parser + mapping store + validator for the import
- * wizard. Intentionally small and dependency-free so we can ship without a
- * new package install. XLSX support is a follow-up: the wizard accepts
- * `.csv` and `text/csv` only for now.
+ * Spreadsheet parser + mapping store + validator for the import wizard.
+ * Supports both CSV and XLSX:
+ *   - `parseCsv(text)` parses RFC4180-ish CSV.
+ *   - `parseXlsx(buffer)` lazily loads SheetJS server-side and returns
+ *     `{ sheets: [{ name, rows }] }` so the wizard can prompt the user to
+ *     pick a sheet on multi-sheet files.
+ *   - `parseSpreadsheet(input)` dispatches based on the file format.
  *
  * Validation surface:
  *   - column → templateMetricId mapping
@@ -13,7 +16,8 @@
  *   - unknown-metric detection
  *
  * Commit performs chunked Prisma updates against existing reports and uses
- * `runBulkTransaction` for atomicity per chunk.
+ * `runBulkTransaction` for atomicity per chunk. Failures are recorded as
+ * per-row outcomes — never bubble up as 500s.
  */
 
 import { prisma } from "@/lib/data/prisma";
@@ -80,6 +84,128 @@ export function parseCsv(text: string): string[][] {
         rows.push(row);
     }
     return rows.filter((r) => r.length > 0 && r.some((cell) => cell.length > 0));
+}
+
+/* ── XLSX parser (SheetJS) ───────────────────────────────────────────────
+ *
+ * Server-side only. SheetJS is dynamically imported so the client wizard
+ * never bundles it. The buffer can be a Node Buffer or a Uint8Array.
+ * Multi-sheet workbooks are returned as an array; the API + wizard pick
+ * the active sheet via `selectedSheet`.
+ */
+
+export interface SheetParseResult {
+    sheets: Array<{ name: string; rows: string[][] }>;
+}
+
+export class SpreadsheetParseError extends Error {
+    constructor(public reason: string) {
+        super(reason);
+        this.name = "SpreadsheetParseError";
+    }
+}
+
+const MAX_SHEETS = Number(process.env.IMPORT_XLSX_MAX_SHEETS ?? 12);
+
+export async function parseXlsx(buffer: Uint8Array | Buffer): Promise<SheetParseResult> {
+    let xlsx: typeof import("xlsx");
+    try {
+        // Lazy import so the bundle for routes that never parse xlsx stays small.
+        xlsx = await import("xlsx");
+    } catch (err) {
+        throw new SpreadsheetParseError(
+            `xlsx parser unavailable: ${err instanceof Error ? err.message : String(err)}`,
+        );
+    }
+
+    let wb: ReturnType<typeof xlsx.read>;
+    try {
+        wb = xlsx.read(buffer, { type: "buffer", cellDates: false, cellNF: false, cellText: false });
+    } catch (err) {
+        throw new SpreadsheetParseError(
+            `Could not read workbook: ${err instanceof Error ? err.message : String(err)}`,
+        );
+    }
+
+    const sheetNames = wb.SheetNames ?? [];
+    if (sheetNames.length === 0) {
+        throw new SpreadsheetParseError("Workbook contains no sheets");
+    }
+    const limit = Math.min(sheetNames.length, MAX_SHEETS);
+    const out: SheetParseResult["sheets"] = [];
+    for (let i = 0; i < limit; i++) {
+        const name = sheetNames[i];
+        const ws = wb.Sheets[name];
+        if (!ws) continue;
+        // `header: 1` returns array-of-arrays. `defval: ""` keeps empty cells
+        // present so column indices stay aligned with headers. `raw: false`
+        // forces string output so number/date coercion happens uniformly in
+        // `validateRows` instead of leaking xlsx-specific types upstream.
+        const matrix = xlsx.utils.sheet_to_json<unknown[]>(ws, {
+            header: 1,
+            defval: "",
+            raw: false,
+            blankrows: false,
+        }) as unknown[][];
+        const rows: string[][] = matrix.map((row) =>
+            (row ?? []).map((cell) => (cell == null ? "" : String(cell))),
+        );
+        // Drop fully empty trailing rows (SheetJS sometimes returns padding rows).
+        const trimmed = rows.filter((r) => r.some((cell) => cell.trim().length > 0));
+        out.push({ name, rows: trimmed });
+    }
+    if (out.length === 0) {
+        throw new SpreadsheetParseError("All sheets in this workbook are empty");
+    }
+    return { sheets: out };
+}
+
+/* ── Spreadsheet dispatch (CSV ↔ XLSX) ──────────────────────────────────── */
+
+export type SpreadsheetFormat = "CSV" | "XLSX";
+
+export interface SpreadsheetParseInput {
+    format: SpreadsheetFormat;
+    /** For CSV: the raw text. For XLSX: base64-encoded buffer (DB storage)
+     *  OR a binary Uint8Array (HTTP body). */
+    payload: string | Uint8Array;
+    /** XLSX only: which sheet to extract. When omitted, returns the first non-empty sheet. */
+    selectedSheet?: string | null;
+}
+
+export async function parseSpreadsheet(
+    input: SpreadsheetParseInput,
+): Promise<{ rows: string[][]; sheetName?: string; sheetNames?: string[] }> {
+    if (input.format === "CSV") {
+        if (typeof input.payload !== "string") {
+            throw new SpreadsheetParseError("CSV payload must be a string");
+        }
+        return { rows: parseCsv(input.payload) };
+    }
+    // XLSX path. Accept either base64 (string) or binary (Uint8Array).
+    let buffer: Buffer;
+    if (typeof input.payload === "string") {
+        try {
+            buffer = Buffer.from(input.payload, "base64");
+        } catch (err) {
+            throw new SpreadsheetParseError(
+                `Invalid base64 payload: ${err instanceof Error ? err.message : String(err)}`,
+            );
+        }
+    } else {
+        buffer = Buffer.from(input.payload);
+    }
+    const parsed = await parseXlsx(buffer);
+    const sheetNames = parsed.sheets.map((s) => s.name);
+    const target = input.selectedSheet
+        ? parsed.sheets.find((s) => s.name === input.selectedSheet)
+        : parsed.sheets[0];
+    if (!target) {
+        throw new SpreadsheetParseError(
+            `Sheet "${input.selectedSheet}" not found. Available: ${sheetNames.join(", ") || "(none)"}`,
+        );
+    }
+    return { rows: target.rows, sheetName: target.name, sheetNames };
 }
 
 /* ── Validation ─────────────────────────────────────────────────────────── */

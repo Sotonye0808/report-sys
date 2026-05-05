@@ -135,6 +135,8 @@ exports.Prisma.UserScalarFieldEnum = {
   phone: 'phone',
   gender: 'gender',
   role: 'role',
+  roleId: 'roleId',
+  unitId: 'unitId',
   campusId: 'campusId',
   orgGroupId: 'orgGroupId',
   avatar: 'avatar',
@@ -170,6 +172,50 @@ exports.Prisma.CampusScalarFieldEnum = {
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrgUnitScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  level: 'level',
+  name: 'name',
+  description: 'description',
+  parentId: 'parentId',
+  rootKey: 'rootKey',
+  country: 'country',
+  location: 'location',
+  address: 'address',
+  phone: 'phone',
+  leaderId: 'leaderId',
+  adminId: 'adminId',
+  metadata: 'metadata',
+  isActive: 'isActive',
+  archivedAt: 'archivedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RoleScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  label: 'label',
+  description: 'description',
+  hierarchyOrder: 'hierarchyOrder',
+  dashboardMode: 'dashboardMode',
+  reportVisibilityScope: 'reportVisibilityScope',
+  capabilities: 'capabilities',
+  cadence: 'cadence',
+  isSystem: 'isSystem',
+  archivedAt: 'archivedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RoleScopeScalarFieldEnum = {
+  id: 'id',
+  roleId: 'roleId',
+  unitId: 'unitId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ReportTemplateScalarFieldEnum = {
@@ -240,6 +286,7 @@ exports.Prisma.ReportScalarFieldEnum = {
   templateVersionId: 'templateVersionId',
   campusId: 'campusId',
   orgGroupId: 'orgGroupId',
+  unitId: 'unitId',
   period: 'period',
   periodType: 'periodType',
   periodYear: 'periodYear',
@@ -410,8 +457,10 @@ exports.Prisma.InviteLinkScalarFieldEnum = {
   type: 'type',
   targetId: 'targetId',
   targetRole: 'targetRole',
+  targetRoleId: 'targetRoleId',
   campusId: 'campusId',
   groupId: 'groupId',
+  unitId: 'unitId',
   note: 'note',
   createdById: 'createdById',
   usedAt: 'usedAt',
@@ -520,11 +569,13 @@ exports.Prisma.FormAssignmentRuleScalarFieldEnum = {
   ownerId: 'ownerId',
   templateId: 'templateId',
   role: 'role',
+  roleId: 'roleId',
   assigneeId: 'assigneeId',
   campusId: 'campusId',
   orgGroupId: 'orgGroupId',
   campusIds: 'campusIds',
   orgGroupIds: 'orgGroupIds',
+  unitIds: 'unitIds',
   metricIds: 'metricIds',
   cadenceOverride: 'cadenceOverride',
   isActive: 'isActive',
@@ -541,6 +592,8 @@ exports.Prisma.ImportJobScalarFieldEnum = {
   fileName: 'fileName',
   fileMime: 'fileMime',
   fileBytes: 'fileBytes',
+  fileFormat: 'fileFormat',
+  selectedSheet: 'selectedSheet',
   storageRef: 'storageRef',
   mappingProfileId: 'mappingProfileId',
   mapping: 'mapping',
@@ -634,12 +687,12 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.JsonNullValueInput = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -918,6 +971,9 @@ exports.Prisma.ModelName = {
   User: 'User',
   OrgGroup: 'OrgGroup',
   Campus: 'Campus',
+  OrgUnit: 'OrgUnit',
+  Role: 'Role',
+  RoleScope: 'RoleScope',
   ReportTemplate: 'ReportTemplate',
   ReportTemplateSection: 'ReportTemplateSection',
   ReportTemplateMetric: 'ReportTemplateMetric',

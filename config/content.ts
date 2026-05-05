@@ -906,23 +906,27 @@ export const CONTENT = {
         features: [
             {
                 title: "Config-driven from end to end",
-                body: "Roles, hierarchy levels, dashboards, email templates, cadence — all admin-editable through the substrate. No deploys for copy changes or workflow tweaks.",
+                body: "Roles, hierarchy, dashboards, email templates, cadence, public-page copy — all admin-editable through the substrate. Custom roles can be created at runtime; the polymorphic OrgUnit table supports multiple parallel trees (e.g. Groups & Departments side-by-side). No deploys for copy or workflow changes.",
             },
             {
                 title: "Quick-form for ushers",
-                body: "Service-day data entry that wires straight into the campus admin's report. Recurring assignment rules + auto-totals keep the numbers consistent.",
+                body: "Service-day data entry that wires straight into the campus admin's report. Recurring assignment rules + auto-totals keep the numbers consistent. Section-level correlation groups are configured in a dedicated panel (cross-section by toggle) parallel to the auto-totals editor.",
             },
             {
                 title: "Aggregated rollups",
-                body: "Monthly, quarterly, and yearly views computed live across any defined org level. One click into the aggregation engine from any report detail.",
+                body: "Monthly, quarterly, and yearly views computed live across any defined org level. One click into the aggregation engine from any report detail. The matcher resolves scope across the polymorphic tree at any depth.",
             },
             {
                 title: "Insights that matter",
-                body: "Pearson correlations across template-defined metric groups, top-mover deltas, biggest-gap rankings — gated by a sample-size floor so the numbers stay honest.",
+                body: "Pearson correlations across template-defined metric groups, top-mover deltas, biggest-gap rankings — gated by a sample-size floor so the numbers stay honest. Insights tabs render the same algorithms in interactive playgrounds on the How It Works page.",
+            },
+            {
+                title: "Spreadsheet imports",
+                body: "Upload CSV or XLSX. Multi-sheet workbooks prompt for sheet selection. Mapping step ties columns to template metrics; commit happens in chunked transactions with per-row outcomes — never a generic 500.",
             },
             {
                 title: "Safe by default",
-                body: "Strict TypeScript, Zod-validated APIs, audit-tagged impersonation for safe role previews, additive-only DB migrations. Existing data is never at risk.",
+                body: "Strict TypeScript, Zod-validated APIs, audit-tagged impersonation for safe role previews, additive-only DB migrations. Existing data is never at risk; admins can run a one-click Reconcile to migrate legacy rows into the new substrate without a deploy.",
             },
             {
                 title: "Offline-tolerant",
@@ -987,7 +991,7 @@ export const CONTENT = {
                         a: "Your current draft survives. Sign back in and the form rehydrates with the values you'd entered.",
                     },
                 ],
-                playgroundIds: [],
+                playgroundIds: ["analytics-chart-toggle"],
             },
             {
                 slug: "ushers",
@@ -1047,7 +1051,7 @@ export const CONTENT = {
                         a: "Yes — the value is editable until the report is approved. After approval, request an unlock from your campus pastor.",
                     },
                 ],
-                playgroundIds: [],
+                playgroundIds: ["template-builder-effect", "auto-sum-chain"],
             },
             {
                 slug: "group-leadership",
@@ -1070,7 +1074,7 @@ export const CONTENT = {
                         a: "From any campus report detail, click the Quarterly or Yearly chip. The aggregation engine computes it live across all source reports in the period.",
                     },
                 ],
-                playgroundIds: [],
+                playgroundIds: ["aggregation-rollup"],
             },
             {
                 slug: "executive",
@@ -1093,7 +1097,7 @@ export const CONTENT = {
                         a: "Yes — superadmin can start a time-limited impersonation session. Read-only by default; switch to mutate mode if you need to take real actions. Every event is audit-logged.",
                     },
                 ],
-                playgroundIds: [],
+                playgroundIds: ["insight-summary-preview", "correlation-matrix-builder"],
             },
             {
                 slug: "admin-config",
@@ -1122,14 +1126,108 @@ export const CONTENT = {
                     },
                     {
                         q: "Can I add new roles at runtime?",
-                        a: "Labels and capabilities for existing roles are admin-editable. Adding a brand-new role enum requires a deploy because user.role is a Postgres enum — but you can re-purpose any non-SUPERADMIN role with a fresh label + capability set.",
+                        a: "Yes. The Roles tab has a runtime Role table with a 'New role' button — pick a code, label, capability set, optional org-unit pin, and save. Built-in roles (matching the original UserRole enum) stay marked as system rows; SUPERADMIN remains immutable. Custom roles can be archived without a deploy.",
+                    },
+                    {
+                        q: "How does the polymorphic hierarchy work?",
+                        a: "The Hierarchy tab shows two surfaces: the legacy level-label editor and a new multi-tree OrgUnit editor. Existing campuses + groups remain authoritative; the OrgUnit editor lets you add new levels (e.g. ZONE, DEPARTMENT) and even spawn parallel trees that live alongside the primary one. Click 'Reconcile' under the OrgUnit panel to mirror legacy rows into the new substrate without a deploy — it's idempotent and never overwrites populated data.",
+                    },
+                    {
+                        q: "Imports keeps erroring on .xlsx — is that fixed?",
+                        a: "Yes. The wizard now accepts .csv, .xlsx, and .xls. Multi-sheet workbooks prompt for sheet selection; a malformed file returns a friendly 'parse failed' error code instead of a Prisma stack trace.",
                     },
                 ],
-                playgroundIds: ["correlation-demo"],
+                playgroundIds: ["correlation-demo", "import-wizard-demo"],
             },
         ],
         playgroundComingSoon: "Hands-on playground — coming soon for this section.",
         relatedHelpHeading: "Related help",
+    },
+
+    /* ── About / Privacy / Terms (admin-editable, hardcoded fallbacks) ───────
+     *
+     * Each page has a `title`, optional `subtitle`, and a `sections[]` array of
+     * heading + body blocks. Admins edit these through Admin Config; the
+     * platform always falls back to the values here when no DB override exists,
+     * so public pages never render blank.
+     */
+    aboutPage: {
+        title: "About Harvesters Reporting",
+        subtitle: "What this platform is, who built it, and why it exists.",
+        sections: [
+            {
+                heading: "What this platform is",
+                body:
+                    "The Harvesters Reporting System is a single, auditable surface for campus reports, reviews, approvals, and analytics across Harvesters International Christian Centre. It replaces fragmented Excel + WhatsApp + Word workflows with a config-driven, role-aware platform that lets every level of leadership see the data they care about — instantly, with a paper trail.",
+            },
+            {
+                heading: "What we believe",
+                body:
+                    "Numbers should be honest, lineage should be traceable, and admins should never need a deploy to change copy or workflow. Every visible string, capability, hierarchy level, role label, dashboard widget, and email template is editable through the substrate at runtime.",
+            },
+            {
+                heading: "Who built it",
+                body:
+                    "Built and maintained by HICC's reporting team in collaboration with S.D. Open to feedback through the in-app bug-report flow.",
+            },
+        ],
+    },
+    privacyPage: {
+        title: "Privacy",
+        subtitle: "How we handle the data you put into the platform.",
+        sections: [
+            {
+                heading: "What we collect",
+                body:
+                    "We collect only the data you submit through the platform — campus reports, goal entries, profile information, bug reports, and uploaded screenshots. We do not run third-party trackers and do not sell or share data with advertisers.",
+            },
+            {
+                heading: "Where it's stored",
+                body:
+                    "Data lives in a managed PostgreSQL database operated under HICC's control. Screenshot uploads use Cloudinary's managed asset lifecycle; screenshots are tied to bug-report records and removed when the linked record is deleted.",
+            },
+            {
+                heading: "Email handling",
+                body:
+                    "Outbound email (verification, invites, workflow notifications, reset links) is delivered through Resend when configured. If the email service is not configured, the platform stays fully usable — emails simply queue locally and the prompts display non-blockingly in the in-app inbox.",
+            },
+            {
+                heading: "Audit + impersonation",
+                body:
+                    "Every significant action (create, submit, approve, lock, unlock, edit) is recorded in an audit log alongside the actor's user id. Superadmin role-impersonation sessions are time-limited, logged, and tagged on every action they touch.",
+            },
+            {
+                heading: "Your rights",
+                body:
+                    "You can request export or deletion of your own profile data through your campus admin or directly via the bug-report flow. Reports themselves are organisational records and retained per HICC policy.",
+            },
+        ],
+    },
+    termsPage: {
+        title: "Terms of Use",
+        subtitle: "House rules for using the platform.",
+        sections: [
+            {
+                heading: "Who can use this platform",
+                body:
+                    "Use of the platform is reserved for invited HICC members, staff, leadership, and authorised partners. Each account is personal — please don't share credentials. Lost access can be reset via the Forgot password flow or by your campus admin.",
+            },
+            {
+                heading: "What you should and shouldn't do",
+                body:
+                    "Submit reports honestly and on time. Do not enter another person's data without authorisation. Do not attempt to bypass role permissions, scrape data outside your scope, or upload anything offensive or illegal. Bug reports go through the in-app flow.",
+            },
+            {
+                heading: "What we provide",
+                body:
+                    "Reasonable best effort to keep the platform available, current, and secure. Maintenance windows are announced through the in-app inbox. Drafts are saved offline so a brief disconnection never costs you work.",
+            },
+            {
+                heading: "Changes to these terms",
+                body:
+                    "We may update these terms as the platform evolves. Material changes are announced in the inbox; using the platform after a notice is acceptance of the updated terms.",
+            },
+        ],
     },
 
     /* ── Need Help? anchor + page → tab map ────────────────────────────────── */
@@ -1235,7 +1333,7 @@ export const CONTENT = {
         subtitle: "Tune the substrate that powers roles, dashboards, imports, and onboarding.",
         namespaceLabels: {
             roles: "Roles & Capabilities",
-            hierarchy: "Hierarchy Levels",
+            hierarchy: "Hierarchy & Org Units",
             dashboardLayout: "Dashboard Layout",
             templatesMapping: "Template & Metric Mappings",
             imports: "Import Defaults",
@@ -1245,6 +1343,11 @@ export const CONTENT = {
             emailTemplates: "Email Templates",
             roleCadence: "Role Cadence",
             correlation: "Insights & Correlation",
+            landing: "Landing Page Copy",
+            howItWorks: "How It Works Copy",
+            aboutPage: "About Page",
+            privacyPage: "Privacy Page",
+            termsPage: "Terms Page",
             impersonationLog: "Impersonation log",
         },
         actions: {

@@ -6,12 +6,11 @@
  * SUPERADMIN only.
  */
 
-import { useState, useEffect, useRef, use } from "react";
+import { useState, useEffect, useMemo, useRef, use } from "react";
 import { useRouter } from "next/navigation";
 import { Form, message, Modal, Switch, Select, Tag, Collapse, Badge, Tabs, Tooltip } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { TemplateAssignmentsEditor } from "./TemplateAssignmentsEditor";
-import { CorrelationGroupSelect } from "./CorrelationGroupSelect";
 import {
   SaveOutlined,
   PlusOutlined,
@@ -130,10 +129,12 @@ function MetricRow({
     },
   ];
 
-  // sectionMetrics + allSections passed for context (used by correlation group
-  // suggestions). Auto-sum configuration was promoted to a section-level
-  // `AutoSumPanel` so the per-metric row stays focused on data-entry fields.
+  // sectionMetrics + allSections passed for context. Both correlation group
+  // and auto-sum configuration were promoted to dedicated section-level
+  // panels (`CorrelationGroupsPanel`, `AutoSumPanel`) so the per-metric row
+  // stays focused on data-entry fields.
   void sectionMetrics;
+  void allSections;
 
   // Settings panel hidden by default — Forms/Zoho-style blank canvas.
   // The row collapses to JUST the borderless name input + settings/delete icons
@@ -247,22 +248,24 @@ function MetricRow({
             ))}
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
-            <Tooltip title="Optional correlation group. Metrics sharing a group form a Pearson correlation matrix in Analytics (gated by min-sample size).">
-              <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1 flex-shrink-0">
-                Correlation
-                <InfoCircleOutlined />
+          {/*
+            Correlation group is no longer edited inline — it's managed in the
+            section-level CorrelationGroupsPanel below the AutoSumPanel, which
+            is parallel to how auto-totals are configured. We keep a read-only
+            badge here so admins know which group (if any) this metric belongs
+            to without having to scroll.
+          */}
+          {metric.correlationGroup && (
+            <div className="flex items-center gap-2 text-[11px] text-ds-text-subtle">
+              <span className="uppercase tracking-wide">Correlation group</span>
+              <Tag color="purple" className="!m-0">
+                {metric.correlationGroup}
+              </Tag>
+              <span className="text-ds-text-subtle">
+                · edit in <em>Correlation groups</em> below
               </span>
-            </Tooltip>
-            <div className="flex-1 min-w-[200px]">
-              <CorrelationGroupSelect
-                sections={allSections}
-                value={metric.correlationGroup}
-                onChange={(v) => onChange({ correlationGroup: v })}
-                placeholder="Pick or create a group"
-              />
             </div>
-          </div>
+          )}
         </div>
       )}
     </div>
@@ -271,18 +274,17 @@ function MetricRow({
 
 /* ── Section settings palette ──────────────────────────────────────────────
  *
- * Hidden-by-default panel for description + isRequired + correlation group.
- * Mirrors the MetricRow approach: blank canvas first, settings on demand.
+ * Hidden-by-default panel for description + isRequired. Correlation grouping
+ * was promoted to a dedicated section-level `CorrelationGroupsPanel` mounted
+ * below `AutoSumPanel` so cross-section configuration lives in one place.
  */
 interface SectionSettingsPaletteProps {
   section: DraftSection;
-  allSections: DraftSection[];
   updateSection: (sId: string, patch: Partial<DraftSection>) => void;
 }
 
 function SectionSettingsPalette({
   section,
-  allSections,
   updateSection,
 }: SectionSettingsPaletteProps) {
   const [open, setOpen] = useState(false);
@@ -290,9 +292,7 @@ function SectionSettingsPalette({
   // Auto-open when settings already differ from defaults so the user knows
   // the panel exists without having to discover the cog.
   const hasNonDefaultConfig =
-    Boolean(section.description) ||
-    Boolean(section.correlationGroup) ||
-    section.isRequired === false; // default is true; flipping false counts as configured
+    Boolean(section.description) || section.isRequired === false; // default is true; flipping false counts as configured
 
   const isOpen = open || hasNonDefaultConfig;
 
@@ -334,22 +334,6 @@ function SectionSettingsPalette({
                 <InfoCircleOutlined className="text-ds-text-subtle" />
               </span>
             </Tooltip>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <Tooltip title="Metrics sharing a correlation group are paired in analytics and the InsightSummary card. Leave empty to opt this section out.">
-              <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1 flex-shrink-0">
-                Correlation
-                <InfoCircleOutlined />
-              </span>
-            </Tooltip>
-            <div className="flex-1 min-w-[220px]">
-              <CorrelationGroupSelect
-                sections={allSections}
-                value={section.correlationGroup}
-                onChange={(v) => updateSection(section.id, { correlationGroup: v })}
-                placeholder="Pick or create a group"
-              />
-            </div>
           </div>
         </div>
       )}
@@ -522,6 +506,309 @@ function AutoSumPanel({ section, allSections, onMetricsChange }: AutoSumPanelPro
   );
 }
 
+/* ── Section-level correlation groups panel ───────────────────────────────
+ *
+ * Collapsible panel mounted below `AutoSumPanel` per section. Surfaces every
+ * correlation group that has at least one member in this section, plus the
+ * ability to create new groups. A group's scope can be:
+ *   - SECTION (default): only metrics in this section can be members.
+ *   - TEMPLATE: any data metric across the template can be members
+ *     (read "Cross-section" — parallels AutoSumPanel's TEMPLATE scope).
+ *
+ * Membership is encoded on each metric via `correlationGroup` (string match);
+ * editing this panel updates `correlationGroup` on the affected metrics
+ * across the entire template via `setAllSections`. This keeps the data shape
+ * unchanged from the prior inline editor — only the editing surface moved.
+ */
+interface CorrelationGroupsPanelProps {
+  section: DraftSection;
+  allSections: DraftSection[];
+  setAllSections: (updater: (prev: DraftSection[]) => DraftSection[]) => void;
+}
+
+function CorrelationGroupsPanel({
+  section,
+  allSections,
+  setAllSections,
+}: CorrelationGroupsPanelProps) {
+  /** Open by default when this section already has groups so admins see them up-front. */
+  const initialOpen = useMemo(
+    () => section.metrics.some((m) => Boolean(m.correlationGroup)),
+    [section.metrics],
+  );
+  const [open, setOpen] = useState(initialOpen);
+
+  /** Groups that have at least one member metric inside THIS section. */
+  const sectionGroups = useMemo(() => {
+    const set = new Set<string>();
+    for (const m of section.metrics) if (m.correlationGroup) set.add(m.correlationGroup);
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [section.metrics]);
+
+  /** Member metrics across the entire template, keyed by group name. */
+  const groupMembership = useMemo(() => {
+    const map = new Map<string, Array<{ id: string; name: string; sectionId: string; sectionName: string }>>();
+    for (const sec of allSections) {
+      for (const m of sec.metrics) {
+        if (!m.correlationGroup) continue;
+        if (!map.has(m.correlationGroup)) map.set(m.correlationGroup, []);
+        map.get(m.correlationGroup)!.push({
+          id: m.id,
+          name: m.name || `Metric ${m.id.slice(0, 6)}`,
+          sectionId: sec.id,
+          sectionName: sec.name || "Section",
+        });
+      }
+    }
+    return map;
+  }, [allSections]);
+
+  /** Effective scope is TEMPLATE when members span sections, otherwise SECTION. */
+  const effectiveScope = (groupName: string): "SECTION" | "TEMPLATE" => {
+    const members = groupMembership.get(groupName) ?? [];
+    if (members.length === 0) return "SECTION";
+    const first = members[0].sectionId;
+    return members.every((m) => m.sectionId === first) ? "SECTION" : "TEMPLATE";
+  };
+
+  /** Available metric options for a group, scoped per its current scope. */
+  const memberOptions = (
+    groupName: string,
+    scope: "SECTION" | "TEMPLATE",
+  ): Array<{ label: string; options: Array<{ value: string; label: string }> }> => {
+    const sourceSections = scope === "TEMPLATE" ? allSections : [section];
+    return sourceSections.map((sec) => ({
+      label: sec.name || "Section",
+      options: sec.metrics
+        .filter((m) => !m.isAutoTotal)
+        .map((m) => ({
+          value: m.id,
+          label: m.name || `Metric ${m.id.slice(0, 6)}`,
+        })),
+    }));
+  };
+
+  /** Current member ids for a group (across template). */
+  const currentMembers = (groupName: string): string[] =>
+    (groupMembership.get(groupName) ?? []).map((m) => m.id);
+
+  /** Set membership: every metric in `nextIds` joins, every former member not in nextIds leaves. */
+  const setGroupMembers = (groupName: string, nextIds: string[]) => {
+    const nextSet = new Set(nextIds);
+    setAllSections((prev) =>
+      prev.map((sec) => ({
+        ...sec,
+        metrics: sec.metrics.map((m) => {
+          if (m.isAutoTotal) return m;
+          if (nextSet.has(m.id)) return { ...m, correlationGroup: groupName };
+          if (m.correlationGroup === groupName) return { ...m, correlationGroup: "" };
+          return m;
+        }),
+      })),
+    );
+  };
+
+  /** Rename a group across all member metrics. No-op if the new name is blank. */
+  const renameGroup = (oldName: string, newName: string) => {
+    const trimmed = newName.trim();
+    if (!trimmed || trimmed === oldName) return;
+    // If the new name collides with an existing group, members merge — that
+    // is the expected outcome of "rename A to B" when B already exists.
+    setAllSections((prev) =>
+      prev.map((sec) => ({
+        ...sec,
+        metrics: sec.metrics.map((m) =>
+          m.correlationGroup === oldName ? { ...m, correlationGroup: trimmed } : m,
+        ),
+      })),
+    );
+  };
+
+  /** Toggle scope: TEMPLATE → SECTION drops cross-section members. */
+  const setGroupScope = (groupName: string, nextScope: "SECTION" | "TEMPLATE") => {
+    if (nextScope === "TEMPLATE") return; // expanding scope needs no member change
+    // Restricting to SECTION: drop members that aren't in this section.
+    setAllSections((prev) =>
+      prev.map((sec) => ({
+        ...sec,
+        metrics: sec.metrics.map((m) => {
+          if (m.correlationGroup !== groupName) return m;
+          if (sec.id === section.id) return m;
+          return { ...m, correlationGroup: "" };
+        }),
+      })),
+    );
+  };
+
+  /** Remove a group entirely (clears correlationGroup on all members). */
+  const removeGroup = (groupName: string) => {
+    setAllSections((prev) =>
+      prev.map((sec) => ({
+        ...sec,
+        metrics: sec.metrics.map((m) =>
+          m.correlationGroup === groupName ? { ...m, correlationGroup: "" } : m,
+        ),
+      })),
+    );
+  };
+
+  /** Create a new group. Auto-suggests a name and starts with no members. */
+  const addGroup = () => {
+    const used = new Set(Array.from(groupMembership.keys()));
+    let n = 1;
+    let name = `${section.name || "Section"} group ${n}`;
+    while (used.has(name)) {
+      n += 1;
+      name = `${section.name || "Section"} group ${n}`;
+    }
+    // Seed the group on the first non-auto metric in this section so it
+    // shows up in `sectionGroups` immediately. If the section has no data
+    // metrics, the group still appears via the explicit override below by
+    // assigning to a synthetic empty member set — but that's harder, so we
+    // require at least one data metric.
+    const firstData = section.metrics.find((m) => !m.isAutoTotal);
+    if (!firstData) {
+      message.warning("Add at least one data metric to this section first.");
+      return;
+    }
+    setAllSections((prev) =>
+      prev.map((sec) =>
+        sec.id === section.id
+          ? {
+              ...sec,
+              metrics: sec.metrics.map((m) =>
+                m.id === firstData.id ? { ...m, correlationGroup: name } : m,
+              ),
+            }
+          : sec,
+      ),
+    );
+    setOpen(true);
+  };
+
+  return (
+    <div className="rounded-ds-md border border-dashed border-ds-border-base bg-ds-surface-base/30">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-2 px-3 py-2 text-xs text-ds-text-secondary hover:bg-ds-surface-sunken/40 transition-colors rounded-t-ds-md"
+        aria-expanded={open ? "true" : "false"}
+      >
+        <div className="flex flex-col items-start gap-0.5">
+          <span className="text-xs font-semibold text-ds-text-primary uppercase tracking-wide inline-flex items-center gap-1.5">
+            Correlation groups ({sectionGroups.length})
+            <Tooltip title="Metrics sharing a correlation group are paired in Analytics & InsightSummary via Pearson correlation (gated by min-sample size). Toggle a group to Cross-section to include metrics from any section in this template.">
+              <InfoCircleOutlined className="text-ds-text-subtle" />
+            </Tooltip>
+          </span>
+          <span className="text-[11px] font-normal text-ds-text-subtle normal-case tracking-normal">
+            Same idea as auto-totals — pick which metrics relate to each other; cross-section is allowed.
+          </span>
+        </div>
+        <span className="text-[10px] text-ds-text-subtle">{open ? "Hide" : "Show"}</span>
+      </button>
+      {open && (
+        <div className="px-3 pb-3 pt-1 space-y-3 border-t border-ds-border-subtle">
+          {sectionGroups.length === 0 ? (
+            <p className="text-xs text-ds-text-subtle py-1">
+              No correlation groups in this section yet.
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {sectionGroups.map((groupName) => {
+                const members = groupMembership.get(groupName) ?? [];
+                const scope = effectiveScope(groupName);
+                return (
+                  <div
+                    key={groupName}
+                    className="p-3 rounded-ds-md border border-ds-border-subtle bg-ds-surface-sunken space-y-2"
+                  >
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-xs text-ds-text-subtle">Group name</span>
+                        <Input
+                          size="middle"
+                          defaultValue={groupName}
+                          onBlur={(e) => renameGroup(groupName, e.target.value)}
+                          placeholder="e.g. First-time visitors"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-xs text-ds-text-subtle">Scope</span>
+                        <Select
+                          size="middle"
+                          value={scope}
+                          onChange={(v) =>
+                            setGroupScope(groupName, v as "SECTION" | "TEMPLATE")
+                          }
+                          options={[
+                            { value: "SECTION", label: "Same section" },
+                            {
+                              value: "TEMPLATE",
+                              label: "Cross-section (any section in this template)",
+                            },
+                          ]}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-ds-text-subtle">
+                        Members ({members.length})
+                      </span>
+                      <Select
+                        mode="multiple"
+                        size="middle"
+                        value={currentMembers(groupName)}
+                        onChange={(v) => setGroupMembers(groupName, v as string[])}
+                        options={memberOptions(groupName, scope) as never}
+                        placeholder={
+                          scope === "SECTION"
+                            ? "Pick metrics in this section"
+                            : "Pick any data metrics across the template"
+                        }
+                        style={{ width: "100%" }}
+                        showSearch
+                        optionFilterProp="label"
+                      />
+                      {scope === "TEMPLATE" && (
+                        <p className="text-[11px] text-ds-text-subtle">
+                          Includes members from:{" "}
+                          {Array.from(new Set(members.map((m) => m.sectionName))).join(", ") ||
+                            "—"}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-end">
+                      <Button
+                        size="small"
+                        type="text"
+                        danger
+                        icon={<DeleteOutlined />}
+                        onClick={() => removeGroup(groupName)}
+                      >
+                        Remove group
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <div className="flex items-center justify-between gap-2 flex-wrap pt-1">
+            <p className="text-[11px] text-ds-text-subtle">
+              Adding a group seeds it on the first data metric in this section — drag in more
+              members from the dropdown above.
+            </p>
+            <Button size="small" icon={<PlusOutlined />} onClick={addGroup}>
+              Add correlation group
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function TemplateDetailPage({ params }: PageProps) {
   const { id } = use(params);
   const router = useRouter();
@@ -649,6 +936,14 @@ export function TemplateDetailPage({ params }: PageProps) {
     setSections((prev) =>
       (prev ?? []).map((s) => (s.id === sId ? { ...s, metrics: nextMetrics } : s)),
     );
+
+  /**
+   * Bulk update across the full sections array — used by `CorrelationGroupsPanel`
+   * because correlation groups can span sections (e.g. renaming a group rewrites
+   * `correlationGroup` on every member, regardless of which section it lives in).
+   */
+  const setAllSections = (updater: (prev: DraftSection[]) => DraftSection[]) =>
+    setSections((prev) => updater(prev ?? []));
   const addMetric = (sId: string) =>
     setSections((prev) =>
       (prev ?? []).map((s) => {
@@ -914,7 +1209,6 @@ export function TemplateDetailPage({ params }: PageProps) {
                         {/* Section settings palette — hidden by default; user opts in to configure */}
                         <SectionSettingsPalette
                           section={section}
-                          allSections={draft}
                           updateSection={updateSection}
                         />
 
@@ -947,6 +1241,18 @@ export function TemplateDetailPage({ params }: PageProps) {
                           section={section}
                           allSections={draft}
                           onMetricsChange={setSectionMetrics}
+                        />
+
+                        {/*
+                          Correlation groups panel — mounted directly below the
+                          auto-totals panel and structured similarly (collapsible
+                          + cross-section scope toggle + multi-select members)
+                          so admins recognise the pattern instantly.
+                        */}
+                        <CorrelationGroupsPanel
+                          section={section}
+                          allSections={draft}
+                          setAllSections={setAllSections}
                         />
 
                         {/* Section footer actions */}
