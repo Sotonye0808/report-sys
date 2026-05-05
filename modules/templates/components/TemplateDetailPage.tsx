@@ -8,7 +8,8 @@
 
 import { useState, useEffect, useRef, use } from "react";
 import { useRouter } from "next/navigation";
-import { Form, message, Modal, Switch, Select, Tag, Collapse, Badge, Tabs } from "antd";
+import { Form, message, Modal, Switch, Select, Tag, Collapse, Badge, Tabs, Tooltip } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import { TemplateAssignmentsEditor } from "./TemplateAssignmentsEditor";
 import { CorrelationGroupSelect } from "./CorrelationGroupSelect";
 import {
@@ -99,12 +100,32 @@ function MetricRow({
   allSections,
 }: MetricRowProps & { sectionMetrics: DraftMetric[]; allSections: DraftSection[] }) {
   type BoolKey = "isRequired" | "capturesGoal" | "capturesAchieved" | "capturesYoY" | "capturesWoW";
-  const TOGGLES: { key: BoolKey; label: string }[] = [
-    { key: "isRequired", label: CONTENT.templates.isRequiredLabel as string },
-    { key: "capturesGoal", label: CONTENT.templates.capturesGoalLabel as string },
-    { key: "capturesAchieved", label: CONTENT.templates.capturesAchievedLabel as string },
-    { key: "capturesYoY", label: CONTENT.templates.capturesYoYLabel as string },
-    { key: "capturesWoW", label: "Capture WoW" },
+  const TOGGLES: { key: BoolKey; label: string; tip: string }[] = [
+    {
+      key: "isRequired",
+      label: CONTENT.templates.isRequiredLabel as string,
+      tip: "Required metrics must be filled before the report can be submitted.",
+    },
+    {
+      key: "capturesGoal",
+      label: CONTENT.templates.capturesGoalLabel as string,
+      tip: "Show a goal field on the form. Goals can also auto-prefill from the previous period — see Goal Automation in Admin Config.",
+    },
+    {
+      key: "capturesAchieved",
+      label: CONTENT.templates.capturesAchievedLabel as string,
+      tip: "Show an achieved-value field on the form (the actual measurement).",
+    },
+    {
+      key: "capturesYoY",
+      label: CONTENT.templates.capturesYoYLabel as string,
+      tip: "Compare against the same period last year. Non-blocking — silently degrades when no prior-year report exists.",
+    },
+    {
+      key: "capturesWoW",
+      label: "Week-on-Week",
+      tip: "Compare against the same metric in the prior week. Non-blocking — only shows when a prior-week report exists.",
+    },
   ];
 
   // sectionMetrics + allSections passed for context (used by correlation group
@@ -114,22 +135,30 @@ function MetricRow({
 
   return (
     <div className="p-4 bg-ds-surface-sunken rounded-ds-lg border border-ds-border-subtle space-y-3">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="sm:col-span-1">
-          <label className="text-xs font-medium text-ds-text-secondary block mb-1">
-            {CONTENT.templates.metricNameLabel as string} *
-          </label>
-          <Input
-            size="middle"
-            value={metric.name}
-            onChange={(e) => onChange({ name: e.target.value })}
-            placeholder="e.g. Total Attendance"
-          />
-        </div>
-        <div>
-          <label className="text-xs font-medium text-ds-text-secondary block mb-1">
-            {CONTENT.templates.fieldTypeLabel as string}
-          </label>
+      {/* Inline-editable metric title — no separate label */}
+      <div className="flex items-start justify-between gap-2">
+        <Input
+          value={metric.name}
+          onChange={(e) => onChange({ name: e.target.value })}
+          placeholder="Untitled metric"
+          variant="borderless"
+          className="!text-base !font-medium !text-ds-text-primary !px-0"
+          aria-label="Metric name"
+        />
+        <Tooltip title="Remove this metric">
+          <Button type="text" danger size="small" icon={<DeleteOutlined />} onClick={onRemove} />
+        </Tooltip>
+      </div>
+
+      {/* Compact configuration row — dropdowns with (i) tooltips */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="flex flex-col gap-1">
+          <Tooltip title="Field type controls how the value is rendered + validated on the form (number / percentage / currency / text).">
+            <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1">
+              {CONTENT.templates.fieldTypeLabel as string}
+              <InfoCircleOutlined />
+            </span>
+          </Tooltip>
           <Select
             size="middle"
             value={metric.fieldType}
@@ -138,10 +167,13 @@ function MetricRow({
             className="w-full"
           />
         </div>
-        <div>
-          <label className="text-xs font-medium text-ds-text-secondary block mb-1">
-            {CONTENT.templates.calculationTypeLabel as string}
-          </label>
+        <div className="flex flex-col gap-1">
+          <Tooltip title="How aggregated reports combine values across periods: Sum (cumulative), Average (rolling mean), or Snapshot (latest value).">
+            <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1">
+              {CONTENT.templates.calculationTypeLabel as string}
+              <InfoCircleOutlined />
+            </span>
+          </Tooltip>
           <Select
             size="middle"
             value={metric.calculationType}
@@ -152,37 +184,39 @@ function MetricRow({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-4 justify-between">
-        <div className="flex flex-wrap gap-4">
-          {TOGGLES.map(({ key, label }) => (
-            <div key={key} className="flex items-center gap-1.5">
+      {/* Toggle chips — each with an (i) tooltip */}
+      <div className="flex flex-wrap gap-x-4 gap-y-2">
+        {TOGGLES.map(({ key, label, tip }) => (
+          <Tooltip key={key} title={tip}>
+            <span className="inline-flex items-center gap-1.5 text-xs text-ds-text-secondary">
               <Switch
                 size="small"
                 checked={metric[key] as boolean}
                 onChange={(v) => onChange({ [key]: v })}
               />
-              <span className="text-xs text-ds-text-secondary">{label}</span>
-            </div>
-          ))}
+              {label}
+              <InfoCircleOutlined className="text-ds-text-subtle" />
+            </span>
+          </Tooltip>
+        ))}
+      </div>
+
+      <div className="flex items-center gap-2 flex-wrap">
+        <Tooltip title="Optional correlation group. Metrics sharing a group form a Pearson correlation matrix in Analytics (gated by min-sample size).">
+          <span className="text-[11px] text-ds-text-subtle inline-flex items-center gap-1 flex-shrink-0">
+            Correlation
+            <InfoCircleOutlined />
+          </span>
+        </Tooltip>
+        <div className="flex-1 min-w-[200px]">
+          <CorrelationGroupSelect
+            sections={allSections}
+            value={metric.correlationGroup}
+            onChange={(v) => onChange({ correlationGroup: v })}
+            placeholder="Pick or create a group"
+          />
         </div>
-        <Button type="text" danger size="small" icon={<DeleteOutlined />} onClick={onRemove} />
       </div>
-
-      <div>
-        <label className="text-xs font-medium text-ds-text-secondary block mb-1">
-          Correlation group (optional)
-        </label>
-        <CorrelationGroupSelect
-          sections={allSections}
-          value={metric.correlationGroup}
-          onChange={(v) => onChange({ correlationGroup: v })}
-          placeholder="Pick a group or type a new one"
-        />
-        <p className="text-xs text-ds-text-subtle mt-1">
-          Metrics sharing a group are paired in correlation analytics. Leave empty to opt out.
-        </p>
-      </div>
-
     </div>
   );
 }
@@ -726,54 +760,52 @@ export function TemplateDetailPage({ params }: PageProps) {
                     ),
                     children: (
                       <div className="space-y-4 pt-1">
-                        {/* Section header fields */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
-                          <div>
-                            <label className="text-xs font-medium text-ds-text-secondary block mb-1">
-                              {CONTENT.templates.sectionNameLabel as string} *
-                            </label>
-                            <Input
-                              size="middle"
-                              value={section.name}
-                              onChange={(e) => updateSection(section.id, { name: e.target.value })}
-                              placeholder="e.g. Weekly Attendance"
-                            />
-                          </div>
-                          <div className="flex items-end gap-3">
-                            <div className="flex-1">
-                              <label className="text-xs font-medium text-ds-text-secondary block mb-1">
-                                Description
-                              </label>
-                              <Input
-                                size="middle"
-                                value={section.description}
-                                onChange={(e) =>
-                                  updateSection(section.id, { description: e.target.value })
-                                }
-                                placeholder="Optional"
-                              />
-                            </div>
-                            <div className="flex items-center gap-1.5 pb-0.5 flex-shrink-0">
-                              <Switch
-                                size="small"
-                                checked={section.isRequired}
-                                onChange={(v) => updateSection(section.id, { isRequired: v })}
-                              />
-                              <span className="text-xs text-ds-text-secondary whitespace-nowrap">
+                        {/* Section header — Forms-style inline-editable title + description, no labels */}
+                        <div className="space-y-2">
+                          <Input
+                            value={section.name}
+                            onChange={(e) => updateSection(section.id, { name: e.target.value })}
+                            placeholder="Untitled section"
+                            variant="borderless"
+                            className="!text-lg !font-semibold !text-ds-text-primary !px-0"
+                            aria-label="Section title"
+                          />
+                          <Input
+                            value={section.description}
+                            onChange={(e) =>
+                              updateSection(section.id, { description: e.target.value })
+                            }
+                            placeholder="Description (optional)"
+                            variant="borderless"
+                            className="!text-sm !text-ds-text-secondary !px-0"
+                            aria-label="Section description"
+                          />
+                          <div className="flex flex-wrap items-center gap-3 pt-1">
+                            <Tooltip title="Required sections must be filled before the report can be submitted.">
+                              <span className="inline-flex items-center gap-1.5 text-xs text-ds-text-secondary">
+                                <Switch
+                                  size="small"
+                                  checked={section.isRequired}
+                                  onChange={(v) => updateSection(section.id, { isRequired: v })}
+                                />
                                 {CONTENT.templates.isRequiredLabel as string}
+                                <InfoCircleOutlined className="text-ds-text-subtle" />
                               </span>
+                            </Tooltip>
+                            <Tooltip title="Metrics sharing a correlation group are paired in analytics and the InsightSummary card. Leave empty to opt this section out.">
+                              <span className="inline-flex items-center gap-1.5 text-xs text-ds-text-secondary">
+                                Correlation
+                                <InfoCircleOutlined className="text-ds-text-subtle" />
+                              </span>
+                            </Tooltip>
+                            <div className="flex-1 min-w-[220px]">
+                              <CorrelationGroupSelect
+                                sections={draft}
+                                value={section.correlationGroup}
+                                onChange={(v) => updateSection(section.id, { correlationGroup: v })}
+                                placeholder="Pick or create a group"
+                              />
                             </div>
-                          </div>
-                          <div className="sm:col-span-2">
-                            <label className="text-xs font-medium text-ds-text-secondary block mb-1">
-                              Section correlation group (optional)
-                            </label>
-                            <CorrelationGroupSelect
-                              sections={draft}
-                              value={section.correlationGroup}
-                              onChange={(v) => updateSection(section.id, { correlationGroup: v })}
-                              placeholder="Pick or create — applies to all metrics in this section by default"
-                            />
                           </div>
                         </div>
 

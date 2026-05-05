@@ -175,6 +175,7 @@ export const API_ROUTES = {
         editRequests: "/api/goals/edit-requests",
         editRequestApprove: (id: string) => `/api/goals/edit-requests/${id}/approve`,
         editRequestReject: (id: string) => `/api/goals/edit-requests/${id}/reject`,
+        automation: "/api/goals/automation",
     },
     notifications: {
         list: "/api/notifications",

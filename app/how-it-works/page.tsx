@@ -5,6 +5,7 @@
  * `<HelpLink />` anchor can deep-link into the right article.
  */
 
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,6 +13,7 @@ import { HowItWorksPage } from "@/modules/how-it-works";
 import { loadAdminConfig } from "@/lib/data/adminConfig";
 import { CONTENT } from "@/config/content";
 import { AppFooter } from "@/components/ui/AppFooter";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 
 export const metadata: Metadata = {
     title: "How it works · Harvesters Reporting",
@@ -48,7 +50,14 @@ export default async function Page() {
                 </nav>
             </header>
             <div className="flex-1">
-                <HowItWorksPage initial={initial} />
+                {/*
+                  HowItWorksPage uses useSearchParams for the ?tab= deep-link
+                  contract, which Next.js requires to live inside a Suspense
+                  boundary so prerender doesn't bail out at build time.
+                */}
+                <Suspense fallback={<div className="px-6 py-10 max-w-5xl mx-auto"><LoadingSkeleton rows={6} /></div>}>
+                    <HowItWorksPage initial={initial} />
+                </Suspense>
             </div>
             <div className="mt-auto px-6 md:px-10 border-t border-ds-border-subtle">
                 <AppFooter />
