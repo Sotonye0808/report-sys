@@ -10,7 +10,6 @@
  */
 
 import Link from "next/link";
-import Image from "next/image";
 import { cookies } from "next/headers";
 import { verifyAccessToken } from "@/lib/utils/auth";
 import { loadAdminConfig } from "@/lib/data/adminConfig";
@@ -18,6 +17,7 @@ import { CONTENT } from "@/config/content";
 import { ROLE_DASHBOARD_ROUTES } from "@/config/routes";
 import { UserRole } from "@/types/global";
 import { AppFooter } from "@/components/ui/AppFooter";
+import { PublicPageHeader } from "@/components/ui/PublicPageHeader";
 
 interface QuickLink {
     label: string;
@@ -84,36 +84,15 @@ export default async function LandingPage() {
 
     return (
         <main className="min-h-screen flex flex-col bg-ds-surface-base">
-            {/* Top bar */}
-            <header className="px-6 md:px-10 py-4 flex items-center justify-between border-b border-ds-border-subtle">
-                <Link href="/" className="flex items-center gap-3 no-underline">
-                    <Image
-                        src="/logo/white-bg-harvesters-Logo.svg"
-                        alt="Harvesters"
-                        width={32}
-                        height={32}
-                        priority
-                    />
-                    <span className="text-sm font-semibold text-ds-text-primary">
-                        Harvesters Reporting
-                    </span>
-                </Link>
-                <nav className="flex items-center gap-4 text-sm">
-                    <Link href="/how-it-works" className="text-ds-text-secondary hover:text-ds-text-primary">
-                        How it works
-                    </Link>
-                    {auth.signedIn ? (
-                        <span className="text-xs text-ds-text-subtle hidden sm:inline">
-                            {data.welcomeBack ?? "Welcome back"}
-                            {auth.firstName ? `, ${auth.firstName}` : ""}
-                        </span>
-                    ) : (
-                        <span className="text-xs text-ds-text-subtle hidden sm:inline">
-                            {data.signedOutBadge ?? "Not signed in"}
-                        </span>
-                    )}
-                </nav>
-            </header>
+            <PublicPageHeader
+                auth={{
+                    signedIn: auth.signedIn,
+                    dashboardHref,
+                    firstName: auth.firstName,
+                }}
+                welcomeBack={data.welcomeBack ?? undefined}
+                signedOutBadge={data.signedOutBadge ?? undefined}
+            />
 
             {/* Hero */}
             <section className="px-6 md:px-10 py-12 md:py-20 max-w-5xl mx-auto w-full">
