@@ -1,3 +1,4 @@
+// @public-mutation -- intentionally unauthenticated (auth lifecycle endpoint).
 import { NextResponse } from "next/server";
 import { clearAuthCookies } from "@/lib/utils/auth";
 import { successResponse, handleApiError } from "@/lib/utils/api";

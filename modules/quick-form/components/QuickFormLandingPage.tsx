@@ -14,6 +14,8 @@ import { Tag, Empty } from "antd";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES, APP_ROUTES } from "@/config/routes";
 import { useApiData } from "@/lib/hooks/useApiData";
+import { useAuth } from "@/providers/AuthProvider";
+import { CAMPUS_SCOPED_ROLES, GROUP_SCOPED_ROLES } from "@/config/hierarchy";
 import { PageLayout, PageHeader } from "@/components/ui/PageLayout";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 
@@ -40,7 +42,19 @@ function statusOf(row: AssignmentRow): string {
 
 export function QuickFormLandingPage() {
     const router = useRouter();
+    const { user } = useAuth();
     const [materialised, setMaterialised] = useState(false);
+
+    // Detect "previewing a scoped role without a target user" — the materialiser
+    // can't run because there's no campus context, and the empty list is misleading.
+    const previewWithoutCampus = (() => {
+        if (!user?.impersonation) return false;
+        const role = user.role;
+        const isScoped = CAMPUS_SCOPED_ROLES.includes(role) || GROUP_SCOPED_ROLES.includes(role);
+        if (!isScoped) return false;
+        if (user.campusId || user.orgGroupId) return false;
+        return true;
+    })();
 
     // Idempotently expand recurring assignment rules into per-period rows
     // before listing assignments. Failure here is non-blocking — if the
@@ -78,6 +92,16 @@ export function QuickFormLandingPage() {
     return (
         <PageLayout>
             <PageHeader title={String(COPY.pageTitle ?? "My Assignments")} subtitle={String(COPY.subtitle ?? "")} />
+            {previewWithoutCampus && (
+                <div
+                    role="region"
+                    aria-label="Impersonation context warning"
+                    className="mb-3 px-4 py-3 rounded-ds-2xl border border-amber-400/60 bg-amber-50 dark:bg-amber-900/20 text-sm text-amber-900 dark:text-amber-100"
+                >
+                    {((CONTENT.impersonation as unknown) as Record<string, string>)?.previewNoCampusBanner ??
+                        "You're previewing a scoped role without a target user, so there's no campus context. Exit the preview and start over with a target user picked."}
+                </div>
+            )}
             {rows.length === 0 ? (
                 <Empty
                     description={

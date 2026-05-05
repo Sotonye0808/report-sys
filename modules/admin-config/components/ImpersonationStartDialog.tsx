@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Modal, Form, Select, Radio, message } from "antd";
 import { CONTENT } from "@/config/content";
 import { ROLE_CONFIG } from "@/config/roles";
+import { CAMPUS_SCOPED_ROLES, GROUP_SCOPED_ROLES } from "@/config/hierarchy";
 import { UserRole } from "@/types/global";
 import { useAuth } from "@/providers/AuthProvider";
 import { useApiData } from "@/lib/hooks/useApiData";
@@ -78,9 +79,26 @@ export function ImpersonationStartDialog({ open, onClose, presetRole, presetUser
         [directory],
     );
 
+    // Campus / group-scoped roles MUST preview against a specific user — without
+    // one, the SUPERADMIN's profile (which has no campus/group) is what gets
+    // resolved as the impersonated scope, and downstream materialisers silently
+    // skip every rule for lack of campus context.
+    const isScopedRole = role
+        ? CAMPUS_SCOPED_ROLES.includes(role) || GROUP_SCOPED_ROLES.includes(role)
+        : false;
+    const targetRequired = isScopedRole;
+    const targetMissing = targetRequired && !userId;
+
     const submit = async () => {
         if (!role) {
             message.error("Pick a role");
+            return;
+        }
+        if (targetMissing) {
+            message.error(
+                (COPY.targetRequired as string) ??
+                    "Pick a target user — this role is scoped to a campus or group.",
+            );
             return;
         }
         setSubmitting(true);
@@ -122,7 +140,21 @@ export function ImpersonationStartDialog({ open, onClose, presetRole, presetUser
                         placeholder="Pick a role"
                     />
                 </Form.Item>
-                <Form.Item label={(COPY.userLabel as string) ?? "Specific user (optional)"}>
+                <Form.Item
+                    label={
+                        targetRequired
+                            ? ((COPY.userLabelRequired as string) ?? "Specific user (required for scoped roles)")
+                            : ((COPY.userLabel as string) ?? "Specific user (optional)")
+                    }
+                    required={targetRequired}
+                    validateStatus={targetMissing ? "error" : undefined}
+                    help={
+                        targetMissing
+                            ? ((COPY.targetRequired as string) ??
+                                  "This role is scoped to a campus or group — pick a user so the preview has the right context.")
+                            : undefined
+                    }
+                >
                     <Select
                         value={userId}
                         options={userOptions}
