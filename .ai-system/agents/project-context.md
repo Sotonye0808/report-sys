@@ -114,3 +114,16 @@ Aggregation closure note (2026-04-05):
 | Service   | Purpose        | Auth Method              |
 | --------- | -------------- | ------------------------ |
 | [service] | [what it does] | [API key / OAuth / etc.] |
+
+---
+
+## Substrate Constraints (added 2026-05-06)
+
+> Decisions baked into the platform's design that future agents need to honour:
+
+- **Polymorphic org units.** The platform stores every "scope" entity (campus, group, department, zone, anything an admin defines) in a single `OrgUnit` table with a self-FK + `level` + `rootKey`. Multiple parallel trees coexist (e.g. a `primary` tree of Group → Campus alongside a `departments` tree). Existing `Campus` + `OrgGroup` rows mirror into `OrgUnit` with the same UUIDs, so legacy FKs continue to resolve. Any new feature that asks "what scopes does this user belong to?" should consult `lib/data/orgUnitMatcher.ts → unitInScope(target, scopes)` rather than equality on `campusId` / `orgGroupId`.
+- **Runtime role substrate.** Roles are CRUD-able at runtime via the `Role` table + `RolesEditorV2` UI. Built-in rows mirror the `UserRole` enum and are protected from delete; SUPERADMIN is fully immutable. Custom roles can be created without a deploy. Capability checks should prefer `hasCapabilityForUser(user, capability)` (reads runtime Role first, falls back to enum overlay) when the runtime substrate matters.
+- **Public-copy substrate.** Every public-facing page (landing, how-it-works, about, privacy, terms, footer) is admin-editable through Admin Config namespaces with hardcoded fallbacks in `config/content.ts`. The hardcoded fallbacks **must read for everyday users**: no "polymorphic substrate", "Pearson r", "additive migrations", "PostgreSQL", "Cloudinary", "Resend", "config-driven", "enum", or other engineering jargon. Technical terminology belongs in `system-architecture.md` only.
+- **Build-time DB safety.** Server components that read from the substrate (`loadAdminConfig`, `loadPublicCopy`, etc.) automatically short-circuit to the typed fallback when `NEXT_PHASE === "phase-production-build"`. New data-fetching server components should consult `isBuildPhase()` from `lib/utils/buildPhase.ts` if they hit remote infrastructure.
+- **Name resolution.** The UI never renders raw FK UUIDs. Use `useEntityNames` (client) or `resolveEntityNames` (server) to turn ids into human-readable names. The `check:no-hardcoded-labels` audit script enforces that user-facing strings don't hardcode hierarchy / role labels — both belong in the substrate.
+- **Migrations are additive.** Every new column / table / index uses `IF NOT EXISTS` and idempotent back-fills. No `DROP`, no `RENAME`, no `TRUNCATE` against data-bearing environments. Apply migrations via `prisma migrate deploy` only; `migrate reset` is forbidden in production.

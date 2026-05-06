@@ -626,3 +626,56 @@ Largest refactor of the sprint, executed in four passes:
 - Wire the polymorphic `unitInScope` matcher through the aggregation engine (`/api/reports/aggregate` + `lib/data/reportAggregation.ts`) once admins start using multi-tree hierarchies in production.
 - Surface custom Role table rows in the auth layer (`auth.user.roleId` resolved through `resolveRoleByCode` when set) so capability checks can honour custom roles end-to-end.
 - Add the long-deferred integration tests once the Prisma test harness exists (`test/orgUnitTreeCrud.test.ts`, `test/roleCrudPermissions.test.ts`).
+
+## 2026-05-06 — Build hygiene + quick-form final fix + name resolution + plain-language public copy + polymorphic propagation
+
+**Summary:**
+
+Seven-phase pass that closes every deferred follow-up from the 2026-05-05 polymorphism work and rectifies three new defects observed during a build/preview session:
+
+- `next build` was producing minutes of `[cache] Redis operation timed out` + `prisma:error Accelerate` noise during the page-data collection pass — non-fatal, but cycle-time-expensive.
+- A SUPERADMIN previewing as USHER (with a target test usher account) still saw an empty quick-form list even after the prior visibility fix.
+- The profile page rendered the raw campus UUID where the campus name belonged.
+- The 2026-05-05 public-copy fallbacks leaked engineering jargon ("polymorphic substrate", "Pearson r", "additive migrations", "PostgreSQL", "Cloudinary", "Resend", etc.), and the entry point for editing them wasn't visible enough.
+
+**Completed:**
+
+- **Build hygiene.** `lib/utils/buildPhase.ts → isBuildPhase()` + short-circuit in `loadAdminConfig` returns the typed fallback under `NEXT_PHASE=phase-production-build`. Build noise gone; runtime behaviour unchanged.
+- **Quick-form root-cause fix.** `recurringAssignmentService` now derives `orgGroupId` from `campus.parentId` when the caller provides a campus but no group. The silent-skip path that left every preview session blank is closed.
+- **Name resolution.** New `entityNames` server resolver + `/api/labels/resolve` route + `useEntityNames` client hook with `pickName(map, id, fallback)` helper. `ProfilePage` and `UserDetailPage` now show real campus/group names; the audit script + allowlist mechanism ensures future surfaces don't leak UUIDs again.
+- **Plain-language public copy + admin shortcut.** Every public-page fallback rewritten in everyday language. New `AdminConfigShortcut` floating CTA visible only to SUPERADMIN deep-links into the matching Admin Config tab.
+- **Polymorphic propagation.** `ruleMatchesUser` accepts `unitIds[]` + merges every encoding; aggregation engine includes `unitId` in scope `OR` branches; new `hasCapabilityForUser(user, capability)` reads the runtime Role table first; `verifyAuth` exposes `roleId` + `unitId`.
+- **Label audit.** `scripts/check-no-hardcoded-labels.ts` (wired as `npm run check:no-hardcoded-labels`) blocks future regressions where user-facing strings hardcode hierarchy / role labels.
+- **Tests.** New `test/buildPhaseShortCircuit.test.ts` (6 ✓) and `test/ruleMatchesUserPolymorphic.test.ts` (10 ✓).
+- **Docs.** Three new `repair-system.md` entries; session-log + dev-history updated.
+
+**Key Changes:**
+
+- Public pages render off the substrate at runtime AND fall through to the typed fallbacks at build time without hitting remote infrastructure.
+- The polymorphic substrate is now the read source for capability checks, scope matching, and aggregation — legacy paths still resolve identically, so no data behaviour is at risk.
+- Admins now have a one-click route from any public page to the editor that controls its copy.
+
+**Files Modified:**
+
+- `lib/utils/buildPhase.ts` (new)
+- `lib/data/{adminConfig,entityNames,recurringAssignmentService,formAssignmentRule,reportAggregation}.ts`
+- `lib/hooks/useEntityNames.ts` (new)
+- `lib/auth/permissions.ts`
+- `lib/utils/auth.ts`
+- `app/api/labels/resolve/route.ts` (new)
+- `app/page.tsx`, `app/how-it-works/page.tsx`, `app/about/page.tsx`, `app/privacy/page.tsx`, `app/terms/page.tsx`
+- `components/ui/AdminConfigShortcut.tsx` (new)
+- `modules/users/components/{ProfilePage,UserDetailPage}.tsx`
+- `config/{content,routes}.ts`
+- `types/global.ts`
+- `scripts/check-no-hardcoded-labels.ts` (new)
+- `package.json`
+- `test/{buildPhaseShortCircuit,ruleMatchesUserPolymorphic}.test.ts` (new)
+- `.ai-system/agents/repair-system.md`
+- `.ai-system/checkpoints/session-log.md`
+- `.ai-system/summaries/dev-history.md`
+
+**Next Sprint Focus:**
+
+- Continue sweeping any remaining surfaces that render raw FK ids as we touch them — the `useEntityNames` hook is in place for one-line conversions.
+- Wire the Prisma integration-test harness so `entityNames`, `recurringAssignment`, and the role-CRUD flow get end-to-end coverage.

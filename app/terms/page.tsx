@@ -11,6 +11,7 @@ import { ROLE_DASHBOARD_ROUTES } from "@/config/routes";
 import { UserRole } from "@/types/global";
 import { AppFooter } from "@/components/ui/AppFooter";
 import { PublicPageHeader } from "@/components/ui/PublicPageHeader";
+import { AdminConfigShortcut } from "@/components/ui/AdminConfigShortcut";
 import { loadPublicCopy } from "@/lib/data/publicCopy";
 
 export const metadata: Metadata = {
@@ -90,6 +91,7 @@ export default async function TermsPage() {
             <div className="mt-auto px-6 md:px-10 border-t border-ds-border-subtle">
                 <AppFooter />
             </div>
+            <AdminConfigShortcut pathname="/terms" />
         </main>
     );
 }

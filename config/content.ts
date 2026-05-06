@@ -905,32 +905,36 @@ export const CONTENT = {
         },
         features: [
             {
-                title: "Config-driven from end to end",
-                body: "Roles, hierarchy, dashboards, email templates, cadence, public-page copy — all admin-editable through the substrate. Custom roles can be created at runtime; the polymorphic OrgUnit table supports multiple parallel trees (e.g. Groups & Departments side-by-side). No deploys for copy or workflow changes.",
+                title: "One place for every report",
+                body: "Weekly and monthly numbers from every campus, every group, in one auditable place. No more tracking down spreadsheets, screenshots, or chat threads to know what's been submitted.",
             },
             {
-                title: "Quick-form for ushers",
-                body: "Service-day data entry that wires straight into the campus admin's report. Recurring assignment rules + auto-totals keep the numbers consistent. Section-level correlation groups are configured in a dedicated panel (cross-section by toggle) parallel to the auto-totals editor.",
+                title: "Easy data entry for ushers",
+                body: "Service-day data entry that flows straight into the weekly campus report. Ushers see only the numbers they're responsible for; auto-totals add things up so nothing has to be re-typed.",
             },
             {
-                title: "Aggregated rollups",
-                body: "Monthly, quarterly, and yearly views computed live across any defined org level. One click into the aggregation engine from any report detail. The matcher resolves scope across the polymorphic tree at any depth.",
+                title: "Roll up the way leadership thinks",
+                body: "See monthly, quarterly, and yearly views for any campus, group, or the whole organisation — one click from any report. The platform follows your org chart, however you've defined it.",
             },
             {
-                title: "Insights that matter",
-                body: "Pearson correlations across template-defined metric groups, top-mover deltas, biggest-gap rankings — gated by a sample-size floor so the numbers stay honest. Insights tabs render the same algorithms in interactive playgrounds on the How It Works page.",
+                title: "Insights you can act on",
+                body: "See which numbers move together, which campuses are growing fastest, and where attention is needed most — without crunching the data yourself.",
             },
             {
-                title: "Spreadsheet imports",
-                body: "Upload CSV or XLSX. Multi-sheet workbooks prompt for sheet selection. Mapping step ties columns to template metrics; commit happens in chunked transactions with per-row outcomes — never a generic 500.",
+                title: "Bring in spreadsheets you already use",
+                body: "Upload an Excel or CSV file, point each column at the right metric, preview the result, and import. Multi-sheet workbooks prompt you to pick a sheet; bad files explain themselves instead of failing silently.",
+            },
+            {
+                title: "Edit copy and structure without a developer",
+                body: "Roles, hierarchy, dashboards, email templates, cadence, and the public pages — all editable through Admin Config. Add a new role, rename a level, or rewrite this very page without waiting for a release.",
             },
             {
                 title: "Safe by default",
-                body: "Strict TypeScript, Zod-validated APIs, audit-tagged impersonation for safe role previews, additive-only DB migrations. Existing data is never at risk; admins can run a one-click Reconcile to migrate legacy rows into the new substrate without a deploy.",
+                body: "Every change is logged and reversible. Previewing the platform as another role keeps every action attributed back to you. Updates never overwrite the data already in your account.",
             },
             {
-                title: "Offline-tolerant",
-                body: "Drafts auto-save locally and sync when you're back online. Push notifications + email are optional and gracefully degrade when the service isn't configured.",
+                title: "Works when the internet doesn't",
+                body: "Drafts save locally and sync the moment you're back online. Email and push notifications are optional and stay quietly out of the way when they're not set up.",
             },
         ],
         quickLinksHeading: "Jump in",
@@ -957,38 +961,38 @@ export const CONTENT = {
     howItWorks: {
         pageTitle: "How it works",
         pageSubtitle:
-            "Concise walkthroughs by feature and role, with scenarios, FAQs, and in-page playgrounds.",
+            "Short walkthroughs for every role, plus answers to common questions and small interactive demos you can try right on the page.",
         intro:
-            "Pick a tab below — each one walks through the typical flow, includes a short scenario, and ends with frequently-asked questions and a hands-on playground where applicable.",
+            "Pick a tab below to see what your role looks like day-to-day. Each tab includes a short walkthrough, a few frequently-asked questions, and a hands-on demo where it's helpful.",
         tabs: [
             {
                 slug: "overview",
                 title: "Overview",
                 sections: [
                     {
-                        heading: "What this platform is",
+                        heading: "What this platform is for",
                         body:
-                            "The Harvesters Reporting System replaces fragmented Excel + WhatsApp + Word workflows with a single auditable surface for campus reports, reviews, approvals, and analytics. Every value is traceable; every action is logged.",
+                            "Harvesters Reporting brings every campus report, review, approval, and analytics view into one place. No more scattered spreadsheets, screenshots, or chat threads. Every number can be traced to who entered it and when.",
                     },
                     {
-                        heading: "How roles fit together",
+                        heading: "How the roles fit together",
                         body:
-                            "Ushers enter raw service-day numbers via the quick form. Campus admins consolidate and submit the weekly / monthly report. Group admins and pastors review and roll up. CEO / Office of CEO / Church Ministry / SPO see scope-overview analytics first, with one-click access to aggregated reports.",
+                            "Ushers enter the service-day numbers through a simple form. Campus admins finish the weekly or monthly report and submit it. Group admins and pastors review and approve. CEO, SPO, and Church Ministry see organisation-wide views with one-click drill-downs.",
                     },
                     {
-                        heading: "What's admin-editable",
+                        heading: "What admins can change without a developer",
                         body:
-                            "Roles + capability bits, hierarchy levels, dashboard widget sets, email templates, role cadence (frequency + expected days + deadline), correlation defaults, PWA copy, invite defaults — all editable at runtime through Admin Config without a deploy.",
+                            "Role names and what each role can do, your organisation's hierarchy, dashboard layouts, the wording in outbound emails, how often each role reports, and even the public pages on this site — all editable inside Admin Config. Changes show up the next time someone loads the page.",
                     },
                 ],
                 faqs: [
                     {
                         q: "Do I need to be online to fill a report?",
-                        a: "No. Drafts auto-save locally and sync when you're back online. The offline indicator in the corner shows the queue length.",
+                        a: "No. Your drafts save in the browser and sync the moment you're back online. A small indicator in the corner shows when something is queued.",
                     },
                     {
-                        q: "What happens if I lose access mid-edit?",
-                        a: "Your current draft survives. Sign back in and the form rehydrates with the values you'd entered.",
+                        q: "What happens if I lose access while editing?",
+                        a: "Your draft survives. Sign back in and the form will be exactly where you left it.",
                     },
                 ],
                 playgroundIds: ["analytics-chart-toggle"],
@@ -998,29 +1002,29 @@ export const CONTENT = {
                 title: "For Ushers",
                 sections: [
                     {
-                        heading: "Quick-form basics",
+                        heading: "What you'll see when you sign in",
                         body:
-                            "When you sign in you land on the Quick Form page. Each card is one assignment — only the metrics your admin chose for you to fill, no goal context. Type in your numbers, the system auto-saves every 30 seconds, and tap Submit when you're done.",
+                            "When you log in you land on the Quick Form page. Each card is one assignment — just the few numbers your campus admin asked you to fill, with nothing extra to wade through. Type in your numbers and the platform saves every 30 seconds. Tap Submit when you're done.",
                     },
                     {
-                        heading: "Who decides which metrics you fill?",
+                        heading: "Who decides which numbers you fill?",
                         body:
-                            "A campus or group admin opens the template editor → Quick-form assignments tab and creates a rule for the USHER role. They pick which metrics, optionally restrict to specific campuses, and set a cadence (typically weekly Sunday + Wednesday).",
+                            "A campus or group admin sets that up in advance from the template editor. They pick the specific numbers ushers are responsible for and how often (typically Sunday and Wednesday for service days). Once that's done, your form shows up automatically every period.",
                     },
                     {
-                        heading: "Where the values go",
+                        heading: "Where what you enter goes",
                         body:
-                            "Your submission flows directly into the campus admin's weekly / monthly report — no copy-paste. The campus admin sees a small 'auto-filled by usher' badge so they know which numbers came from you.",
+                            "Your numbers flow straight into the campus's weekly or monthly report — no copy-paste, no extra steps. Your campus admin sees a small badge next to each value so they know which numbers came from you.",
                     },
                 ],
                 faqs: [
                     {
-                        q: "What if I'm assigned to fill a metric I don't have data for?",
-                        a: "Leave it blank. Save Draft. The campus admin can follow up directly or fill it themselves.",
+                        q: "What if I'm asked for a number I don't have?",
+                        a: "Leave it blank and save the draft. Your campus admin can follow up or fill it in themselves.",
                     },
                     {
-                        q: "Can I edit a value after submitting?",
-                        a: "Until the assignment is marked complete, yes. After completion, your campus admin handles edits.",
+                        q: "Can I change a value after I submit?",
+                        a: "Yes, until your assignment is marked complete. After that, your campus admin handles changes.",
                     },
                 ],
                 playgroundIds: ["quick-form-demo"],
@@ -1032,23 +1036,23 @@ export const CONTENT = {
                     {
                         heading: "Filling the campus report",
                         body:
-                            "Open Reports → New report. The template auto-fills the title and period from its recurrence settings. Ushers' submissions are already in the corresponding cells. Add the rest, run a preview, and Submit when ready.",
+                            "Open Reports → New report. The title and period fill in for you based on the template you pick. Anything your ushers have already submitted is sitting in the right cells. Fill in the rest, preview the totals, and submit when you're ready.",
                     },
                     {
-                        heading: "Aggregated quick views",
+                        heading: "Quick rollups from any report",
                         body:
-                            "On any report detail you'll see Monthly / Quarterly / Yearly chips — one click takes you to a server-aggregated rollup of all your campus's reports for that period. No extra setup.",
+                            "On any report detail page you'll see Monthly, Quarterly, and Yearly chips. One click takes you to a combined view of every report from your campus for that period — no extra setup, no configuration.",
                     },
                     {
-                        heading: "Auto-totals",
+                        heading: "Numbers that add themselves up",
                         body:
-                            "If your template has an auto-total metric (e.g. 'Total attendance' = Men + Women + Children), the cell is server-computed and read-only on the form, with a comment listing the source metrics.",
+                            "If your template has a total metric (for example, Total attendance = Men + Women + Children), the platform fills it in automatically and locks the cell. The total updates every time a source value changes, with a small note showing which metrics it added together.",
                     },
                 ],
                 faqs: [
                     {
-                        q: "Can I unlock a metric an usher already filled?",
-                        a: "Yes — the value is editable until the report is approved. After approval, request an unlock from your campus pastor.",
+                        q: "Can I change a number an usher already filled?",
+                        a: "Yes, until the report is approved. After approval, ask your campus pastor for an unlock.",
                     },
                 ],
                 playgroundIds: ["template-builder-effect", "auto-sum-chain"],
@@ -1058,20 +1062,20 @@ export const CONTENT = {
                 title: "For Group Admins / Pastors",
                 sections: [
                     {
-                        heading: "Scope overview at a glance",
+                        heading: "What your dashboard shows",
                         body:
-                            "Your dashboard lands on a scope-overview view: campus performance ranking, top-movers, compliance heatmap, period selector. From there, drill into any campus's reports without leaving the page.",
+                            "You land on a group-wide view: how each campus is performing, which ones are growing fastest, who's behind on submissions, and a period selector to compare timeframes. Drill into any campus's reports without leaving the page.",
                     },
                     {
-                        heading: "Approving + reviewing",
+                        heading: "Reviewing and approving",
                         body:
-                            "Submitted campus reports queue under 'Pending review'. Mark Reviewed once the data passes your check; if something's off, request edits with a reason — the campus admin gets notified inline + by email if the service is configured.",
+                            "When campus admins submit, the reports queue under Pending review. Mark them Reviewed when the numbers look right; if something's off, request edits with a short reason and the campus admin gets a notification (and an email if email is set up).",
                     },
                 ],
                 faqs: [
                     {
-                        q: "How do I see a quarter or year roll-up?",
-                        a: "From any campus report detail, click the Quarterly or Yearly chip. The aggregation engine computes it live across all source reports in the period.",
+                        q: "How do I see a quarter or year combined?",
+                        a: "From any campus report detail page, click the Quarterly or Yearly chip. The combined view is calculated live from every report in the period.",
                     },
                 ],
                 playgroundIds: ["aggregation-rollup"],
@@ -1081,20 +1085,20 @@ export const CONTENT = {
                 title: "For CEO / SPO / Office of CEO / Church Ministry",
                 sections: [
                     {
-                        heading: "Org-wide scope overview",
+                        heading: "An organisation-wide picture",
                         body:
-                            "Your dashboard shows group performance ranking, top campus, org compliance, recent submissions, pending review queue, and admin quick-links. The widget set is admin-editable from Admin Config → Dashboard layout.",
+                            "Your dashboard shows how each group is doing, which campus is leading, the overall reporting rate, recent submissions, what's waiting on review, and quick links to the admin tools you use most. A superadmin can rearrange the cards from Admin Config → Dashboard layout.",
                     },
                     {
-                        heading: "Insights",
+                        heading: "Insights, written for humans",
                         body:
-                            "InsightSummary card surfaces top-mover, biggest-gap, and compliance-delta sentences. CorrelationMatrix renders a Pearson heatmap when at least 5 paired samples exist (configurable).",
+                            "Each cycle the platform highlights what changed: who's grown the most, where the biggest gaps are, and how compliance is trending. Numbers that move together get spotlighted as soon as there's enough data to draw a clean line.",
                     },
                 ],
                 faqs: [
                     {
                         q: "Can I preview the platform as another role?",
-                        a: "Yes — superadmin can start a time-limited impersonation session. Read-only by default; switch to mutate mode if you need to take real actions. Every event is audit-logged.",
+                        a: "Yes — a superadmin can start a time-limited preview session. It's read-only by default so you can walk through screens safely; switch to mutate mode if you actually need to take action. Every step is logged so the trail still leads back to you.",
                     },
                 ],
                 playgroundIds: ["insight-summary-preview", "correlation-matrix-builder"],
@@ -1104,37 +1108,41 @@ export const CONTENT = {
                 title: "For Superadmin",
                 sections: [
                     {
-                        heading: "Admin Config substrate",
+                        heading: "What lives in Admin Config",
                         body:
-                            "The Admin Config page is where every admin-editable bit lives: roles + capabilities, hierarchy levels, dashboard layout per role band, email templates, role cadence, correlation thresholds, PWA copy, invite defaults. Each namespace has a typed fallback in `config/*` — DB overrides take effect on next read with optimistic-lock conflict detection on save.",
+                            "Everything admins can change without a developer: roles and what each one can do, your organisation's hierarchy, dashboard layouts, email wording, how often each role reports, install prompts, invite defaults, and the public pages on this site. Saved changes show up the next time someone loads the affected page.",
                     },
                     {
-                        heading: "Templates editor",
+                        heading: "Templates",
                         body:
-                            "Templates → tabs: Sections & metrics for the data shape, Quick-form assignments for the recurring rule editor. Auto-sum panel sits at the section level — pick source metrics from the same section or, with a one-click opt-in, across the template.",
+                            "Templates → Sections & metrics defines what the report looks like. Templates → Quick-form assignments lets you pin specific metrics to specific roles (so ushers, for example, only see their few cells). Section-level auto-totals and correlation groups have their own panels — same shape, sitting one above the other.",
                     },
                     {
-                        heading: "Impersonation",
+                        heading: "Previewing the platform as another role",
                         body:
-                            "Open the user menu → Preview as another role. Pick the role; for campus / group-scoped roles you must pick a target user so the preview inherits real campus + group context. Sessions auto-expire (default 30 min) and log every event.",
+                            "From the user menu, click Preview as another role. Pick the role; for roles tied to a campus or group, pick a real user too so the preview inherits their context. Sessions expire automatically (30 min by default) and every step is logged.",
                     },
                 ],
                 faqs: [
                     {
-                        q: "How do I roll back a bad config change?",
-                        a: "Each namespace tab has a Reset to defaults button — that writes a tombstone row marking the namespace as fallback, restoring the typed defaults from `config/*`.",
+                        q: "How do I undo a bad change in Admin Config?",
+                        a: "Every tab has a Reset to defaults button — it removes your override and restores the platform's built-in values for that section.",
                     },
                     {
                         q: "Can I add new roles at runtime?",
-                        a: "Yes. The Roles tab has a runtime Role table with a 'New role' button — pick a code, label, capability set, optional org-unit pin, and save. Built-in roles (matching the original UserRole enum) stay marked as system rows; SUPERADMIN remains immutable. Custom roles can be archived without a deploy.",
+                        a: "Yes. The Roles tab has a New role button — give it a name, choose what it can do, optionally pin it to specific units, and save. Built-in roles stay marked as such; superadmin remains protected. Custom roles can be archived later without a release.",
                     },
                     {
-                        q: "How does the polymorphic hierarchy work?",
-                        a: "The Hierarchy tab shows two surfaces: the legacy level-label editor and a new multi-tree OrgUnit editor. Existing campuses + groups remain authoritative; the OrgUnit editor lets you add new levels (e.g. ZONE, DEPARTMENT) and even spawn parallel trees that live alongside the primary one. Click 'Reconcile' under the OrgUnit panel to mirror legacy rows into the new substrate without a deploy — it's idempotent and never overwrites populated data.",
+                        q: "Can the org chart have more than one branch?",
+                        a: "Yes. The Hierarchy tab supports multiple parallel trees side-by-side (for example, your usual Groups → Campuses tree alongside a Departments tree). Existing campuses and groups stay where they are; the new tree editor lets you add levels at any depth.",
+                    },
+                    {
+                        q: "What if some old data hasn't moved to the new structure yet?",
+                        a: "Click Reconcile in the Hierarchy tab to migrate any older data into the new structure. It's safe to run any time — it never overwrites data you've already entered.",
                     },
                     {
                         q: "Imports keeps erroring on .xlsx — is that fixed?",
-                        a: "Yes. The wizard now accepts .csv, .xlsx, and .xls. Multi-sheet workbooks prompt for sheet selection; a malformed file returns a friendly 'parse failed' error code instead of a Prisma stack trace.",
+                        a: "Yes. The wizard now accepts .csv, .xlsx, and .xls. Workbooks with multiple sheets ask you to pick one; bad files explain themselves with a clear message instead of failing silently.",
                     },
                 ],
                 playgroundIds: ["correlation-demo", "import-wizard-demo"],
@@ -1158,17 +1166,17 @@ export const CONTENT = {
             {
                 heading: "What this platform is",
                 body:
-                    "The Harvesters Reporting System is a single, auditable surface for campus reports, reviews, approvals, and analytics across Harvesters International Christian Centre. It replaces fragmented Excel + WhatsApp + Word workflows with a config-driven, role-aware platform that lets every level of leadership see the data they care about — instantly, with a paper trail.",
+                    "Harvesters Reporting brings every campus report, review, approval, and analytics view into one place for Harvesters International Christian Centre. It replaces a tangle of spreadsheets, screenshots, and chat messages with a single, traceable home for the numbers leadership relies on.",
             },
             {
                 heading: "What we believe",
                 body:
-                    "Numbers should be honest, lineage should be traceable, and admins should never need a deploy to change copy or workflow. Every visible string, capability, hierarchy level, role label, dashboard widget, and email template is editable through the substrate at runtime.",
+                    "Numbers should be honest, every value should be traceable to who entered it, and admins shouldn't need a developer to change wording or workflow. Roles, hierarchy, dashboards, email wording, and the public pages on this site can all be edited inside Admin Config — the change shows up the next time someone loads the page.",
             },
             {
                 heading: "Who built it",
                 body:
-                    "Built and maintained by HICC's reporting team in collaboration with S.D. Open to feedback through the in-app bug-report flow.",
+                    "Built and maintained by HICC's reporting team in collaboration with S.D. Use the bug-report link in the app to send us feedback or report something that needs attention.",
             },
         ],
     },
@@ -1179,27 +1187,27 @@ export const CONTENT = {
             {
                 heading: "What we collect",
                 body:
-                    "We collect only the data you submit through the platform — campus reports, goal entries, profile information, bug reports, and uploaded screenshots. We do not run third-party trackers and do not sell or share data with advertisers.",
+                    "Only what you submit through the platform: the report values you enter, the goals you set, your profile information, any bug reports you send, and the screenshots you attach. We don't run third-party trackers and we don't sell or share your data with advertisers.",
             },
             {
                 heading: "Where it's stored",
                 body:
-                    "Data lives in a managed PostgreSQL database operated under HICC's control. Screenshot uploads use Cloudinary's managed asset lifecycle; screenshots are tied to bug-report records and removed when the linked record is deleted.",
+                    "Your data lives in a database operated under HICC's control. Screenshots you attach to bug reports are stored with a trusted hosting provider and are removed when the linked report is deleted.",
             },
             {
                 heading: "Email handling",
                 body:
-                    "Outbound email (verification, invites, workflow notifications, reset links) is delivered through Resend when configured. If the email service is not configured, the platform stays fully usable — emails simply queue locally and the prompts display non-blockingly in the in-app inbox.",
+                    "Outbound email (verification, invites, review notices, reset links) is sent through a trusted email provider when one is set up. If email isn't configured, the platform still works — these messages show up inside the app instead, and nothing else changes.",
             },
             {
-                heading: "Audit + impersonation",
+                heading: "Audit and previews",
                 body:
-                    "Every significant action (create, submit, approve, lock, unlock, edit) is recorded in an audit log alongside the actor's user id. Superadmin role-impersonation sessions are time-limited, logged, and tagged on every action they touch.",
+                    "Every meaningful action (creating, submitting, approving, locking, unlocking, editing) is recorded against the person who did it. When a superadmin previews the platform as another role, the session is time-limited and every step is logged so the trail still leads back to the real actor.",
             },
             {
                 heading: "Your rights",
                 body:
-                    "You can request export or deletion of your own profile data through your campus admin or directly via the bug-report flow. Reports themselves are organisational records and retained per HICC policy.",
+                    "You can ask your campus admin or the team (via the bug-report flow) to export or remove your profile information. Report content itself is an organisational record and is kept in line with HICC's policy.",
             },
         ],
     },
@@ -1208,24 +1216,24 @@ export const CONTENT = {
         subtitle: "House rules for using the platform.",
         sections: [
             {
-                heading: "Who can use this platform",
+                heading: "Who can use the platform",
                 body:
-                    "Use of the platform is reserved for invited HICC members, staff, leadership, and authorised partners. Each account is personal — please don't share credentials. Lost access can be reset via the Forgot password flow or by your campus admin.",
+                    "The platform is for invited HICC members, staff, leadership, and authorised partners. Accounts are personal — please don't share your password. Forgotten passwords can be reset from the sign-in page or by your campus admin.",
             },
             {
-                heading: "What you should and shouldn't do",
+                heading: "What we ask of you",
                 body:
-                    "Submit reports honestly and on time. Do not enter another person's data without authorisation. Do not attempt to bypass role permissions, scrape data outside your scope, or upload anything offensive or illegal. Bug reports go through the in-app flow.",
+                    "Please submit reports honestly and on time, only enter data you're responsible for, and don't try to work around your role's permissions. Don't upload anything offensive or unlawful. If something looks broken, send us a bug report through the link in the app.",
             },
             {
                 heading: "What we provide",
                 body:
-                    "Reasonable best effort to keep the platform available, current, and secure. Maintenance windows are announced through the in-app inbox. Drafts are saved offline so a brief disconnection never costs you work.",
+                    "We do our best to keep the platform up, current, and secure. Planned maintenance is announced inside the app. Your drafts save in the browser so a brief connection blip never costs you the work you've already typed.",
             },
             {
                 heading: "Changes to these terms",
                 body:
-                    "We may update these terms as the platform evolves. Material changes are announced in the inbox; using the platform after a notice is acceptance of the updated terms.",
+                    "These terms may be updated as the platform evolves. We announce meaningful changes inside the app; continuing to use the platform after a notice means you accept the updated terms.",
             },
         ],
     },
@@ -1330,7 +1338,7 @@ export const CONTENT = {
     /* ── Admin Config ────────────────────────────────────────────────────────── */
     adminConfig: {
         pageTitle: "Admin Config",
-        subtitle: "Tune the substrate that powers roles, dashboards, imports, and onboarding.",
+        subtitle: "Edit roles, hierarchy, dashboards, email wording, and the public pages — without a developer.",
         namespaceLabels: {
             roles: "Roles & Capabilities",
             hierarchy: "Hierarchy & Org Units",

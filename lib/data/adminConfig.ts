@@ -163,6 +163,17 @@ export async function loadAdminConfig<T = Record<string, unknown>>(
         return { namespace, version: 0, payload: fallback, source: "fallback" };
     }
 
+    // Build-phase short-circuit: `next build`'s "Collecting page data" pass
+    // imports + invokes server components to gather metadata, even on
+    // dynamic routes. Hitting the database / Redis there can never succeed
+    // (prod creds usually aren't present in the build sandbox), and even
+    // when they are, the timeouts add minutes to every build for noise that
+    // gets caught and replaced with the typed fallback anyway. Skip cleanly.
+    const { isBuildPhase } = await import("@/lib/utils/buildPhase");
+    if (isBuildPhase()) {
+        return { namespace, version: 0, payload: fallback, source: "fallback" };
+    }
+
     // Cache hit
     const cached = (await cache.get(NS_CACHE_KEY(namespace))) as AdminConfigSnapshot<T> | null;
     if (cached && cached.namespace === namespace) {

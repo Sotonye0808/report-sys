@@ -32,6 +32,7 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { ROLE_CONFIG } from "@/config/roles";
 import { fmtDate } from "@/lib/utils/formatDate";
 import { apiMutation } from "@/lib/utils/apiMutation";
+import { useEntityNames, pickName } from "@/lib/hooks/useEntityNames";
 
 /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 /* Shared primitives                                                           */
@@ -131,10 +132,18 @@ function ProfileTab({ user }: { user: AuthUser }) {
     }
   };
 
+  // Resolve raw FK ids on the user record into human-readable names.
+  // Without this, the campus field used to render the UUID directly.
+  const { names: entityNames } = useEntityNames({
+    campusIds: [user.campusId],
+    groupIds: [user.orgGroupId],
+  });
+
   if (loading) return <LoadingSkeleton rows={5} />;
 
   const displayName = `${profile?.firstName ?? user.firstName} ${profile?.lastName ?? user.lastName}`;
-  const campus = user.campusId;
+  const campusName = pickName(entityNames.campuses, user.campusId, "—");
+  const groupName = pickName(entityNames.groups, user.orgGroupId, "—");
   const initials =
     `${(profile?.firstName ?? user.firstName)[0] ?? ""}${(profile?.lastName ?? user.lastName)[0] ?? ""}`.toUpperCase();
 
@@ -217,7 +226,12 @@ function ProfileTab({ user }: { user: AuthUser }) {
             label={CONTENT.profile.roleLabel as string}
             value={ROLE_CONFIG[user.role]?.label ?? user.role}
           />
-          {campus && <InfoRow label={CONTENT.profile.campusLabel as string} value={campus} />}
+          {user.campusId && (
+            <InfoRow label={CONTENT.profile.campusLabel as string} value={campusName} />
+          )}
+          {user.orgGroupId && (
+            <InfoRow label={CONTENT.profile.groupLabel as string} value={groupName} />
+          )}
           <InfoRow
             label={CONTENT.profile.memberSince as string}
             value={fmtDate(profile?.createdAt)}

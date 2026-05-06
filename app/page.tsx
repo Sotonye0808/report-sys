@@ -19,6 +19,7 @@ import { ROLE_DASHBOARD_ROUTES } from "@/config/routes";
 import { UserRole } from "@/types/global";
 import { AppFooter } from "@/components/ui/AppFooter";
 import { PublicPageHeader } from "@/components/ui/PublicPageHeader";
+import { AdminConfigShortcut } from "@/components/ui/AdminConfigShortcut";
 
 interface QuickLink {
     label: string;
@@ -173,6 +174,8 @@ export default async function LandingPage() {
             <div className="mt-auto px-6 md:px-10 border-t border-ds-border-subtle">
                 <AppFooter />
             </div>
+            {/* SUPERADMIN-only edit-this-page affordance; no-op for everyone else. */}
+            <AdminConfigShortcut pathname="/" />
         </main>
     );
 }

@@ -27,7 +27,10 @@
       "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx test/publicCopySanitise.test.ts)",
       "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx test/orgUnitMatcher.test.ts)",
       "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx test/spreadsheetParse.test.ts)",
-      "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx scripts/check-mutation-auth.ts)"
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx scripts/check-mutation-auth.ts)",
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx scripts/check-no-hardcoded-labels.ts)",
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx test/buildPhaseShortCircuit.test.ts)",
+      "Bash(DATABASE_URL=postgresql://localhost:5432/test npx tsx test/ruleMatchesUserPolymorphic.test.ts)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Harvesters WebDev\\Downloads\\web-dev\\report-sys\\app\\api\\org\\units"

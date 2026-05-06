@@ -145,7 +145,11 @@ export async function buildReportQuery(
     if (criteria.templateId) where.templateId = criteria.templateId;
 
     if (criteria.scopeType === "campus" && criteria.scopeId) {
-        where.campusId = criteria.scopeId;
+        // Polymorphic: a campus's UUID is also its OrgUnit id thanks to the
+        // back-fill, so adding unitId as a parallel match means new-substrate
+        // reports (where unitId may be set without legacy campusId) still
+        // resolve. Legacy reports continue to match via campusId equality.
+        where.OR = [{ campusId: criteria.scopeId }, { unitId: criteria.scopeId }];
     } else if (criteria.scopeType === "group" && criteria.scopeId) {
         const selectedGroup = await db.orgGroup.findUnique({
             where: { id: criteria.scopeId },
@@ -153,16 +157,25 @@ export async function buildReportQuery(
         });
 
         const selectedGroupCampusIds = selectedGroup?.campuses.map((campus) => campus.id) ?? [];
+        // Build a single OR that covers every encoding:
+        //  - reports tagged with the group id directly (orgGroupId or unitId)
+        //  - reports tagged with one of the group's campus ids (campusId or unitId)
+        const branches: Record<string, unknown>[] = [
+            { orgGroupId: criteria.scopeId },
+            { unitId: criteria.scopeId },
+        ];
         if (selectedGroupCampusIds.length > 0) {
-            where.OR = [
-                { orgGroupId: criteria.scopeId },
-                { campusId: { in: selectedGroupCampusIds } },
-            ];
-        } else {
-            where.orgGroupId = criteria.scopeId;
+            branches.push({ campusId: { in: selectedGroupCampusIds } });
+            branches.push({ unitId: { in: selectedGroupCampusIds } });
         }
+        where.OR = branches;
     } else if (campusScope && campusScope.length > 0) {
-        where.campusId = { in: campusScope };
+        // Mirror unitId for the campus-list scope so polymorphic reports
+        // remain visible to campus-bound roles after reconciliation.
+        where.OR = [
+            { campusId: { in: campusScope } },
+            { unitId: { in: campusScope } },
+        ];
     }
 
     return where;

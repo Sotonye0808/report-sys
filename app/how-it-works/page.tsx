@@ -20,6 +20,7 @@ import { UserRole } from "@/types/global";
 import { AppFooter } from "@/components/ui/AppFooter";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { PublicPageHeader } from "@/components/ui/PublicPageHeader";
+import { AdminConfigShortcut } from "@/components/ui/AdminConfigShortcut";
 
 export const metadata: Metadata = {
     title: "How it works · Harvesters Reporting",
@@ -84,6 +85,7 @@ export default async function Page() {
             <div className="mt-auto px-6 md:px-10 border-t border-ds-border-subtle">
                 <AppFooter />
             </div>
+            <AdminConfigShortcut pathname="/how-it-works" />
         </main>
     );
 }

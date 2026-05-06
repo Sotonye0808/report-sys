@@ -235,6 +235,11 @@ export async function verifyAuth(
         // checks downstream therefore see the impersonated role automatically.
         role: effectiveRole,
         actualRole,
+        // Pass through the polymorphic substrate columns when populated. Both
+        // are nullable; `hasCapabilityForUser` and the entity resolver fall
+        // back gracefully to the legacy enum / campusId paths when null.
+        roleId: (userProfile as { roleId?: string | null }).roleId ?? null,
+        unitId: (userProfile as { unitId?: string | null }).unitId ?? null,
         campusId: impersonatedScope.campusId ?? userProfile.campusId ?? undefined,
         orgGroupId: impersonatedScope.orgGroupId ?? userProfile.orgGroupId ?? undefined,
         avatar: userProfile.avatar ?? undefined,

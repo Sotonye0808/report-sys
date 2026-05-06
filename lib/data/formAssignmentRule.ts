@@ -160,6 +160,8 @@ interface MatchUser {
     role: UserRole;
     campusId?: string | null;
     orgGroupId?: string | null;
+    /** Polymorphic OrgUnit id when populated; falls through to legacy fields. */
+    unitId?: string | null;
 }
 
 interface MatchableRule {
@@ -169,12 +171,15 @@ interface MatchableRule {
     orgGroupId: string | null;
     campusIds: string[];
     orgGroupIds: string[];
+    /** Polymorphic OrgUnit ids — empty array means "applies to every unit". */
+    unitIds?: string[] | null;
 }
 
 /**
- * Returns true when the rule applies to the given user. Honours both the
- * legacy single-value scope columns and the new array columns. Empty arrays
- * AND null legacy fields ⇒ rule applies to every campus / group.
+ * Returns true when the rule applies to the given user. Honours every scope
+ * encoding: legacy single-value `campusId`/`orgGroupId`, the array columns
+ * `campusIds`/`orgGroupIds`, AND the polymorphic `unitIds[]`. Empty scope
+ * collections ⇒ rule applies to every unit / campus / group.
  */
 export function ruleMatchesUser(rule: MatchableRule, user: MatchUser): boolean {
     // Direct user match always wins.
@@ -182,19 +187,21 @@ export function ruleMatchesUser(rule: MatchableRule, user: MatchUser): boolean {
     if (!rule.role) return false;
     if (rule.role !== user.role) return false;
 
-    const campusList = (rule.campusIds && rule.campusIds.length > 0)
-        ? rule.campusIds
-        : rule.campusId
-            ? [rule.campusId]
-            : [];
-    const groupList = (rule.orgGroupIds && rule.orgGroupIds.length > 0)
-        ? rule.orgGroupIds
-        : rule.orgGroupId
-            ? [rule.orgGroupId]
-            : [];
+    // Merge every scope encoding into a single deduped list so callers don't
+    // need to know which one the rule was written under. Polymorphic
+    // `unitIds[]` includes campuses and groups (their UUIDs are the same as
+    // OrgUnit ids per the back-fill migration), so legacy + new substrate
+    // rules match identically here.
+    const merged = new Set<string>();
+    for (const id of rule.unitIds ?? []) if (id) merged.add(id);
+    for (const id of rule.campusIds ?? []) if (id) merged.add(id);
+    for (const id of rule.orgGroupIds ?? []) if (id) merged.add(id);
+    if (rule.campusId) merged.add(rule.campusId);
+    if (rule.orgGroupId) merged.add(rule.orgGroupId);
 
-    if (campusList.length === 0 && groupList.length === 0) return true;
-    if (user.campusId && campusList.includes(user.campusId)) return true;
-    if (user.orgGroupId && groupList.includes(user.orgGroupId)) return true;
+    if (merged.size === 0) return true;
+    if (user.unitId && merged.has(user.unitId)) return true;
+    if (user.campusId && merged.has(user.campusId)) return true;
+    if (user.orgGroupId && merged.has(user.orgGroupId)) return true;
     return false;
 }

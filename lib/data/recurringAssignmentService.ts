@@ -69,15 +69,31 @@ export async function materialiseAssignmentsForUser(
                 orgGroupId: rule.orgGroupId,
                 campusIds: rule.campusIds ?? [],
                 orgGroupIds: rule.orgGroupIds ?? [],
+                unitIds: (rule as { unitIds?: string[] | null }).unitIds ?? [],
             },
             {
                 id: input.userId,
                 role: input.role,
                 campusId: input.campusId ?? null,
                 orgGroupId: input.orgGroupId ?? null,
+                unitId: input.campusId ?? input.orgGroupId ?? null,
             },
         ),
     );
+
+    // Per-call memo: avoid re-fetching the same campus's parent id across
+    // multiple rules that resolve to the same campus.
+    const campusParentMemo = new Map<string, string | null>();
+    async function resolveGroupForCampus(campusId: string): Promise<string | null> {
+        if (campusParentMemo.has(campusId)) return campusParentMemo.get(campusId) ?? null;
+        const campus = await prisma.campus.findUnique({
+            where: { id: campusId },
+            select: { parentId: true },
+        });
+        const parentId = campus?.parentId ?? null;
+        campusParentMemo.set(campusId, parentId);
+        return parentId;
+    }
 
     const out: MaterialisedAssignment[] = [];
     for (const rule of matching) {
@@ -93,7 +109,14 @@ export async function materialiseAssignmentsForUser(
         // wire into their own campus). Rule scope only filters which users
         // qualify — it never overrides the campus the report is created against.
         const campusId = input.campusId ?? rule.campusId ?? null;
-        const orgGroupId = input.orgGroupId ?? rule.orgGroupId ?? null;
+        // Derive orgGroupId from the campus's parent when not supplied directly.
+        // Fixes the silent-skip path that previously returned an empty
+        // assignment list for users (typically USHER) whose user record sets
+        // campusId but leaves orgGroupId null.
+        let orgGroupId = input.orgGroupId ?? rule.orgGroupId ?? null;
+        if (!orgGroupId && campusId) {
+            orgGroupId = await resolveGroupForCampus(campusId);
+        }
         if (!campusId || !orgGroupId) continue;
 
         const { report } = await ensureReportShell(

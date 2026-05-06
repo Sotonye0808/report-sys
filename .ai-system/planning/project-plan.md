@@ -64,13 +64,16 @@
 
 > **Section summary:** Future-facing enhancements for admin control, data entry optimization, and deeper analytical insights.
 
-- [ ] Admin-editable configuration system (migrate roles, hierarchy level definitions, and mappings to be config-driven and admin-editable)
-- [ ] Quick form interface for ushers/data entry (metric-specific exposure and simplified input fields)
-- [ ] Simplified analytical views for various roles with clear insights and statistics
-- [ ] Flexible report and metric comparison with automated correlations and insights
-- [ ] Excel/Spreadsheet import (mapping abstract values to metrics and templates)
-- [ ] PWA installation notice and optimized PWA onboarding
-- [ ] Auto-invite with optimized UI/UX via query parameter links and redirects
+- [x] Admin-editable configuration system (migrate roles, hierarchy level definitions, and mappings to be config-driven and admin-editable) — substrate landed 2026-04-29; runtime Role + polymorphic OrgUnit + public-copy substrates landed 2026-05-05/06.
+- [x] Quick form interface for ushers/data entry (metric-specific exposure and simplified input fields) — landed; quick-form blank-list edge cases (visibility + null orgGroupId) closed 2026-05-05/06.
+- [x] Simplified analytical views for various roles with clear insights and statistics — InsightSummary + correlation widgets + scope-overview dashboards.
+- [x] Flexible report and metric comparison with automated correlations and insights — Compare metrics + Compare reports tabs under /analytics.
+- [x] Excel/Spreadsheet import (mapping abstract values to metrics and templates) — CSV + XLSX flows, multi-sheet picker, friendly parse errors.
+- [x] PWA installation notice and optimized PWA onboarding — install banner + push prompt + dismissal API.
+- [x] Auto-invite with optimized UI/UX via query parameter links and redirects — sanitised /join redirect targets.
+- [x] Multi-tree polymorphic hierarchy — `OrgUnit` substrate with self-FK + `rootKey` supports parallel trees (Group→Campus alongside Department→…) without breaking existing data.
+- [x] Plain-language public copy + admin entry point — landing/how-it-works/about/privacy/terms editable via Admin Config with jargon-free fallbacks; SUPERADMIN-only "Edit page copy" CTA on every public page.
+- [x] Name resolution everywhere — `useEntityNames` hook + `/api/labels/resolve` route + audit script ensure raw FK UUIDs never render to users.
 
 ---
 
