@@ -177,7 +177,9 @@ export function UserDetailPage({ params }: PageProps) {
               labelStyle={{ color: "var(--ds-text-secondary)", fontSize: 12 }}
             >
               <Descriptions.Item label={CONTENT.users.campusLabel as string}>
-                {campus?.name ?? user.campusId ?? "—"}
+                {/* Prefer the campus name; fall back to a friendly placeholder
+                    rather than leaking the raw campus UUID. */}
+                {campus?.name ?? (user.campusId ? "Unknown campus" : "—")}
               </Descriptions.Item>
               <Descriptions.Item label={CONTENT.profile.phoneLabel as string}>
                 {user.phone ?? "—"}

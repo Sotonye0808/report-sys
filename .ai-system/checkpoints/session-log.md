@@ -675,3 +675,48 @@ Four-pass implementation of the bundled plan from `.ai-system/planning/temp-publ
 - `npm run lint` blocked by ESLint v9 flat-config gap (pre-existing).
 - Targeted unit tests pass in this environment; integration tests requiring a real DB still need the Prisma harness.
 - Migration is gated behind `prisma migrate deploy` — never run `migrate reset` against data-bearing environments.
+
+## Session 17 — 2026-05-06 (Build hygiene + quick-form final fix + name resolution + plain-language public copy + polymorphic propagation)
+
+**Completed:**
+
+Seven-phase pass closing the deferred follow-ups from 2026-05-05 plus three new defects observed in the build/preview session.
+
+- **Phase A — Build hygiene:** Added `lib/utils/buildPhase.ts → isBuildPhase()` and short-circuited `loadAdminConfig` to return the typed fallback under `NEXT_PHASE=phase-production-build`. The `[cache] Redis operation timed out` + `prisma:error Accelerate experienced an error` noise during `next build` is gone; build cycles are minutes shorter on the page-data collection step.
+- **Phase B — Quick-form root-cause fix:** `lib/data/recurringAssignmentService.ts` now derives `orgGroupId` from `campus.parentId` when the caller supplies `campusId` but no `orgGroupId`. The silent-skip path that left preview sessions with empty assignment lists is closed. The lookup is memoised across rules in the same call so the cost is one `findUnique` per distinct campus.
+- **Phase C — Name resolution everywhere:** New `lib/data/entityNames.ts` (server batched resolver), `app/api/labels/resolve/route.ts` (auth-required POST), `lib/hooks/useEntityNames.ts` (client hook with `pickName` helper). `ProfilePage` now renders campus + group names via the hook (no more raw `user.campusId` UUID); `UserDetailPage` falls back to "Unknown campus" instead of leaking the id.
+- **Phase D — Plain-language public copy + admin shortcut:** Rewrote `landing.features` (8 entries), every `howItWorks` tab + FAQ, and the about/privacy/terms sections in everyday language. Removed engineering jargon ("polymorphic substrate", "Pearson r", "additive migrations", "PostgreSQL", "Cloudinary", "Resend", "config-driven"). New `components/ui/AdminConfigShortcut.tsx` floats a SUPERADMIN-only "Edit page copy →" CTA on every public page that deep-links into the matching Admin Config tab.
+- **Phase E — Polymorphic propagation:** `ruleMatchesUser` now accepts `unitIds[]` and merges every scope encoding into a single deduped set so legacy single-value, array, and polymorphic rules all match identically. Aggregation engine adds `unitId` to its scope `OR` branches alongside the legacy column-equality (no regression for legacy data; new substrate works end-to-end). New `hasCapabilityForUser(user, capability)` reads the runtime Role table when `auth.user.roleId` is set and falls back to the legacy enum overlay otherwise. `verifyAuth` now passes `roleId` + `unitId` through the AuthUser payload.
+- **Phase F — Label audit:** `scripts/check-no-hardcoded-labels.ts` flags hardcoded "Campus" / "Group" / role labels in `modules/**` + `components/**` outside the resolver allowlist. Wired as `npm run check:no-hardcoded-labels`. Baseline scan: 0 findings (the post-`??` fallback defaults are intentional + admin-editable via CONTENT keys).
+- **Phase G — Tests + docs:** New `test/buildPhaseShortCircuit.test.ts` (6 ✓), `test/ruleMatchesUserPolymorphic.test.ts` (10 ✓). Repair-system entries added for the three new defects.
+- **Validation:** `npx tsc --noEmit` ✓; new test suites pass; mutation-auth + label-audit scripts pass.
+
+**Files Modified:**
+
+- `lib/utils/buildPhase.ts` (new)
+- `lib/data/{adminConfig,entityNames,recurringAssignmentService,formAssignmentRule,reportAggregation}.ts`
+- `lib/hooks/useEntityNames.ts` (new)
+- `lib/auth/permissions.ts`
+- `lib/utils/auth.ts`
+- `app/api/labels/resolve/route.ts` (new)
+- `app/page.tsx`, `app/how-it-works/page.tsx`, `app/about/page.tsx`, `app/privacy/page.tsx`, `app/terms/page.tsx`
+- `components/ui/AdminConfigShortcut.tsx` (new)
+- `modules/users/components/{ProfilePage,UserDetailPage}.tsx`
+- `config/{content,routes}.ts`
+- `types/global.ts`
+- `scripts/check-no-hardcoded-labels.ts` (new)
+- `package.json` (added `check:no-hardcoded-labels` script)
+- `test/buildPhaseShortCircuit.test.ts` (new)
+- `test/ruleMatchesUserPolymorphic.test.ts` (new)
+- `.ai-system/agents/repair-system.md`
+- `.ai-system/checkpoints/session-log.md`
+- `.ai-system/summaries/dev-history.md`
+
+**Next Task:**
+
+- Promote integration tests for `entityNames` + `materialiseAssignmentsForUser` once the Prisma test harness lands.
+- Sweep additional surfaces (reports table, invites, analytics filter chips) for raw-id rendering as we encounter them — the resolver hook is now in place to make these one-line refactors.
+
+**Notes / Blockers:**
+
+- Same as prior session: `npm run lint` blocked by ESLint v9 flat-config; we use audit scripts (`check:mutation-auth`, `check:no-hardcoded-labels`) instead.

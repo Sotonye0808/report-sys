@@ -90,6 +90,46 @@ export async function hasCapability(
     return Boolean(cfg[capability]);
 }
 
+/**
+ * Resolves capabilities for a user, checking the runtime Role table first
+ * (when `auth.user.roleId` is set) and falling back to the legacy enum
+ * overlay otherwise. Custom roles created via `RolesEditorV2` are honoured
+ * here; built-in roles continue to flow through the existing overlay.
+ *
+ * Existing capability checks that only know about the enum can keep using
+ * `hasCapability(role, …)` — this helper is the substrate-aware path for
+ * code that wants the runtime Role table consulted.
+ */
+export async function hasCapabilityForUser(
+    user: { role: UserRole; roleId?: string | null } | null | undefined,
+    capability: keyof RoleConfig,
+): Promise<boolean> {
+    if (!user) return false;
+    if (user.roleId) {
+        try {
+            const { resolveRoleByCode } = await import("@/lib/data/role");
+            const { prisma } = await import("@/lib/data/prisma");
+            const row = await prisma.role.findUnique({
+                where: { id: user.roleId },
+                select: { code: true, capabilities: true, archivedAt: true },
+            });
+            if (row && !row.archivedAt) {
+                const caps = (row.capabilities as Record<string, boolean>) ?? {};
+                if (capability in caps) return Boolean(caps[capability]);
+                // Field not present on the runtime row — fall through to the
+                // resolver so built-in defaults still apply for missing keys.
+                const resolved = await resolveRoleByCode(row.code);
+                if (resolved && capability in (resolved.capabilities ?? {})) {
+                    return Boolean(resolved.capabilities[capability as string]);
+                }
+            }
+        } catch {
+            // Substrate hiccup — fall through to the legacy enum path.
+        }
+    }
+    return hasCapability(user.role, capability);
+}
+
 /* ── Role cadence (with admin overrides) ──────────────────────────────── */
 
 export interface ResolvedCadence {

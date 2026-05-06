@@ -242,8 +242,14 @@ declare global {
         role: UserRole;
         /** The user's real role; equals `role` unless an impersonation session is active. */
         actualRole?: UserRole;
+        /** Optional FK into the runtime Role table. Substrate-aware capability
+         *  checks (`hasCapabilityForUser`) read this first before falling back
+         *  to the legacy `role` enum overlay. */
+        roleId?: string | null;
         campusId?: string;
         orgGroupId?: string;
+        /** Optional polymorphic OrgUnit id; populated post-reconcile. */
+        unitId?: string | null;
         firstName: string;
         lastName: string;
         avatar?: string;

@@ -459,6 +459,62 @@
 
 ---
 
+### Planned Feature — Build hygiene + quick-form (final) + name resolution + plain-language public copy + remaining deferred propagation
+
+> **Tightened plan:** see [`.ai-system/planning/temp-build-quickform-name-resolution-public-copy-cleanup-plan-2026-05-06.md`](./temp-build-quickform-name-resolution-public-copy-cleanup-plan-2026-05-06.md). Single-pass scope. Five tracks bundled because they share ~60% of the same files.
+
+#### Phase A — Build hygiene
+
+- [x] Add `lib/utils/buildPhase.ts` exporting `isBuildPhase()`. *(2026-05-06)*
+- [x] Short-circuit `loadAdminConfig` to return the typed fallback when `isBuildPhase()` is true (skip Redis + DB entirely on that path). *(2026-05-06)*
+- [ ] Verify with `npm run build` that `[adminConfig]` / `[cache]` build noise disappears. *(deferred — environment can't run a full prod build, but the unit test for the short-circuit passes; user to validate next build cycle)*
+
+#### Phase B — Quick-form materialise (root-cause fix)
+
+- [x] In `lib/data/recurringAssignmentService.ts`, derive `orgGroupId` from `campus.parentId` when caller supplies `campusId` but no `orgGroupId`. Memoise across rules in the same call. *(2026-05-06)*
+
+#### Phase C — Name resolution everywhere
+
+- [x] Add `lib/data/entityNames.ts` (campus / group / unit / role / user batch resolver). *(2026-05-06)*
+- [x] Add `app/api/labels/resolve/route.ts` (auth-required POST batched lookup). *(2026-05-06)*
+- [x] Add `lib/hooks/useEntityNames.ts` (single-batch fetch + cache + `pickName` helper). *(2026-05-06)*
+- [x] Refactor `modules/users/components/ProfilePage.tsx` to render campus + group labels via the hook. *(2026-05-06)*
+- [x] Sweep `UserDetailPage` to fall back to "Unknown campus" instead of leaking the id. *(2026-05-06)*
+- [ ] Continue sweeping additional surfaces (reports table, invites, analytics filter chips) as they're touched — `useEntityNames` is in place for one-line conversions.
+
+#### Phase D — Plain-language public copy + admin entry point
+
+- [x] Rewrite `config/content.ts → landing.features` (8 entries; expanded from 6) in plain language. *(2026-05-06)*
+- [x] Rewrite `howItWorks.tabs[*].sections + faqs` in plain language (playgroundIds preserved). *(2026-05-06)*
+- [x] Rewrite `aboutPage.sections`, `privacyPage.sections`, `termsPage.sections` in plain language (stripped PostgreSQL / Cloudinary / Resend / "substrate" / "Pearson" / "additive migrations" jargon). *(2026-05-06)*
+- [x] Add `components/ui/AdminConfigShortcut.tsx` (floating "Edit page copy" CTA, SUPERADMIN-only) mounted on `/`, `/how-it-works`, `/about`, `/privacy`, `/terms`. *(2026-05-06)*
+
+#### Phase E — Deferred polymorphic propagation
+
+- [x] Refactor `lib/data/reportAggregation.ts → buildReportQuery` to add `unitId` to the scope `OR` branches alongside legacy `campusId`/`orgGroupId` equality. *(2026-05-06)*
+- [x] Refactor `lib/data/formAssignmentRule.ts → ruleMatchesUser` to accept `unitIds[]` via merged scope set. *(2026-05-06)*
+- [x] Add `hasCapabilityForUser(user, capability)` in `lib/auth/permissions.ts` reading the runtime `Role` table first when `auth.user.roleId` is set. *(2026-05-06)*
+- [x] Pass `roleId` + `unitId` through `verifyAuth → AuthUser` payload. *(2026-05-06)*
+
+#### Phase F — Label audit
+
+- [x] `scripts/check-no-hardcoded-labels.ts` audit script (with allowlist + post-`??` fallback exclusion) wired as `npm run check:no-hardcoded-labels`. Baseline: 0 findings. *(2026-05-06)*
+- [ ] Promote the audit script to a true ESLint rule once the ESLint v9 flat-config gap is closed. *(deferred — flat-config migration is a separate task)*
+
+#### Phase G — Tests + docs
+
+- [x] `test/buildPhaseShortCircuit.test.ts` (6 ✓). *(2026-05-06)*
+- [x] `test/ruleMatchesUserPolymorphic.test.ts` (10 ✓). *(2026-05-06)*
+- [ ] `test/recurringAssignmentDerivesGroupFromCampus.test.ts` — *(deferred; needs Prisma test harness for the campus.parentId lookup)*.
+- [ ] `test/entityNamesResolver.test.ts` — *(deferred; needs Prisma test harness)*.
+- [ ] `test/aggregationPolymorphicScope.test.ts` — *(deferred; needs Prisma test harness)*.
+- [x] Update `.ai-system/agents/project-context.md` with substrate constraints. *(2026-05-06)*
+- [x] Update `.ai-system/planning/project-plan.md` Phase 6 ticks. *(2026-05-06)*
+- [x] Update `.ai-system/agents/repair-system.md` with three new entries (build-phase noise, materialise-skip-on-null-orgGroupId, raw-id leakage). *(2026-05-06)*
+- [x] Update session-log + dev-history. *(2026-05-06)*
+
+---
+
 ### Planned Feature — Polymorphic Org Units (superseded — see plan above)
 
 > **Status (2026-05-05):** Superseded by the bundled 2026-05-05 plan above, which absorbs this scope and adds the public-copy substrate, role CRUD, xlsx fix, and multi-tree hierarchy. Tasks below kept for trace.

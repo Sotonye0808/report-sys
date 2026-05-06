@@ -221,6 +221,9 @@ export const API_ROUTES = {
     publicCopy: {
         namespace: (ns: string) => `/api/public-copy/${ns}`,
     },
+    labels: {
+        resolve: "/api/labels/resolve",
+    },
     formAssignments: {
         list: "/api/form-assignments",
         detail: (id: string) => `/api/form-assignments/${id}`,

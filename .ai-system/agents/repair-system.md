@@ -650,4 +650,77 @@ Uploading an `.xlsx` file to the imports wizard surfaced a Prisma-flavoured erro
 
 **Date:** 2026-05-05
 
-**Date:** 2026-05-03
+## next build emits Prisma + Redis errors during the page-data collection phase
+
+**Symptom:**
+`npm run build` produced repeated `[cache] get/set error: Redis operation timed out` and `prisma:error … Accelerate experienced an error` messages during the "Collecting page data" step. Build still succeeded — the errors were caught and the page rendered with the typed fallback — but each timeout cost a few seconds, adding minutes to every build cycle.
+
+**Root Cause:**
+Public pages (`/`, `/how-it-works`, `/about`, `/privacy`, `/terms`) are server components that call `loadPublicCopy → loadAdminConfig` at render time. Next.js 16's `next build` invokes those components once during the metadata-collection step, even on dynamic routes. Hitting the database / Redis from that step in build sandboxes (where prod credentials usually aren't present) is wasted effort: the request can't succeed, so it sits there until the Redis timeout fires before falling through to the fallback path.
+
+**Fix Applied:**
+- Added `lib/utils/buildPhase.ts → isBuildPhase()` (reads `process.env.NEXT_PHASE === "phase-production-build"`).
+- `lib/data/adminConfig.ts → loadAdminConfig` short-circuits to the typed fallback when `isBuildPhase()` returns true. Skips Redis cache reads and Prisma queries entirely on that path; runtime behaviour is unchanged because `NEXT_PHASE` isn't set in production server runs.
+
+**Prevention:**
+- Any future server-component data fetcher that talks to remote infrastructure should consult `isBuildPhase()` and degrade gracefully when the build sandbox can't reach prod resources.
+- Build-time errors that get caught silently should still be flagged via lint or a build-time review — they cost cycle time even when they don't break the build.
+
+**Files Affected:**
+- `lib/utils/buildPhase.ts` (new)
+- `lib/data/adminConfig.ts`
+
+**Date:** 2026-05-06
+
+## Quick form blank under USHER preview when target user has no orgGroupId
+
+**Symptom:**
+A SUPERADMIN previewed the platform as USHER with a target test usher account. An active `FormAssignmentRule` for role=USHER existed for every campus. The quick-form landing page still showed "No active assignments". The materialise endpoint returned `{ assignments: [], count: 0 }`.
+
+**Root Cause:**
+`lib/data/recurringAssignmentService.ts` had a hard skip:
+```
+if (!campusId || !orgGroupId) continue;
+```
+The target usher user record carried `campusId` but `orgGroupId` was null on `users.orgGroupId`. The materialiser couldn't construct a report shell without an org group, so it silently skipped every matching rule.
+
+**Fix Applied:**
+- The materialiser now derives `orgGroupId` from `campus.parentId` when the caller supplies a `campusId` but no `orgGroupId`. The lookup is memoised across the rules processed in the same call so the per-call cost is one `findUnique({ select: { parentId: true } })` per distinct campus.
+- The skip remains for the truly null case (no campus + no group), so genuinely unscoped contexts still degrade safely.
+
+**Prevention:**
+- Whenever a service `continue`s on missing data, double-check whether one of the supplied fields uniquely determines another via an existing FK. The legacy Campus → OrgGroup join was right there.
+- For polymorphic-substrate refactors, prefer "derive from a single canonical id" over "require both legs to be passed in".
+
+**Files Affected:**
+- `lib/data/recurringAssignmentService.ts`
+
+**Date:** 2026-05-06
+
+## Raw UUIDs leaking into the UI (campus id in profile)
+
+**Symptom:**
+The profile page rendered the raw `user.campusId` UUID where the user expected to see the campus name (e.g. "Lagos Campus"). Same risk on user-detail, invites, and reports surfaces.
+
+**Root Cause:**
+`modules/users/components/ProfilePage.tsx` did `const campus = user.campusId; … <InfoRow value={campus} />`. There was no shared resolver that turned an FK id into a name on the client, so each surface had to do its own findUnique-by-id and frequently fell back to rendering the id.
+
+**Fix Applied:**
+- `lib/data/entityNames.ts` — server-side batched resolver for campuses, groups, OrgUnits, runtime roles, and users. Returns a map keyed by id with `null` for missing ids.
+- `app/api/labels/resolve/route.ts` — auth-required POST endpoint that wraps the resolver. Cached via `Cache-Control: private, max-age=300` so subsequent navigations don't re-fetch.
+- `lib/hooks/useEntityNames.ts` — client hook with an in-memory cache + `pickName(map, id, fallback)` helper. UI surfaces the name on success and a friendly placeholder ("Unknown campus") on the rare not-found case — never the raw UUID.
+- `modules/users/components/ProfilePage.tsx` updated to use the hook (campus + group). `UserDetailPage` updated to fall back to "Unknown campus" instead of `user.campusId`.
+
+**Prevention:**
+- New surfaces that render an FK id should call `useEntityNames` (or `resolveEntityNames` server-side) instead of inlining a `findUnique`.
+- The `check:no-hardcoded-labels` audit script (added in the same pass) enforces that user-facing strings don't hardcode "Campus" / "Group" / role labels — those live in the substrate.
+
+**Files Affected:**
+- `lib/data/entityNames.ts` (new)
+- `app/api/labels/resolve/route.ts` (new)
+- `lib/hooks/useEntityNames.ts` (new)
+- `modules/users/components/ProfilePage.tsx`
+- `modules/users/components/UserDetailPage.tsx`
+- `scripts/check-no-hardcoded-labels.ts` (new)
+
+**Date:** 2026-05-06
