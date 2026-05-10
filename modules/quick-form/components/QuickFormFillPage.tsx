@@ -14,7 +14,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Form, InputNumber, Input, message } from "antd";
+import { InputNumber, message } from "antd";
 import { CONTENT } from "@/config/content";
 import { API_ROUTES, APP_ROUTES } from "@/config/routes";
 import { useApiData } from "@/lib/hooks/useApiData";
@@ -52,7 +52,6 @@ interface ReportPayload {
 interface ValueRow {
     templateMetricId: string;
     monthlyAchieved?: number | null;
-    comment?: string | null;
 }
 
 export function QuickFormFillPage({ assignmentId }: { assignmentId: string }) {
@@ -84,7 +83,6 @@ export function QuickFormFillPage({ assignmentId }: { assignmentId: string }) {
                     current: {
                         templateMetricId: rm.templateMetricId,
                         monthlyAchieved: rm.monthlyAchieved ?? null,
-                        comment: rm.comment ?? null,
                     },
                 });
             }
@@ -106,9 +104,12 @@ export function QuickFormFillPage({ assignmentId }: { assignmentId: string }) {
 
     const submitValues = async (submit: boolean): Promise<boolean> => {
         const payload = {
-            metrics: Object.values(values).filter(
-                (v) => v.monthlyAchieved != null || (v.comment ?? "").trim().length > 0,
-            ),
+            metrics: Object.values(values)
+                .filter((v) => v.monthlyAchieved != null)
+                .map((v) => ({
+                    templateMetricId: v.templateMetricId,
+                    monthlyAchieved: v.monthlyAchieved as number,
+                })),
             submit,
         };
         if (payload.metrics.length === 0) return false;
@@ -122,6 +123,10 @@ export function QuickFormFillPage({ assignmentId }: { assignmentId: string }) {
             });
             const json = (await res.json()) as { success: boolean; error?: string };
             if (!res.ok || !json.success) {
+                if (!submit && res.status >= 400 && res.status < 500) {
+                    // Prevent retry storms for invalid payloads until the user changes values.
+                    lastSubmittedRef.current = serialised;
+                }
                 message.error(json.error ?? "Save failed");
                 setAutosaveLabel(COPY_AUTOSAVE.failed ?? "Could not save");
                 return false;
@@ -191,41 +196,23 @@ export function QuickFormFillPage({ assignmentId }: { assignmentId: string }) {
                         >
                             <p className="text-xs uppercase tracking-wide text-ds-text-subtle">{m.sectionName}</p>
                             <p className="text-base font-semibold text-ds-text-primary">{m.metricName}</p>
-                            <Form layout="vertical">
-                                <Form.Item label="Value">
-                                    <InputNumber
-                                        size="large"
-                                        style={{ width: "100%" }}
-                                        value={current.monthlyAchieved ?? undefined}
-                                        onChange={(v) =>
-                                            setValues((prev) => ({
-                                                ...prev,
-                                                [m.templateMetricId]: {
-                                                    ...current,
-                                                    templateMetricId: m.templateMetricId,
-                                                    monthlyAchieved: typeof v === "number" ? v : null,
-                                                },
-                                            }))
-                                        }
-                                    />
-                                </Form.Item>
-                                <Form.Item label="Comment (optional)">
-                                    <Input.TextArea
-                                        rows={2}
-                                        value={current.comment ?? ""}
-                                        onChange={(e) =>
-                                            setValues((prev) => ({
-                                                ...prev,
-                                                [m.templateMetricId]: {
-                                                    ...current,
-                                                    templateMetricId: m.templateMetricId,
-                                                    comment: e.target.value,
-                                                },
-                                            }))
-                                        }
-                                    />
-                                </Form.Item>
-                            </Form>
+                            <InputNumber
+                                size="large"
+                                style={{ width: "100%" }}
+                                value={current.monthlyAchieved ?? undefined}
+                                placeholder={String(COPY.valuePlaceholder ?? "Enter value")}
+                                aria-label={m.metricName}
+                                onChange={(v) =>
+                                    setValues((prev) => ({
+                                        ...prev,
+                                        [m.templateMetricId]: {
+                                            ...current,
+                                            templateMetricId: m.templateMetricId,
+                                            monthlyAchieved: typeof v === "number" ? v : null,
+                                        },
+                                    }))
+                                }
+                            />
                         </div>
                     );
                 })}

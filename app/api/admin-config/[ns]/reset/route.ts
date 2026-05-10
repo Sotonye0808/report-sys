@@ -26,6 +26,11 @@ const ALLOWED_NS: AdminConfigNamespaceName[] = [
     "emailTemplates",
     "roleCadence",
     "correlation",
+    "landing",
+    "howItWorks",
+    "aboutPage",
+    "privacyPage",
+    "termsPage",
 ];
 
 export async function POST(

@@ -41,6 +41,7 @@ export interface MetricValues {
   monthlyAchieved?: number;
   yoyGoal?: number;
   comment?: string;
+  isLocked?: boolean;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -182,13 +183,15 @@ interface MetricRowProps {
   values: MetricValues;
   goalInfo?: GoalForMetric;
   onChange: (v: MetricValues) => void;
+  onRequestUnlock?: (metric: ReportTemplateMetric) => void;
   disabled?: boolean;
 }
 
-function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowProps) {
+function MetricRow({ metric, values, goalInfo, onChange, onRequestUnlock, disabled }: MetricRowProps) {
   const isCurrency = metric.fieldType === MetricFieldType.CURRENCY;
   const isPercentage = metric.fieldType === MetricFieldType.PERCENTAGE;
   const isAutoTotal = Boolean((metric as { isAutoTotal?: boolean }).isAutoTotal);
+  const isMetricLocked = Boolean(values.isLocked);
   const capturesWoW = Boolean((metric as { capturesWoW?: boolean }).capturesWoW);
   const wowGoal = (values as { wowGoal?: number | null }).wowGoal ?? null;
   const wowAchieved = (values as { wowAchieved?: number | null }).wowAchieved ?? values.monthlyAchieved;
@@ -302,7 +305,8 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
                 const isYoyFieldReadOnly = valueKey === "yoyGoal" && isYoyReadOnly;
                 // Auto-total achievement is server-computed; never editable client-side.
                 const isAutoTotalAchievement = isAutoTotal && valueKey === "monthlyAchieved";
-                const isReadOnly = isGoalReadOnly || isYoyFieldReadOnly || isAutoTotalAchievement;
+                const isReadOnly =
+                  isGoalReadOnly || isYoyFieldReadOnly || isAutoTotalAchievement || isMetricLocked;
 
                 const displayValue = isGoalReadOnly
                   ? goalInfo!.targetValue
@@ -346,8 +350,24 @@ function MetricRow({ metric, values, goalInfo, onChange, disabled }: MetricRowPr
               value={values.comment}
               onChange={(v) => onChange({ ...values, comment: v || undefined })}
               label={rk.metricComment as string}
-              disabled={disabled}
+              disabled={disabled || isMetricLocked}
             />
+            {isMetricLocked && (
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-ds-text-subtle">
+                  {(rk.quickFormLockedHint as string) ?? "Locked from quick-form submission."}
+                </span>
+                {onRequestUnlock && (
+                  <button
+                    type="button"
+                    className="text-ds-brand-accent hover:underline"
+                    onClick={() => onRequestUnlock(metric)}
+                  >
+                    {(rk.quickFormRequestUnlock as string) ?? "Request unlock"}
+                  </button>
+                )}
+              </div>
+            )}
 
             {/* Live statistics row */}
             {(livePct !== null || liveYoy !== null || wowDelta !== null) && (
@@ -412,6 +432,7 @@ interface SectionPanelProps {
   metricValues: Record<string, MetricValues>;
   goalsMap: GoalsForReportMap;
   onMetricChange: (metricId: string, v: MetricValues) => void;
+  onRequestMetricUnlock?: (metric: ReportTemplateMetric) => void;
   disabled?: boolean;
 }
 
@@ -420,6 +441,7 @@ function SectionPanel({
   metricValues,
   goalsMap,
   onMetricChange,
+  onRequestMetricUnlock,
   disabled,
 }: SectionPanelProps) {
   const requiredMetrics = section.metrics.filter((m) => m.isRequired && m.capturesAchieved);
@@ -454,6 +476,7 @@ function SectionPanel({
               values={metricValues[metric.id] ?? {}}
               goalInfo={goalsMap[metric.id]}
               onChange={(v) => onMetricChange(metric.id, v)}
+              onRequestUnlock={onRequestMetricUnlock}
               disabled={disabled}
             />
           ))
@@ -561,6 +584,7 @@ interface ReportSectionsFormProps {
   metricValues: Record<string, MetricValues>;
   goalsMap: GoalsForReportMap;
   onMetricChange: (metricId: string, v: MetricValues) => void;
+  onRequestMetricUnlock?: (metric: ReportTemplateMetric) => void;
   disabled?: boolean;
 }
 
@@ -569,6 +593,7 @@ export function ReportSectionsForm({
   metricValues,
   goalsMap,
   onMetricChange,
+  onRequestMetricUnlock,
   disabled,
 }: ReportSectionsFormProps) {
   const sortedSections = [...template.sections].sort((a, b) => a.order - b.order);
@@ -598,6 +623,7 @@ export function ReportSectionsForm({
         metricValues={metricValues}
         goalsMap={goalsMap}
         onMetricChange={onMetricChange}
+        onRequestMetricUnlock={onRequestMetricUnlock}
         disabled={disabled}
       />
     ),
@@ -633,6 +659,15 @@ export function ReportSectionsForm({
             <span className="flex items-center gap-1 text-yellow-500">
               <InfoCircleOutlined />
               {rk.noGoalsSet as string}
+            </span>
+          </>
+        )}
+        {Object.values(metricValues).some((v) => v.isLocked) && (
+          <>
+            <span className="text-ds-border-base">|</span>
+            <span className="flex items-center gap-1">
+              <LockOutlined className="text-ds-text-subtle" />
+              {(rk.quickFormLockedBadge as string) ?? "Quick-form metrics locked"}
             </span>
           </>
         )}
@@ -683,7 +718,7 @@ export function buildSectionsPayload(
             templateMetricId: metric.id,
             metricName: metric.name,
             calculationType: metric.calculationType,
-            isLocked: false,
+            isLocked: vals.isLocked ?? false,
             monthlyGoal: goal?.targetValue ?? vals.monthlyGoal,
             monthlyAchieved: vals.monthlyAchieved,
             yoyGoal: vals.yoyGoal,
@@ -701,13 +736,14 @@ export function parseSectionsToMetricValues(sections: unknown[]): Record<string,
   const map: Record<string, MetricValues> = {};
   const typedSections = sections as Array<{
     templateSectionId: string;
-    metrics: Array<{
-      templateMetricId: string;
-      monthlyGoal?: number;
-      monthlyAchieved?: number;
-      yoyGoal?: number;
-      comment?: string;
-    }>;
+      metrics: Array<{
+        templateMetricId: string;
+        monthlyGoal?: number;
+        monthlyAchieved?: number;
+        yoyGoal?: number;
+        isLocked?: boolean;
+        comment?: string;
+      }>;
   }>;
   for (const sec of typedSections) {
     for (const m of sec.metrics ?? []) {
@@ -715,6 +751,7 @@ export function parseSectionsToMetricValues(sections: unknown[]): Record<string,
         monthlyGoal: m.monthlyGoal,
         monthlyAchieved: m.monthlyAchieved,
         yoyGoal: m.yoyGoal,
+        isLocked: m.isLocked ?? false,
         comment: m.comment,
       };
     }

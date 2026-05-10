@@ -136,6 +136,9 @@ export const CONTENT = {
         fieldYoYComment: "Add YoY comment",
         metricComment: "Add comment",
         commentPlaceholder: "Optional context or note…",
+        quickFormLockedBadge: "Quick-form metrics locked",
+        quickFormLockedHint: "This metric was filled from quick form and is read-only.",
+        quickFormRequestUnlock: "Request unlock",
         goalPrefilledTooltip: "Pre-filled from set goals — not editable while filling a report",
         goalFromSource: "Goal source",
         goalNotSet: "No goal set",
@@ -1446,6 +1449,7 @@ export const CONTENT = {
             saved: "Draft saved",
             failed: "Could not save draft",
         },
+        valuePlaceholder: "Enter value",
     },
 
     /* ── PWA Install Banner ─────────────────────────────────────────────────── */
