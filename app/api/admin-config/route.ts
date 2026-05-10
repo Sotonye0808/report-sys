@@ -22,6 +22,11 @@ const NAMESPACES = [
     "emailTemplates",
     "roleCadence",
     "correlation",
+    "landing",
+    "howItWorks",
+    "aboutPage",
+    "privacyPage",
+    "termsPage",
 ] as const;
 
 export async function GET(req: NextRequest) {

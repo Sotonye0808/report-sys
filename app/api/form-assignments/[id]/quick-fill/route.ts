@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/data/prisma";
 import { verifyAuth } from "@/lib/utils/auth";
+import { ReportEventType } from "@/types/global";
 import {
     successResponse,
     forbiddenResponse,
@@ -34,9 +35,8 @@ const Schema = z.object({
     metrics: z
         .array(
             z.object({
-                templateMetricId: z.string().uuid(),
-                monthlyAchieved: z.number().finite().optional(),
-                comment: z.string().max(500).optional(),
+                templateMetricId: z.string().min(1),
+                monthlyAchieved: z.number().finite().nullable().optional(),
             }),
         )
         .min(1)
@@ -103,7 +103,9 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
                     where: { id: row.id },
                     data: {
                         monthlyAchieved: m.monthlyAchieved ?? null,
-                        comment: m.comment ?? null,
+                        isLocked: true,
+                        lockedAt: new Date(),
+                        lockedById: auth.user.id,
                     },
                 }),
             );
@@ -117,6 +119,18 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
         }
 
         await Promise.all(updates);
+
+        if (updates.length > 0) {
+            await prisma.reportEvent.create({
+                data: {
+                    reportId: assignment.reportId,
+                    eventType: ReportEventType.EDIT_APPLIED,
+                    actorId: auth.user.id,
+                    timestamp: new Date(),
+                    details: `Quick form updated ${updates.length} metric${updates.length === 1 ? "" : "s"} and locked them`,
+                },
+            });
+        }
 
         if (parsed.data.submit) {
             await markAssignmentComplete(assignment.id);

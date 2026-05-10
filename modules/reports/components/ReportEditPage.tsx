@@ -190,6 +190,55 @@ export function ReportEditPage({ params }: PageProps) {
     }
   };
 
+  const handleRequestMetricUnlock = async (metric: ReportTemplateMetric) => {
+    const reason = window.prompt(
+      `Why do you need to unlock "${metric.name}"?`,
+      "Need to update quick-form prefilled value",
+    );
+    if (!reason || !reason.trim()) return;
+    setSaving(true);
+    try {
+      const createRes = await fetch(API_ROUTES.reports.edits(id), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reason: `Unlock request (${metric.name}): ${reason.trim()}`,
+          sections: [],
+        }),
+      });
+      const createJson = (await createRes.json().catch(() => ({}))) as {
+        success?: boolean;
+        error?: string;
+        data?: { id?: string };
+      };
+      const editId = createJson.data?.id;
+      if (!createRes.ok || !createJson.success || !editId) {
+        message.error(createJson.error ?? "Unable to create unlock request.");
+        return;
+      }
+
+      const submitRes = await fetch(API_ROUTES.reports.editsSubmit(id), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ editId }),
+      });
+      const submitJson = (await submitRes.json().catch(() => ({}))) as {
+        success?: boolean;
+        error?: string;
+      };
+      if (!submitRes.ok || !submitJson.success) {
+        message.error(submitJson.error ?? "Unlock request could not be submitted.");
+        return;
+      }
+      message.success("Unlock request submitted for review.");
+      router.push(APP_ROUTES.reportDetail(id));
+    } catch {
+      message.error(CONTENT.common.errorDefault as string);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   /* Guards */
   if (!can.fillReports && role !== UserRole.SUPERADMIN) {
     router.replace(APP_ROUTES.reports);
@@ -330,6 +379,7 @@ export function ReportEditPage({ params }: PageProps) {
             metricValues={metricValues}
             goalsMap={goalsMap}
             onMetricChange={handleMetricChange}
+            onRequestMetricUnlock={handleRequestMetricUnlock}
           />
         )}
 
