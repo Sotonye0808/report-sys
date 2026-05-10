@@ -79,6 +79,15 @@ interface Snapshot {
     actorId?: string | null;
 }
 
+function fallbackSnapshot(namespace: Namespace): Snapshot {
+    return {
+        namespace,
+        version: 0,
+        payload: {},
+        source: "fallback",
+    };
+}
+
 const CAPABILITY_KEYS: Array<keyof RoleConfig> = [
     "canCreateReports",
     "canFillReports",
@@ -527,6 +536,9 @@ export function AdminConfigPage() {
             if (!res.ok || !json.success || !json.data) return;
             const map = {} as Record<Namespace, Snapshot>;
             for (const ns of json.data.namespaces) map[ns.namespace] = ns;
+            for (const ns of NAMESPACES) {
+                if (!map[ns]) map[ns] = fallbackSnapshot(ns);
+            }
             setSnapshots(map);
         } catch {
             // ignore
@@ -565,11 +577,13 @@ export function AdminConfigPage() {
         );
     }
 
-    const tabItems = NAMESPACES.map((ns) => ({
-        key: ns,
-        label: COPY_NS_LABELS[ns] ?? ns,
-        children: (
-            <div className="flex flex-col gap-4 mt-3">
+    const tabItems = NAMESPACES.map((ns) => {
+        const snap = snapshots[ns] ?? fallbackSnapshot(ns);
+        return {
+            key: ns,
+            label: COPY_NS_LABELS[ns] ?? ns,
+            children: (
+                <div className="flex flex-col gap-4 mt-3">
                 <div className="flex items-center justify-end">
                     <Button size="small" danger onClick={() => handleReset(ns)}>
                         {COPY_ACTIONS.reset ?? "Reset to defaults"}
@@ -584,7 +598,7 @@ export function AdminConfigPage() {
                           Both stay live during the cut-over so admins can continue
                           using overlays while exploring the new substrate.
                         */}
-                        <RolesEditor snap={snapshots[ns]} onSaved={reload} />
+                        <RolesEditor snap={snap} onSaved={reload} />
                         <details className="border border-ds-border-subtle rounded-ds-md bg-ds-surface-base/50">
                             <summary className="cursor-pointer px-4 py-2 text-sm font-semibold text-ds-text-primary">
                                 Runtime role table + custom roles (new)
@@ -596,7 +610,7 @@ export function AdminConfigPage() {
                     </div>
                 ) : ns === "hierarchy" ? (
                     <div className="flex flex-col gap-4">
-                        <HierarchyEditor snap={snapshots[ns]} onSaved={reload} />
+                        <HierarchyEditor snap={snap} onSaved={reload} />
                         <details
                             open
                             className="border border-ds-border-subtle rounded-ds-md bg-ds-surface-base/50"
@@ -616,35 +630,36 @@ export function AdminConfigPage() {
                         </details>
                     </div>
                 ) : ns === "dashboardLayout" ? (
-                    <DashboardLayoutEditor snap={snapshots[ns] as never} onSaved={reload} />
+                    <DashboardLayoutEditor snap={snap as never} onSaved={reload} />
                 ) : ns === "templatesMapping" ? (
-                    <TemplatesMappingEditor snap={snapshots[ns] as never} onSaved={reload} />
+                    <TemplatesMappingEditor snap={snap as never} onSaved={reload} />
                 ) : ns === "imports" ? (
-                    <ImportsEditor snap={snapshots[ns] as never} onSaved={reload} />
+                    <ImportsEditor snap={snap as never} onSaved={reload} />
                 ) : ns === "pwaInstall" ? (
-                    <PwaInstallEditor snap={snapshots[ns] as never} onSaved={reload} />
+                    <PwaInstallEditor snap={snap as never} onSaved={reload} />
                 ) : ns === "bulkInvites" ? (
-                    <BulkInvitesEditor snap={snapshots[ns] as never} onSaved={reload} />
+                    <BulkInvitesEditor snap={snap as never} onSaved={reload} />
                 ) : ns === "analytics" ? (
-                    <AnalyticsEditor snap={snapshots[ns] as never} onSaved={reload} />
+                    <AnalyticsEditor snap={snap as never} onSaved={reload} />
                 ) : ns === "emailTemplates" ? (
-                    <EmailTemplatesEditor snap={snapshots[ns] as never} onSaved={reload} />
+                    <EmailTemplatesEditor snap={snap as never} onSaved={reload} />
                 ) : ns === "roleCadence" ? (
-                    <RoleCadenceEditor snap={snapshots[ns] as never} onSaved={reload} />
+                    <RoleCadenceEditor snap={snap as never} onSaved={reload} />
                 ) : ns === "correlation" ? (
-                    <CorrelationEditor snap={snapshots[ns] as never} onSaved={reload} />
+                    <CorrelationEditor snap={snap as never} onSaved={reload} />
                 ) : ns === "landing" ? (
-                    <LandingCopyEditor snap={snapshots[ns]} onSaved={reload} />
+                    <LandingCopyEditor snap={snap} onSaved={reload} />
                 ) : ns === "howItWorks" ? (
-                    <HowItWorksEditor snap={snapshots[ns]} onSaved={reload} />
+                    <HowItWorksEditor snap={snap} onSaved={reload} />
                 ) : ns === "aboutPage" || ns === "privacyPage" || ns === "termsPage" ? (
-                    <SimplePageEditor namespace={ns} snap={snapshots[ns]} onSaved={reload} />
+                    <SimplePageEditor namespace={ns} snap={snap} onSaved={reload} />
                 ) : (
-                    <JsonEditor namespace={ns} snap={snapshots[ns]} onSaved={reload} />
+                    <JsonEditor namespace={ns} snap={snap} onSaved={reload} />
                 )}
-            </div>
-        ),
-    }));
+                </div>
+            ),
+        };
+    });
 
     const allTabs = [
         ...tabItems,

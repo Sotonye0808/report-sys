@@ -348,7 +348,6 @@ interface InlineMetricRow {
     templateMetricId: string;
     metricName?: string;
     monthlyAchieved?: number | null;
-    comment?: string | null;
 }
 
 interface InlineReportPayload {

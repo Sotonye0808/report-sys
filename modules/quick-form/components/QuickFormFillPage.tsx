@@ -5,7 +5,7 @@
  *
  * Single-assignment fill surface. Shows ONLY the metrics in the assignment's
  * subset. Goals are hidden by design — assignees enter monthlyAchieved values
- * (and optional comments) only. Autosaves every 30s; explicit Submit marks
+ * only. Autosaves every 30s; explicit Submit marks
  * the assignment complete server-side.
  *
  * The server is the source of truth for which metrics are allowed; the client
@@ -44,7 +44,6 @@ interface ReportPayload {
             templateMetricId: string;
             metricName?: string;
             monthlyAchieved?: number | null;
-            comment?: string | null;
         }>;
     }>;
 }
@@ -67,6 +66,7 @@ export function QuickFormFillPage({ assignmentId }: { assignmentId: string }) {
     const [autosaveLabel, setAutosaveLabel] = useState<string>("");
     const [submitting, setSubmitting] = useState(false);
     const lastSubmittedRef = useRef<string>("");
+    const autosaveBlockedRef = useRef(false);
 
     // Filter the report's metrics down to the assigned subset.
     const visibleMetrics = useMemo(() => {
@@ -126,12 +126,14 @@ export function QuickFormFillPage({ assignmentId }: { assignmentId: string }) {
                 if (!submit && res.status >= 400 && res.status < 500) {
                     // Prevent retry storms for invalid payloads until the user changes values.
                     lastSubmittedRef.current = serialised;
+                    autosaveBlockedRef.current = true;
                 }
                 message.error(json.error ?? "Save failed");
                 setAutosaveLabel(COPY_AUTOSAVE.failed ?? "Could not save");
                 return false;
             }
             lastSubmittedRef.current = serialised;
+            autosaveBlockedRef.current = false;
             setAutosaveLabel(COPY_AUTOSAVE.saved ?? "Saved");
             return true;
         } catch {
@@ -144,6 +146,7 @@ export function QuickFormFillPage({ assignmentId }: { assignmentId: string }) {
     useEffect(() => {
         if (!assignment || assignment.completedAt || assignment.cancelledAt) return;
         const id = setInterval(() => {
+            if (autosaveBlockedRef.current) return;
             setAutosaveLabel(COPY_AUTOSAVE.saving ?? "Saving…");
             void submitValues(false);
         }, 30_000);
@@ -203,14 +206,17 @@ export function QuickFormFillPage({ assignmentId }: { assignmentId: string }) {
                                 placeholder={String(COPY.valuePlaceholder ?? "Enter value")}
                                 aria-label={m.metricName}
                                 onChange={(v) =>
-                                    setValues((prev) => ({
-                                        ...prev,
-                                        [m.templateMetricId]: {
-                                            ...current,
-                                            templateMetricId: m.templateMetricId,
-                                            monthlyAchieved: typeof v === "number" ? v : null,
-                                        },
-                                    }))
+                                    {
+                                        autosaveBlockedRef.current = false;
+                                        setValues((prev) => ({
+                                            ...prev,
+                                            [m.templateMetricId]: {
+                                                ...current,
+                                                templateMetricId: m.templateMetricId,
+                                                monthlyAchieved: typeof v === "number" ? v : null,
+                                            },
+                                        }));
+                                    }
                                 }
                             />
                         </div>
