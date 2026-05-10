@@ -18,16 +18,31 @@ export function useServiceWorker() {
             return;
 
         registered.current = true;
+        let cancelled = false;
+        let updateInterval: number | undefined;
 
-        navigator.serviceWorker
-            .register("/sw.js")
-            .then((reg) => {
-                // Check for SW updates every 60 minutes
-                const interval = setInterval(() => reg.update(), 60 * 60 * 1000);
-                return () => clearInterval(interval);
-            })
-            .catch((err) => {
+        void (async () => {
+            try {
+                const probe = await fetch("/sw.js", { cache: "no-store" });
+                if (!probe.ok || cancelled) return;
+
+                const reg = await navigator.serviceWorker.register("/sw.js");
+                if (cancelled) return;
+
+                // Check for SW updates every 60 minutes.
+                updateInterval = window.setInterval(() => {
+                    void reg.update().catch(() => {
+                        // Ignore update probe failures to avoid uncaught promise noise.
+                    });
+                }, 60 * 60 * 1000);
+            } catch (err) {
                 console.error("SW registration failed:", err);
-            });
+            }
+        })();
+
+        return () => {
+            cancelled = true;
+            if (updateInterval) window.clearInterval(updateInterval);
+        };
     }, []);
 }

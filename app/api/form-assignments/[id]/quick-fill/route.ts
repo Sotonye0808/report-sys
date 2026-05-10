@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/data/prisma";
 import { verifyAuth } from "@/lib/utils/auth";
+import { ReportEventType } from "@/types/global";
 import {
     successResponse,
     forbiddenResponse,
@@ -29,14 +30,14 @@ import {
     FormAssignmentMetricMismatchError,
     FormAssignmentNotFoundError,
 } from "@/lib/data/formAssignment";
+import { createReportEvent } from "@/lib/utils/audit";
 
 const Schema = z.object({
     metrics: z
         .array(
             z.object({
-                templateMetricId: z.string().uuid(),
-                monthlyAchieved: z.number().finite().optional(),
-                comment: z.string().max(500).optional(),
+                templateMetricId: z.string().min(1),
+                monthlyAchieved: z.number().finite().nullable().optional(),
             }),
         )
         .min(1)
@@ -77,10 +78,14 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
             where: { reportId: assignment.reportId },
             include: { metrics: true },
         });
-        const metricRowByTemplate = new Map<string, { id: string; isLocked: boolean }>();
+        const metricRowByTemplate = new Map<string, { id: string; isLocked: boolean; lockedById: string | null }>();
         for (const sec of sections) {
             for (const rm of sec.metrics) {
-                metricRowByTemplate.set(rm.templateMetricId, { id: rm.id, isLocked: rm.isLocked });
+                metricRowByTemplate.set(rm.templateMetricId, {
+                    id: rm.id,
+                    isLocked: rm.isLocked,
+                    lockedById: rm.lockedById ?? null,
+                });
             }
         }
 
@@ -94,7 +99,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
                 missing.push(m.templateMetricId);
                 continue;
             }
-            if (row.isLocked) {
+            if (row.isLocked && row.lockedById && row.lockedById !== auth.user.id) {
                 locked.push(m.templateMetricId);
                 continue;
             }
@@ -103,20 +108,25 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
                     where: { id: row.id },
                     data: {
                         monthlyAchieved: m.monthlyAchieved ?? null,
-                        comment: m.comment ?? null,
+                        isLocked: true,
+                        lockedAt: new Date(),
+                        lockedById: auth.user.id,
                     },
                 }),
             );
         }
 
-        if (missing.length > 0) {
-            return NextResponse.json(
-                badRequestResponse(`Report has no row for templateMetricId(s): ${missing.join(", ")}`),
-                { status: 400 },
-            );
-        }
-
         await Promise.all(updates);
+
+        if (updates.length > 0) {
+            await createReportEvent({
+                reportId: assignment.reportId,
+                eventType: ReportEventType.EDIT_APPLIED,
+                actorId: auth.user.id,
+                timestamp: new Date(),
+                details: `Quick form updated ${updates.length} metric${updates.length === 1 ? "" : "s"} and locked them`,
+            });
+        }
 
         if (parsed.data.submit) {
             await markAssignmentComplete(assignment.id);
@@ -127,6 +137,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string
                 assignmentId: assignment.id,
                 updated: updates.length,
                 locked,
+                missing,
                 completed: parsed.data.submit,
             }),
         );
