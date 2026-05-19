@@ -4,6 +4,86 @@
 
 ---
 
+## Session 85 — 2026-05-13
+
+**Goal:**
+Roll out a narrow CIS federation handshake across the workspace so report-sys and harvesthub-reboot can consume signed identity syncs without a schema rewrite.
+
+**Completed:**
+
+- Added CIS env/config plumbing plus status and signed webhook endpoints for report-sys.
+- Mirrored the same CIS config/helper/routes pattern into harvesthub-reboot.
+- Updated `.ai-system` task queues, project plans, project context, architecture notes, and env examples in both repos.
+- Recorded the additive CIS handshake decision in memory and validated all touched files.
+
+**Files Modified:**
+
+- .ai-system/planning/project-plan.md
+- .ai-system/planning/task-queue.md
+- .ai-system/agents/project-context.md
+- .ai-system/agents/system-architecture.md
+- .ai-system/memory/project-decisions.md
+- .ai-system/checkpoints/session-log.md
+- .ai-system/summaries/dev-history.md
+- .env.example
+- lib/config/cis.ts
+- app/api/cis/status/route.ts
+- app/api/cis/webhook/route.ts
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\.ai-system\planning\project-plan.md
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\.ai-system\planning\task-queue.md
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\.ai-system\agents\project-context.md
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\.ai-system\agents\system-architecture.md
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\.ai-system\checkpoints\session-log.md
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\.ai-system\summaries\dev-history.md
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\.ai-system\memory\project-decisions.md
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\.env.example
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\lib\config\env.ts
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\lib\config\index.ts
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\lib\config\cis.ts
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\app\api\cis\status\route.ts
+- c:\Users\Harvesters WebDev\Downloads\web-dev\harvesthub-reboot\app\api\cis\webhook\route.ts
+
+**Next Task:**
+Keep CIS adoption moving into the next workspace target, starting with any repo that already has a shared AI-system and a route/API surface.
+
+**Notes / Blockers:**
+
+- The first-pass CIS contract is intentionally additive and non-destructive; no local user-link persistence was introduced in this batch.
+
+---
+
+## Session 86 — 2026-05-13
+
+**Goal:**
+Add CIS identity persistence and document the push model.
+
+**Completed:**
+
+- Added `CisIdentity` and `CisWebhookEvent` models for CIS sync persistence.
+- Persisted webhook events and mappings in `/api/cis/webhook`.
+- Updated CIS documentation and decisions to reflect the push model.
+
+**Files Modified:**
+
+- prisma/schema.prisma
+- lib/data/cisIdentity.ts
+- app/api/cis/webhook/route.ts
+- .ai-system/planning/task-queue.md
+- .ai-system/planning/project-plan.md
+- .ai-system/agents/project-context.md
+- .ai-system/agents/system-architecture.md
+- .ai-system/memory/project-decisions.md
+- .ai-system/checkpoints/session-log.md
+- .ai-system/summaries/dev-history.md
+
+**Next Task:**
+Define the CIS payload contract and decide when to link identities to local users.
+
+**Notes / Blockers:**
+None.
+
+---
+
 ## How to Use
 
 - Agents write an entry after completing each major task

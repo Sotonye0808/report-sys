@@ -72,6 +72,7 @@ Phase: Active Development
 Active sprint focus: Production readiness, bug fixes, and quarterly summaries feature
 
 Aggregation closure note (2026-04-05):
+
 - Role-aware aggregation scope resolution now uses shared org rollup context helper behavior (campus/group/global-safe defaults).
 - Aggregation retrieval remains draft-inclusive by default (`includeDrafts`) and is validated in targeted tests for campus/group/global paths.
 
@@ -111,9 +112,16 @@ Aggregation closure note (2026-04-05):
 
 > **Section summary:** Third-party services and APIs this project connects to.
 
-| Service   | Purpose        | Auth Method              |
-| --------- | -------------- | ------------------------ |
-| [service] | [what it does] | [API key / OAuth / etc.] |
+| Service | Purpose                                                           | Auth Method                                |
+| ------- | ----------------------------------------------------------------- | ------------------------------------------ |
+| CIS     | Canonical identity and role federation, plus signed webhook syncs | `CIS_CLIENT_SECRET` + `CIS_WEBHOOK_SECRET` |
+
+## CIS Integration Notes
+
+- CIS uses a push model: signed webhooks from CIS post to `/api/cis/webhook`.
+- Identity sync remains additive: events are persisted to `CisIdentity` and `CisWebhookEvent` without mutating local user/report data.
+- CIS-facing routes must tolerate missing env config in local development but surface a clear readiness signal for deployment checks.
+- Platform-specific webhook payloads should stay versioned and narrow so future sync fields can be added without breaking older clients.
 
 ---
 

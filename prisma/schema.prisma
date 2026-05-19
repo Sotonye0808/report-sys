@@ -8,78 +8,79 @@ datasource db {
 }
 
 model User {
-  id                      String                  @id @default(uuid())
-  organisationId          String?
-  email                   String                  @unique
-  pendingEmail            String?                 @unique
-  emailVerifiedAt         DateTime?
-  emailVerificationSentAt DateTime?
-  pendingEmailRequestedAt DateTime?
-  pendingEmailSentAt      DateTime?
-  passwordHash            String
-  firstName               String
-  lastName                String
-  phone                   String?
-  gender                  Gender?
-  role                    UserRole                @default(MEMBER)
+  id                          String                  @id @default(uuid())
+  organisationId              String?
+  email                       String                  @unique
+  pendingEmail                String?                 @unique
+  emailVerifiedAt             DateTime?
+  emailVerificationSentAt     DateTime?
+  pendingEmailRequestedAt     DateTime?
+  pendingEmailSentAt          DateTime?
+  passwordHash                String
+  firstName                   String
+  lastName                    String
+  phone                       String?
+  gender                      Gender?
+  role                        UserRole                @default(MEMBER)
   /// Optional FK into the runtime Role table; populated by the reconciliation
   /// flow. Legacy `role` enum stays as the source of truth until reconciled.
-  roleId                  String?
+  roleId                      String?
   /// Optional FK into the polymorphic OrgUnit substrate (any level). Coexists
   /// with legacy campusId / orgGroupId — read paths prefer this when set.
-  unitId                  String?
-  campusId                String?
-  orgGroupId              String?
-  avatar                  String?
-  avatarUrl               String?
-  isActive                Boolean                 @default(true)
-  createdAt               DateTime                @default(now())
-  updatedAt               DateTime                @updatedAt
-  bugReports              BugReport[]             @relation("BugReportCreator")
-  adminedCampuses         Campus[]                @relation("CampusAdmin")
-  goalEditRequests        GoalEditRequest[]       @relation("GoalEditRequester")
-  reviewedGoalEdits       GoalEditRequest[]       @relation("GoalEditReviewer")
-  goals                   Goal[]                  @relation("GoalCreator")
-  lockedGoals             Goal[]                  @relation("GoalLocker")
-  createdInviteLinks      InviteLink[]            @relation("InviteLinkCreator")
-  mediaAssets             MediaAsset[]            @relation("MediaAssetOwner")
-  assetUploadSessions     AssetUploadSession[]    @relation("AssetSessionOwner")
-  assetLifecycleEvents    AssetLifecycleEvent[]   @relation("AssetLifecycleActor")
-  emailActionTokens       EmailActionToken[]      @relation("EmailActionTokenOwner")
-  notifications           Notification[]          @relation("NotificationRecipient")
-  ledOrgGroups            OrgGroup[]              @relation("OrgGroupLeader")
-  reviewedEdits           ReportEdit[]            @relation("EditReviewer")
-  reportEdits             ReportEdit[]            @relation("EditSubmitter")
-  reportEvents            ReportEvent[]           @relation("EventActor")
-  lockedMetrics           ReportMetric[]          @relation("MetricLocker")
-  createdTemplateVersions ReportTemplateVersion[] @relation("TemplateVersionCreator")
-  createdTemplates        ReportTemplate[]        @relation("TemplateCreator")
-  reportUpdateRequests    ReportUpdateRequest[]   @relation("UpdateRequester")
-  reviewedUpdates         ReportUpdateRequest[]   @relation("UpdateReviewer")
-  reportVersions          ReportVersion[]         @relation("VersionCreator")
-  approvedReports         Report[]                @relation("ReportApprover")
-  createdReports          Report[]                @relation("ReportCreator")
-  dataEntryReports        Report[]                @relation("DataEntryCreator")
-  reviewedReports         Report[]                @relation("ReportReviewer")
-  submittedReports        Report[]                @relation("ReportSubmitter")
-  adminConfigEntries      AdminConfigEntry[]      @relation("AdminConfigActor")
-  formAssignmentsReceived FormAssignment[]        @relation("FormAssignmentAssignee")
-  formAssignmentsCreated  FormAssignment[]        @relation("FormAssignmentAssigner")
-  formAssignmentRulesOwned FormAssignmentRule[]   @relation("FormAssignmentRuleOwner")
-  formAssignmentRulesAssigned FormAssignmentRule[] @relation("FormAssignmentRuleAssignee")
-  impersonationSessions   ImpersonationSession[] @relation("ImpersonationActor")
-  impersonationTargetedBy ImpersonationSession[] @relation("ImpersonationTarget")
-  importJobs              ImportJob[]             @relation("ImportJobOwner")
-  importMappingProfiles   ImportMappingProfile[]  @relation("ImportMappingOwner")
-  bulkInviteBatches       BulkInviteBatch[]       @relation("BulkInviteCreator")
-  pwaPromptDismissals     PwaPromptDismissal[]    @relation("PwaPromptUser")
-  activationTokens        UserActivationToken[]   @relation("UserActivationOwner")
-  campus                  Campus?                 @relation("CampusUsers", fields: [campusId], references: [id])
-  orgGroup                OrgGroup?               @relation("OrgGroupUsers", fields: [orgGroupId], references: [id])
-  unit                    OrgUnit?                @relation("OrgUnitUsers", fields: [unitId], references: [id])
-  roleEntry               Role?                   @relation("RoleUsers", fields: [roleId], references: [id])
-  ownedUnits              OrgUnit[]               @relation("OrgUnitLeader")
-  ownedAdminUnits         OrgUnit[]               @relation("OrgUnitAdmin")
+  unitId                      String?
+  campusId                    String?
+  orgGroupId                  String?
+  avatar                      String?
+  avatarUrl                   String?
+  isActive                    Boolean                 @default(true)
+  createdAt                   DateTime                @default(now())
+  updatedAt                   DateTime                @updatedAt
+  bugReports                  BugReport[]             @relation("BugReportCreator")
+  adminedCampuses             Campus[]                @relation("CampusAdmin")
+  goalEditRequests            GoalEditRequest[]       @relation("GoalEditRequester")
+  reviewedGoalEdits           GoalEditRequest[]       @relation("GoalEditReviewer")
+  goals                       Goal[]                  @relation("GoalCreator")
+  lockedGoals                 Goal[]                  @relation("GoalLocker")
+  createdInviteLinks          InviteLink[]            @relation("InviteLinkCreator")
+  mediaAssets                 MediaAsset[]            @relation("MediaAssetOwner")
+  assetUploadSessions         AssetUploadSession[]    @relation("AssetSessionOwner")
+  assetLifecycleEvents        AssetLifecycleEvent[]   @relation("AssetLifecycleActor")
+  emailActionTokens           EmailActionToken[]      @relation("EmailActionTokenOwner")
+  notifications               Notification[]          @relation("NotificationRecipient")
+  ledOrgGroups                OrgGroup[]              @relation("OrgGroupLeader")
+  reviewedEdits               ReportEdit[]            @relation("EditReviewer")
+  reportEdits                 ReportEdit[]            @relation("EditSubmitter")
+  reportEvents                ReportEvent[]           @relation("EventActor")
+  lockedMetrics               ReportMetric[]          @relation("MetricLocker")
+  createdTemplateVersions     ReportTemplateVersion[] @relation("TemplateVersionCreator")
+  createdTemplates            ReportTemplate[]        @relation("TemplateCreator")
+  reportUpdateRequests        ReportUpdateRequest[]   @relation("UpdateRequester")
+  reviewedUpdates             ReportUpdateRequest[]   @relation("UpdateReviewer")
+  reportVersions              ReportVersion[]         @relation("VersionCreator")
+  approvedReports             Report[]                @relation("ReportApprover")
+  createdReports              Report[]                @relation("ReportCreator")
+  dataEntryReports            Report[]                @relation("DataEntryCreator")
+  reviewedReports             Report[]                @relation("ReportReviewer")
+  submittedReports            Report[]                @relation("ReportSubmitter")
+  adminConfigEntries          AdminConfigEntry[]      @relation("AdminConfigActor")
+  formAssignmentsReceived     FormAssignment[]        @relation("FormAssignmentAssignee")
+  formAssignmentsCreated      FormAssignment[]        @relation("FormAssignmentAssigner")
+  formAssignmentRulesOwned    FormAssignmentRule[]    @relation("FormAssignmentRuleOwner")
+  formAssignmentRulesAssigned FormAssignmentRule[]    @relation("FormAssignmentRuleAssignee")
+  impersonationSessions       ImpersonationSession[]  @relation("ImpersonationActor")
+  impersonationTargetedBy     ImpersonationSession[]  @relation("ImpersonationTarget")
+  importJobs                  ImportJob[]             @relation("ImportJobOwner")
+  importMappingProfiles       ImportMappingProfile[]  @relation("ImportMappingOwner")
+  bulkInviteBatches           BulkInviteBatch[]       @relation("BulkInviteCreator")
+  pwaPromptDismissals         PwaPromptDismissal[]    @relation("PwaPromptUser")
+  activationTokens            UserActivationToken[]   @relation("UserActivationOwner")
+  campus                      Campus?                 @relation("CampusUsers", fields: [campusId], references: [id])
+  orgGroup                    OrgGroup?               @relation("OrgGroupUsers", fields: [orgGroupId], references: [id])
+  unit                        OrgUnit?                @relation("OrgUnitUsers", fields: [unitId], references: [id])
+  roleEntry                   Role?                   @relation("RoleUsers", fields: [roleId], references: [id])
+  ownedUnits                  OrgUnit[]               @relation("OrgUnitLeader")
+  ownedAdminUnits             OrgUnit[]               @relation("OrgUnitAdmin")
+  cisIdentities              CisIdentity[]           @relation("CisIdentityLinked")
 
   @@index([email])
   @@index([role])
@@ -88,6 +89,51 @@ model User {
   @@index([unitId])
   @@index([roleId])
   @@map("users")
+}
+
+model CisIdentity {
+  id             String   @id @default(uuid())
+  cisSubjectId   String
+  sourcePlatform String
+  externalUserId String?
+  linkedUserId   String?
+  email          String?
+  phone          String?
+  displayName    String?
+  role           String?
+  status         String?
+  lastEventType  String
+  lastEventAt    DateTime @default(now())
+  payload        Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  linkedUser User?             @relation("CisIdentityLinked", fields: [linkedUserId], references: [id])
+  events     CisWebhookEvent[]
+
+  @@unique([cisSubjectId, sourcePlatform])
+  @@unique([externalUserId])
+  @@index([linkedUserId])
+  @@index([email])
+  @@map("cis_identities")
+}
+
+model CisWebhookEvent {
+  id             String   @id @default(uuid())
+  identityId     String?
+  eventType      String
+  sourcePlatform String
+  subjectId      String?
+  externalUserId String?
+  payload        Json?
+  receivedAt     DateTime @default(now())
+
+  identity CisIdentity? @relation(fields: [identityId], references: [id], onDelete: SetNull)
+
+  @@index([identityId])
+  @@index([eventType])
+  @@index([sourcePlatform])
+  @@map("cis_webhook_events")
 }
 
 model OrgGroup {
@@ -134,50 +180,49 @@ model Campus {
   @@map("campuses")
 }
 
-/* ── Polymorphic Org Units (multi-tree, variable-depth) ────────────────────
- *
+/**
+ * ── Polymorphic Org Units (multi-tree, variable-depth) ────────────────────
  * Single substrate for every "scope" the platform tracks. Each row carries a
  * `level` (admin-defined: GROUP, CAMPUS, DEPARTMENT, ZONE, …), a `parentId`
  * (self-FK; null for roots) and a `rootKey` that groups roots into trees so
  * multiple parallel hierarchies can coexist (e.g. "primary" tree of
  * Group→Campus alongside "departments" tree of Department→Sub-department).
- *
  * Migration discipline: every existing Campus + OrgGroup row is back-filled
  * into this table with the SAME UUID so existing FKs resolve through either
  * path. Legacy tables stay live as compatibility surfaces; new code reads
  * org_units exclusively.
  */
 model OrgUnit {
-  id           String    @id @default(uuid())
+  id          String    @id @default(uuid())
   /// Optional admin-set short slug. Useful for stable cross-tree references.
-  code         String?
+  code        String?
   /// Admin-defined level (e.g. "GROUP", "CAMPUS", "DEPARTMENT"). Free-form
   /// because the hierarchy admin-config namespace owns the canonical list.
-  level        String
-  name         String
-  description  String?
-  parentId     String?
+  level       String
+  name        String
+  description String?
+  parentId    String?
   /// Groups roots into separate trees. Default seed value is "primary".
-  rootKey      String    @default("primary")
-  country      String?
-  location     String?
-  address      String?
-  phone        String?
-  leaderId     String?
-  adminId      String?
-  metadata     Json?
-  isActive     Boolean   @default(true)
-  archivedAt   DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  rootKey     String    @default("primary")
+  country     String?
+  location    String?
+  address     String?
+  phone       String?
+  leaderId    String?
+  adminId     String?
+  metadata    Json?
+  isActive    Boolean   @default(true)
+  archivedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  parent       OrgUnit?  @relation("OrgUnitChildren", fields: [parentId], references: [id], onDelete: SetNull)
-  children     OrgUnit[] @relation("OrgUnitChildren")
-  leader       User?     @relation("OrgUnitLeader", fields: [leaderId], references: [id])
-  unitAdmin    User?     @relation("OrgUnitAdmin", fields: [adminId], references: [id])
-  users        User[]    @relation("OrgUnitUsers")
-  reports      Report[]  @relation("ReportUnit")
-  scopedRoles  RoleScope[] @relation("OrgUnitRoleScope")
+  parent      OrgUnit?    @relation("OrgUnitChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  children    OrgUnit[]   @relation("OrgUnitChildren")
+  leader      User?       @relation("OrgUnitLeader", fields: [leaderId], references: [id])
+  unitAdmin   User?       @relation("OrgUnitAdmin", fields: [adminId], references: [id])
+  users       User[]      @relation("OrgUnitUsers")
+  reports     Report[]    @relation("ReportUnit")
+  scopedRoles RoleScope[] @relation("OrgUnitRoleScope")
 
   @@index([rootKey, level])
   @@index([parentId])
@@ -185,38 +230,37 @@ model OrgUnit {
   @@map("org_units")
 }
 
-/* ── Runtime-managed Role substrate ──────────────────────────────────────
- *
+/**
+ * ── Runtime-managed Role substrate ──────────────────────────────────────
  * Built-in roles (one per UserRole enum value) are seeded with `isSystem=true`
  * so they're protected from delete; SUPERADMIN's capabilities are also
  * locked. Admins can CREATE custom roles at runtime — they get a fresh UUID,
  * a unique uppercase code, and a capability subset (cannot grant any of the
  * SUPERADMIN-only bits).
- *
  * `User.roleId` (added above) optionally pins a user to a runtime role row.
  * When null, code falls back to the legacy `User.role` enum.
  */
 model Role {
-  id                    String       @id @default(uuid())
+  id                    String    @id @default(uuid())
   /// Stable uppercase slug. Built-in roles use the matching UserRole enum value;
   /// custom roles use any uppercase identifier the admin chooses (uniqueness enforced).
-  code                  String       @unique
+  code                  String    @unique
   label                 String
   description           String?
-  hierarchyOrder        Int          @default(50)
-  dashboardMode         String       @default("scope-overview")
-  reportVisibilityScope String       @default("own")
+  hierarchyOrder        Int       @default(50)
+  dashboardMode         String    @default("scope-overview")
+  reportVisibilityScope String    @default("own")
   capabilities          Json
   cadence               Json?
   /// True for seed roles that mirror the UserRole enum. System roles cannot
   /// be deleted (only archived) and SUPERADMIN cannot be edited at all.
-  isSystem              Boolean      @default(false)
+  isSystem              Boolean   @default(false)
   archivedAt            DateTime?
-  createdAt             DateTime     @default(now())
-  updatedAt             DateTime     @updatedAt
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
-  users                 User[]       @relation("RoleUsers")
-  scopes                RoleScope[]  @relation("RoleScopes")
+  users  User[]      @relation("RoleUsers")
+  scopes RoleScope[] @relation("RoleScopes")
 
   @@index([archivedAt])
   @@map("roles")
@@ -228,8 +272,8 @@ model RoleScope {
   unitId    String
   createdAt DateTime @default(now())
 
-  role      Role     @relation("RoleScopes", fields: [roleId], references: [id], onDelete: Cascade)
-  unit      OrgUnit  @relation("OrgUnitRoleScope", fields: [unitId], references: [id], onDelete: Cascade)
+  role Role    @relation("RoleScopes", fields: [roleId], references: [id], onDelete: Cascade)
+  unit OrgUnit @relation("OrgUnitRoleScope", fields: [unitId], references: [id], onDelete: Cascade)
 
   @@unique([roleId, unitId])
   @@index([unitId])
@@ -237,29 +281,29 @@ model RoleScope {
 }
 
 model ReportTemplate {
-  id                      String                  @id @default(uuid())
-  organisationId          String
-  name                    String
-  description             String?
-  version                 Int                     @default(1)
-  isActive                Boolean                 @default(true)
-  isDefault               Boolean                 @default(false)
-  createdById             String
-  campusId                String?
-  orgGroupId              String?
-  createdAt               DateTime                @default(now())
-  updatedAt               DateTime                @updatedAt
-  deadlineOffsetHours     Int?                    @default(48)
-  deadlinePolicy          ReportDeadlinePolicy?   @default(PERIOD_END)
-  recurrenceFrequency     ReportPeriodType?
-  recurrenceDays          Int[]                   @default([])
-  autoFillTitleTemplate   String?
-  goals                   Goal[]                  @relation("GoalTemplateMetric")
-  sections                ReportTemplateSection[]
-  versions                ReportTemplateVersion[]
-  createdBy               User                    @relation("TemplateCreator", fields: [createdById], references: [id])
-  reports                 Report[]                @relation("ReportTemplate")
-  formAssignmentRules     FormAssignmentRule[]    @relation("FormAssignmentRuleTemplate")
+  id                    String                  @id @default(uuid())
+  organisationId        String
+  name                  String
+  description           String?
+  version               Int                     @default(1)
+  isActive              Boolean                 @default(true)
+  isDefault             Boolean                 @default(false)
+  createdById           String
+  campusId              String?
+  orgGroupId            String?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  deadlineOffsetHours   Int?                    @default(48)
+  deadlinePolicy        ReportDeadlinePolicy?   @default(PERIOD_END)
+  recurrenceFrequency   ReportPeriodType?
+  recurrenceDays        Int[]                   @default([])
+  autoFillTitleTemplate String?
+  goals                 Goal[]                  @relation("GoalTemplateMetric")
+  sections              ReportTemplateSection[]
+  versions              ReportTemplateVersion[]
+  createdBy             User                    @relation("TemplateCreator", fields: [createdById], references: [id])
+  reports               Report[]                @relation("ReportTemplate")
+  formAssignmentRules   FormAssignmentRule[]    @relation("FormAssignmentRuleTemplate")
 
   @@map("report_templates")
 }
@@ -586,8 +630,8 @@ model EmailActionToken {
 }
 
 model InviteLink {
-  id             String            @id @default(uuid())
-  token          String            @unique
+  id             String           @id @default(uuid())
+  token          String           @unique
   type           InviteLinkType
   targetId       String?
   targetRole     UserRole?
@@ -603,12 +647,12 @@ model InviteLink {
   createdById    String
   usedAt         DateTime?
   expiresAt      DateTime?
-  isActive       Boolean           @default(true)
+  isActive       Boolean          @default(true)
   recipientEmail String?
   batchId        String?
-  createdAt      DateTime          @default(now())
-  createdBy      User              @relation("InviteLinkCreator", fields: [createdById], references: [id])
-  batch          BulkInviteBatch?  @relation("InviteLinkBatch", fields: [batchId], references: [id], onDelete: SetNull)
+  createdAt      DateTime         @default(now())
+  createdBy      User             @relation("InviteLinkCreator", fields: [createdById], references: [id])
+  batch          BulkInviteBatch? @relation("InviteLinkBatch", fields: [batchId], references: [id], onDelete: SetNull)
 
   @@index([token])
   @@index([batchId])
@@ -715,7 +759,9 @@ model AssetLifecycleEvent {
   @@map("asset_lifecycle_events")
 }
 
-/* ── Admin Config + Form Assignments + Imports + Bulk Invites + PWA + Activation ── */
+/**
+ * ── Admin Config + Form Assignments + Imports + Bulk Invites + PWA + Activation ──
+ */
 
 model AdminConfigEntry {
   id         String   @id @default(uuid())
@@ -761,7 +807,7 @@ model FormAssignment {
 }
 
 model FormAssignmentRule {
-  id              String           @id @default(uuid())
+  id              String    @id @default(uuid())
   ownerId         String
   templateId      String
   role            UserRole?
@@ -771,18 +817,18 @@ model FormAssignmentRule {
   assigneeId      String?
   campusId        String?
   orgGroupId      String?
-  campusIds       String[]         @default([])
-  orgGroupIds     String[]         @default([])
+  campusIds       String[]  @default([])
+  orgGroupIds     String[]  @default([])
   /// Polymorphic scope — any OrgUnit ids at any level. Empty array = applies
   /// to every unit. New writes prefer this; legacy `campusIds`/`orgGroupIds`
   /// remain readable so existing rules continue to materialise.
-  unitIds         String[]         @default([])
+  unitIds         String[]  @default([])
   metricIds       String[]
   cadenceOverride Json?
-  isActive        Boolean          @default(true)
+  isActive        Boolean   @default(true)
   notes           String?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   owner       User             @relation("FormAssignmentRuleOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   template    ReportTemplate   @relation("FormAssignmentRuleTemplate", fields: [templateId], references: [id], onDelete: Cascade)
@@ -796,43 +842,43 @@ model FormAssignmentRule {
 }
 
 model ImportJob {
-  id                 String              @id @default(uuid())
-  ownerId            String
-  templateId         String?
-  status             ImportJobStatus     @default(DRAFT)
-  fileName           String?
-  fileMime           String?
-  fileBytes          Int?
+  id                String          @id @default(uuid())
+  ownerId           String
+  templateId        String?
+  status            ImportJobStatus @default(DRAFT)
+  fileName          String?
+  fileMime          String?
+  fileBytes         Int?
   /// "CSV" or "XLSX". When XLSX, `storageRef` is base64-encoded bytes;
   /// when CSV (or unset for legacy rows), `storageRef` is raw text.
-  fileFormat         String?
+  fileFormat        String?
   /// For multi-sheet xlsx, the user-chosen sheet name. Null = first sheet.
-  selectedSheet      String?
-  storageRef         String?
-  mappingProfileId   String?
-  mapping            Json?
-  validationSummary  Json?
-  commitSummary      Json?
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
+  selectedSheet     String?
+  storageRef        String?
+  mappingProfileId  String?
+  mapping           Json?
+  validationSummary Json?
+  commitSummary     Json?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
-  owner          User                   @relation("ImportJobOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  mappingProfile ImportMappingProfile?  @relation("ImportJobProfile", fields: [mappingProfileId], references: [id], onDelete: SetNull)
-  items          ImportJobItem[]        @relation("ImportJobItems")
+  owner          User                  @relation("ImportJobOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  mappingProfile ImportMappingProfile? @relation("ImportJobProfile", fields: [mappingProfileId], references: [id], onDelete: SetNull)
+  items          ImportJobItem[]       @relation("ImportJobItems")
 
   @@index([ownerId, status])
   @@map("import_jobs")
 }
 
 model ImportJobItem {
-  id                String             @id @default(uuid())
-  jobId             String
-  rowIndex          Int
-  rawValues         Json
-  normalizedValues  Json?
-  outcome           ImportRowOutcome   @default(OK)
-  errors            String[]
-  createdAt         DateTime           @default(now())
+  id               String           @id @default(uuid())
+  jobId            String
+  rowIndex         Int
+  rawValues        Json
+  normalizedValues Json?
+  outcome          ImportRowOutcome @default(OK)
+  errors           String[]
+  createdAt        DateTime         @default(now())
 
   job ImportJob @relation("ImportJobItems", fields: [jobId], references: [id], onDelete: Cascade)
 
@@ -857,16 +903,16 @@ model ImportMappingProfile {
 }
 
 model BulkInviteBatch {
-  id            String           @id @default(uuid())
-  createdById   String
-  kind          BulkInviteKind
-  sharedAttrs   Json?
-  totalEntries  Int              @default(0)
-  successCount  Int              @default(0)
-  skippedCount  Int              @default(0)
-  failedCount   Int              @default(0)
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+  id           String         @id @default(uuid())
+  createdById  String
+  kind         BulkInviteKind
+  sharedAttrs  Json?
+  totalEntries Int            @default(0)
+  successCount Int            @default(0)
+  skippedCount Int            @default(0)
+  failedCount  Int            @default(0)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
 
   createdBy User         @relation("BulkInviteCreator", fields: [createdById], references: [id], onDelete: Cascade)
   invites   InviteLink[] @relation("InviteLinkBatch")
@@ -876,14 +922,14 @@ model BulkInviteBatch {
 }
 
 model PwaPromptDismissal {
-  id              String              @id @default(uuid())
-  userId          String
-  kind            PwaPromptKind
-  platform        PwaPromptPlatform
-  mode            PwaDismissalMode    @default(snooze)
-  nextEligibleAt  DateTime?
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
+  id             String            @id @default(uuid())
+  userId         String
+  kind           PwaPromptKind
+  platform       PwaPromptPlatform
+  mode           PwaDismissalMode  @default(snooze)
+  nextEligibleAt DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
 
   user User @relation("PwaPromptUser", fields: [userId], references: [id], onDelete: Cascade)
 
@@ -905,23 +951,25 @@ model UserActivationToken {
   @@map("user_activation_tokens")
 }
 
-/* ── Superadmin role-impersonation / preview ───────────────────────────── */
+/**
+ * ── Superadmin role-impersonation / preview ─────────────────────────────
+ */
 
 model ImpersonationSession {
-  id                  String                @id @default(uuid())
-  superadminId        String
-  impersonatedRole    UserRole
-  impersonatedUserId  String?
-  mode                ImpersonationMode     @default(READ_ONLY)
-  startedAt           DateTime              @default(now())
-  expiresAt           DateTime
-  endedAt             DateTime?
-  endedReason         ImpersonationEndReason?
-  eventCount          Int                   @default(0)
+  id                 String                  @id @default(uuid())
+  superadminId       String
+  impersonatedRole   UserRole
+  impersonatedUserId String?
+  mode               ImpersonationMode       @default(READ_ONLY)
+  startedAt          DateTime                @default(now())
+  expiresAt          DateTime
+  endedAt            DateTime?
+  endedReason        ImpersonationEndReason?
+  eventCount         Int                     @default(0)
 
-  superadmin       User                   @relation("ImpersonationActor", fields: [superadminId], references: [id], onDelete: Cascade)
-  impersonatedUser User?                  @relation("ImpersonationTarget", fields: [impersonatedUserId], references: [id], onDelete: SetNull)
-  events           ImpersonationEvent[]   @relation("ImpersonationSessionEvents")
+  superadmin       User                 @relation("ImpersonationActor", fields: [superadminId], references: [id], onDelete: Cascade)
+  impersonatedUser User?                @relation("ImpersonationTarget", fields: [impersonatedUserId], references: [id], onDelete: SetNull)
+  events           ImpersonationEvent[] @relation("ImpersonationSessionEvents")
 
   @@index([superadminId, endedAt])
   @@index([startedAt])
@@ -929,7 +977,7 @@ model ImpersonationSession {
 }
 
 model ImpersonationEvent {
-  id            String                  @id @default(uuid())
+  id            String                 @id @default(uuid())
   sessionId     String
   type          ImpersonationEventType
   path          String?
@@ -937,7 +985,7 @@ model ImpersonationEvent {
   status        Int?
   requestId     String?
   payloadDigest String?
-  createdAt     DateTime                @default(now())
+  createdAt     DateTime               @default(now())
 
   session ImpersonationSession @relation("ImpersonationSessionEvents", fields: [sessionId], references: [id], onDelete: Cascade)
 

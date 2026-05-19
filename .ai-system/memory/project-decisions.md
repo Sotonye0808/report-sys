@@ -63,3 +63,38 @@
 
 **Implications:** New bulk endpoints can reuse the same logic. Chunk metrics add observability and retry behavior improves transient failure handling.
 
+## CIS Federation Handshake Surface
+
+**Decision:** Add a narrow CIS-facing status route and signed webhook route in each platform repo instead of collapsing their local schemas into CIS-owned tables.
+**Date:** 2026-05-13
+**Made by:** AI assistant (workspace rollout session)
+
+**Reason:** The reporting system needs a low-risk adoption path that lets CIS drive identity sync and readiness checks without forcing a cross-repo schema rewrite in the same batch.
+
+**Alternatives Considered:** Expose only documentation, or wire CIS directly into the local user tables right away. Rejected because docs-only does not exercise the integration surface, and direct schema coupling would require a broader migration pass.
+
+**Implications:** CIS integration remains additive and platform-specific. Future work can attach a real persistence target behind the webhook route when the owning repo is ready for that migration.
+
+## CIS Sync Uses Push Model
+
+**Decision:** CIS posts signed identity events to report-sys via webhooks (push model).
+**Date:** 2026-05-13
+**Made by:** AI assistant
+
+**Reason:** Push eliminates polling overhead and keeps identity propagation near-real time.
+
+**Alternatives Considered:** Pull model (periodic polling). Rejected due to increased latency and operational overhead.
+
+**Implications:** Webhook verification and idempotency remain critical; reconciliation can be added later as a manual resync.
+
+## CIS Identity Persistence (Additive)
+
+**Decision:** Persist CIS sync data in `CisIdentity` and `CisWebhookEvent` without mutating core user records.
+**Date:** 2026-05-13
+**Made by:** AI assistant
+
+**Reason:** Provides auditability and future linking surface without schema coupling.
+
+**Alternatives Considered:** Direct user upserts on webhook. Rejected until payload contract is final and migration scope is approved.
+
+**Implications:** Identity linking can be layered later; current sync remains non-destructive.

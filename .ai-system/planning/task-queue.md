@@ -4,6 +4,23 @@
 
 ---
 
+## Workspace-Wide CIS Federation Rollout
+
+> **Section summary:** Add a canonical identity handshake surface so this repo can consume CIS identity syncs without hardcoding integration details.
+
+- [x] Add CIS integration config, webhook/status routes, and env template keys for report-sys.
+- [x] Update `.ai-system` docs with the CIS contract, rollout constraints, and continuation prompt.
+- [x] Mirror the same CIS handshake surface in harvesthub-reboot.
+- [x] Validate the touched files after the rollout lands.
+
+## CIS Identity Persistence (Phase 1)
+
+> **Section summary:** Persist signed CIS sync events without mutating local users.
+
+- [x] Add `CisIdentity` + `CisWebhookEvent` models to Prisma schema.
+- [x] Persist webhook events and identity mappings in `/api/cis/webhook`.
+- [x] Record push-model decision in `.ai-system` docs.
+
 ## Current Sprint
 
 > **Section summary:** Tasks actively being worked on. Agents pick the first incomplete task.
@@ -220,7 +237,7 @@
 - [x] Implement `lib/data/recurringAssignmentService.ts` (rule resolution + materialisation, calling `ensureReportShell`).
 - [x] Add `POST /api/form-assignments/materialise` invoking the service for the calling user.
 - [x] Update `QuickFormLandingPage` to call materialise on mount before listing assignments.
-- [ ] Show "Last filled by USHER" badge on `ReportEditPage` per metric. *(deferred: requires explicit `lastQuickFillById` column; tracked separately)*
+- [ ] Show "Last filled by USHER" badge on `ReportEditPage` per metric. _(deferred: requires explicit `lastQuickFillById` column; tracked separately)_
 
 #### Phase C — Auto-fill report title + period at create time
 
@@ -233,7 +250,7 @@
 - [x] Implement `GET /api/reports/[id]/quick-views` returning monthly/quarterly/yearly link + `sourceCount` per scope; cache 60 s.
 - [x] Build `modules/reports/components/QuickViewAggregateBar.tsx` (three CTA pills, disabled when `sourceCount === 0`).
 - [x] Mount the bar on `ReportDetailPage`.
-- [ ] `/reports/aggregate` query-param prefill verification *(manual smoke remaining)*.
+- [ ] `/reports/aggregate` query-param prefill verification _(manual smoke remaining)_.
 
 #### Phase E — Correlation in template editor + descriptive analytics
 
@@ -258,8 +275,8 @@
 - [x] `test/insightsAlgorithms.test.ts` — Pearson correctness; min-samples gate; top-mover ordering; biggest-gap sort; summariseInsights structure; correlation matrix gating.
 - [x] `test/templateCorrelationFieldOptional.test.ts` — old template payloads (without `correlationGroup`) render without error.
 - [x] `test/migrationAdditiveSafety.test.ts` — migration adds columns only; no DROP / RENAME / TRUNCATE.
-- [ ] `test/recurringAssignmentMaterialisation.test.ts` — *(integration; deferred until Prisma test harness is in place)*
-- [ ] `test/quickViewAvailability.test.ts` — *(integration; deferred until Prisma test harness is in place)*
+- [ ] `test/recurringAssignmentMaterialisation.test.ts` — _(integration; deferred until Prisma test harness is in place)_
+- [ ] `test/quickViewAvailability.test.ts` — _(integration; deferred until Prisma test harness is in place)_
 - [x] Update `.ai-system/agents/system-architecture.md` — new modules + data-flow entries (34–43).
 - [x] Update `.ai-system/agents/project-context.md` — backward-compat constraint + non-destructive migration rule + admin-editable cadence note.
 - [x] Update `.env.example` (`INSIGHTS_PEARSON_MIN_SAMPLES`, `INSIGHTS_TOP_MOVER_WINDOW_PERIODS`, `INSIGHTS_ENABLED`).
@@ -307,14 +324,14 @@
 
 - [x] `IMPERSONATION_*` event family lives in `lib/auth/impersonation.ts → recordEvent`; `lib/utils/audit.ts → createReportEvent` mirrors mutations into the active session as `MUTATION_APPLIED`.
 - [x] Audit tagging via `tagImpersonationIfActive` reads `impersonationContext` and writes a session event for every domain audit emission.
-- [ ] Email + push fan-out footer ("(by SUPERADMIN previewing as <Role>)") — *deferred to follow-up; audit log already captures the context*.
+- [ ] Email + push fan-out footer ("(by SUPERADMIN previewing as <Role>)") — _deferred to follow-up; audit log already captures the context_.
 - [x] `app/api/impersonation/sessions/route.ts` — paginated history (SUPERADMIN-only).
 - [x] Admin Config "Impersonation log" tab via `ImpersonationLogPanel`.
 
 #### Phase F — Tests + docs
 
 - [x] `test/impersonationGuard.test.ts` — `assertNotReadOnly` blocks mutations in READ_ONLY mode; allowlist passes.
-- [ ] `test/impersonationSessionFlow.test.ts` — *(integration; deferred until Prisma test harness is in place)*.
+- [ ] `test/impersonationSessionFlow.test.ts` — _(integration; deferred until Prisma test harness is in place)_.
 - [x] `test/impersonationCookieSecurity.test.ts` — token signature + audience + tampered + expired token rejections.
 - [x] `test/impersonationMigrationAdditiveSafety.test.ts` — additive-only guard.
 - [x] Update `.ai-system/agents/system-architecture.md` (modules + data-flow entries 44–48 + env keys).
@@ -325,7 +342,7 @@
 #### Phase G — Follow-ups (queued, not in initial pass)
 
 - [x] CI lint rule: `npm run check:mutation-auth` (script `scripts/check-mutation-auth.ts`) statically scans every `app/api/**/route.ts` and fails when a `POST/PUT/PATCH/DELETE` export lacks a `verifyAuth(` call. The impersonation read-only gate fires inside `verifyAuth`, so this single chokepoint covers the original intent. Public auth lifecycle endpoints opt out via the `// @public-mutation` annotation (9 routes tagged).
-- [x] "Replay session" affordance — `ImpersonationLogPanel` modal renders a Tabs split (Timeline / Replay narrative) + a "Restart preview" CTA that opens a fresh session with the same role + target user + mode. *Note: literal page-by-page walkthrough still requires a client `PAGE_VISITED` emitter on each navigation — the event type exists in `ImpersonationEventType` but no emitter is wired today; tracked as a follow-up if needed.*
+- [x] "Replay session" affordance — `ImpersonationLogPanel` modal renders a Tabs split (Timeline / Replay narrative) + a "Restart preview" CTA that opens a fresh session with the same role + target user + mode. _Note: literal page-by-page walkthrough still requires a client `PAGE_VISITED` emitter on each navigation — the event type exists in `ImpersonationEventType` but no emitter is wired today; tracked as a follow-up if needed._
 - [ ] Optional `record-only` mode capturing intent without storing payloads.
 
 ### Planned Feature — Quick-Form Rule Editor + Smart Selects + Auto-Total Metrics + Week-on-Week + Chart Polish + Comparison Surfaces
@@ -390,72 +407,72 @@
 
 #### Phase A — Schema + safe additive migration
 
-- [x] Add `OrgUnit` (with `rootKey`, `level`, self-FK, metadata) + `Role` (with `isSystem`, capabilities jsonb) + `RoleScope` to `prisma/schema.prisma`. Strictly additive. *(2026-05-05)*
-- [x] Add `unitId` + `roleId` columns alongside every legacy carrier (`users`, `reports`, `invite_links`, `form_assignment_rules`). *(2026-05-05)*
-- [x] Author migration `20260505120000_org_role_polymorphism_and_imports_xlsx` with `CREATE TABLE IF NOT EXISTS` + `INSERT INTO ... SELECT ...` back-fills. No `DROP`, no `RENAME`. Apply via `prisma migrate deploy`. *(2026-05-05; dual-write triggers omitted — back-fill is idempotent + the runtime Reconcile action covers drift)*
-- [x] Author `scripts/seed-roles-and-units.ts` — idempotent seeder that delegates to `lib/data/reconcile.ts → reconcileSubstrate` (supports `--dry`). *(2026-05-05)*
-- [x] Regenerate Prisma client; `npx prisma validate`. *(2026-05-05)*
+- [x] Add `OrgUnit` (with `rootKey`, `level`, self-FK, metadata) + `Role` (with `isSystem`, capabilities jsonb) + `RoleScope` to `prisma/schema.prisma`. Strictly additive. _(2026-05-05)_
+- [x] Add `unitId` + `roleId` columns alongside every legacy carrier (`users`, `reports`, `invite_links`, `form_assignment_rules`). _(2026-05-05)_
+- [x] Author migration `20260505120000_org_role_polymorphism_and_imports_xlsx` with `CREATE TABLE IF NOT EXISTS` + `INSERT INTO ... SELECT ...` back-fills. No `DROP`, no `RENAME`. Apply via `prisma migrate deploy`. _(2026-05-05; dual-write triggers omitted — back-fill is idempotent + the runtime Reconcile action covers drift)_
+- [x] Author `scripts/seed-roles-and-units.ts` — idempotent seeder that delegates to `lib/data/reconcile.ts → reconcileSubstrate` (supports `--dry`). _(2026-05-05)_
+- [x] Regenerate Prisma client; `npx prisma validate`. _(2026-05-05)_
 
 #### Phase B — Read paths
 
-- [x] Implement `lib/data/orgUnit.ts` (CRUD + multi-root tree). *(2026-05-05)*
-- [x] Implement `lib/data/orgUnitMatcher.ts` (`unitInScope`, `descendantSet`, `mergeLegacyScope`). *(2026-05-05)*
-- [x] Implement `lib/data/role.ts` (CRUD with system-protected guard + capability validator + `resolveRoleByCode` fallback). *(2026-05-05)*
-- [x] Implement `lib/data/publicCopy.ts` (sanitisation + deep-merge over fallback). *(2026-05-05)*
-- [x] Add `app/api/org/units/*`, `app/api/roles/*`, `app/api/public-copy/[ns]`, `app/api/admin-config/reconcile` route surfaces. *(2026-05-05)*
-- [x] Refactor `app/api/reports/[id]/route.ts` to use `unitInScope` after legacy column-equality (legacy + new substrate both work end-to-end). *(2026-05-05)*
-- [ ] Refactor `app/api/reports/aggregate/route.ts` + `lib/data/reportAggregation.ts` to use `unitInScope`. *(deferred — aggregation engine still uses campusId/orgGroupId equality; scope-match upgrade tracked for next pass)*
-- [ ] Refactor `lib/data/recurringAssignmentService.ts` + `lib/data/formAssignmentRule.ts` to use `unitIds[]` + the matcher. *(deferred — ruleMatchesUser still uses legacy fields; back-compat path unchanged)*
-- [ ] Refactor `lib/auth/permissions.ts` to read `Role`-table rows first. *(deferred — runtime Role table is read by RolesEditorV2 today; capability resolver upgrade is the next pass)*
-- [x] Refactor `app/page.tsx` + `app/how-it-works/page.tsx` + new `app/about/page.tsx` + `app/privacy/page.tsx` + `app/terms/page.tsx` to read from the new namespaces with `config/content.ts` fallback. *(2026-05-05)*
+- [x] Implement `lib/data/orgUnit.ts` (CRUD + multi-root tree). _(2026-05-05)_
+- [x] Implement `lib/data/orgUnitMatcher.ts` (`unitInScope`, `descendantSet`, `mergeLegacyScope`). _(2026-05-05)_
+- [x] Implement `lib/data/role.ts` (CRUD with system-protected guard + capability validator + `resolveRoleByCode` fallback). _(2026-05-05)_
+- [x] Implement `lib/data/publicCopy.ts` (sanitisation + deep-merge over fallback). _(2026-05-05)_
+- [x] Add `app/api/org/units/*`, `app/api/roles/*`, `app/api/public-copy/[ns]`, `app/api/admin-config/reconcile` route surfaces. _(2026-05-05)_
+- [x] Refactor `app/api/reports/[id]/route.ts` to use `unitInScope` after legacy column-equality (legacy + new substrate both work end-to-end). _(2026-05-05)_
+- [ ] Refactor `app/api/reports/aggregate/route.ts` + `lib/data/reportAggregation.ts` to use `unitInScope`. _(deferred — aggregation engine still uses campusId/orgGroupId equality; scope-match upgrade tracked for next pass)_
+- [ ] Refactor `lib/data/recurringAssignmentService.ts` + `lib/data/formAssignmentRule.ts` to use `unitIds[]` + the matcher. _(deferred — ruleMatchesUser still uses legacy fields; back-compat path unchanged)_
+- [ ] Refactor `lib/auth/permissions.ts` to read `Role`-table rows first. _(deferred — runtime Role table is read by RolesEditorV2 today; capability resolver upgrade is the next pass)_
+- [x] Refactor `app/page.tsx` + `app/how-it-works/page.tsx` + new `app/about/page.tsx` + `app/privacy/page.tsx` + `app/terms/page.tsx` to read from the new namespaces with `config/content.ts` fallback. _(2026-05-05)_
 
 #### Phase C — Imports xlsx fix
 
-- [x] `xlsx` (SheetJS) already in package.json. Implement `parseXlsx(buf): { sheets: Array<{ name, rows: string[][] }> }` (lazy server-only import). *(2026-05-05)*
-- [x] Refactor `lib/data/importPipeline.ts → parseSpreadsheet(input)` dispatcher; `parseCsv` unchanged. *(2026-05-05)*
-- [x] Update `app/api/imports/[id]/file/route.ts` to accept `.xlsx`/`.xls` mimes; persist as base64 with `fileFormat` discriminator; validate on upload + return `sheetNames`. *(2026-05-05)*
-- [x] Update `app/api/imports/[id]/mapping/route.ts` to dispatch + return per-sheet sample rows. *(2026-05-05)*
-- [x] Update `validate` route to iterate the chosen sheet's rows; commit route was already format-agnostic. *(2026-05-05)*
-- [x] Update `modules/imports/components/ImportWizardPage.tsx` (wider mime set, sheet picker on multi-sheet xlsx, friendly `import_parse_failed` messages). *(2026-05-05)*
+- [x] `xlsx` (SheetJS) already in package.json. Implement `parseXlsx(buf): { sheets: Array<{ name, rows: string[][] }> }` (lazy server-only import). _(2026-05-05)_
+- [x] Refactor `lib/data/importPipeline.ts → parseSpreadsheet(input)` dispatcher; `parseCsv` unchanged. _(2026-05-05)_
+- [x] Update `app/api/imports/[id]/file/route.ts` to accept `.xlsx`/`.xls` mimes; persist as base64 with `fileFormat` discriminator; validate on upload + return `sheetNames`. _(2026-05-05)_
+- [x] Update `app/api/imports/[id]/mapping/route.ts` to dispatch + return per-sheet sample rows. _(2026-05-05)_
+- [x] Update `validate` route to iterate the chosen sheet's rows; commit route was already format-agnostic. _(2026-05-05)_
+- [x] Update `modules/imports/components/ImportWizardPage.tsx` (wider mime set, sheet picker on multi-sheet xlsx, friendly `import_parse_failed` messages). _(2026-05-05)_
 
 #### Phase D — Admin Config UI extensions
 
-- [x] Build `RolesEditorV2.tsx` with CREATE dialog (code + label + capability picker + visibility scope + dashboard mode + optional scope-unit pin). Mounted alongside the legacy `RolesEditor` so admins can transition incrementally. *(2026-05-05)*
-- [x] Build `OrgUnitTreeEditor.tsx` (multi-root tabs, per-node add/edit/promote/archive). *(2026-05-05)*
-- [x] Build `LandingCopyEditor` + `HowItWorksEditor` + `SimplePageEditor` (about/privacy/terms) + `ReconcilePanel` in `PublicCopyEditors.tsx`. *(2026-05-05)*
-- [x] Mount all editors as new tabs under Admin Config; legacy JSON editor remains as fallback for unknown namespaces. *(2026-05-05)*
+- [x] Build `RolesEditorV2.tsx` with CREATE dialog (code + label + capability picker + visibility scope + dashboard mode + optional scope-unit pin). Mounted alongside the legacy `RolesEditor` so admins can transition incrementally. _(2026-05-05)_
+- [x] Build `OrgUnitTreeEditor.tsx` (multi-root tabs, per-node add/edit/promote/archive). _(2026-05-05)_
+- [x] Build `LandingCopyEditor` + `HowItWorksEditor` + `SimplePageEditor` (about/privacy/terms) + `ReconcilePanel` in `PublicCopyEditors.tsx`. _(2026-05-05)_
+- [x] Mount all editors as new tabs under Admin Config; legacy JSON editor remains as fallback for unknown namespaces. _(2026-05-05)_
 
 #### Phase E — How-It-Works playgrounds
 
-- [x] Add seven new playgrounds: `analytics-chart-toggle`, `template-builder-effect`, `correlation-matrix-builder`, `auto-sum-chain`, `insight-summary-preview`, `aggregation-rollup`, `import-wizard-demo`. *(2026-05-05)*
-- [x] Update each tab in the `howItWorks` fallback to reference appropriate `playgroundIds`. *(2026-05-05)*
+- [x] Add seven new playgrounds: `analytics-chart-toggle`, `template-builder-effect`, `correlation-matrix-builder`, `auto-sum-chain`, `insight-summary-preview`, `aggregation-rollup`, `import-wizard-demo`. _(2026-05-05)_
+- [x] Update each tab in the `howItWorks` fallback to reference appropriate `playgroundIds`. _(2026-05-05)_
 
 #### Phase F — Hardcoded-fallback refresh
 
-- [x] Update `config/content.ts → landing.features` to mention polymorphic hierarchy + multi-tree + role CRUD + xlsx imports as live capabilities. *(2026-05-05)*
-- [x] Refresh `config/content.ts → howItWorks.tabs[*].sections + faqs` so every claim matches the platform's current state. *(2026-05-05)*
-- [x] Add `aboutPage` + `privacyPage` + `termsPage` namespace stubs in `config/content.ts` (full content, not stubs). *(2026-05-05)*
+- [x] Update `config/content.ts → landing.features` to mention polymorphic hierarchy + multi-tree + role CRUD + xlsx imports as live capabilities. _(2026-05-05)_
+- [x] Refresh `config/content.ts → howItWorks.tabs[*].sections + faqs` so every claim matches the platform's current state. _(2026-05-05)_
+- [x] Add `aboutPage` + `privacyPage` + `termsPage` namespace stubs in `config/content.ts` (full content, not stubs). _(2026-05-05)_
 
 #### Phase G — Tests + docs
 
-- [ ] `test/orgUnitTreeCrud.test.ts` — multi-root tree creation, descendants, ancestors, archive flow. *(deferred — needs Prisma test harness)*
-- [x] `test/orgUnitMatcher.test.ts` — pure-function unit tests on `mergeLegacyScope` (4 ✓). Full `unitInScope` deferred to Prisma harness. *(2026-05-05)*
-- [ ] `test/roleCrudPermissions.test.ts` — SUPERADMIN write rejection, capability-subset validator, scope-binding round-trip. *(deferred — needs Prisma test harness)*
-- [x] `test/publicCopySanitise.test.ts` — script tag, javascript URL, protocol-relative URL all rejected (8 ✓). *(2026-05-05)*
-- [x] `test/spreadsheetParse.test.ts` — single-sheet, multi-sheet, missing-sheet rejection, dispatcher contract (11 ✓). *(2026-05-05)*
-- [ ] `test/playgroundsMount.test.ts` — every registered playground mounts without error. *(deferred — needs jsdom/Testing Library harness)*
-- [ ] `test/migrationAdditiveSafety.test.ts` extension — new migration adds columns + tables only. *(deferred)*
-- [x] Update `.ai-system/agents/system-architecture.md` (module rows + data-flow entries 65–78). *(2026-05-05)*
-- [ ] Update `.ai-system/agents/project-context.md` (multi-tree hierarchy + role CRUD + public-copy constraints). *(deferred — small follow-up)*
-- [x] Update `.ai-system/agents/repair-system.md` with xlsx parse error entry. *(2026-05-05)*
-- [x] Update `.env.example` (`PUBLIC_COPY_DB_ENABLED`, `IMPORT_ALLOWED_MIMES`, `IMPORT_XLSX_MAX_SHEETS`). *(2026-05-05)*
-- [ ] Update `.ai-system/planning/project-plan.md` Phase 6: tick "Admin-editable configuration system" + "Excel/Spreadsheet import"; add "Multi-tree polymorphic hierarchy" line. *(deferred — small follow-up)*
+- [ ] `test/orgUnitTreeCrud.test.ts` — multi-root tree creation, descendants, ancestors, archive flow. _(deferred — needs Prisma test harness)_
+- [x] `test/orgUnitMatcher.test.ts` — pure-function unit tests on `mergeLegacyScope` (4 ✓). Full `unitInScope` deferred to Prisma harness. _(2026-05-05)_
+- [ ] `test/roleCrudPermissions.test.ts` — SUPERADMIN write rejection, capability-subset validator, scope-binding round-trip. _(deferred — needs Prisma test harness)_
+- [x] `test/publicCopySanitise.test.ts` — script tag, javascript URL, protocol-relative URL all rejected (8 ✓). _(2026-05-05)_
+- [x] `test/spreadsheetParse.test.ts` — single-sheet, multi-sheet, missing-sheet rejection, dispatcher contract (11 ✓). _(2026-05-05)_
+- [ ] `test/playgroundsMount.test.ts` — every registered playground mounts without error. _(deferred — needs jsdom/Testing Library harness)_
+- [ ] `test/migrationAdditiveSafety.test.ts` extension — new migration adds columns + tables only. _(deferred)_
+- [x] Update `.ai-system/agents/system-architecture.md` (module rows + data-flow entries 65–78). _(2026-05-05)_
+- [ ] Update `.ai-system/agents/project-context.md` (multi-tree hierarchy + role CRUD + public-copy constraints). _(deferred — small follow-up)_
+- [x] Update `.ai-system/agents/repair-system.md` with xlsx parse error entry. _(2026-05-05)_
+- [x] Update `.env.example` (`PUBLIC_COPY_DB_ENABLED`, `IMPORT_ALLOWED_MIMES`, `IMPORT_XLSX_MAX_SHEETS`). _(2026-05-05)_
+- [ ] Update `.ai-system/planning/project-plan.md` Phase 6: tick "Admin-editable configuration system" + "Excel/Spreadsheet import"; add "Multi-tree polymorphic hierarchy" line. _(deferred — small follow-up)_
 
 #### Phase H — Cleanup + lint
 
-- [ ] Add ESLint rule `no-hardcoded-org-label`. *(deferred)*
-- [ ] Add ESLint rule `no-hardcoded-role-label`. *(deferred)*
-- [ ] Sweep every UI surface that says "Campus" / "Group" / role label and resolve through `resolveHierarchyLevels()` + `resolveRoleConfig()`. *(deferred — incremental sweep across many surfaces)*
+- [ ] Add ESLint rule `no-hardcoded-org-label`. _(deferred)_
+- [ ] Add ESLint rule `no-hardcoded-role-label`. _(deferred)_
+- [ ] Sweep every UI surface that says "Campus" / "Group" / role label and resolve through `resolveHierarchyLevels()` + `resolveRoleConfig()`. _(deferred — incremental sweep across many surfaces)_
 
 ---
 
@@ -465,53 +482,53 @@
 
 #### Phase A — Build hygiene
 
-- [x] Add `lib/utils/buildPhase.ts` exporting `isBuildPhase()`. *(2026-05-06)*
-- [x] Short-circuit `loadAdminConfig` to return the typed fallback when `isBuildPhase()` is true (skip Redis + DB entirely on that path). *(2026-05-06)*
-- [ ] Verify with `npm run build` that `[adminConfig]` / `[cache]` build noise disappears. *(deferred — environment can't run a full prod build, but the unit test for the short-circuit passes; user to validate next build cycle)*
+- [x] Add `lib/utils/buildPhase.ts` exporting `isBuildPhase()`. _(2026-05-06)_
+- [x] Short-circuit `loadAdminConfig` to return the typed fallback when `isBuildPhase()` is true (skip Redis + DB entirely on that path). _(2026-05-06)_
+- [ ] Verify with `npm run build` that `[adminConfig]` / `[cache]` build noise disappears. _(deferred — environment can't run a full prod build, but the unit test for the short-circuit passes; user to validate next build cycle)_
 
 #### Phase B — Quick-form materialise (root-cause fix)
 
-- [x] In `lib/data/recurringAssignmentService.ts`, derive `orgGroupId` from `campus.parentId` when caller supplies `campusId` but no `orgGroupId`. Memoise across rules in the same call. *(2026-05-06)*
+- [x] In `lib/data/recurringAssignmentService.ts`, derive `orgGroupId` from `campus.parentId` when caller supplies `campusId` but no `orgGroupId`. Memoise across rules in the same call. _(2026-05-06)_
 
 #### Phase C — Name resolution everywhere
 
-- [x] Add `lib/data/entityNames.ts` (campus / group / unit / role / user batch resolver). *(2026-05-06)*
-- [x] Add `app/api/labels/resolve/route.ts` (auth-required POST batched lookup). *(2026-05-06)*
-- [x] Add `lib/hooks/useEntityNames.ts` (single-batch fetch + cache + `pickName` helper). *(2026-05-06)*
-- [x] Refactor `modules/users/components/ProfilePage.tsx` to render campus + group labels via the hook. *(2026-05-06)*
-- [x] Sweep `UserDetailPage` to fall back to "Unknown campus" instead of leaking the id. *(2026-05-06)*
+- [x] Add `lib/data/entityNames.ts` (campus / group / unit / role / user batch resolver). _(2026-05-06)_
+- [x] Add `app/api/labels/resolve/route.ts` (auth-required POST batched lookup). _(2026-05-06)_
+- [x] Add `lib/hooks/useEntityNames.ts` (single-batch fetch + cache + `pickName` helper). _(2026-05-06)_
+- [x] Refactor `modules/users/components/ProfilePage.tsx` to render campus + group labels via the hook. _(2026-05-06)_
+- [x] Sweep `UserDetailPage` to fall back to "Unknown campus" instead of leaking the id. _(2026-05-06)_
 - [ ] Continue sweeping additional surfaces (reports table, invites, analytics filter chips) as they're touched — `useEntityNames` is in place for one-line conversions.
 
 #### Phase D — Plain-language public copy + admin entry point
 
-- [x] Rewrite `config/content.ts → landing.features` (8 entries; expanded from 6) in plain language. *(2026-05-06)*
-- [x] Rewrite `howItWorks.tabs[*].sections + faqs` in plain language (playgroundIds preserved). *(2026-05-06)*
-- [x] Rewrite `aboutPage.sections`, `privacyPage.sections`, `termsPage.sections` in plain language (stripped PostgreSQL / Cloudinary / Resend / "substrate" / "Pearson" / "additive migrations" jargon). *(2026-05-06)*
-- [x] Add `components/ui/AdminConfigShortcut.tsx` (floating "Edit page copy" CTA, SUPERADMIN-only) mounted on `/`, `/how-it-works`, `/about`, `/privacy`, `/terms`. *(2026-05-06)*
+- [x] Rewrite `config/content.ts → landing.features` (8 entries; expanded from 6) in plain language. _(2026-05-06)_
+- [x] Rewrite `howItWorks.tabs[*].sections + faqs` in plain language (playgroundIds preserved). _(2026-05-06)_
+- [x] Rewrite `aboutPage.sections`, `privacyPage.sections`, `termsPage.sections` in plain language (stripped PostgreSQL / Cloudinary / Resend / "substrate" / "Pearson" / "additive migrations" jargon). _(2026-05-06)_
+- [x] Add `components/ui/AdminConfigShortcut.tsx` (floating "Edit page copy" CTA, SUPERADMIN-only) mounted on `/`, `/how-it-works`, `/about`, `/privacy`, `/terms`. _(2026-05-06)_
 
 #### Phase E — Deferred polymorphic propagation
 
-- [x] Refactor `lib/data/reportAggregation.ts → buildReportQuery` to add `unitId` to the scope `OR` branches alongside legacy `campusId`/`orgGroupId` equality. *(2026-05-06)*
-- [x] Refactor `lib/data/formAssignmentRule.ts → ruleMatchesUser` to accept `unitIds[]` via merged scope set. *(2026-05-06)*
-- [x] Add `hasCapabilityForUser(user, capability)` in `lib/auth/permissions.ts` reading the runtime `Role` table first when `auth.user.roleId` is set. *(2026-05-06)*
-- [x] Pass `roleId` + `unitId` through `verifyAuth → AuthUser` payload. *(2026-05-06)*
+- [x] Refactor `lib/data/reportAggregation.ts → buildReportQuery` to add `unitId` to the scope `OR` branches alongside legacy `campusId`/`orgGroupId` equality. _(2026-05-06)_
+- [x] Refactor `lib/data/formAssignmentRule.ts → ruleMatchesUser` to accept `unitIds[]` via merged scope set. _(2026-05-06)_
+- [x] Add `hasCapabilityForUser(user, capability)` in `lib/auth/permissions.ts` reading the runtime `Role` table first when `auth.user.roleId` is set. _(2026-05-06)_
+- [x] Pass `roleId` + `unitId` through `verifyAuth → AuthUser` payload. _(2026-05-06)_
 
 #### Phase F — Label audit
 
-- [x] `scripts/check-no-hardcoded-labels.ts` audit script (with allowlist + post-`??` fallback exclusion) wired as `npm run check:no-hardcoded-labels`. Baseline: 0 findings. *(2026-05-06)*
-- [ ] Promote the audit script to a true ESLint rule once the ESLint v9 flat-config gap is closed. *(deferred — flat-config migration is a separate task)*
+- [x] `scripts/check-no-hardcoded-labels.ts` audit script (with allowlist + post-`??` fallback exclusion) wired as `npm run check:no-hardcoded-labels`. Baseline: 0 findings. _(2026-05-06)_
+- [ ] Promote the audit script to a true ESLint rule once the ESLint v9 flat-config gap is closed. _(deferred — flat-config migration is a separate task)_
 
 #### Phase G — Tests + docs
 
-- [x] `test/buildPhaseShortCircuit.test.ts` (6 ✓). *(2026-05-06)*
-- [x] `test/ruleMatchesUserPolymorphic.test.ts` (10 ✓). *(2026-05-06)*
-- [ ] `test/recurringAssignmentDerivesGroupFromCampus.test.ts` — *(deferred; needs Prisma test harness for the campus.parentId lookup)*.
-- [ ] `test/entityNamesResolver.test.ts` — *(deferred; needs Prisma test harness)*.
-- [ ] `test/aggregationPolymorphicScope.test.ts` — *(deferred; needs Prisma test harness)*.
-- [x] Update `.ai-system/agents/project-context.md` with substrate constraints. *(2026-05-06)*
-- [x] Update `.ai-system/planning/project-plan.md` Phase 6 ticks. *(2026-05-06)*
-- [x] Update `.ai-system/agents/repair-system.md` with three new entries (build-phase noise, materialise-skip-on-null-orgGroupId, raw-id leakage). *(2026-05-06)*
-- [x] Update session-log + dev-history. *(2026-05-06)*
+- [x] `test/buildPhaseShortCircuit.test.ts` (6 ✓). _(2026-05-06)_
+- [x] `test/ruleMatchesUserPolymorphic.test.ts` (10 ✓). _(2026-05-06)_
+- [ ] `test/recurringAssignmentDerivesGroupFromCampus.test.ts` — _(deferred; needs Prisma test harness for the campus.parentId lookup)_.
+- [ ] `test/entityNamesResolver.test.ts` — _(deferred; needs Prisma test harness)_.
+- [ ] `test/aggregationPolymorphicScope.test.ts` — _(deferred; needs Prisma test harness)_.
+- [x] Update `.ai-system/agents/project-context.md` with substrate constraints. _(2026-05-06)_
+- [x] Update `.ai-system/planning/project-plan.md` Phase 6 ticks. _(2026-05-06)_
+- [x] Update `.ai-system/agents/repair-system.md` with three new entries (build-phase noise, materialise-skip-on-null-orgGroupId, raw-id leakage). _(2026-05-06)_
+- [x] Update session-log + dev-history. _(2026-05-06)_
 
 ---
 

@@ -29,6 +29,61 @@
 
 ---
 
+## 2026-05-19 — CIS Prisma Migrations + Environment Configuration
+
+**Summary:**
+Completed the CIS federation rollout by creating Prisma migrations for the CisIdentity and CisWebhookEvent models and populating environment variables with CIS configuration.
+
+**Completed:**
+
+- Created additive Prisma migration `20260519151453_cis_identity_persistence` for report-sys.
+- Fixed Prisma relation validation error by adding back-relation from User model to CisIdentity.
+- Updated `.env.local` with CIS variables: `CIS_API_URL`, `CIS_PLATFORM_SLUG`, `CIS_CLIENT_ID`, `CIS_CLIENT_SECRET`, `CIS_WEBHOOK_SECRET`, `CIS_WEBHOOK_PATH`, `CIS_WEBHOOK_ALLOWED_SKEW_SECONDS`.
+
+**Key Changes:**
+
+- CIS persistence layer now has database migrations ready for deployment via `prisma migrate deploy`.
+- Environment configuration is complete for local development and deployment validation.
+
+**Next Sprint Focus:**
+Apply migrations to development database and validate the webhook endpoint behavior end-to-end.
+
+## 2026-05-13 — CIS Identity Persistence
+
+**Summary:**
+Extended the CIS federation surface to persist identity mappings and webhook history while keeping local user data untouched.
+
+**Completed:**
+
+- Added `CisIdentity` and `CisWebhookEvent` models.
+- Persisted webhook events in `/api/cis/webhook`.
+- Updated CIS docs to reflect the push model.
+
+**Key Changes:**
+
+- CIS sync events now have a durable audit trail without mutating core user records.
+
+**Next Sprint Focus:**
+Finalize the CIS payload contract and decide if/when to attach user-link logic.
+
+## 2026-05-13 — Workspace-Wide CIS Federation Rollout
+
+**Summary:**
+Rolled out a narrow CIS federation handshake across report-sys and harvesthub-reboot so both repos can report readiness and accept signed identity syncs without a schema rewrite.
+
+**Completed:**
+
+- Added CIS env/config plumbing plus status and webhook endpoints for report-sys and harvesthub-reboot.
+- Updated the `.ai-system` task queues, project plans, project context, architecture notes, and env examples in both repos.
+- Recorded the additive CIS handshake decision in memory and validated all touched config/route/doc files.
+
+**Key Changes:**
+
+- CIS integration is now additive and route-scoped in both repos, with signature-verified webhook intake and public status discovery.
+
+**Next Sprint Focus:**
+Continue workspace-wide CIS adoption with the next repo that already has a stable route/API surface and `.ai-system` coverage.
+
 ## [DATE] — Project Initialization
 
 **Summary:**
