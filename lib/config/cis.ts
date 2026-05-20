@@ -71,7 +71,7 @@ export function verifyCisWebhookSignature(params: {
         return false;
     }
 
-    const expectedSignature = buildCisWebhookSignature(timestamp, payload);
+    const expectedSignature = timestamp ? buildCisWebhookSignature(timestamp, payload) : "";
     if (!expectedSignature) {
         return false;
     }

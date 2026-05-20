@@ -80,6 +80,7 @@ model User {
   roleEntry                   Role?                   @relation("RoleUsers", fields: [roleId], references: [id])
   ownedUnits                  OrgUnit[]               @relation("OrgUnitLeader")
   ownedAdminUnits             OrgUnit[]               @relation("OrgUnitAdmin")
+  cisIdentities               CisIdentity[]           @relation("CisIdentityLinked")
 
   @@index([email])
   @@index([role])
@@ -88,6 +89,51 @@ model User {
   @@index([unitId])
   @@index([roleId])
   @@map("users")
+}
+
+model CisIdentity {
+  id             String   @id @default(uuid())
+  cisSubjectId   String
+  sourcePlatform String
+  externalUserId String?
+  linkedUserId   String?
+  email          String?
+  phone          String?
+  displayName    String?
+  role           String?
+  status         String?
+  lastEventType  String
+  lastEventAt    DateTime @default(now())
+  payload        Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  linkedUser User?             @relation("CisIdentityLinked", fields: [linkedUserId], references: [id])
+  events     CisWebhookEvent[]
+
+  @@unique([cisSubjectId, sourcePlatform])
+  @@unique([externalUserId])
+  @@index([linkedUserId])
+  @@index([email])
+  @@map("cis_identities")
+}
+
+model CisWebhookEvent {
+  id             String   @id @default(uuid())
+  identityId     String?
+  eventType      String
+  sourcePlatform String
+  subjectId      String?
+  externalUserId String?
+  payload        Json?
+  receivedAt     DateTime @default(now())
+
+  identity CisIdentity? @relation(fields: [identityId], references: [id], onDelete: SetNull)
+
+  @@index([identityId])
+  @@index([eventType])
+  @@index([sourcePlatform])
+  @@map("cis_webhook_events")
 }
 
 model OrgGroup {
